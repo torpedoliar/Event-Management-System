@@ -226,101 +226,90 @@ if !ERRORLEVEL! neq 0 (
 echo      - Build Kompilasi Image: Berhasil 100%
 
 :: ==========================================
-:: [5/9] Start Database Engine
+:: [5/9] Menjalankan Semua Layanan
 :: ==========================================
 echo.
-echo [5/9] Mengaktifkan mesin PostgreSQL Engine...
-!DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production up -d postgres
+echo [5/9] Menjalankan semua layanan aplikasi...
+echo      - Docker Compose akan mengatur urutan startup otomatis:
+echo        1. PostgreSQL Database (menunggu healthy)
+echo        2. Backend API NestJS (prisma generate, db push, seed, lalu start)
+echo        3. Frontend Next.js (menunggu backend healthy)
+echo.
+echo      - Proses ini memakan waktu 1-3 menit. Mohon tunggu...
+!DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production up -d --force-recreate
+if !ERRORLEVEL! neq 0 (
+    echo      - [WARNING] Docker Compose up mengembalikan error.
+    echo        Cek log: docker compose -f docker-compose.prod.yml logs
+)
+echo      - Perintah up selesai. Semua container sudah di-request untuk start.
 
-set RETRY=0
-:wait_db
-set /a RETRY+=1
-if !RETRY! gtr 60 (
-    echo [ERROR] Time-out menunggu database! (Lebih dari 2 menit)
-    pause
-    exit /b 1
+:: ==========================================
+:: [6/9] Menunggu Database Siap
+:: ==========================================
+echo.
+echo [6/9] Menunggu PostgreSQL siap menerima koneksi...
+set DB_RETRY=0
+:wait_db_loop
+set /a DB_RETRY+=1
+if !DB_RETRY! gtr 30 (
+    echo      - [WARNING] Database belum merespon setelah 60 detik.
+    echo        Cek log: docker logs guest-db-prod
+    goto wait_backend_start
 )
 docker exec guest-db-prod pg_isready -U postgres >nul 2>&1
 if !ERRORLEVEL! neq 0 (
     timeout /t 2 /nobreak >nul
-    goto wait_db
+    goto wait_db_loop
 )
-echo      - PostgreSQL Online. (Respons di percobaan ke-!RETRY!)
+echo      - PostgreSQL Online.
 
 :: ==========================================
-:: [6/9] Database Prisma Schema Syncing
+:: [7/9] Menunggu Backend API Siap
 :: ==========================================
+:wait_backend_start
 echo.
-echo [6/9] Migrasi Skema Database ke versi terbaru...
-echo      - Menginjeksi Model Prisma...
-
-:: Gunakan exec jika container backend sudah running, fallback ke run
-docker ps -q -f name=guest-backend-prod | findstr . >nul
-if !ERRORLEVEL! equ 0 (
-    !DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production exec -T backend sh -c "npx prisma generate && npx prisma db push --accept-data-loss"
-) else (
-    !DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production run --rm backend sh -c "npx prisma generate && npx prisma db push --accept-data-loss"
+echo [7/9] Menunggu Backend API siap menerima koneksi...
+echo      - Backend sedang menjalankan: prisma generate, db push, seed...
+set BE_RETRY=0
+:wait_be_loop
+set /a BE_RETRY+=1
+if !BE_RETRY! gtr 60 (
+    echo      - [WARNING] Backend belum merespon setelah 2 menit.
+    echo        Cek log: docker logs guest-backend-prod
+    goto check_frontend_start
 )
+docker exec guest-backend-prod node -e "const http=require('http');http.get('http://127.0.0.1:4000/api/health',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))" >nul 2>&1
 if !ERRORLEVEL! neq 0 (
-    echo      - [WARNING] Prisma sync gagal, akan dicoba otomatis saat container start.
-) else (
-    echo      - Sinkronisasi struktur Database Selesai.
+    timeout /t 3 /nobreak >nul
+    goto wait_be_loop
 )
-
-:: ==========================================
-:: [7/9] Start Backend & Frontend
-:: ==========================================
-echo.
-echo [7/9] Menghidupkan Backend API dan Frontend...
-echo      - Menjalankan semua service dengan --force-recreate...
-!DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production up -d --force-recreate
-echo      - Perintah up selesai. Menunggu semua container siap...
-
-:: Tunggu backend healthy
-echo.
-echo [7.5/9] Menunggu Backend API siap menerima koneksi...
-set RETRY=0
-:wait_backend
-set /a RETRY+=1
-if !RETRY! gtr 45 (
-    echo      - [WARNING] Node Backend tidak merespon Health Check /api/health !
-    docker ps -q -f name=guest-backend-prod | findstr . >nul
-    if !ERRORLEVEL! neq 0 (
-        echo [ERROR] Backend container gagal dihidupkan (Crash)!
-        echo         Ketik perintah ini untuk debug: docker logs guest-backend-prod
-        pause
-        exit /b 1
-    )
-    echo      - Container dinyatakan berjalan walau tanpa respon HTTP, Lanjut...
-    goto check_frontend
-)
-docker exec guest-backend-prod node -e "const http = require('http'); http.get('http://127.0.0.1:4000/api/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))" >nul 2>&1
-if !ERRORLEVEL! neq 0 (
-    timeout /t 2 /nobreak >nul
-    goto wait_backend
-)
-echo      - Node Backend API Online. (Siap melayani traffic di percobaan ke-!RETRY!)
+echo      - Backend API Online.
 
 :: ==========================================
 :: [8/9] Verifikasi Frontend
 :: ==========================================
-:check_frontend
+:check_frontend_start
 echo.
-echo [8/9] Memverifikasi UI Frontend (Next.js)...
-timeout /t 8 /nobreak >nul
-docker ps -q -f name=guest-frontend-prod | findstr . >nul
-if !ERRORLEVEL! neq 0 (
-    echo      - [WARNING] Frontend container belum running. Cek log:
-    echo        docker logs guest-frontend-prod
-    echo      - Mencoba restart paksa...
-    docker start guest-frontend-prod >nul 2>&1
-    timeout /t 5 /nobreak >nul
+echo [8/9] Memverifikasi UI Frontend...
+set FE_RETRY=0
+:wait_fe_loop
+set /a FE_RETRY+=1
+if !FE_RETRY! gtr 20 (
+    echo      - [WARNING] Frontend belum merespon setelah 40 detik.
+    echo        Cek log: docker logs guest-frontend-prod
+    goto final_verify
 )
-echo      - UI Web Server: Aktif.
+docker ps -q -f name=guest-frontend-prod -f status=running | findstr . >nul
+if !ERRORLEVEL! neq 0 (
+    timeout /t 2 /nobreak >nul
+    goto wait_fe_loop
+)
+echo      - Frontend Online.
 
 :: ==========================================
 :: [9/9] Final Verification Output
 :: ==========================================
+:final_verify
 echo.
 echo [9/9] Verifikasi Terakhir...
 timeout /t 3 /nobreak >nul
