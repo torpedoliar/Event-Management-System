@@ -68,28 +68,34 @@ export class GuestsController {
   @UseGuards(JwtAuthGuard)
   @Get('guests/template')
   async downloadTemplate(@Res() res: Response) {
-    const headers = ['guest_id', 'name', 'table_location', 'email', 'company', 'department', 'division', 'category', 'notes'];
-    const example1 = ['G001', 'Budi Santoso', 'Meja 1', 'budi@email.com', 'PT Contoh', 'IT', 'Engineering', 'VIP', 'Catatan opsional'];
-    const example2 = ['G002', 'Siti Rahayu', '-', '', 'PT Lainnya', '', '', 'REGULAR', ''];
+    try {
+      const headers = ['guest_id', 'name', 'table_location', 'email', 'company', 'department', 'division', 'category', 'notes'];
+      const example1 = ['G001', 'Budi Santoso', 'Meja 1', 'budi@email.com', 'PT Contoh', 'IT', 'Engineering', 'VIP', 'Catatan opsional'];
+      const example2 = ['G002', 'Siti Rahayu', '-', '', 'PT Lainnya', '', '', 'REGULAR', ''];
 
-    // We can use XLSX utils to create a workbook and stringify it, but since we are in NestJS
-    // we already have the XLSX library imported as `* as XLSX`
-    const ws = XLSX.utils.aoa_to_sheet([headers, example1, example2]);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Template Import Tamu');
+      const ws = XLSX.utils.aoa_to_sheet([headers, example1, example2]);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Template Import Tamu');
 
-    // Auto-width columns
-    ws['!cols'] = headers.map(h => ({ wch: Math.max(h.length, 15) }));
+      // Auto-width columns
+      ws['!cols'] = headers.map(h => ({ wch: Math.max(h.length, 15) }));
 
-    const buffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
+      const buffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
 
-    res.set({
-      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'Content-Disposition': 'attachment; filename="template_import_tamu.xlsx"',
-      'Content-Length': buffer.length,
-    });
+      res.set({
+        'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'Content-Disposition': 'attachment; filename="template_import_tamu.xlsx"',
+        'Content-Length': buffer.length,
+      });
 
-    res.send(buffer);
+      res.send(buffer);
+    } catch (error: any) {
+      console.error('Template download error:', error);
+      res.status(500).json({
+        error: 'Gagal membuat template',
+        message: error.message || 'Terjadi kesalahan saat membuat file template Excel.',
+      });
+    }
   }
 
   @UseGuards(JwtAuthGuard)

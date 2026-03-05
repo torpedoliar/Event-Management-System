@@ -1,4 +1,58 @@
-node_modules
-.next
-npm-debug.log
+# Dependencies
+node_modules/
+
+# Build outputs
+.next/
+dist/
+out/
+build/
+coverage/
+*.tsbuildinfo
+
+# Env files
 .env
+.env.*
+.env.local
+
+# IDE / OS
+.vscode/
+.idea/
+.trae/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# SSL Certs (mounted via volume)
+certs/
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+docs/
+word/
+*.docx
+*.7z
+*.zip
+*.rar
+
+# Test files
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+__tests__/
+
+# Data files
+*.xlsx
+*.xls
+*.csv
+*.sql
+
+# Docker files (not needed inside container)
+Dockerfile
+Dockerfile.*
+docker-compose*

@@ -1,10 +1,10 @@
 @echo off
 setlocal enabledelayedexpansion
-title Update - Event Management System v1.3.0
+title Update - Event Management System v1.3.1
 
 echo.
 echo ================================================================
-echo     EVENT MANAGEMENT SYSTEM - Auto Update Script v1.3.0
+echo     EVENT MANAGEMENT SYSTEM - Auto Update Script v1.3.1
 echo     Windows OS Version
 echo ================================================================
 echo.
@@ -14,9 +14,9 @@ set "ROOT=%~dp0"
 cd /d "%ROOT%"
 
 :: ==========================================
-:: [0/6] Pre-flight Checks
+:: [0/7] Pre-flight Checks
 :: ==========================================
-echo [0/6] Menjalankan Pre-flight checks...
+echo [0/7] Menjalankan Pre-flight checks...
 
 if not exist "docker-compose.prod.yml" (
     echo [ERROR] docker-compose.prod.yml tidak ditemukan!
@@ -58,10 +58,10 @@ if not exist ".env.production" (
 )
 
 :: ==========================================
-:: [1/6] Backup Database Terkini
+:: [1/7] Backup Database Terkini
 :: ==========================================
 echo.
-echo [1/6] Mengamankan database saat ini...
+echo [1/7] Mengamankan database saat ini...
 if not exist "backups" mkdir backups
 
 for /f "tokens=2 delims==" %%I in ('wmic os get localdatetime /format:list') do set datetime=%%I
@@ -83,10 +83,10 @@ if !ERRORLEVEL! equ 0 (
 )
 
 :: ==========================================
-:: [2/6] Tarik Kode Terbaru (Git Pull)
+:: [2/7] Tarik Kode Terbaru (Git Pull)
 :: ==========================================
 echo.
-echo [2/6] Meminta kode terbaru dari Source Repository (GitHub)...
+echo [2/7] Meminta kode terbaru dari Source Repository (GitHub)...
 git pull origin main
 if !ERRORLEVEL! neq 0 (
     echo [ERROR] Git Pull gagal! 
@@ -99,23 +99,44 @@ if !ERRORLEVEL! neq 0 (
 echo      - Kode berhasil diupdate ke versi pamungkas.
 
 :: ==========================================
-:: [3/6] Deteksi Perubahan Skema
+:: [3/7] Deteksi Perubahan Skema
 :: ==========================================
 echo.
-echo [3/6] Mendeteksi modifikasi database engine...
+echo [3/7] Mendeteksi modifikasi database engine...
 git diff HEAD~1 --name-only 2>nul | findstr "prisma/schema.prisma" >nul
 if !ERRORLEVEL! equ 0 (
     echo      - Status: TERDETEKSI ada perubahan struktur Database.
-    echo        (Migrasi aman akan dilakukan otomatis di Step 6)
+    echo        (Migrasi aman akan dilakukan otomatis di Step 7)
 ) else (
     echo      - Status: Struktur Database aman, tidak ada perubahan.
 )
 
 :: ==========================================
-:: [4/6] Rebuild Infrastructure (Zero Downtime Check)
+:: [4/7] Membersihkan Image Docker Lama
 :: ==========================================
 echo.
-echo [4/6] Melakukan Build Ulang Infrastruktur... (Ini memakan waktu sekitar 2-5 Menit)
+echo [4/7] Membersihkan image Docker lama untuk memastikan rebuild bersih...
+
+:: Dapatkan project name dari docker compose
+for /f "tokens=*" %%P in ('!DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml config --images 2^>nul') do (
+    echo      - Menghapus image cache: %%P
+    docker rmi "%%P" >nul 2>&1
+)
+
+:: Fallback: hapus berdasarkan pola nama umum
+docker rmi registrasitamu-frontend registrasitamu-backend >nul 2>&1
+docker rmi registrasi-tamu-frontend registrasi-tamu-backend >nul 2>&1
+docker rmi registrasi_tamu-frontend registrasi_tamu-backend >nul 2>&1
+
+:: Bersihkan dangling images
+docker image prune -f >nul 2>&1
+echo      - Pembersihan image lama selesai.
+
+:: ==========================================
+:: [5/7] Rebuild Infrastructure (Zero Downtime Check)
+:: ==========================================
+echo.
+echo [5/7] Melakukan Build Ulang Infrastruktur... (Ini memakan waktu sekitar 2-5 Menit)
 echo      - Container di background MASIH TETAP MENYALA untuk meminimalkan downtime pengguna.
 !DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production build --no-cache
 if !ERRORLEVEL! neq 0 (
@@ -128,20 +149,35 @@ if !ERRORLEVEL! neq 0 (
 echo      - Build Kompilasi Image: Selesai.
 
 :: ==========================================
-:: [5/6] Recreations & Restart Routine 
+:: [6/7] Recreations & Restart Routine (Force Recreate)
 :: ==========================================
 echo.
-echo [5/6] Merestart kontainer ke modul terbaru...
+echo [6/7] Merestart kontainer dengan image terbaru...
 !DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production down --remove-orphans >nul 2>&1
-!DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production up -d
+!DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production up -d --force-recreate
 echo      - Node Backend, Database, dan Frontend hidup kembali di versi baru.
-timeout /t 5 /nobreak >nul
+
+:: Tunggu backend healthy sebelum lanjut
+echo      - Menunggu Backend siap menerima koneksi...
+set RETRY=0
+:wait_backend
+set /a RETRY+=1
+if !RETRY! gtr 30 (
+    echo      - [WARNING] Backend belum merespon setelah 60 detik, melanjutkan...
+    goto backend_ready
+)
+timeout /t 2 /nobreak >nul
+docker exec guest-backend-prod node -e "const http = require('http'); http.get('http://127.0.0.1:4000/api/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))" >nul 2>&1
+if !ERRORLEVEL! neq 0 goto wait_backend
+echo      - Backend API Online! (Siap di percobaan ke-!RETRY!)
+
+:backend_ready
 
 :: ==========================================
-:: [6/6] Database Syncing & Cleanup
+:: [7/7] Database Syncing & Cleanup
 :: ==========================================
 echo.
-echo [6/6] Menerapkan Sinkronisasi Skema Database via Prisma Engine...
+echo [7/7] Menerapkan Sinkronisasi Skema Database via Prisma Engine...
 !DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production exec -T backend npx prisma db push --accept-data-loss >nul 2>&1
 if !ERRORLEVEL! equ 0 (
     echo      - Database Sync Selesai (100^%).
@@ -159,12 +195,57 @@ echo [Pembersihan Otomatis] Membuang file backup kuno agar penyimpanan Lega...
 for /f "skip=5 eol=: delims=" %%F in ('dir /b /o-d "backups\db_backup_*.sql"') do del /q "backups\%%F" >nul 2>&1
 
 :: ==========================================
+:: Verifikasi Akhir
+:: ==========================================
+echo.
+echo [Verifikasi] Memastikan semua layanan berjalan normal...
+
+set ALL_OK=1
+
+:: Cek container status
+docker ps -q -f name=guest-db-prod | findstr . >nul
+if !ERRORLEVEL! equ 0 (
+    echo      - [OK] Database PostgreSQL: Berjalan
+) else (
+    echo      - [FAIL] Database PostgreSQL: Mati!
+    set ALL_OK=0
+)
+
+docker ps -q -f name=guest-backend-prod | findstr . >nul
+if !ERRORLEVEL! equ 0 (
+    echo      - [OK] Backend API NestJS: Berjalan
+) else (
+    echo      - [FAIL] Backend API NestJS: Mati!
+    set ALL_OK=0
+)
+
+docker ps -q -f name=guest-frontend-prod | findstr . >nul
+if !ERRORLEVEL! equ 0 (
+    echo      - [OK] Frontend Next.js: Berjalan
+) else (
+    echo      - [FAIL] Frontend Next.js: Mati!
+    set ALL_OK=0
+)
+
+:: Verifikasi image freshness
+echo.
+echo [Verifikasi] Timestamp Container:
+for /f "tokens=*" %%T in ('docker inspect guest-backend-prod --format "{{.Created}}" 2^>nul') do echo      - Backend  dibuat: %%T
+for /f "tokens=*" %%T in ('docker inspect guest-frontend-prod --format "{{.Created}}" 2^>nul') do echo      - Frontend dibuat: %%T
+
+:: ==========================================
 :: DONE
 :: ==========================================
 echo.
-echo ================================================================
-echo                   PEMBERBARUAN SUKSES DILAKUKAN
-echo ================================================================
+if !ALL_OK! equ 1 (
+    echo ================================================================
+    echo                   PEMBERBARUAN SUKSES DILAKUKAN
+    echo ================================================================
+) else (
+    echo ================================================================
+    echo        PEMBERBARUAN SELESAI DENGAN WARNING - CEK STATUS DIATAS
+    echo ================================================================
+)
 echo.
 echo   Aplikasi saat ini telah berjalan pada rilis kode terbaru.
 echo   File Backup Keamanan: !BACKUP_FILE!

@@ -543,11 +543,29 @@ export default function GuestsListPage() {
             className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10"
             onClick={async () => {
               try {
+                setError(null);
                 const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
                 const res = await fetch(`${apiBase()}/guests/template`, {
                   headers: token ? { Authorization: `Bearer ${token}` } : undefined,
                 });
-                if (!res.ok) throw new Error('Gagal mendownload template');
+                if (!res.ok) {
+                  if (res.status === 401) {
+                    throw new Error('Sesi telah berakhir. Silakan login kembali untuk mendownload template.');
+                  }
+                  // Try to parse JSON error from backend
+                  const contentType = res.headers.get('content-type');
+                  if (contentType?.includes('application/json')) {
+                    const errData = await res.json();
+                    throw new Error(errData.message || errData.error || 'Gagal mendownload template');
+                  }
+                  throw new Error(`Gagal mendownload template (HTTP ${res.status})`);
+                }
+
+                // Verify response is actually an XLSX file
+                const contentType = res.headers.get('content-type') || '';
+                if (!contentType.includes('spreadsheet') && !contentType.includes('octet-stream')) {
+                  console.warn('[Download Template] Unexpected content-type:', contentType);
+                }
 
                 const blob = await res.blob();
                 const url = window.URL.createObjectURL(blob);
