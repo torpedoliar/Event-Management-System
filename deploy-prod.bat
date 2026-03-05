@@ -371,5 +371,5 @@ if /i "!OPEN_BROWSER!"=="y" (
 )
 
 echo.
-echo Skrip deploy telah selesai dengan sempurna.
-pause >nul
+echo Skrip deploy telah selesai.
+pause

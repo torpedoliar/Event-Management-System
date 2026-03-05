@@ -243,6 +243,5 @@ echo   Catatan: Hentikan server backend terlebih dahulu
 echo     docker-compose -f docker-compose.prod.yml stop backend
 echo     type "!BACKUP_FILE!" ^| docker exec -i guest-db-prod psql -U postgres guest_registry
 echo     docker-compose -f docker-compose.prod.yml start backend
-echo.
-echo ================================================================
-pause >nul
+echo Skrip update telah selesai.
+pause
