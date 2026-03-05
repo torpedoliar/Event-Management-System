@@ -66,6 +66,33 @@ export class GuestsController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('guests/template')
+  async downloadTemplate(@Res() res: Response) {
+    const headers = ['guest_id', 'name', 'table_location', 'email', 'company', 'department', 'division', 'category', 'notes'];
+    const example1 = ['G001', 'Budi Santoso', 'Meja 1', 'budi@email.com', 'PT Contoh', 'IT', 'Engineering', 'VIP', 'Catatan opsional'];
+    const example2 = ['G002', 'Siti Rahayu', '-', '', 'PT Lainnya', '', '', 'REGULAR', ''];
+
+    // We can use XLSX utils to create a workbook and stringify it, but since we are in NestJS
+    // we already have the XLSX library imported as `* as XLSX`
+    const ws = XLSX.utils.aoa_to_sheet([headers, example1, example2]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Template Import Tamu');
+
+    // Auto-width columns
+    ws['!cols'] = headers.map(h => ({ wch: Math.max(h.length, 15) }));
+
+    const buffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
+
+    res.set({
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': 'attachment; filename="template_import_tamu.xlsx"',
+      'Content-Length': buffer.length,
+    });
+
+    res.send(buffer);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get('guests/export')
   async exportXlsx(@Res() res: Response, @Query('eventId') eventId?: string) {
     try {
@@ -78,9 +105,9 @@ export class GuestsController {
       if (!activeEventId) {
         const activeEvent = await this.guests.getActiveEvent();
         if (!activeEvent) {
-          res.status(400).json({ 
-            error: 'Tidak ada event aktif', 
-            message: 'Silakan aktifkan event terlebih dahulu sebelum export data tamu.' 
+          res.status(400).json({
+            error: 'Tidak ada event aktif',
+            message: 'Silakan aktifkan event terlebih dahulu sebelum export data tamu.'
           });
           return;
         }
@@ -99,9 +126,9 @@ export class GuestsController {
 
       // Check if there's any data
       if (allGuests.length === 0) {
-        res.status(404).json({ 
-          error: 'Data kosong', 
-          message: 'Tidak ada data tamu untuk di-export. Silakan tambahkan tamu terlebih dahulu.' 
+        res.status(404).json({
+          error: 'Data kosong',
+          message: 'Tidak ada data tamu untuk di-export. Silakan tambahkan tamu terlebih dahulu.'
         });
         return;
       }
@@ -134,9 +161,9 @@ export class GuestsController {
       res.send(buffer);
     } catch (error: any) {
       console.error('Export error:', error);
-      res.status(500).json({ 
-        error: 'Gagal export', 
-        message: error.message || 'Terjadi kesalahan saat mengexport data tamu.' 
+      res.status(500).json({
+        error: 'Gagal export',
+        message: error.message || 'Terjadi kesalahan saat mengexport data tamu.'
       });
     }
   }
@@ -154,9 +181,9 @@ export class GuestsController {
       if (!activeEventId) {
         const activeEvent = await this.guests.getActiveEvent();
         if (!activeEvent) {
-          res.status(400).json({ 
-            error: 'Tidak ada event aktif', 
-            message: 'Silakan aktifkan event terlebih dahulu sebelum export laporan.' 
+          res.status(400).json({
+            error: 'Tidak ada event aktif',
+            message: 'Silakan aktifkan event terlebih dahulu sebelum export laporan.'
           });
           return;
         }
@@ -165,9 +192,9 @@ export class GuestsController {
       } else {
         const event = await this.guests.getEventById(eventId!);
         if (!event) {
-          res.status(404).json({ 
-            error: 'Event tidak ditemukan', 
-            message: 'Event dengan ID tersebut tidak ditemukan.' 
+          res.status(404).json({
+            error: 'Event tidak ditemukan',
+            message: 'Event dengan ID tersebut tidak ditemukan.'
           });
           return;
         }
@@ -185,9 +212,9 @@ export class GuestsController {
 
       // Check if there's any data
       if (allGuests.length === 0) {
-        res.status(404).json({ 
-          error: 'Data kosong', 
-          message: 'Tidak ada data tamu untuk di-export. Silakan tambahkan tamu terlebih dahulu.' 
+        res.status(404).json({
+          error: 'Data kosong',
+          message: 'Tidak ada data tamu untuk di-export. Silakan tambahkan tamu terlebih dahulu.'
         });
         return;
       }
@@ -239,7 +266,7 @@ export class GuestsController {
       XLSX.utils.book_append_sheet(wb, ws1, 'Tamu');
 
       // Sheet 2: Prize Winners Summary
-      const prizeWinners = allGuests.flatMap((g: any) => 
+      const prizeWinners = allGuests.flatMap((g: any) =>
         (g.prizeWins || []).map((pw: any) => ({
           'Guest ID': g.guestId,
           'Nama Tamu': g.name,
@@ -257,7 +284,7 @@ export class GuestsController {
       }
 
       // Sheet 3: Souvenir Distribution
-      const souvenirTakes = allGuests.flatMap((g: any) => 
+      const souvenirTakes = allGuests.flatMap((g: any) =>
         (g.souvenirTakes || []).map((st: any) => ({
           'Guest ID': g.guestId,
           'Nama Tamu': g.name,
@@ -280,9 +307,9 @@ export class GuestsController {
       res.send(buffer);
     } catch (error: any) {
       console.error('Export full error:', error);
-      res.status(500).json({ 
-        error: 'Gagal export laporan', 
-        message: error.message || 'Terjadi kesalahan saat mengexport laporan event.' 
+      res.status(500).json({
+        error: 'Gagal export laporan',
+        message: error.message || 'Terjadi kesalahan saat mengexport laporan event.'
       });
     }
   }
@@ -329,11 +356,11 @@ export class GuestsController {
     allGuests.sort((a, b) => a.queueNumber - b.queueNumber);
 
     // Create PDF document - landscape for better table layout
-    const doc = new PDFDocument({ 
-      size: 'A4', 
+    const doc = new PDFDocument({
+      size: 'A4',
       layout: 'landscape',
       margin: 30,
-      bufferPages: true 
+      bufferPages: true
     });
 
     // Set response headers
@@ -354,22 +381,22 @@ export class GuestsController {
 
       // Title
       doc.fontSize(22).font('Helvetica-Bold').fillColor('#ffffff')
-         .text('LAPORAN DATA TAMU', marginLeft, 20, { width: pageWidth });
-      
+        .text('LAPORAN DATA TAMU', marginLeft, 20, { width: pageWidth });
+
       // Event info
       doc.fontSize(12).font('Helvetica').fillColor('#94a3b8')
-         .text(eventName || 'Event', marginLeft, 45);
-      
+        .text(eventName || 'Event', marginLeft, 45);
+
       const eventInfoParts = [eventDate, eventTime ? `${eventTime} WIB` : '', eventLocation].filter(Boolean);
       if (eventInfoParts.length > 0) {
         doc.fontSize(9).fillColor('#64748b')
-           .text(eventInfoParts.join(' • '), marginLeft, 60);
+          .text(eventInfoParts.join(' • '), marginLeft, 60);
       }
 
       // Export timestamp (right side)
       doc.fontSize(8).fillColor('#64748b')
-         .text(`Diekspor: ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })}`, 
-                doc.page.width - 200, 60, { width: 170, align: 'right' });
+        .text(`Diekspor: ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })}`,
+          doc.page.width - 200, 60, { width: 170, align: 'right' });
     };
 
     drawHeader();
@@ -390,12 +417,12 @@ export class GuestsController {
       doc.save();
       doc.roundedRect(x, boxY, boxWidth, boxHeight, 6).fill(color);
       doc.fontSize(10).font('Helvetica').fillColor('#ffffff').opacity(0.8)
-         .text(label, x + 10, boxY + 8, { width: boxWidth - 20 });
+        .text(label, x + 10, boxY + 8, { width: boxWidth - 20 });
       doc.fontSize(20).font('Helvetica-Bold').fillColor('#ffffff').opacity(1)
-         .text(String(value), x + 10, boxY + 22, { width: boxWidth - 20 });
+        .text(String(value), x + 10, boxY + 22, { width: boxWidth - 20 });
       if (subtext) {
         doc.fontSize(8).font('Helvetica').fillColor('#ffffff').opacity(0.7)
-           .text(subtext, x + 10, boxY + 38, { width: boxWidth - 20 });
+          .text(subtext, x + 10, boxY + 38, { width: boxWidth - 20 });
       }
       doc.restore();
     };
@@ -472,40 +499,40 @@ export class GuestsController {
 
       // ID
       doc.font('Helvetica').fillColor('#3b82f6')
-         .text(truncateText(guest.guestId, 10), colX + 4, y + 7, { width: cols[1].width - 8 });
+        .text(truncateText(guest.guestId, 10), colX + 4, y + 7, { width: cols[1].width - 8 });
       colX += cols[1].width;
 
       // Nama
       doc.font('Helvetica-Bold').fillColor('#1e293b')
-         .text(truncateText(guest.name, 18), colX + 4, y + 7, { width: cols[2].width - 8 });
+        .text(truncateText(guest.name, 18), colX + 4, y + 7, { width: cols[2].width - 8 });
       colX += cols[2].width;
 
       // Email
       doc.font('Helvetica').fillColor('#64748b')
-         .text(truncateText(guest.email || '-', 18), colX + 4, y + 7, { width: cols[3].width - 8 });
+        .text(truncateText(guest.email || '-', 18), colX + 4, y + 7, { width: cols[3].width - 8 });
       colX += cols[3].width;
 
       // Perusahaan
       doc.font('Helvetica').fillColor('#64748b')
-         .text(truncateText(guest.company || '-', 15), colX + 4, y + 7, { width: cols[4].width - 8 });
+        .text(truncateText(guest.company || '-', 15), colX + 4, y + 7, { width: cols[4].width - 8 });
       colX += cols[4].width;
 
       // Meja
       doc.fillColor('#374151')
-         .text(truncateText(guest.tableLocation, 8), colX + 4, y + 7, { width: cols[5].width - 8, align: 'center' });
+        .text(truncateText(guest.tableLocation, 8), colX + 4, y + 7, { width: cols[5].width - 8, align: 'center' });
       colX += cols[5].width;
 
       // Kategori
       const catColor = guest.category === 'VVIP' ? '#dc2626' : guest.category === 'VIP' ? '#f59e0b' : '#6b7280';
       doc.fillColor(catColor)
-         .text(guest.category || 'REGULAR', colX + 4, y + 7, { width: cols[6].width - 8, align: 'center' });
+        .text(guest.category || 'REGULAR', colX + 4, y + 7, { width: cols[6].width - 8, align: 'center' });
       colX += cols[6].width;
 
       // Sumber Registrasi
       const sourceText = formatSourcePdf(guest.registrationSource);
       const sourceColor = guest.registrationSource === 'WALKIN' ? '#f97316' : guest.registrationSource === 'IMPORT' ? '#3b82f6' : '#6b7280';
       doc.fillColor(sourceColor)
-         .text(sourceText, colX + 4, y + 7, { width: cols[7].width - 8, align: 'center' });
+        .text(sourceText, colX + 4, y + 7, { width: cols[7].width - 8, align: 'center' });
       colX += cols[7].width;
 
       // Status
@@ -513,13 +540,13 @@ export class GuestsController {
         doc.save();
         doc.roundedRect(colX + 6, y + 4, cols[8].width - 12, 14, 3).fill('#22c55e');
         doc.fontSize(7).font('Helvetica-Bold').fillColor('#ffffff')
-           .text('HADIR', colX + 6, y + 7, { width: cols[8].width - 12, align: 'center' });
+          .text('HADIR', colX + 6, y + 7, { width: cols[8].width - 12, align: 'center' });
         doc.restore();
       } else {
         doc.save();
         doc.roundedRect(colX + 6, y + 4, cols[8].width - 12, 14, 3).fill('#ef4444');
         doc.fontSize(7).font('Helvetica-Bold').fillColor('#ffffff')
-           .text('BELUM', colX + 6, y + 7, { width: cols[8].width - 12, align: 'center' });
+          .text('BELUM', colX + 6, y + 7, { width: cols[8].width - 12, align: 'center' });
         doc.restore();
       }
       colX += cols[8].width;
@@ -527,18 +554,18 @@ export class GuestsController {
       // Jumlah Check-in
       const checkinCount = guest.checkinCount ?? (guest.checkedIn ? 1 : 0);
       doc.font('Helvetica-Bold').fontSize(8).fillColor(checkinCount > 1 ? '#8b5cf6' : '#374151')
-         .text(String(checkinCount), colX + 4, y + 7, { width: cols[9].width - 8, align: 'center' });
+        .text(String(checkinCount), colX + 4, y + 7, { width: cols[9].width - 8, align: 'center' });
       colX += cols[9].width;
 
       // Waktu Check-in
       doc.font('Helvetica').fontSize(8).fillColor('#64748b')
-         .text(guest.checkedInAt ? formatLocalTime(guest.checkedInAt) : '-', colX + 4, y + 7, { width: cols[10].width - 8, align: 'center' });
+        .text(guest.checkedInAt ? formatLocalTime(guest.checkedInAt) : '-', colX + 4, y + 7, { width: cols[10].width - 8, align: 'center' });
       colX += cols[10].width;
 
       // Check-in Oleh (show all admins if multiple check-ins)
       const checkinAdmins = guest.checkins?.map((c: any) => c.checkinByName).filter(Boolean).join(', ') || guest.checkedInByName || '-';
       doc.fillColor('#64748b')
-         .text(truncateText(checkinAdmins, 18), colX + 4, y + 7, { width: cols[11].width - 8 });
+        .text(truncateText(checkinAdmins, 18), colX + 4, y + 7, { width: cols[11].width - 8 });
       colX += cols[11].width;
 
       // Souvenir
@@ -546,17 +573,17 @@ export class GuestsController {
         doc.save();
         doc.roundedRect(colX + 10, y + 4, cols[12].width - 20, 14, 3).fill('#8b5cf6');
         doc.fontSize(7).font('Helvetica-Bold').fillColor('#ffffff')
-           .text('YA', colX + 10, y + 7, { width: cols[12].width - 20, align: 'center' });
+          .text('YA', colX + 10, y + 7, { width: cols[12].width - 20, align: 'center' });
         doc.restore();
       } else {
         doc.fontSize(8).font('Helvetica').fillColor('#94a3b8')
-           .text('-', colX + 4, y + 7, { width: cols[12].width - 8, align: 'center' });
+          .text('-', colX + 4, y + 7, { width: cols[12].width - 8, align: 'center' });
       }
     };
 
     // Draw table
     tableY = drawTableHeader(tableY);
-    
+
     for (let i = 0; i < allGuests.length; i++) {
       // Check if we need a new page
       if (tableY + rowHeight > doc.page.height - 50) {
@@ -577,8 +604,8 @@ export class GuestsController {
       drawHeader();
 
       doc.fontSize(16).font('Helvetica-Bold').fillColor('#1e293b')
-         .text('DAFTAR PEMENANG LUCKY DRAW', marginLeft, 100);
-      
+        .text('DAFTAR PEMENANG LUCKY DRAW', marginLeft, 100);
+
       let prizeY = 130;
       const prizeRowHeight = 25;
 
@@ -618,18 +645,18 @@ export class GuestsController {
           doc.font('Helvetica').fillColor('#f59e0b').text(truncateText(pw.prize?.name || '', 25), marginLeft + 264, prizeY + 8, { width: 150 });
           doc.fillColor('#64748b').text(pw.prize?.category === 'UTAMA' ? 'Utama' : 'Hiburan', marginLeft + 414, prizeY + 8, { width: 80 });
           doc.text(formatLocalTime(pw.wonAt), marginLeft + 494, prizeY + 8, { width: 100 });
-          
+
           if (pw.collection) {
             doc.save();
             doc.roundedRect(marginLeft + 600, prizeY + 5, 60, 15, 3).fill('#22c55e');
             doc.fontSize(7).font('Helvetica-Bold').fillColor('#ffffff')
-               .text('DIAMBIL', marginLeft + 600, prizeY + 8, { width: 60, align: 'center' });
+              .text('DIAMBIL', marginLeft + 600, prizeY + 8, { width: 60, align: 'center' });
             doc.restore();
           } else {
             doc.save();
             doc.roundedRect(marginLeft + 600, prizeY + 5, 60, 15, 3).fill('#f59e0b');
             doc.fontSize(7).font('Helvetica-Bold').fillColor('#ffffff')
-               .text('BELUM', marginLeft + 600, prizeY + 8, { width: 60, align: 'center' });
+              .text('BELUM', marginLeft + 600, prizeY + 8, { width: 60, align: 'center' });
             doc.restore();
           }
 
@@ -644,8 +671,8 @@ export class GuestsController {
     for (let i = 0; i < pageCount; i++) {
       doc.switchToPage(i);
       doc.fontSize(8).font('Helvetica').fillColor('#94a3b8')
-         .text(`Halaman ${i + 1} dari ${pageCount}`, marginLeft, doc.page.height - 25, 
-                { width: pageWidth, align: 'center' });
+        .text(`Halaman ${i + 1} dari ${pageCount}`, marginLeft, doc.page.height - 25,
+          { width: pageWidth, align: 'center' });
     }
 
     doc.end();
@@ -770,8 +797,8 @@ export class GuestsController {
         cb: (error: Error | null, acceptFile: boolean) => void,
       ) => {
         const isXlsx = file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-                       file.originalname.endsWith('.xlsx') ||
-                       file.originalname.endsWith('.xls');
+          file.originalname.endsWith('.xlsx') ||
+          file.originalname.endsWith('.xls');
         if (!isXlsx) {
           return cb(new Error('Only Excel files (.xlsx, .xls) are allowed'), false);
         }
@@ -840,29 +867,28 @@ export class GuestsController {
       const division = row['division'] ?? row['Division'] ?? row['divisi'] ?? row['Divisi'] ?? undefined;
       const notes = row['notes'] ?? row['Notes'] ?? row['Catatan'] ?? row['catatan'] ?? undefined;
       const category = row['category'] ?? row['Category'] ?? row['Kategori'] ?? row['kategori'] ?? undefined;
-      
-      if (!guestId || !name || !tableLocation) {
+
+      if (!guestId || !name) {
         const missing = [];
         if (!guestId) missing.push('guest_id');
         if (!name) missing.push('name');
-        if (!tableLocation) missing.push('table_location');
         invalidRows.push({ row: i + 2, reason: `Kolom wajib kosong: ${missing.join(', ')}` });
         continue;
       }
-      parsedRows.push({ guestId: String(guestId), name: String(name), tableLocation: String(tableLocation), email, company, department, division, notes, category });
+      parsedRows.push({ guestId: String(guestId), name: String(name), tableLocation: tableLocation ? String(tableLocation) : '-', email, company, department, division, notes, category });
     }
 
     if (parsedRows.length === 0) {
-      const errorMsg = invalidRows.length > 0 
+      const errorMsg = invalidRows.length > 0
         ? `Semua baris tidak valid. Contoh error baris ${invalidRows[0].row}: ${invalidRows[0].reason}`
-        : 'Tidak ada data valid untuk diimport. Pastikan kolom guest_id, name, dan table_location terisi.';
+        : 'Tidak ada data valid untuk diimport. Pastikan kolom guest_id dan name terisi.';
       throw new Error(errorMsg);
     }
 
     // Check for duplicates (only if duplicate IDs are not allowed)
     const guestIds = parsedRows.map(r => r.guestId);
     const names = parsedRows.map(r => r.name);
-    const { duplicateIds, duplicateNames } = allowDuplicateGuestId 
+    const { duplicateIds, duplicateNames } = allowDuplicateGuestId
       ? { duplicateIds: [], duplicateNames: [] }
       : await this.guests.checkDuplicates(guestIds, names);
 
@@ -924,9 +950,9 @@ export class GuestsController {
       emitEvent({ type: 'guest-update', data: { action: 'import', count: created } });
     }
 
-    return { 
-      created, 
-      skipped, 
+    return {
+      created,
+      skipped,
       total: parsedRows.length,
       duplicates: skippedDetails,
       allowDuplicateGuestId,
@@ -943,8 +969,8 @@ export class GuestsController {
         cb: (error: Error | null, acceptFile: boolean) => void,
       ) => {
         const isXlsx = file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-                       file.originalname.endsWith('.xlsx') ||
-                       file.originalname.endsWith('.xls');
+          file.originalname.endsWith('.xlsx') ||
+          file.originalname.endsWith('.xls');
         if (!isXlsx) {
           return cb(new Error('Only Excel files (.xlsx, .xls) are allowed'), false);
         }

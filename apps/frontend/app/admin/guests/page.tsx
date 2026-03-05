@@ -6,7 +6,7 @@ import Card from '../../../components/ui/Card';
 import Input from '../../../components/ui/Input';
 import Button from '../../../components/ui/Button';
 import { QRCodeSVG } from 'qrcode.react';
-import { QrCode, Edit, Trash2, CheckCircle, Gift, X, AlertTriangle, Users, Tag, Mail, Send, Loader2, Settings, Trophy, Package } from 'lucide-react';
+import { QrCode, Edit, Trash2, CheckCircle, Gift, X, AlertTriangle, Users, Tag, Mail, Send, Loader2, Settings, Trophy, Package, Download } from 'lucide-react';
 import { useSSE } from '../../../lib/sse-context';
 import { Textarea } from '../../../components/ui/Textarea';
 
@@ -539,6 +539,35 @@ export default function GuestsListPage() {
           </Button>
           <Button
             size="sm"
+            variant="ghost"
+            className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10"
+            onClick={async () => {
+              try {
+                const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+                const res = await fetch(`${apiBase()}/guests/template`, {
+                  headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+                });
+                if (!res.ok) throw new Error('Gagal mendownload template');
+
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'template_import_tamu.xlsx';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+              } catch (e: any) {
+                setError(e.message || 'Gagal mendownload template');
+              }
+            }}
+          >
+            <Download size={14} className="mr-1" />
+            Download Template
+          </Button>
+          <Button
+            size="sm"
             variant="secondary"
             className="ml-auto"
             onClick={doExport}
@@ -775,13 +804,12 @@ export default function GuestsListPage() {
                         {g.prizeWins && g.prizeWins.length > 0 ? (
                           <div className="flex flex-col items-center gap-1">
                             {g.prizeWins.map((pw, idx) => (
-                              <span 
-                                key={idx} 
-                                className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
-                                  pw.collection 
-                                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' 
-                                    : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                                }`}
+                              <span
+                                key={idx}
+                                className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${pw.collection
+                                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                                  : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                                  }`}
                                 title={`${pw.prize.name} - ${pw.collection ? 'Sudah diambil' : 'Belum diambil'}`}
                               >
                                 <Trophy size={12} />
