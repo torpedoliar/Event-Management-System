@@ -117,7 +117,7 @@ if !ERRORLEVEL! equ 0 (
 echo.
 echo [4/6] Melakukan Build Ulang Infrastruktur... (Ini memakan waktu sekitar 2-5 Menit)
 echo      - Container di background MASIH TETAP MENYALA untuk meminimalkan downtime pengguna.
-!DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production build
+!DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production build --no-cache
 if !ERRORLEVEL! neq 0 (
     echo [ERROR] Proses Build / Kompilasi gagal!
     echo         Update dibatalkan karena fatal error (misal: koneksi putus).
