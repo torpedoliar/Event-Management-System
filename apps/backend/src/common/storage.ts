@@ -1,5 +1,6 @@
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { mkdirSync } from 'fs';
 import type { Request } from 'express';
 import type { Multer } from 'multer';
 
@@ -10,13 +11,18 @@ function uniqueName(originalName: string): string {
   return `${ts}-${rand}${extname(name)}`;
 }
 
+function ensureDir(dir: string): string {
+  mkdirSync(dir, { recursive: true });
+  return dir;
+}
+
 export const photosStorage = () =>
   diskStorage({
     destination: (
       _req: Request,
       _file: Express.Multer.File,
       cb: (error: Error | null, destination: string) => void,
-    ) => cb(null, 'uploads/photos'),
+    ) => cb(null, ensureDir('uploads/photos')),
     filename: (
       _req: Request,
       file: Express.Multer.File,
@@ -30,7 +36,7 @@ export const logosStorage = () =>
       _req: Request,
       _file: Express.Multer.File,
       cb: (error: Error | null, destination: string) => void,
-    ) => cb(null, 'uploads/branding/logos'),
+    ) => cb(null, ensureDir('uploads/branding/logos')),
     filename: (
       _req: Request,
       file: Express.Multer.File,
@@ -44,10 +50,11 @@ export const backgroundsStorage = () =>
       _req: Request,
       _file: Express.Multer.File,
       cb: (error: Error | null, destination: string) => void,
-    ) => cb(null, 'uploads/branding/backgrounds'),
+    ) => cb(null, ensureDir('uploads/branding/backgrounds')),
     filename: (
       _req: Request,
       file: Express.Multer.File,
       cb: (error: Error | null, filename: string) => void,
     ) => cb(null, uniqueName(file.originalname)),
   });
+
