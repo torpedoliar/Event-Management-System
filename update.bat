@@ -19,7 +19,7 @@ cd /d "%ROOT%"
 echo [0/7] Menjalankan Pre-flight checks...
 
 if not exist "docker-compose.prod.yml" (
-    echo [ERROR] docker-compose.prod.yml tidak ditemukan!
+    echo [ERROR] docker-compose.prod.yml tidak ditemukan.
     echo         Script ini harus dijalankan di dalam root folder proyek.
     pause
     exit /b 1
@@ -28,7 +28,7 @@ if not exist "docker-compose.prod.yml" (
 :: Check Docker Engine
 docker info >nul 2>&1
 if !ERRORLEVEL! neq 0 (
-    echo [ERROR] Docker tidak berjalan atau tidak terinstall!
+    echo [ERROR] Docker tidak berjalan atau tidak terinstall.
     pause
     exit /b 1
 )
@@ -43,7 +43,7 @@ if !ERRORLEVEL! equ 0 (
     if !ERRORLEVEL! equ 0 (
         set DOCKER_COMPOSE_CMD=docker-compose
     ) else (
-        echo [ERROR] Docker Compose tidak ditemukan!
+        echo [ERROR] Docker Compose tidak ditemukan.
         pause
         exit /b 1
     )
@@ -51,7 +51,7 @@ if !ERRORLEVEL! equ 0 (
 
 :: Check Environment 
 if not exist ".env.production" (
-    echo [ERROR] File konfigurasi .env.production tidak ditemukan!
+    echo [ERROR] File konfigurasi .env.production tidak ditemukan.
     echo         Update gagal. Sistem belum pernah di-deploy dengan benar.
     pause
     exit /b 1
@@ -75,7 +75,7 @@ if !ERRORLEVEL! equ 0 (
     if exist "!BACKUP_FILE!" (
         echo      - File berhasil diamankan: !BACKUP_FILE!
     ) else (
-        echo      - [WARNING] Mekanisme backup SQL ke lokal gagal!
+        echo      - [WARNING] Mekanisme backup SQL ke lokal gagal.
         echo        Hal ini tidak biasa, melanjutkan operasi dengan resiko.
     )
 ) else (
@@ -89,9 +89,9 @@ echo.
 echo [2/7] Meminta kode terbaru dari Source Repository (GitHub)...
 git pull origin main
 if !ERRORLEVEL! neq 0 (
-    echo [ERROR] Git Pull gagal! 
+    echo [ERROR] Git Pull gagal.
     echo         Sistem mendeteksi adanya modifikasi lokal yang bertabrakan.
-    echo         Solusi: Coba jalankan perintah 'git stash' terlebih dahulu, 
+    echo         Solusi: Coba jalankan perintah 'git stash' terlebih dahulu,
     echo                 kemudian jalankan skrip ini lagi.
     pause
     exit /b 1
@@ -106,7 +106,7 @@ echo [3/7] Mendeteksi modifikasi database engine...
 git diff HEAD~1 --name-only 2>nul | findstr "prisma/schema.prisma" >nul
 if !ERRORLEVEL! equ 0 (
     echo      - Status: TERDETEKSI ada perubahan struktur Database.
-    echo        (Migrasi aman akan dilakukan otomatis di Step 7)
+    echo        Migrasi aman akan dilakukan otomatis di Step 7.
 ) else (
     echo      - Status: Struktur Database aman, tidak ada perubahan.
 )
@@ -128,8 +128,8 @@ echo [5/7] Melakukan Build Ulang Infrastruktur... (Ini memakan waktu sekitar 2-5
 echo      - Container di background MASIH TETAP MENYALA untuk meminimalkan downtime pengguna.
 !DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production build --no-cache
 if !ERRORLEVEL! neq 0 (
-    echo [ERROR] Proses Build / Kompilasi gagal!
-    echo         Update dibatalkan karena fatal error (misal: koneksi putus).
+    echo [ERROR] Proses Build / Kompilasi gagal.
+    echo         Update dibatalkan karena fatal error, misal koneksi putus.
     echo         Container Anda yang lama masih beroperasi dengan selamat.
     pause
     exit /b 1
@@ -157,7 +157,7 @@ if !RETRY! gtr 30 (
 timeout /t 2 /nobreak >nul
 docker exec guest-backend-prod node -e "const http = require('http'); http.get('http://127.0.0.1:4000/api/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))" >nul 2>&1
 if !ERRORLEVEL! neq 0 goto wait_backend
-echo      - Backend API Online! (Siap di percobaan ke-!RETRY!)
+echo      - Backend API Online. Siap di percobaan ke-!RETRY!.
 
 :backend_ready
 
@@ -195,7 +195,7 @@ docker ps -q -f name=guest-db-prod | findstr . >nul
 if !ERRORLEVEL! equ 0 (
     echo      - [OK] Database PostgreSQL: Berjalan
 ) else (
-    echo      - [FAIL] Database PostgreSQL: Mati!
+    echo      - [FAIL] Database PostgreSQL: Mati
     set ALL_OK=0
 )
 
@@ -203,7 +203,7 @@ docker ps -q -f name=guest-backend-prod | findstr . >nul
 if !ERRORLEVEL! equ 0 (
     echo      - [OK] Backend API NestJS: Berjalan
 ) else (
-    echo      - [FAIL] Backend API NestJS: Mati!
+    echo      - [FAIL] Backend API NestJS: Mati
     set ALL_OK=0
 )
 
@@ -211,7 +211,7 @@ docker ps -q -f name=guest-frontend-prod | findstr . >nul
 if !ERRORLEVEL! equ 0 (
     echo      - [OK] Frontend Next.js: Berjalan
 ) else (
-    echo      - [FAIL] Frontend Next.js: Mati!
+    echo      - [FAIL] Frontend Next.js: Mati
     set ALL_OK=0
 )
 
