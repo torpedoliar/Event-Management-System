@@ -251,18 +251,34 @@ echo      - PostgreSQL Online. (Respons di percobaan ke-!RETRY!)
 :: [6/9] Database Prisma Schema Syncing
 :: ==========================================
 echo.
-echo [6/9] Migrasi Skema Database ke versi 1.3...
+echo [6/9] Migrasi Skema Database ke versi terbaru...
 echo      - Menginjeksi Model Prisma...
-!DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production run --rm backend sh -c "npx prisma generate && npx prisma db push --accept-data-loss"
-echo      - Sinkronisasi struktur Database Selesai.
+
+:: Gunakan exec jika container backend sudah running, fallback ke run
+docker ps -q -f name=guest-backend-prod | findstr . >nul
+if !ERRORLEVEL! equ 0 (
+    !DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production exec -T backend sh -c "npx prisma generate && npx prisma db push --accept-data-loss"
+) else (
+    !DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production run --rm backend sh -c "npx prisma generate && npx prisma db push --accept-data-loss"
+)
+if !ERRORLEVEL! neq 0 (
+    echo      - [WARNING] Prisma sync gagal, akan dicoba otomatis saat container start.
+) else (
+    echo      - Sinkronisasi struktur Database Selesai.
+)
 
 :: ==========================================
-:: [7/9] Start REST API Backend Node
+:: [7/9] Start Backend & Frontend
 :: ==========================================
 echo.
-echo [7/9] Menghidupkan Node Backend API (NestJS)...
-!DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production up -d backend
+echo [7/9] Menghidupkan Backend API dan Frontend...
+echo      - Menjalankan semua service dengan --force-recreate...
+!DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production up -d --force-recreate
+echo      - Perintah up selesai. Menunggu semua container siap...
 
+:: Tunggu backend healthy
+echo.
+echo [7.5/9] Menunggu Backend API siap menerima koneksi...
 set RETRY=0
 :wait_backend
 set /a RETRY+=1
@@ -275,32 +291,32 @@ if !RETRY! gtr 45 (
         pause
         exit /b 1
     )
-    echo      - Container dinyatakan berjalan walau tanpa respon HTTP, Lanjut ke step 8...
-    goto start_frontend
+    echo      - Container dinyatakan berjalan walau tanpa respon HTTP, Lanjut...
+    goto check_frontend
 )
 docker exec guest-backend-prod node -e "const http = require('http'); http.get('http://127.0.0.1:4000/api/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))" >nul 2>&1
 if !ERRORLEVEL! neq 0 (
     timeout /t 2 /nobreak >nul
     goto wait_backend
 )
-echo      - Node Backend API Online. (Siap melayani traffic SSE)
+echo      - Node Backend API Online. (Siap melayani traffic di percobaan ke-!RETRY!)
 
 :: ==========================================
-:: [8/9] Start Frontend Node (React Server)
+:: [8/9] Verifikasi Frontend
 :: ==========================================
-:start_frontend
+:check_frontend
 echo.
-echo [8/9] Mengaktifkan UI Frontend React Server (Next.js)...
-!DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production up -d frontend
-
-timeout /t 5 /nobreak >nul
+echo [8/9] Memverifikasi UI Frontend (Next.js)...
+timeout /t 8 /nobreak >nul
 docker ps -q -f name=guest-frontend-prod | findstr . >nul
 if !ERRORLEVEL! neq 0 (
-    echo      - Status Container "Die". Sedang merestart paksa...
+    echo      - [WARNING] Frontend container belum running. Cek log:
+    echo        docker logs guest-frontend-prod
+    echo      - Mencoba restart paksa...
     docker start guest-frontend-prod >nul 2>&1
-    timeout /t 3 /nobreak >nul
+    timeout /t 5 /nobreak >nul
 )
-echo      - UI Web Server Online.
+echo      - UI Web Server: Aktif.
 
 :: ==========================================
 :: [9/9] Final Verification Output

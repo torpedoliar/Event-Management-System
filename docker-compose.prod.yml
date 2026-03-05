@@ -23,7 +23,7 @@ services:
       dockerfile: Dockerfile
     container_name: guest-backend-prod
     restart: unless-stopped
-    command: sh -c "npx prisma generate && npx prisma db push && node dist/prisma/seed.js && npm run start"
+    command: sh -c "npx prisma generate && npx prisma db push && (node dist/prisma/seed.js || true) && npm run start"
     depends_on:
       postgres:
         condition: service_healthy
@@ -61,7 +61,7 @@ services:
     restart: unless-stopped
     depends_on:
       backend:
-        condition: service_started
+        condition: service_healthy
     environment:
       NODE_ENV: production
       PORT: 3000
