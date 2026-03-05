@@ -112,25 +112,13 @@ if !ERRORLEVEL! equ 0 (
 )
 
 :: ==========================================
-:: [4/7] Membersihkan Image Docker Lama
+:: [4/7] Persiapan Rebuild
 :: ==========================================
 echo.
-echo [4/7] Membersihkan image Docker lama untuk memastikan rebuild bersih...
+echo [4/7] Membersihkan container lama yang berstatus exited...
+docker container prune -f >nul 2>&1
+echo      - Pembersihan container selesai.
 
-:: Dapatkan project name dari docker compose
-for /f "tokens=*" %%P in ('!DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml config --images 2^>nul') do (
-    echo      - Menghapus image cache: %%P
-    docker rmi "%%P" >nul 2>&1
-)
-
-:: Fallback: hapus berdasarkan pola nama umum
-docker rmi registrasitamu-frontend registrasitamu-backend >nul 2>&1
-docker rmi registrasi-tamu-frontend registrasi-tamu-backend >nul 2>&1
-docker rmi registrasi_tamu-frontend registrasi_tamu-backend >nul 2>&1
-
-:: Bersihkan dangling images
-docker image prune -f >nul 2>&1
-echo      - Pembersihan image lama selesai.
 
 :: ==========================================
 :: [5/7] Rebuild Infrastructure (Zero Downtime Check)

@@ -108,26 +108,12 @@ else
 fi
 
 # ==========================================
-# [4/7] Membersihkan Image Docker Lama
+# [4/7] Persiapan Rebuild
 # ==========================================
 echo ""
-echo -e "${YELLOW}[4/7] Membersihkan image Docker lama untuk memastikan rebuild bersih...${NC}"
-
-# Dapatkan image names dari compose dan hapus
-IMAGE_LIST=$($DOCKER_COMPOSE_CMD -f docker-compose.prod.yml config --images 2>/dev/null || true)
-for IMG in $IMAGE_LIST; do
-    echo "  - Menghapus image cache: $IMG"
-    docker rmi "$IMG" 2>/dev/null || true
-done
-
-# Fallback: hapus berdasarkan pola nama umum
-docker rmi registrasitamu-frontend registrasitamu-backend 2>/dev/null || true
-docker rmi registrasi-tamu-frontend registrasi-tamu-backend 2>/dev/null || true
-docker rmi registrasi_tamu-frontend registrasi_tamu-backend 2>/dev/null || true
-
-# Bersihkan dangling images
-docker image prune -f > /dev/null 2>&1 || true
-echo "  - Pembersihan image lama selesai."
+echo -e "${YELLOW}[4/7] Membersihkan container lama yang berstatus exited...${NC}"
+docker container prune -f > /dev/null 2>&1 || true
+echo "  - Pembersihan container selesai."
 
 # ==========================================
 # [5/7] Rebuild Infrastructure (Zero Downtime Check)
