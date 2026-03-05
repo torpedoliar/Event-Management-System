@@ -92,6 +92,9 @@ export class PublicController {
     res.setHeader('Connection', 'keep-alive');
     res.flushHeaders?.();
 
+    // Send 4KB of padding to bypass proxy/router buffering (e.g. NGINX default proxy_buffering)
+    res.write(':' + Array(4096).join(' ') + '\n\n');
+
     const send = (event: string, data: any) => {
       res.write(`event: ${event}\n`);
       res.write(`data: ${JSON.stringify(data)}\n\n`);
