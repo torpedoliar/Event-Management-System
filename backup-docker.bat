@@ -81,6 +81,7 @@ if exist "docker-compose.restore.yml" (
     copy "docker-compose.prod.yml" "%BACKUP_DIR%\docker-compose.prod.yml" >nul 2>&1
 )
 copy "generate-ssl.bat" "%BACKUP_DIR%\generate-ssl.bat" >nul 2>&1
+copy "renew-ssl.bat" "%BACKUP_DIR%\renew-ssl.bat" >nul 2>&1
 xcopy "certs" "%BACKUP_DIR%\certs\" /E /I /Q >nul 2>&1
 echo       [OK] Configuration files saved
 

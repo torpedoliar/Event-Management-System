@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, Res, Headers } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Res, Headers, UnauthorizedException } from '@nestjs/common';
 import { GuestsService } from '../guests/guests.service';
 import { Response } from 'express';
 import { onEvent, emitEvent } from '../common/sse';
@@ -71,7 +71,7 @@ export class PublicController {
   ) {
     const user = this.extractUserFromToken(authHeader);
     if (!user.id) {
-      throw new Error('Login diperlukan untuk membuat tamu baru');
+      throw new UnauthorizedException('Login diperlukan untuk membuat tamu baru');
     }
     const newGuest = await this.guests.createAndCheckIn(guestIdOrName, user.id, user.name);
     emitEvent({ type: 'checkin', data: newGuest });
@@ -111,6 +111,7 @@ export class PublicController {
       if (ev.type === 'souvenir_given') send('souvenir_given', ev.data);
       if (ev.type === 'souvenir_removed') send('souvenir_removed', ev.data);
       if (ev.type === 'souvenir_reset') send('souvenir_reset', ev.data);
+      if (ev.type === 'event_change') send('event_change', ev.data);
     });
 
     const heartbeat = setInterval(() => {

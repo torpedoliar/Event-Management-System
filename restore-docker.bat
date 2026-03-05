@@ -1,16 +1,15 @@
 @echo off
 setlocal enabledelayedexpansion
-chcp 65001 >nul
 title Docker Restore - Guest Registry
 
 echo.
-echo ╔══════════════════════════════════════════════════════════════╗
-echo ║          DOCKER RESTORE - GUEST REGISTRY v1.0                ║
-echo ║     Restore images, database, uploads, dan konfigurasi       ║
-echo ╚══════════════════════════════════════════════════════════════╝
+echo ================================================================
+echo           DOCKER RESTORE - GUEST REGISTRY v1.0
+echo     Restore images, database, uploads, dan konfigurasi
+echo ================================================================
 echo.
 
-:: Check Docker
+REM Check Docker
 docker --version >nul 2>&1
 if %errorlevel% neq 0 (
     echo [ERROR] Docker tidak ditemukan. Install Docker terlebih dahulu.
@@ -18,7 +17,7 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-:: Check required files
+REM Check required files
 echo [0/7] Memeriksa file backup...
 set MISSING=0
 
@@ -56,10 +55,10 @@ if %MISSING%==1 (
 echo       [OK] Semua file backup tersedia
 echo.
 
-:: Confirm restore
-echo ══════════════════════════════════════════════════════════════
+REM Confirm restore
+echo ================================================================
 echo PERINGATAN: Proses ini akan mengganti data yang ada!
-echo ══════════════════════════════════════════════════════════════
+echo ================================================================
 echo.
 set /p CONFIRM="Lanjutkan restore? (y/n): "
 if /i not "%CONFIRM%"=="y" (
@@ -69,7 +68,7 @@ if /i not "%CONFIRM%"=="y" (
 )
 echo.
 
-:: Load Docker Images
+REM Load Docker Images
 echo [1/7] Loading Docker images...
 echo       - Backend image...
 docker load -i backend-image.tar
@@ -91,7 +90,7 @@ if %errorlevel% neq 0 (
 echo       [OK] Images loaded
 echo.
 
-:: Copy configuration to parent directory
+REM Copy configuration to parent directory
 echo [2/7] Menyalin konfigurasi...
 copy ".env.production" "..\" >nul 2>&1
 copy "docker-compose.prod.yml" "..\" >nul 2>&1
@@ -104,10 +103,10 @@ if exist "generate-ssl.bat" (
 echo       [OK] Configuration copied to parent directory
 echo.
 
-:: Change to parent directory
+REM Change to parent directory
 cd ..
 
-:: Check if SSL certs exist, if not generate them
+REM Check if SSL certs exist, if not generate them
 if not exist "certs\server.key" (
     echo [2.5/7] Generating SSL certificates...
     if exist "generate-ssl.bat" (
@@ -118,19 +117,19 @@ if not exist "certs\server.key" (
     )
 )
 
-:: Stop existing containers if any
+REM Stop existing containers if any
 echo [3/7] Menghentikan container lama (jika ada)...
 docker-compose -f docker-compose.prod.yml --env-file .env.production down 2>nul
 echo       [OK] Containers stopped
 echo.
 
-:: Start database
+REM Start database
 echo [4/7] Starting database container...
 docker-compose -f docker-compose.prod.yml --env-file .env.production up -d postgres
 echo       Menunggu database ready (15 detik)...
 timeout /t 15 /nobreak >nul
 
-:: Check database health
+REM Check database health
 docker exec guest-db-prod pg_isready -U postgres >nul 2>&1
 if %errorlevel% neq 0 (
     echo       Menunggu tambahan 10 detik...
@@ -139,7 +138,7 @@ if %errorlevel% neq 0 (
 echo       [OK] Database ready
 echo.
 
-:: Restore database
+REM Restore database
 echo [5/7] Restore database...
 cd "%~dp0"
 docker exec -i guest-db-prod psql -U postgres -d guest_registry < database.sql
@@ -151,13 +150,13 @@ if %errorlevel% neq 0 (
 cd ..
 echo.
 
-:: Start backend
+REM Start backend
 echo [6/7] Starting backend container...
 docker-compose -f docker-compose.prod.yml --env-file .env.production up -d backend
 echo       Menunggu backend ready (20 detik)...
 timeout /t 20 /nobreak >nul
 
-:: Restore uploads
+REM Restore uploads
 cd "%~dp0"
 if exist "uploads" (
     echo       Restoring uploads...
@@ -167,29 +166,19 @@ if exist "uploads" (
 cd ..
 echo.
 
-:: Start frontend
+REM Start frontend
 echo [7/7] Starting frontend container...
 docker-compose -f docker-compose.prod.yml --env-file .env.production up -d frontend
 timeout /t 5 /nobreak >nul
 echo       [OK] Frontend started
 echo.
 
-:: Show final status
-echo ══════════════════════════════════════════════════════════════
+REM Show final status
+echo ================================================================
 echo                    RESTORE SELESAI!
-echo ══════════════════════════════════════════════════════════════
+echo ================================================================
 echo.
 docker ps --filter "name=guest" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 echo.
-
-:: Get IP address
-for /f "tokens=2 delims=:" %%a in ('ipconfig ^| findstr /c:"IPv4"') do (
-    for /f "tokens=1" %%b in ("%%a") do (
-        echo Akses aplikasi di: https://%%b:8443
-        goto :showdone
-    )
-)
-:showdone
-echo.
-echo ══════════════════════════════════════════════════════════════
+echo ================================================================
 pause

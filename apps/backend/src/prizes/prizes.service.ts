@@ -16,7 +16,7 @@ export class PrizesService {
         const prizes = await this.prisma.prize.findMany({
             where: { eventId: eid },
             orderBy: { createdAt: 'asc' },
-            include: { 
+            include: {
                 prizeWinners: {
                     include: { guest: true },
                     orderBy: { wonAt: 'asc' }
@@ -30,9 +30,9 @@ export class PrizesService {
         }));
     }
 
-    async create(data: { 
-        name: string; 
-        quantity: number; 
+    async create(data: {
+        name: string;
+        quantity: number;
         description?: string;
         category?: string;
         allowMultipleWins?: boolean;
@@ -51,9 +51,9 @@ export class PrizesService {
         });
     }
 
-    async update(id: string, data: { 
-        name?: string; 
-        quantity?: number; 
+    async update(id: string, data: {
+        name?: string;
+        quantity?: number;
         description?: string;
         category?: string;
         allowMultipleWins?: boolean;
@@ -69,11 +69,11 @@ export class PrizesService {
     }
 
     async drawWinner(prizeId: string) {
-        const prize = await this.prisma.prize.findUnique({ 
-            where: { id: prizeId }, 
-            include: { 
+        const prize = await this.prisma.prize.findUnique({
+            where: { id: prizeId },
+            include: {
                 prizeWinners: { include: { guest: true } }
-            } 
+            }
         });
         if (!prize) throw new BadRequestException('Prize not found');
 
@@ -88,7 +88,7 @@ export class PrizesService {
         const currentWinnerGuestIds = prize.prizeWinners.map(pw => pw.guestId);
 
         let eligible;
-        
+
         if (prize.allowMultipleWins) {
             // Allow guests who already won OTHER prizes to win this prize
             // But exclude guests who already won THIS specific prize
@@ -96,7 +96,7 @@ export class PrizesService {
                 where: {
                     eventId: active.id,
                     checkedIn: true,
-                    id: { notIn: currentWinnerGuestIds.length > 0 ? currentWinnerGuestIds : undefined }
+                    ...(currentWinnerGuestIds.length > 0 ? { id: { notIn: currentWinnerGuestIds } } : {})
                 }
             });
         } else {
@@ -112,7 +112,7 @@ export class PrizesService {
 
         if (eligible.length === 0) {
             throw new BadRequestException(
-                prize.allowMultipleWins 
+                prize.allowMultipleWins
                     ? 'Semua tamu yang hadir sudah memenangkan hadiah ini'
                     : 'Tidak ada tamu yang memenuhi syarat (semua sudah pernah menang)'
             );

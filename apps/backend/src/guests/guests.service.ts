@@ -621,6 +621,17 @@ export class GuestsService {
         checkedInAt: now,
         checkedInById: adminId || null,
         checkedInByName: adminName || null,
+        checkinCount: 1,
+      }
+    });
+
+    // Create check-in record for data consistency with normal check-in flow
+    await this.prisma.guestCheckin.create({
+      data: {
+        guestId: created.id,
+        checkinById: adminId || null,
+        checkinByName: adminName || null,
+        checkinAt: now,
       }
     });
 
@@ -654,8 +665,10 @@ export class GuestsService {
       data.checkedIn = updateData.checkedIn;
       if (updateData.checkedIn) {
         data.checkedInAt = new Date();
+        data.checkinCount = 1;
       } else {
         data.checkedInAt = null;
+        data.checkinCount = 0;
       }
     }
     if (updateData.souvenirTaken !== undefined) data.souvenirTaken = updateData.souvenirTaken;

@@ -132,8 +132,8 @@ export class SouvenirsService {
             // Auto check-in for souvenir-only guests
             await this.prisma.guest.update({
                 where: { id: guestId },
-                data: { 
-                    checkedIn: true, 
+                data: {
+                    checkedIn: true,
                     checkedInAt: new Date(),
                     checkedInById: takenById,
                     checkedInByName: takenByName,
@@ -222,10 +222,29 @@ export class SouvenirsService {
     }
 
     async reset(souvenirId: string) {
+        // Get affected guest IDs before deleting
+        const affectedTakes = await this.prisma.souvenirTake.findMany({
+            where: { souvenirId },
+            select: { guestId: true }
+        });
+        const affectedGuestIds = [...new Set(affectedTakes.map(t => t.guestId))];
+
         // Remove all takes for this souvenir
         await this.prisma.souvenirTake.deleteMany({
             where: { souvenirId }
         });
+
+        // Update souvenirTaken flag for affected guests who have no remaining takes
+        for (const gid of affectedGuestIds) {
+            const remainingTakes = await this.prisma.souvenirTake.count({ where: { guestId: gid } });
+            if (remainingTakes === 0) {
+                await this.prisma.guest.update({
+                    where: { id: gid },
+                    data: { souvenirTaken: false }
+                });
+            }
+        }
+
         return { success: true };
     }
 
@@ -332,7 +351,7 @@ export class SouvenirsService {
 
         // Determine if input is guest ID or name
         const isLikelyId = /^[A-Z0-9\-_]+$/i.test(guestIdOrName.trim()) && guestIdOrName.length <= 50;
-        
+
         // Create the guest with the input as both ID and name, or just name
         const guestId = isLikelyId ? guestIdOrName.trim() : `GUEST-${Date.now()}`;
         const guestName = guestIdOrName.trim();
@@ -352,11 +371,23 @@ export class SouvenirsService {
                 tableLocation: '-',
                 queueNumber: nextQueue,
                 eventId: active.id,
+                registrationSource: 'WALKIN',
                 checkedIn: true,
                 checkedInAt: new Date(),
                 checkedInById: takenById,
                 checkedInByName: takenByName,
+                checkinCount: 1,
                 souvenirTaken: true
+            }
+        });
+
+        // Create check-in record for data consistency
+        await this.prisma.guestCheckin.create({
+            data: {
+                guestId: guest.id,
+                checkinById: takenById || null,
+                checkinByName: takenByName || null,
+                counterName: 'Souvenir Counter',
             }
         });
 

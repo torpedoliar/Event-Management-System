@@ -70,13 +70,23 @@ export default function ShowPage() {
         setSelected(g);
       } catch { }
     };
+    const onEventChange = () => {
+      // Reload config when active event changes
+      fetch(`${apiBase()}/config/event`).then(async (r) => {
+        const data = await r.json();
+        setCfg(data);
+      }).catch(() => { });
+      setSelected(null);
+    };
     addEventListener('config', onConfig);
     addEventListener('preview', onPreview);
     addEventListener('checkin', onCheckin);
+    addEventListener('event_change', onEventChange);
     return () => {
       removeEventListener('config', onConfig);
       removeEventListener('preview', onPreview);
       removeEventListener('checkin', onCheckin);
+      removeEventListener('event_change', onEventChange);
     };
   }, []);
 
@@ -191,12 +201,12 @@ export default function ShowPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8">
           {/* Backdrop with blur */}
           <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={() => setSelected(null)} />
-          
+
           {/* Card */}
           <div className="relative w-full max-w-6xl popup-success">
             {/* Glow effect */}
             <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 via-blue-500 to-purple-500 rounded-3xl blur-lg opacity-50" />
-            
+
             <div className="relative overflow-hidden rounded-2xl md:rounded-3xl border border-white/20 bg-slate-900/95 text-white shadow-2xl grid grid-cols-1 md:grid-cols-[380px_1fr]">
               {/* Photo Section */}
               <div className="relative bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center min-h-[280px] md:min-h-full overflow-hidden">
@@ -213,7 +223,7 @@ export default function ShowPage() {
                     <span className="text-lg">No Photo</span>
                   </div>
                 )}
-                
+
                 {/* Queue Badge */}
                 <div className="absolute top-4 left-4 md:bottom-4 md:top-auto">
                   <div className="px-4 py-2 rounded-xl bg-white/20 backdrop-blur-md border border-white/30">

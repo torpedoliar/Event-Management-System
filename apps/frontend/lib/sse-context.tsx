@@ -16,7 +16,8 @@ const EVENT_TYPES = [
     'checkin', 'uncheckin', 'config', 'preview',
     'prize_draw', 'prize_reset', 'prize_collected', 'prize_uncollected',
     'guest-update', 'guest_created_souvenir',
-    'souvenir_given', 'souvenir_removed', 'souvenir_reset'
+    'souvenir_given', 'souvenir_removed', 'souvenir_reset',
+    'event_change'
 ] as const;
 
 export function SSEProvider({ children }: { children: ReactNode }) {
@@ -28,7 +29,7 @@ export function SSEProvider({ children }: { children: ReactNode }) {
 
     const connect = useCallback(() => {
         if (typeof window === 'undefined') return;
-        
+
         // Close existing connection
         if (esRef.current) {
             esRef.current.close();
@@ -47,11 +48,11 @@ export function SSEProvider({ children }: { children: ReactNode }) {
             console.log('[SSE] Disconnected/Error');
             setConnected(false);
             es.close();
-            
+
             // Exponential backoff: 1s, 2s, 4s, 8s, max 30s
             const delay = Math.min(1000 * Math.pow(2, reconnectAttempts.current), 30000);
             reconnectAttempts.current++;
-            
+
             retryTimeoutRef.current = setTimeout(connect, delay);
         };
 
