@@ -10,7 +10,7 @@ services:
     volumes:
       - postgres_data_prod:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -23,7 +23,7 @@ services:
       dockerfile: Dockerfile
     container_name: guest-backend-prod
     restart: unless-stopped
-    command: sh -c "npx prisma generate && npm run seed && npm run start"
+    command: sh -c "npx prisma generate && npx prisma db push && node dist/prisma/seed.js && npm run start"
     depends_on:
       postgres:
         condition: service_healthy
@@ -45,7 +45,7 @@ services:
     networks:
       - guest-network-prod
     healthcheck:
-      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:4000/api/health || exit 1"]
+      test: [ "CMD-SHELL", "node -e \"const http = require('http'); http.get('http://127.0.0.1:4000/api/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))\" || exit 1" ]
       interval: 15s
       timeout: 10s
       retries: 10
@@ -82,6 +82,7 @@ services:
 volumes:
   postgres_data_prod:
   backend_uploads:
+
 
 networks:
   guest-network-prod:
