@@ -77,6 +77,7 @@ export default function SouvenirPage() {
     const [checkedGuest, setCheckedGuest] = useState<Guest | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [history, setHistory] = useState<Guest[]>([]); // Local history of souvenir takes
+    const popupTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     // Prize collection states
     const [prizeWins, setPrizeWins] = useState<PrizeWin[]>([]);
@@ -137,7 +138,7 @@ export default function SouvenirPage() {
             fetch(`${apiBase()}/config/event`).then(async (r) => {
                 const data = await r.json();
                 setCfg(data);
-            }).catch(() => {});
+            }).catch(() => { });
             loadSouvenirs();
             setResults([]);
             setSelected(null);
@@ -273,8 +274,12 @@ export default function SouvenirPage() {
             addToHistory({ ...newGuest, souvenirTaken: true });
             setQ('');
 
+            if (popupTimeoutRef.current) clearTimeout(popupTimeoutRef.current);
             const ms = cfg?.checkinPopupTimeoutMs ?? 3000;
-            setTimeout(() => setCheckedGuest(null), ms);
+            popupTimeoutRef.current = setTimeout(() => {
+                setCheckedGuest(null);
+                popupTimeoutRef.current = null;
+            }, ms);
 
             loadSouvenirs();
             setTimeout(() => inputRef.current?.focus(), 100);
@@ -289,6 +294,7 @@ export default function SouvenirPage() {
         setError(null);
         setSelected(null);
         setCheckedGuest(null);
+        setAlreadyTakenInfo(null);
         setPrizeWins([]);
         const params = new URLSearchParams();
         if (!q.trim()) return;
@@ -311,16 +317,15 @@ export default function SouvenirPage() {
                 if (data.length === 1) {
                     const guest = data[0];
                     setSelected(guest);
-                    
+
                     // Load prize wins first to check if guest has uncollected prizes
                     const prizeData = await loadGuestPrizesAndReturn(guest.id);
                     const hasUncollectedPrizes = prizeData && prizeData.some((pw: any) => !pw.collection);
-                    
+
                     // Only auto-give souvenir if:
                     // 1. selectedSouvenir is set
-                    // 2. guest hasn't taken souvenir yet
-                    // 3. guest has NO uncollected prizes (if has prizes, let them choose first)
-                    if (selectedSouvenir && !guest.souvenirTaken && !hasUncollectedPrizes) {
+                    // 2. guest has NO uncollected prizes (if has prizes, let them choose first)
+                    if (selectedSouvenir && !hasUncollectedPrizes) {
                         await giveSouvenir(guest, selectedSouvenir);
                         setQ('');
                         setTimeout(() => inputRef.current?.focus(), 100);
@@ -425,8 +430,12 @@ export default function SouvenirPage() {
             setCheckedGuest({ ...g, souvenirTaken: true });
             addToHistory({ ...g, souvenirTaken: true });
 
+            if (popupTimeoutRef.current) clearTimeout(popupTimeoutRef.current);
             const ms = cfg?.checkinPopupTimeoutMs ?? 3000;
-            setTimeout(() => setCheckedGuest(null), ms);
+            popupTimeoutRef.current = setTimeout(() => {
+                setCheckedGuest(null);
+                popupTimeoutRef.current = null;
+            }, ms);
 
             // Reload souvenirs to update stock
             loadSouvenirs();
@@ -476,8 +485,12 @@ export default function SouvenirPage() {
                 setCheckedGuest(updated);
                 addToHistory(updated);
 
+                if (popupTimeoutRef.current) clearTimeout(popupTimeoutRef.current);
                 const ms = cfg?.checkinPopupTimeoutMs ?? 3000;
-                setTimeout(() => setCheckedGuest(null), ms);
+                popupTimeoutRef.current = setTimeout(() => {
+                    setCheckedGuest(null);
+                    popupTimeoutRef.current = null;
+                }, ms);
             }
         } catch (e: any) {
             setError(e.message || 'Gagal memproses souvenir');
@@ -507,6 +520,8 @@ export default function SouvenirPage() {
         setSearching(true);
         setPrizeWins([]);
         setError(null);
+        setCheckedGuest(null);
+        setAlreadyTakenInfo(null);
         try {
             // 1. Try search by ID/GuestID
             const params = new URLSearchParams();
@@ -519,13 +534,13 @@ export default function SouvenirPage() {
                 const guest = data[0] as Guest;
                 setResults([guest]);
                 setSelected(guest);
-                
+
                 // Load prize wins first to check if guest has uncollected prizes
                 const prizeData = await loadGuestPrizesAndReturn(guest.id);
                 const hasUncollectedPrizes = prizeData && prizeData.some((pw: any) => !pw.collection);
-                
+
                 // Only auto-give souvenir if guest has NO uncollected prizes
-                if (selectedSouvenir && !guest.souvenirTaken && !hasUncollectedPrizes) {
+                if (selectedSouvenir && !hasUncollectedPrizes) {
                     await giveSouvenir(guest, selectedSouvenir);
                     setQ('');
                     setTimeout(() => inputRef.current?.focus(), 100);
@@ -615,7 +630,7 @@ export default function SouvenirPage() {
                             )}
                         </div>
                     )}
-                    
+
                     <input
                         ref={inputRef}
                         value={q}
@@ -834,8 +849,8 @@ export default function SouvenirPage() {
             {selected && prizeWins.length > 0 && (
                 <div className="relative z-10 px-6 pb-6 flex justify-center">
                     <div className="w-full max-w-5xl rounded-xl border border-amber-500/30 bg-amber-900/30 p-4 text-white shadow-glass backdrop-blur-sm">
-                        <div 
-                            className="flex items-center justify-between cursor-pointer" 
+                        <div
+                            className="flex items-center justify-between cursor-pointer"
                             onClick={() => setShowPrizes(!showPrizes)}
                         >
                             <div className="font-semibold flex items-center gap-2 text-amber-300">
@@ -846,7 +861,7 @@ export default function SouvenirPage() {
                                 {showPrizes ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                             </button>
                         </div>
-                        
+
                         {showPrizes && (
                             <div className="mt-4 space-y-3">
                                 {/* Uncollected Prizes */}
@@ -883,7 +898,7 @@ export default function SouvenirPage() {
                                         ))}
                                     </div>
                                 )}
-                                
+
                                 {/* Collected Prizes */}
                                 {collectedPrizes.length > 0 && (
                                     <div className="space-y-2">
@@ -985,11 +1000,10 @@ export default function SouvenirPage() {
                                 souvenirs.filter(s => s.remaining > 0).map((s) => (
                                     <div
                                         key={s.id}
-                                        className={`flex items-center justify-between rounded-lg border p-4 cursor-pointer transition-colors ${
-                                            selectedSouvenir === s.id
+                                        className={`flex items-center justify-between rounded-lg border p-4 cursor-pointer transition-colors ${selectedSouvenir === s.id
                                                 ? 'border-purple-500 bg-purple-500/20'
                                                 : 'border-white/20 bg-white/5 hover:bg-white/10'
-                                        }`}
+                                            }`}
                                         onClick={() => setSelectedSouvenir(s.id)}
                                     >
                                         <div>
@@ -1001,11 +1015,10 @@ export default function SouvenirPage() {
                                                 Sisa: {s.remaining} / {s.quantity}
                                             </div>
                                         </div>
-                                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                                            selectedSouvenir === s.id
+                                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedSouvenir === s.id
                                                 ? 'border-purple-400 bg-purple-400'
                                                 : 'border-white/30'
-                                        }`}>
+                                            }`}>
                                             {selectedSouvenir === s.id && (
                                                 <CheckCircle size={14} className="text-white" />
                                             )}
