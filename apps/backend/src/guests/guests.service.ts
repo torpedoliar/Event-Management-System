@@ -514,8 +514,16 @@ export class GuestsService {
 
     // If exact match is enforced (e.g. from a QR Scanner), skip fuzzy search
     if (exactMatchOnly && qId) {
+      // Allow exact match on internal UUID or guestId (case-insensitive)
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(qId);
       const exacts = await this.prisma.guest.findMany({
-        where: { eventId, guestId: qId },
+        where: {
+          eventId,
+          OR: [
+            { guestId: { equals: qId, mode: 'insensitive' } },
+            ...(isUuid ? [{ id: qId }] : [])
+          ]
+        },
         orderBy: [{ queueNumber: 'asc' }]
       });
       return exacts;
@@ -528,7 +536,7 @@ export class GuestsService {
       if (qId) or.push({ guestId: { contains: qId, mode: 'insensitive' } });
       if (qName) or.push({ name: { contains: qName, mode: 'insensitive' } });
       const where: Prisma.GuestWhereInput = { eventId, ...(or.length ? { OR: or } : {}) };
-      return this.prisma.guest.findMany({ where, orderBy: [{ queueNumber: 'asc' }], take: 20 });
+      return this.prisma.guest.findMany({ where, orderBy: [{ queueNumber: 'asc' }] });
     }
 
     // Original behavior: prioritize exact ID match
@@ -542,7 +550,7 @@ export class GuestsService {
     if (qId) or.push({ guestId: { contains: qId, mode: 'insensitive' } });
     if (qName) or.push({ name: { contains: qName, mode: 'insensitive' } });
     const where: Prisma.GuestWhereInput = { eventId, ...(or.length ? { OR: or } : {}) };
-    return this.prisma.guest.findMany({ where, orderBy: [{ queueNumber: 'asc' }], take: 20 });
+    return this.prisma.guest.findMany({ where, orderBy: [{ queueNumber: 'asc' }] });
   }
 
   async checkInByGuestId(guestId: string, adminId?: string, adminName?: string) {
