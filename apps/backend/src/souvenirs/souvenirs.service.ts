@@ -357,11 +357,12 @@ export class SouvenirsService {
         const guestName = guestIdOrName.trim();
 
         // Get max queue number
-        const maxQueue = await this.prisma.guest.aggregate({
-            _max: { queueNumber: true },
-            where: { eventId: active.id }
+        const lastGuest = await this.prisma.guest.findFirst({
+            where: { eventId: active.id },
+            orderBy: { queueNumber: 'desc' },
+            select: { queueNumber: true }
         });
-        const nextQueue = (maxQueue._max.queueNumber || 0) + 1;
+        const nextQueue = (lastGuest?.queueNumber || 0) + 1;
 
         // Create guest
         const guest = await this.prisma.guest.create({

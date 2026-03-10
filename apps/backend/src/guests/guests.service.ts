@@ -237,12 +237,12 @@ export class GuestsService {
   }
 
   async nextQueueNumber(eventId: string): Promise<number> {
-    const max = await this.prisma.guest.aggregate({
+    const lastGuest = await this.prisma.guest.findFirst({
       where: { eventId },
-      _max: { queueNumber: true },
+      orderBy: { queueNumber: 'desc' },
+      select: { queueNumber: true }
     });
-    const current = max._max.queueNumber ?? 0;
-    return current + 1;
+    return (lastGuest?.queueNumber ?? 0) + 1;
   }
 
   async bulkCreate(guests: Omit<Prisma.GuestCreateManyInput, 'queueNumber' | 'eventId'>[], eventId: string) {
@@ -501,15 +501,25 @@ export class GuestsService {
     return { total, checkedIn, notCheckedIn: total - checkedIn };
   }
 
-  async publicSearch(params: { guestId?: string; name?: string }) {
+  async publicSearch(params: { guestId?: string; name?: string; exact?: boolean }) {
     const eventId = await this.getActiveEventId();
     if (!eventId) return [];
     const qId = params.guestId?.trim();
     const qName = params.name?.trim();
+    const exactMatchOnly = params.exact === true;
 
     // Check if duplicate guest IDs are allowed
     const event = await this.prisma.event.findUnique({ where: { id: eventId } });
     const allowDuplicates = event?.allowDuplicateGuestId ?? false;
+
+    // If exact match is enforced (e.g. from a QR Scanner), skip fuzzy search
+    if (exactMatchOnly && qId) {
+      const exacts = await this.prisma.guest.findMany({
+        where: { eventId, guestId: qId },
+        orderBy: [{ queueNumber: 'asc' }]
+      });
+      return exacts;
+    }
 
     // If duplicates allowed, always return all matches for selection
     if (allowDuplicates) {
@@ -518,7 +528,7 @@ export class GuestsService {
       if (qId) or.push({ guestId: { contains: qId, mode: 'insensitive' } });
       if (qName) or.push({ name: { contains: qName, mode: 'insensitive' } });
       const where: Prisma.GuestWhereInput = { eventId, ...(or.length ? { OR: or } : {}) };
-      return this.prisma.guest.findMany({ where, orderBy: [{ queueNumber: 'asc' }] });
+      return this.prisma.guest.findMany({ where, orderBy: [{ queueNumber: 'asc' }], take: 20 });
     }
 
     // Original behavior: prioritize exact ID match
@@ -532,7 +542,7 @@ export class GuestsService {
     if (qId) or.push({ guestId: { contains: qId, mode: 'insensitive' } });
     if (qName) or.push({ name: { contains: qName, mode: 'insensitive' } });
     const where: Prisma.GuestWhereInput = { eventId, ...(or.length ? { OR: or } : {}) };
-    return this.prisma.guest.findMany({ where, orderBy: [{ queueNumber: 'asc' }] });
+    return this.prisma.guest.findMany({ where, orderBy: [{ queueNumber: 'asc' }], take: 20 });
   }
 
   async checkInByGuestId(guestId: string, adminId?: string, adminName?: string) {

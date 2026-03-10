@@ -7,6 +7,10 @@ export class QueryGuestsDto {
   q?: string;
 
   @IsOptional()
+  @Type(() => Boolean)
+  exact?: boolean;
+
+  @IsOptional()
   @IsString()
   guestId?: string;
 

@@ -528,6 +528,7 @@ export default function SouvenirPage() {
             const params = new URLSearchParams();
             params.set('guestId', decodedText);
             params.set('name', decodedText);
+            params.set('exact', 'true'); // Flag to skip fuzzy fallback on backend
             const res = await fetch(`${apiBase()}/public/guests/search?${params.toString()}`);
             const data = await res.json();
 
