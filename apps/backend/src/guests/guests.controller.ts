@@ -904,6 +904,7 @@ export class GuestsController {
     let created = 0;
     let skipped = 0;
     const skippedDetails: Array<{ guestId: string; name: string; reason: string }> = [];
+    const guestsToInsert: any[] = [];
 
     for (const row of parsedRows) {
       // Check if duplicate (skip check if allowDuplicateGuestId is enabled)
@@ -920,35 +921,33 @@ export class GuestsController {
         continue;
       }
 
-      try {
-        // Map category string to enum
-        let categoryEnum: GuestCategory = GuestCategory.REGULAR;
-        if (row.category) {
-          const upperCat = row.category.toUpperCase();
-          if (Object.values(GuestCategory).includes(upperCat as GuestCategory)) {
-            categoryEnum = upperCat as GuestCategory;
-          }
+      // Map category string to enum
+      let categoryEnum: GuestCategory = GuestCategory.REGULAR;
+      if (row.category) {
+        const upperCat = row.category.toUpperCase();
+        if (Object.values(GuestCategory).includes(upperCat as GuestCategory)) {
+          categoryEnum = upperCat as GuestCategory;
         }
+      }
 
-        await this.guests.create({
-          guestId: row.guestId,
-          name: row.name,
-          tableLocation: row.tableLocation,
-          email: row.email,
-          company: row.company,
-          department: row.department,
-          division: row.division,
-          notes: row.notes,
-          category: categoryEnum,
-        }, undefined, allowDuplicateGuestId, 'IMPORT');
-        created++;
-      } catch {
-        skipped++;
-        skippedDetails.push({
-          guestId: row.guestId,
-          name: row.name,
-          reason: 'Error saat menyimpan',
-        });
+      guestsToInsert.push({
+        guestId: row.guestId,
+        name: row.name,
+        tableLocation: row.tableLocation,
+        email: row.email,
+        company: row.company,
+        department: row.department,
+        division: row.division,
+        notes: row.notes,
+        category: categoryEnum,
+      });
+    }
+
+    if (guestsToInsert.length > 0) {
+      try {
+        created = await this.guests.bulkCreate(guestsToInsert, activeEvent.id);
+      } catch (err: any) {
+        throw new Error(`Gagal menyimpan data tamu bulk: ${err.message}`);
       }
     }
 

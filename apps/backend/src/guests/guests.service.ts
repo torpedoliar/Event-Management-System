@@ -59,13 +59,13 @@ export class GuestsService {
   async list(query: QueryGuestsDto) {
     const page = query.page ?? 1;
     const pageSize = query.pageSize ?? 10;
-    
+
     // Auto-filter by active event if no eventId provided
     if (!query.eventId) {
       const activeEventId = await this.getActiveEventId();
       if (activeEventId) query.eventId = activeEventId;
     }
-    
+
     const where = this.buildWhere(query);
 
     const [total, data] = await this.prisma.$transaction([
@@ -75,12 +75,12 @@ export class GuestsService {
         orderBy: [{ queueNumber: 'asc' }, { createdAt: 'asc' }],
         skip: (page - 1) * pageSize,
         take: pageSize,
-        include: { 
-          prizeWins: { 
-            include: { 
+        include: {
+          prizeWins: {
+            include: {
               prize: true,
-              collection: true 
-            } 
+              collection: true
+            }
           },
           souvenirTakes: {
             include: { souvenir: true }
@@ -98,13 +98,13 @@ export class GuestsService {
   async listWithFullRelations(query: QueryGuestsDto) {
     const page = query.page ?? 1;
     const pageSize = query.pageSize ?? 10;
-    
+
     // Auto-filter by active event if no eventId provided
     if (!query.eventId) {
       const activeEventId = await this.getActiveEventId();
       if (activeEventId) query.eventId = activeEventId;
     }
-    
+
     const where = this.buildWhere(query);
 
     const [total, data] = await this.prisma.$transaction([
@@ -114,12 +114,12 @@ export class GuestsService {
         orderBy: [{ queueNumber: 'asc' }, { createdAt: 'asc' }],
         skip: (page - 1) * pageSize,
         take: pageSize,
-        include: { 
-          prizeWins: { 
-            include: { 
+        include: {
+          prizeWins: {
+            include: {
               prize: true,
               collection: true
-            } 
+            }
           },
           souvenirTakes: {
             include: { souvenir: true }
@@ -140,13 +140,13 @@ export class GuestsService {
     const cursor = query.cursor;
     const sortBy = query.sortBy ?? 'queueNumber';
     const sortOrder = query.sortOrder ?? 'asc';
-    
+
     // Auto-filter by active event if no eventId provided
     if (!query.eventId) {
       const activeEventId = await this.getActiveEventId();
       if (activeEventId) query.eventId = activeEventId;
     }
-    
+
     const where = this.buildWhere(query);
 
     // Build orderBy dynamically
@@ -245,6 +245,37 @@ export class GuestsService {
     return current + 1;
   }
 
+  async bulkCreate(guests: Omit<Prisma.GuestCreateManyInput, 'queueNumber' | 'eventId'>[], eventId: string) {
+    if (!guests.length) return 0;
+
+    // Get the sequence starting point once
+    let currentQueue = await this.nextQueueNumber(eventId);
+
+    // Assign queue numbers in-memory
+    const dataToInsert = guests.map(g => ({
+      ...g,
+      eventId,
+      queueNumber: currentQueue++,
+      registrationSource: g.registrationSource || 'IMPORT',
+      checkedIn: false
+    }));
+
+    // Chunk size of 1000 is safe for most databases to avoid statement size limits
+    const chunkSize = 1000;
+    let totalCreated = 0;
+
+    for (let i = 0; i < dataToInsert.length; i += chunkSize) {
+      const chunk = dataToInsert.slice(i, i + chunkSize);
+      const result = await this.prisma.guest.createMany({
+        data: chunk,
+        skipDuplicates: true
+      });
+      totalCreated += result.count;
+    }
+
+    return totalCreated;
+  }
+
   async getById(id: string) {
     const guest = await this.prisma.guest.findUnique({ where: { id } });
     if (!guest) throw new NotFoundException('Guest not found');
@@ -266,7 +297,7 @@ export class GuestsService {
   }
 
   async checkIn(id: string, adminId?: string, adminName?: string) {
-    const guest = await this.prisma.guest.findUnique({ 
+    const guest = await this.prisma.guest.findUnique({
       where: { id },
       include: { event: true, checkins: true }
     });
@@ -285,10 +316,10 @@ export class GuestsService {
     console.log(`[CheckIn] Existing checkins:`, guest.checkins.map(c => ({ id: c.checkinById, name: c.checkinByName })));
 
     // Check if this admin already checked in this guest (only if adminId is provided)
-    const existingCheckinByAdmin = adminId 
+    const existingCheckinByAdmin = adminId
       ? guest.checkins.find(c => c.checkinById === adminId)
       : null;
-    
+
     console.log(`[CheckIn] existingCheckinByAdmin:`, existingCheckinByAdmin ? 'YES' : 'NO');
 
     if (guest.checkedIn) {
@@ -296,73 +327,73 @@ export class GuestsService {
       // Allow unlimited total check-ins, but only 1 per admin/counter
       if (allowMultiplePerCounter) {
         console.log(`[CheckIn] Using Per-Counter mode`);
-        
+
         // Require login for per-counter mode
         if (!adminId) {
-          const guestWithHistory = await this.prisma.guest.findUnique({ 
+          const guestWithHistory = await this.prisma.guest.findUnique({
             where: { id },
             include: { checkins: { orderBy: { checkinAt: 'asc' } } }
           });
-          throw new ConflictException({ 
-            ...guestWithHistory, 
+          throw new ConflictException({
+            ...guestWithHistory,
             requireLogin: true,
             message: `Login diperlukan untuk mode Multiple Check-in Per Counter`
           });
         }
-        
+
         // Check if THIS specific admin has already checked in
         if (existingCheckinByAdmin) {
           console.log(`[CheckIn] BLOCKED - Admin ${adminName} (${adminId}) already checked in this guest`);
-          const guestWithHistory = await this.prisma.guest.findUnique({ 
+          const guestWithHistory = await this.prisma.guest.findUnique({
             where: { id },
             include: { checkins: { orderBy: { checkinAt: 'asc' } } }
           });
-          throw new ConflictException({ 
-            ...guestWithHistory, 
+          throw new ConflictException({
+            ...guestWithHistory,
             alreadyCheckedByThisAdmin: true,
             message: `${adminName || 'Admin ini'} sudah pernah check-in tamu ini`
           });
         }
-        
+
         // ALLOW - this admin hasn't checked in yet
         console.log(`[CheckIn] ALLOWED - Admin ${adminName} (${adminId}) can check in`);
-        
-      // MODE 2: No multiple check-in allowed  
+
+        // MODE 2: No multiple check-in allowed  
       } else if (!allowMultiple) {
         console.log(`[CheckIn] BLOCKED - Multiple check-in not allowed`);
-        const guestWithHistory = await this.prisma.guest.findUnique({ 
+        const guestWithHistory = await this.prisma.guest.findUnique({
           where: { id },
           include: { checkins: { orderBy: { checkinAt: 'asc' } } }
         });
         throw new ConflictException(guestWithHistory);
-        
-      // MODE 3: Regular multiple check-in with maxCheckinCount limit
+
+        // MODE 3: Regular multiple check-in with maxCheckinCount limit
       } else {
         console.log(`[CheckIn] Using Regular Multiple mode with max ${maxCheckins}`);
-        
+
         // Check if already checked in by this admin (only if adminId provided)
         if (adminId && existingCheckinByAdmin) {
           console.log(`[CheckIn] BLOCKED - Admin already checked in`);
-          const guestWithHistory = await this.prisma.guest.findUnique({ 
+          const guestWithHistory = await this.prisma.guest.findUnique({
             where: { id },
             include: { checkins: { orderBy: { checkinAt: 'asc' } } }
           });
-          throw new ConflictException({ 
-            ...guestWithHistory, 
+          throw new ConflictException({
+            ...guestWithHistory,
             alreadyCheckedByThisAdmin: true,
             message: `${adminName || 'Admin ini'} sudah pernah check-in tamu ini`
           });
         }
-        
+
         // Check if max check-ins reached
         if (guest.checkinCount >= maxCheckins) {
           console.log(`[CheckIn] BLOCKED - Max check-ins reached (${guest.checkinCount}/${maxCheckins})`);
-          const guestWithHistory = await this.prisma.guest.findUnique({ 
+          const guestWithHistory = await this.prisma.guest.findUnique({
             where: { id },
             include: { checkins: { orderBy: { checkinAt: 'asc' } } }
           });
-          throw new ConflictException({ 
-            ...guestWithHistory, 
+          throw new ConflictException({
+            ...guestWithHistory,
             maxReached: true,
             message: `Sudah mencapai maksimum ${maxCheckins}x check-in`
           });
@@ -385,8 +416,8 @@ export class GuestsService {
       // Update guest
       await tx.guest.update({
         where: { id },
-        data: { 
-          checkedIn: true, 
+        data: {
+          checkedIn: true,
           checkedInAt: guest.checkedInAt || now, // Keep first check-in time
           checkedInById: guest.checkedInById || adminId || null, // Keep first admin
           checkedInByName: guest.checkedInByName || adminName || null,
@@ -396,7 +427,7 @@ export class GuestsService {
     });
 
     // Return the updated guest with check-in history
-    return this.prisma.guest.findUnique({ 
+    return this.prisma.guest.findUnique({
       where: { id },
       include: { checkins: { orderBy: { checkinAt: 'asc' } } }
     });
@@ -408,7 +439,7 @@ export class GuestsService {
       include: { checkins: true }
     });
     if (!guest) throw new NotFoundException('Guest not found');
-    
+
     // Store original check-in info for audit
     const originalCheckinAt = guest.checkedInAt;
     const originalCheckinBy = guest.checkedInByName;
@@ -422,8 +453,8 @@ export class GuestsService {
       await tx.guestCheckin.deleteMany({ where: { guestId: id } });
       await tx.guest.update({
         where: { id },
-        data: { 
-          checkedIn: false, 
+        data: {
+          checkedIn: false,
           checkedInAt: null,
           checkedInById: null,
           checkedInByName: null,
@@ -598,7 +629,7 @@ export class GuestsService {
 
     // Determine if input is guest ID or name
     const isLikelyId = /^[A-Z0-9\-_]+$/i.test(guestIdOrName.trim()) && guestIdOrName.length <= 50;
-    
+
     // Create the guest with the input as both ID and name, or just name
     const guestId = isLikelyId ? guestIdOrName.trim() : `GUEST-${Date.now()}`;
     const guestName = guestIdOrName.trim();
@@ -642,18 +673,18 @@ export class GuestsService {
   async bulkDelete(dto: BulkDeleteGuestsDto) {
     const { ids } = dto;
     if (!ids.length) return { deleted: 0 };
-    
+
     const result = await this.prisma.guest.deleteMany({
       where: { id: { in: ids } },
     });
-    
+
     return { deleted: result.count };
   }
 
   async bulkUpdate(dto: BulkUpdateGuestsDto) {
     const { ids, ...updateData } = dto;
     if (!ids.length) return { updated: 0 };
-    
+
     // Remove undefined values
     const data: Prisma.GuestUpdateManyMutationInput = {};
     if (updateData.category !== undefined) data.category = updateData.category as GuestCategory;
@@ -672,12 +703,12 @@ export class GuestsService {
       }
     }
     if (updateData.souvenirTaken !== undefined) data.souvenirTaken = updateData.souvenirTaken;
-    
+
     const result = await this.prisma.guest.updateMany({
       where: { id: { in: ids } },
       data,
     });
-    
+
     return { updated: result.count };
   }
 
@@ -707,13 +738,13 @@ export class GuestsService {
       select: { guestId: true, name: true },
     });
 
-    const duplicateNames = existingByNames.filter(g => 
+    const duplicateNames = existingByNames.filter(g =>
       lowerNames.includes(g.name.toLowerCase())
     );
 
     return {
       duplicateIds: existingByIds,
-      duplicateNames: duplicateNames.filter(n => 
+      duplicateNames: duplicateNames.filter(n =>
         !existingByIds.some(e => e.guestId === n.guestId)
       ),
     };
