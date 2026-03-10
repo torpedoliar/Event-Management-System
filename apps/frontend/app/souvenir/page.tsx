@@ -341,6 +341,7 @@ export default function SouvenirPage() {
                     await createAndGiveSouvenir(q.trim());
                 } else {
                     setError('Tamu tidak ditemukan');
+                    setQ('');
                 }
             }
         } catch (e: any) {
@@ -557,6 +558,7 @@ export default function SouvenirPage() {
                     await createAndGiveSouvenir(decodedText.trim());
                 } else {
                     setError('QR Code tidak dikenali atau tamu tidak ditemukan');
+                    setQ('');
                 }
             }
         } catch (e: any) {
@@ -1001,8 +1003,8 @@ export default function SouvenirPage() {
                                     <div
                                         key={s.id}
                                         className={`flex items-center justify-between rounded-lg border p-4 cursor-pointer transition-colors ${selectedSouvenir === s.id
-                                                ? 'border-purple-500 bg-purple-500/20'
-                                                : 'border-white/20 bg-white/5 hover:bg-white/10'
+                                            ? 'border-purple-500 bg-purple-500/20'
+                                            : 'border-white/20 bg-white/5 hover:bg-white/10'
                                             }`}
                                         onClick={() => setSelectedSouvenir(s.id)}
                                     >
@@ -1016,8 +1018,8 @@ export default function SouvenirPage() {
                                             </div>
                                         </div>
                                         <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedSouvenir === s.id
-                                                ? 'border-purple-400 bg-purple-400'
-                                                : 'border-white/30'
+                                            ? 'border-purple-400 bg-purple-400'
+                                            : 'border-white/30'
                                             }`}>
                                             {selectedSouvenir === s.id && (
                                                 <CheckCircle size={14} className="text-white" />
