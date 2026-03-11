@@ -232,6 +232,10 @@ export default function CheckinPage() {
     const cleanQ = cleanQrContent(q.trim());
     params.set('guestId', cleanQ);
     params.set('name', q.trim());
+    // If input has no spaces, it's likely a QR code / exact ID — skip fuzzy search
+    if (!q.trim().includes(' ')) {
+      params.set('exact', 'true');
+    }
     setSearching(true);
     try {
       const res = await fetch(`${apiBase()}/public/guests/search?${params.toString()}`);

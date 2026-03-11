@@ -104,24 +104,34 @@ export class SouvenirsService {
     }
 
     async giveSouvenir(guestId: string, souvenirId: string, takenById?: string, takenByName?: string) {
-        // Check event settings for check-in requirement
-        const activeEvent = await this.events.getActive();
+        // Run independent queries in parallel for speed
+        const [activeEvent, guest, souvenir] = await Promise.all([
+            this.events.getActive(),
+            this.prisma.guest.findUnique({
+                where: { id: guestId },
+                include: {
+                    souvenirTakes: {
+                        include: { souvenir: true },
+                        orderBy: { takenAt: 'desc' }
+                    },
+                    prizeWins: {
+                        include: { collection: true }
+                    }
+                }
+            }),
+            this.prisma.souvenir.findUnique({
+                where: { id: souvenirId },
+                include: { _count: { select: { takes: true } } }
+            })
+        ]);
+
         const requireCheckin = activeEvent?.requireCheckinForSouvenir ?? true;
 
-        // Get guest with souvenir takes and prize wins for detailed info
-        const guest = await this.prisma.guest.findUnique({
-            where: { id: guestId },
-            include: {
-                souvenirTakes: {
-                    include: { souvenir: true },
-                    orderBy: { takenAt: 'desc' }
-                },
-                prizeWins: {
-                    include: { collection: true }
-                }
-            }
-        });
         if (!guest) throw new BadRequestException('Tamu tidak ditemukan');
+        if (!souvenir) throw new BadRequestException('Souvenir not found');
+        if (souvenir._count.takes >= souvenir.quantity) {
+            throw new BadRequestException('Souvenir sudah habis');
+        }
 
         // Check if guest has uncollected prizes
         const hasUncollectedPrizes = guest.prizeWins.some(pw => !pw.collection);
@@ -149,16 +159,6 @@ export class SouvenirsService {
                     counterName: 'Souvenir Counter'
                 }
             });
-        }
-
-        // Check if souvenir exists and has stock
-        const souvenir = await this.prisma.souvenir.findUnique({
-            where: { id: souvenirId },
-            include: { takes: true }
-        });
-        if (!souvenir) throw new BadRequestException('Souvenir not found');
-        if (souvenir.takes.length >= souvenir.quantity) {
-            throw new BadRequestException('Souvenir sudah habis');
         }
 
         // Check if guest already took this souvenir

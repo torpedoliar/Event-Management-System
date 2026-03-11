@@ -27,8 +27,8 @@ export class PublicController {
   }
 
   @Get('guests/search')
-  search(@Query('guestId') guestId?: string, @Query('name') name?: string) {
-    return this.guests.publicSearch({ guestId, name });
+  search(@Query('guestId') guestId?: string, @Query('name') name?: string, @Query('exact') exact?: string) {
+    return this.guests.publicSearch({ guestId, name, exact: exact === 'true' });
   }
 
   @Post('guests/checkin')

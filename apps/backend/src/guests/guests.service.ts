@@ -401,10 +401,10 @@ export class GuestsService {
       }
     }
 
-    // Perform check-in
-    await this.prisma.$transaction(async (tx) => {
+    // Perform check-in and return updated guest in one transaction
+    const [newCheckin, updatedGuest] = await this.prisma.$transaction(async (tx) => {
       // Create check-in record
-      await tx.guestCheckin.create({
+      const checkin = await tx.guestCheckin.create({
         data: {
           guestId: id,
           checkinById: adminId || null,
@@ -414,7 +414,7 @@ export class GuestsService {
       });
 
       // Update guest
-      await tx.guest.update({
+      const updated = await tx.guest.update({
         where: { id },
         data: {
           checkedIn: true,
@@ -424,13 +424,15 @@ export class GuestsService {
           checkinCount: { increment: 1 },
         },
       });
+
+      return [checkin, updated];
     });
 
-    // Return the updated guest with check-in history
-    return this.prisma.guest.findUnique({
-      where: { id },
-      include: { checkins: { orderBy: { checkinAt: 'asc' } } }
-    });
+    // Build response in-memory — avoid extra findUnique query
+    const allCheckins = [...guest.checkins, newCheckin].sort(
+      (a, b) => new Date(a.checkinAt).getTime() - new Date(b.checkinAt).getTime()
+    );
+    return { ...updatedGuest, checkins: allCheckins };
   }
 
   async uncheckIn(id: string, adminId?: string, adminName?: string, reason?: string) {
@@ -556,9 +558,9 @@ export class GuestsService {
   async checkInByGuestId(guestId: string, adminId?: string, adminName?: string) {
     const eventId = await this.getActiveEventId();
     if (!eventId) throw new NotFoundException('No active event');
-    const guest = await this.prisma.guest.findFirst({ where: { eventId, guestId } });
+    // Find guest with minimal query — checkIn() will handle the rest
+    const guest = await this.prisma.guest.findFirst({ where: { eventId, guestId }, select: { id: true } });
     if (!guest) throw new NotFoundException('Guest not found');
-    // Use the main checkIn method which handles multiple check-ins
     return this.checkIn(guest.id, adminId, adminName);
   }
 
@@ -566,25 +568,27 @@ export class GuestsService {
     try {
       const eventId = await this.getActiveEventId();
       if (!eventId) throw new NotFoundException('No active event');
-      let guest: Guest | null = null;
+      let guestId: string | null = null;
 
       // Check if qrCode is a valid UUID
       const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(qrCode);
 
       if (isUuid) {
-        // Try to find by internal ID first (UUID)
-        guest = await this.prisma.guest.findUnique({ where: { id: qrCode } });
+        // Try to find by internal ID first (UUID) — select only id to minimize data
+        const byId = await this.prisma.guest.findUnique({ where: { id: qrCode }, select: { id: true, eventId: true } });
+        if (byId && byId.eventId === eventId) guestId = byId.id;
       }
 
       // If not found or event mismatch, try by guestId (string)
-      if (!guest || guest.eventId !== eventId) {
-        guest = await this.prisma.guest.findFirst({ where: { eventId, guestId: qrCode } });
+      if (!guestId) {
+        const byGuestId = await this.prisma.guest.findFirst({ where: { eventId, guestId: qrCode }, select: { id: true } });
+        if (byGuestId) guestId = byGuestId.id;
       }
 
-      if (!guest) throw new NotFoundException('Guest not found');
+      if (!guestId) throw new NotFoundException('Guest not found');
 
-      // Use the main checkIn method which handles multiple check-ins
-      return this.checkIn(guest.id, adminId, adminName);
+      // checkIn() loads guest with includes internally — no double lookup
+      return this.checkIn(guestId, adminId, adminName);
     } catch (error) {
       if (error instanceof NotFoundException || error instanceof ConflictException) throw error;
       throw new NotFoundException("Gagal memproses QR Code. Pastikan QR valid.");

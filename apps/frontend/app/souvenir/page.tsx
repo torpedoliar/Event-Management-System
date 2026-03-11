@@ -301,6 +301,10 @@ export default function SouvenirPage() {
 
         params.set('guestId', q.trim());
         params.set('name', q.trim());
+        // If input has no spaces, it's likely a QR code / exact ID — skip fuzzy search
+        if (!q.trim().includes(' ')) {
+            params.set('exact', 'true');
+        }
         setSearching(true);
         try {
             // Use public search to find guest first
@@ -318,20 +322,21 @@ export default function SouvenirPage() {
                     const guest = data[0];
                     setSelected(guest);
 
-                    // Load prize wins first to check if guest has uncollected prizes
-                    const prizeData = await loadGuestPrizesAndReturn(guest.id);
-                    const hasUncollectedPrizes = prizeData && prizeData.some((pw: any) => !pw.collection);
+                    // Fire prize check and souvenir give in parallel for speed
+                    const prizePromise = loadGuestPrizesAndReturn(guest.id);
 
-                    // Only auto-give souvenir if:
-                    // 1. selectedSouvenir is set
-                    // 2. guest has NO uncollected prizes (if has prizes, let them choose first)
-                    if (selectedSouvenir && !hasUncollectedPrizes) {
-                        await giveSouvenir(guest, selectedSouvenir);
-                        setQ('');
-                        setTimeout(() => inputRef.current?.focus(), 100);
-                    } else if (hasUncollectedPrizes) {
-                        // Guest has prizes - show message and let them collect prizes first
-                        setError('Tamu ini memiliki hadiah yang belum diambil. Silakan ambil hadiah terlebih dahulu.');
+                    if (selectedSouvenir) {
+                        // Check prizes while preparing to give souvenir
+                        const prizeData = await prizePromise;
+                        const hasUncollectedPrizes = prizeData && prizeData.some((pw: any) => !pw.collection);
+
+                        if (!hasUncollectedPrizes) {
+                            await giveSouvenir(guest, selectedSouvenir);
+                            setQ('');
+                            setTimeout(() => inputRef.current?.focus(), 100);
+                        } else {
+                            setError('Tamu ini memiliki hadiah yang belum diambil. Silakan ambil hadiah terlebih dahulu.');
+                        }
                     }
                 }
                 // If multiple results, let user choose manually
@@ -438,7 +443,7 @@ export default function SouvenirPage() {
                 popupTimeoutRef.current = null;
             }, ms);
 
-            // Reload souvenirs to update stock
+            // Reload souvenirs to update stock (fire-and-forget, don't block UI)
             loadSouvenirs();
         } catch (e: any) {
             setError(e.message || 'Gagal memproses souvenir');
