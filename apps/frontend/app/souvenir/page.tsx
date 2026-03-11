@@ -301,8 +301,10 @@ export default function SouvenirPage() {
 
         params.set('guestId', q.trim());
         params.set('name', q.trim());
-        // If input has no spaces, it's likely a QR code / exact ID — skip fuzzy search
-        if (!q.trim().includes(' ')) {
+        // Detect if input looks like a QR code / ID (contains digits, dashes, or is all uppercase)
+        // Pure alphabetic names like "Budi" should still trigger fuzzy search
+        const looksLikeId = /[\d\-]/.test(q.trim()) || /^[A-Z0-9_\-]+$/.test(q.trim());
+        if (looksLikeId) {
             params.set('exact', 'true');
         }
         setSearching(true);
