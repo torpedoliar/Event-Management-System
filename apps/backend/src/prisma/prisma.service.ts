@@ -4,10 +4,20 @@ import { PrismaClient } from '@prisma/client';
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor() {
+    const poolSize = parseInt(process.env.DATABASE_POOL_SIZE || '20', 10);
+    const poolTimeout = parseInt(process.env.DATABASE_POOL_TIMEOUT || '10', 10);
+    const dbUrl = process.env.DATABASE_URL || '';
+    
+    // Append connection pool params to DATABASE_URL if not already present
+    const separator = dbUrl.includes('?') ? '&' : '?';
+    const pooledUrl = dbUrl.includes('connection_limit') 
+      ? dbUrl 
+      : `${dbUrl}${separator}connection_limit=${poolSize}&pool_timeout=${poolTimeout}`;
+
     super({
       datasources: {
         db: {
-          url: process.env.DATABASE_URL,
+          url: pooledUrl,
         },
       },
       log: process.env.NODE_ENV === 'development' 

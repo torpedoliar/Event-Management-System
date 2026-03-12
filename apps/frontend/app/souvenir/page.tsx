@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import { apiBase, toApiUrl, apiFetch, parseErrorMessage } from "../../lib/api";
 import { Html5Qrcode } from "html5-qrcode";
 import { Search, QrCode, Loader2, CheckCircle, Clock, Users, X, Gift, XCircle, Trophy, Package, ChevronDown, ChevronUp, UserPlus, Settings, Radio, UserCheck, AlertTriangle } from 'lucide-react';
@@ -106,7 +106,18 @@ export default function SouvenirPage() {
     const [savingSettings, setSavingSettings] = useState(false);
     const [alreadyTakenInfo, setAlreadyTakenInfo] = useState<{ guest: Guest; takes: SouvenirTakeInfo[] } | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const searchAbortRef = useRef<AbortController | null>(null);
+    const debouncedLoadRef = useRef<NodeJS.Timeout | null>(null);
     const { addEventListener, removeEventListener, connected } = useSSE();
+
+    // Debounced loadSouvenirs — collapses rapid calls into one (2s window)
+    const debouncedLoadSouvenirs = useCallback(() => {
+        if (debouncedLoadRef.current) clearTimeout(debouncedLoadRef.current);
+        debouncedLoadRef.current = setTimeout(() => {
+            loadSouvenirs();
+            debouncedLoadRef.current = null;
+        }, 2000);
+    }, []);
 
     useEffect(() => {
         fetch(`${apiBase()}/config/event`).then(async (r) => {
@@ -308,9 +319,15 @@ export default function SouvenirPage() {
             params.set('exact', 'true');
         }
         setSearching(true);
+        // Cancel any in-flight search to prevent stale results
+        if (searchAbortRef.current) searchAbortRef.current.abort();
+        const controller = new AbortController();
+        searchAbortRef.current = controller;
         try {
             // Use public search to find guest first
-            const res = await fetch(`${apiBase()}/public/guests/search?${params.toString()}`);
+            const res = await fetch(`${apiBase()}/public/guests/search?${params.toString()}`, {
+                signal: controller.signal
+            });
             if (!res.ok) {
                 const errorText = await res.text();
                 throw new Error(parseErrorMessage(errorText));
@@ -445,8 +462,8 @@ export default function SouvenirPage() {
                 popupTimeoutRef.current = null;
             }, ms);
 
-            // Reload souvenirs to update stock (fire-and-forget, don't block UI)
-            loadSouvenirs();
+            // Reload souvenirs to update stock (debounced, fire-and-forget)
+            debouncedLoadSouvenirs();
         } catch (e: any) {
             setError(e.message || 'Gagal memproses souvenir');
         } finally {

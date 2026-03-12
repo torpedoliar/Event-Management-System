@@ -17,17 +17,19 @@ export class SouvenirsService {
             where: { eventId: eid },
             orderBy: { createdAt: 'asc' },
             include: {
+                _count: { select: { takes: true } },
                 takes: {
-                    include: { guest: true },
-                    orderBy: { takenAt: 'asc' }
+                    include: { guest: { select: { id: true, name: true, guestId: true } } },
+                    orderBy: { takenAt: 'desc' },
+                    take: 10  // Only load last 10 for display, not all 10K+
                 }
             }
         });
-        // Transform to include taken count
+        // Transform to include taken count using _count (O(1) instead of loading all rows)
         return souvenirs.map((s: any) => ({
             ...s,
-            takenCount: s.takes.length,
-            remaining: s.quantity - s.takes.length
+            takenCount: s._count.takes,
+            remaining: s.quantity - s._count.takes
         }));
     }
 

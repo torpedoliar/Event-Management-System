@@ -107,6 +107,7 @@ export default function CheckinPage() {
   const streamRef = useRef<MediaStream | null>(null);
   const autoStreamRef = useRef<MediaStream | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const searchAbortRef = useRef<AbortController | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { addEventListener, removeEventListener } = useSSE();
 
@@ -239,8 +240,14 @@ export default function CheckinPage() {
       params.set('exact', 'true');
     }
     setSearching(true);
+    // Cancel any in-flight search to prevent stale results
+    if (searchAbortRef.current) searchAbortRef.current.abort();
+    const controller = new AbortController();
+    searchAbortRef.current = controller;
     try {
-      const res = await fetch(`${apiBase()}/public/guests/search?${params.toString()}`);
+      const res = await fetch(`${apiBase()}/public/guests/search?${params.toString()}`, {
+        signal: controller.signal
+      });
       if (!res.ok) {
         const errorText = await res.text();
         throw new Error(parseErrorMessage(errorText));

@@ -1,25 +1,30 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService, AuditAction } from '../common/audit/audit.service';
+import { EventsService } from '../events/events.service';
 import { CreateGuestDto, BulkDeleteGuestsDto, BulkUpdateGuestsDto } from './dto/create-guest.dto';
 import { UpdateGuestDto } from './dto/update-guest.dto';
 import { QueryGuestsDto } from './dto/query-guests.dto';
 import { Guest, Prisma, GuestCategory } from '@prisma/client';
+
+const isDev = process.env.NODE_ENV === 'development';
 
 @Injectable()
 export class GuestsService {
   constructor(
     private prisma: PrismaService,
     private audit: AuditService,
+    private events: EventsService,
   ) { }
 
+  /** Uses cached EventsService — no DB hit within 5s TTL */
   async getActiveEventId(): Promise<string | null> {
-    const active = await this.prisma.event.findFirst({ where: { isActive: true } });
+    const active = await this.events.getActive();
     return active ? active.id : null;
   }
 
   async getActiveEvent() {
-    return this.prisma.event.findFirst({ where: { isActive: true } });
+    return this.events.getActive();
   }
 
   async getEventById(id: string) {
@@ -309,33 +314,34 @@ export class GuestsService {
     const maxCheckins = event?.maxCheckinCount ?? 1;
     const allowMultiplePerCounter = event?.allowMultipleCheckinPerCounter ?? false;
 
-    // Debug logging
-    console.log(`[CheckIn] Guest: ${guest.name}, AdminId: ${adminId}, AdminName: ${adminName}`);
-    console.log(`[CheckIn] Settings - allowMultiplePerCounter: ${allowMultiplePerCounter}, allowMultiple: ${allowMultiple}, maxCheckins: ${maxCheckins}`);
-    console.log(`[CheckIn] Guest checkedIn: ${guest.checkedIn}, checkinCount: ${guest.checkinCount}`);
-    console.log(`[CheckIn] Existing checkins:`, guest.checkins.map(c => ({ id: c.checkinById, name: c.checkinByName })));
+    // Debug logging (dev only — console.log blocks event loop)
+    if (isDev) {
+      console.log(`[CheckIn] Guest: ${guest.name}, AdminId: ${adminId}, AdminName: ${adminName}`);
+      console.log(`[CheckIn] Settings - allowMultiplePerCounter: ${allowMultiplePerCounter}, allowMultiple: ${allowMultiple}, maxCheckins: ${maxCheckins}`);
+      console.log(`[CheckIn] Guest checkedIn: ${guest.checkedIn}, checkinCount: ${guest.checkinCount}`);
+      console.log(`[CheckIn] Existing checkins:`, guest.checkins.map(c => ({ id: c.checkinById, name: c.checkinByName })));
+    }
 
     // Check if this admin already checked in this guest (only if adminId is provided)
     const existingCheckinByAdmin = adminId
       ? guest.checkins.find(c => c.checkinById === adminId)
       : null;
 
-    console.log(`[CheckIn] existingCheckinByAdmin:`, existingCheckinByAdmin ? 'YES' : 'NO');
+    if (isDev) console.log(`[CheckIn] existingCheckinByAdmin:`, existingCheckinByAdmin ? 'YES' : 'NO');
 
     if (guest.checkedIn) {
       // MODE 1: Per-Counter mode (allowMultiplePerCounter = true)
       // Allow unlimited total check-ins, but only 1 per admin/counter
       if (allowMultiplePerCounter) {
-        console.log(`[CheckIn] Using Per-Counter mode`);
+        if (isDev) console.log(`[CheckIn] Using Per-Counter mode`);
 
         // Require login for per-counter mode
         if (!adminId) {
-          const guestWithHistory = await this.prisma.guest.findUnique({
-            where: { id },
-            include: { checkins: { orderBy: { checkinAt: 'asc' } } }
-          });
+          // Reuse already-loaded checkins, sort in-memory
+          const sortedCheckins = [...guest.checkins].sort((a, b) => new Date(a.checkinAt).getTime() - new Date(b.checkinAt).getTime());
           throw new ConflictException({
-            ...guestWithHistory,
+            ...guest,
+            checkins: sortedCheckins,
             requireLogin: true,
             message: `Login diperlukan untuk mode Multiple Check-in Per Counter`
           });
@@ -343,43 +349,37 @@ export class GuestsService {
 
         // Check if THIS specific admin has already checked in
         if (existingCheckinByAdmin) {
-          console.log(`[CheckIn] BLOCKED - Admin ${adminName} (${adminId}) already checked in this guest`);
-          const guestWithHistory = await this.prisma.guest.findUnique({
-            where: { id },
-            include: { checkins: { orderBy: { checkinAt: 'asc' } } }
-          });
+          if (isDev) console.log(`[CheckIn] BLOCKED - Admin ${adminName} (${adminId}) already checked in this guest`);
+          const sortedCheckins = [...guest.checkins].sort((a, b) => new Date(a.checkinAt).getTime() - new Date(b.checkinAt).getTime());
           throw new ConflictException({
-            ...guestWithHistory,
+            ...guest,
+            checkins: sortedCheckins,
             alreadyCheckedByThisAdmin: true,
             message: `${adminName || 'Admin ini'} sudah pernah check-in tamu ini`
           });
         }
 
         // ALLOW - this admin hasn't checked in yet
-        console.log(`[CheckIn] ALLOWED - Admin ${adminName} (${adminId}) can check in`);
+        if (isDev) console.log(`[CheckIn] ALLOWED - Admin ${adminName} (${adminId}) can check in`);
 
         // MODE 2: No multiple check-in allowed  
       } else if (!allowMultiple) {
-        console.log(`[CheckIn] BLOCKED - Multiple check-in not allowed`);
-        const guestWithHistory = await this.prisma.guest.findUnique({
-          where: { id },
-          include: { checkins: { orderBy: { checkinAt: 'asc' } } }
-        });
-        throw new ConflictException(guestWithHistory);
+        if (isDev) console.log(`[CheckIn] BLOCKED - Multiple check-in not allowed`);
+        // Reuse already-loaded checkins, sort in-memory
+        const sortedCheckins = [...guest.checkins].sort((a, b) => new Date(a.checkinAt).getTime() - new Date(b.checkinAt).getTime());
+        throw new ConflictException({ ...guest, checkins: sortedCheckins });
 
         // MODE 3: Regular multiple check-in with maxCheckinCount limit
       } else {
-        console.log(`[CheckIn] Using Regular Multiple mode with max ${maxCheckins}`);
+        if (isDev) console.log(`[CheckIn] Using Regular Multiple mode with max ${maxCheckins}`);
 
         // Check if already checked in by this admin (only if adminId provided)
         if (adminId && existingCheckinByAdmin) {
-          console.log(`[CheckIn] BLOCKED - Admin already checked in`);
-          const guestWithHistory = await this.prisma.guest.findUnique({
-            where: { id },
-            include: { checkins: { orderBy: { checkinAt: 'asc' } } }
-          });
+          if (isDev) console.log(`[CheckIn] BLOCKED - Admin already checked in`);
+          const sortedCheckins = [...guest.checkins].sort((a, b) => new Date(a.checkinAt).getTime() - new Date(b.checkinAt).getTime());
           throw new ConflictException({
-            ...guestWithHistory,
+            ...guest,
+            checkins: sortedCheckins,
             alreadyCheckedByThisAdmin: true,
             message: `${adminName || 'Admin ini'} sudah pernah check-in tamu ini`
           });
@@ -387,13 +387,11 @@ export class GuestsService {
 
         // Check if max check-ins reached
         if (guest.checkinCount >= maxCheckins) {
-          console.log(`[CheckIn] BLOCKED - Max check-ins reached (${guest.checkinCount}/${maxCheckins})`);
-          const guestWithHistory = await this.prisma.guest.findUnique({
-            where: { id },
-            include: { checkins: { orderBy: { checkinAt: 'asc' } } }
-          });
+          if (isDev) console.log(`[CheckIn] BLOCKED - Max check-ins reached (${guest.checkinCount}/${maxCheckins})`);
+          const sortedCheckins = [...guest.checkins].sort((a, b) => new Date(a.checkinAt).getTime() - new Date(b.checkinAt).getTime());
           throw new ConflictException({
-            ...guestWithHistory,
+            ...guest,
+            checkins: sortedCheckins,
             maxReached: true,
             message: `Sudah mencapai maksimum ${maxCheckins}x check-in`
           });
@@ -504,15 +502,15 @@ export class GuestsService {
   }
 
   async publicSearch(params: { guestId?: string; name?: string; exact?: boolean }) {
-    const eventId = await this.getActiveEventId();
-    if (!eventId) return [];
+    // Use cached event — avoids 2 separate DB queries (getActiveEventId + event.findUnique)
+    const event = await this.getActiveEvent();
+    if (!event) return [];
+    const eventId = event.id;
     const qId = params.guestId?.trim();
     const qName = params.name?.trim();
     const exactMatchOnly = params.exact === true;
 
-    // Check if duplicate guest IDs are allowed
-    const event = await this.prisma.event.findUnique({ where: { id: eventId } });
-    const allowDuplicates = event?.allowDuplicateGuestId ?? false;
+    const allowDuplicates = event.allowDuplicateGuestId ?? false;
 
     // If exact match is enforced (e.g. from a QR Scanner), skip fuzzy search
     if (exactMatchOnly && qId) {
