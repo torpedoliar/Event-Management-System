@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PublicController } from './public.controller';
-import { GuestsService } from '../guests/guests.service';
+import { GuestsModule } from '../guests/guests.module';
 
 @Module({
   imports: [
@@ -9,8 +9,8 @@ import { GuestsService } from '../guests/guests.service';
       secret: process.env.JWT_SECRET || 'dev-secret',
       signOptions: { expiresIn: '24h' },
     }),
+    GuestsModule,
   ],
   controllers: [PublicController],
-  providers: [GuestsService],
 })
 export class PublicModule {}
