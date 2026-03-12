@@ -7,7 +7,7 @@ import { GuestsService } from '../guests/guests.service';
   imports: [
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'dev-secret',
-      signOptions: { expiresIn: '12h' },
+      signOptions: { expiresIn: '24h' },
     }),
   ],
   controllers: [PublicController],
