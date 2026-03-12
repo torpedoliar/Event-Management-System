@@ -19,9 +19,8 @@ export class SouvenirsService {
             include: {
                 _count: { select: { takes: true } },
                 takes: {
-                    include: { guest: { select: { id: true, name: true, guestId: true } } },
-                    orderBy: { takenAt: 'desc' },
-                    take: 10  // Only load last 10 for display, not all 10K+
+                    include: { guest: { select: { id: true, name: true, guestId: true, queueNumber: true, division: true } } },
+                    orderBy: { takenAt: 'asc' }
                 }
             }
         });
