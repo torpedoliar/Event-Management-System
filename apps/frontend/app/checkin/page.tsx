@@ -103,6 +103,8 @@ export default function CheckinPage() {
   const [autoCreateGuest, setAutoCreateGuest] = useState(false);
   const [enablePhotoCapture, setEnablePhotoCapture] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [downloadingGuests, setDownloadingGuests] = useState(false);
+  const [downloadProgress, setDownloadProgress] = useState<string | null>(null);
   const [savingEventSetting, setSavingEventSetting] = useState(false);
   const [creatingGuest, setCreatingGuest] = useState(false);
   const [showPhotoCapture, setShowPhotoCapture] = useState(false);
@@ -221,6 +223,47 @@ export default function CheckinPage() {
       setError(e.message || 'Gagal menyimpan pengaturan');
     } finally {
       setSavingEventSetting(false);
+    }
+  };
+
+  const handleDownloadGuests = async () => {
+    setDownloadingGuests(true);
+    setDownloadProgress('Mengambil data tamu...');
+    setError(null);
+    try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      const res = await fetch(`${apiBase()}/guests?limit=10000`, { headers });
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(parseErrorMessage(errorText));
+      }
+
+      const guests = await res.json();
+      setDownloadProgress(`Menyimpan ${guests.length} tamu ke cache...`);
+
+      const localGuests: any[] = guests.map((g: any) => ({
+        id: g.id,
+        guestId: g.guestId,
+        name: g.name,
+        checkedIn: g.checkedIn,
+        checkinCount: g.checkinCount || 0,
+        lastCheckinAt: g.checkedInAt || undefined,
+        photoUrl: g.photoUrl || undefined,
+        updatedAt: new Date().toISOString(),
+      }));
+
+      const result = await indexedDBService.cacheGuestsBulk(localGuests);
+      setDownloadProgress(`Berhasil: ${result.success} tamu tersimpan, ${result.failed} gagal.`);
+
+      setTimeout(() => setDownloadProgress(null), 5000);
+    } catch (e: any) {
+      setError(e.message || 'Gagal mengunduh data tamu');
+      setDownloadProgress(null);
+    } finally {
+      setDownloadingGuests(false);
     }
   };
 
@@ -1192,6 +1235,35 @@ export default function CheckinPage() {
                     </label>
                   </div>
                 )}
+
+                {/* Bulk download for offline access */}
+                <div className="pt-4 border-t border-white/10">
+                  <div className="text-xs text-white/40 uppercase tracking-wider mb-3">Akses Offline</div>
+                  <button
+                    onClick={handleDownloadGuests}
+                    disabled={downloadingGuests}
+                    className={`w-full flex items-center justify-center gap-2 p-4 rounded-lg border border-white/20 bg-white/5 cursor-pointer transition-colors ${downloadingGuests ? 'opacity-50 pointer-events-none' : 'hover:bg-white/10'
+                      }`}
+                  >
+                    {downloadingGuests ? (
+                      <>
+                        <Loader2 size={20} className="text-blue-400 animate-spin" />
+                        <span className="text-sm text-white">{downloadProgress}</span>
+                      </>
+                    ) : (
+                      <>
+                        <Users size={20} className="text-blue-400" />
+                        <div className="text-left">
+                          <div className="font-medium text-white">Download Tamu untuk Akses Offline</div>
+                          <div className="text-xs text-white/60">Simpan semua data tamu ke perangkat untuk pencarian saat offline</div>
+                        </div>
+                      </>
+                    )}
+                  </button>
+                  {downloadProgress && !downloadingGuests && (
+                    <div className="mt-2 text-xs text-emerald-400 text-center">{downloadProgress}</div>
+                  )}
+                </div>
               </div>
 
               <div className="mt-6 flex gap-3">
