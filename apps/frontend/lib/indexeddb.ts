@@ -89,7 +89,7 @@ class IndexedDBService {
     await this.init();
     const id = crypto.randomUUID();
     const now = new Date().toISOString();
-    
+
     await this.db!.add('pendingCheckins', {
       ...checkin,
       id,
@@ -132,14 +132,14 @@ class IndexedDBService {
     const store = tx.objectStore('pendingCheckins');
     let cursor = await store.openCursor();
     const toDelete: string[] = [];
-    
+
     while (cursor) {
       if (cursor.value.status === 'synced') {
         toDelete.push(cursor.value.id);
       }
       cursor = await cursor.continue();
     }
-    
+
     // Batch delete
     await Promise.all(toDelete.map(id => this.db!.delete('pendingCheckins', id)));
   }
@@ -176,6 +176,23 @@ class IndexedDBService {
   async cacheGuest(guest: LocalGuest): Promise<void> {
     await this.init();
     await this.db!.put('localGuests', guest);
+  }
+
+  async cacheGuestsBulk(guests: LocalGuest[]): Promise<{ success: number; failed: number }> {
+    await this.init();
+    let success = 0;
+    let failed = 0;
+
+    for (const guest of guests) {
+      try {
+        await this.db!.put('localGuests', guest);
+        success++;
+      } catch {
+        failed++;
+      }
+    }
+
+    return { success, failed };
   }
 
   async getCachedGuest(id: string): Promise<LocalGuest | null> {
