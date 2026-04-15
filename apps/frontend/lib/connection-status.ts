@@ -74,13 +74,15 @@ class ConnectionStatusService {
     const healthUrl = `${baseUrl}/api/public/health`;
 
     try {
-      const startTime = Date.now();
+      const startTime = performance.now();
       const response = await fetch(healthUrl, {
         method: 'GET',
-        cache: 'no-cache'
+        cache: 'no-cache',
+        // OPTIMIZATION: Abort after 5s to prevent hanging
+        signal: AbortSignal.timeout(5000)
       });
 
-      const latency = Date.now() - startTime;
+      const latency = Math.round(performance.now() - startTime);
 
       if (response.ok) {
         const data = await response.json();
@@ -98,7 +100,6 @@ class ConnectionStatusService {
         throw new Error(`Health check failed: ${response.status}`);
       }
     } catch (error) {
-      // Don't set offline if browser says online (might be CORS or server down)
       if (!navigator.onLine) {
         this.setOffline();
       }

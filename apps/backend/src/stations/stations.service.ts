@@ -56,29 +56,24 @@ export class StationsService {
   }
 
   async getStationsByEvent(eventId: string): Promise<StationResponseDto[]> {
+    // OPTIMIZATION: Single query with _count instead of N+1 count queries
     const stations = await this.prisma.checkinStation.findMany({
-      where: { 
+      where: {
         eventId,
-        isActive: true 
+        isActive: true
       },
-      orderBy: { createdAt: 'asc' }
+      orderBy: { createdAt: 'asc' },
+      include: {
+        _count: {
+          select: { checkins: true }
+        }
+      }
     });
 
-    // Get check-in counts for each station
-    const stationsWithCount = await Promise.all(
-      stations.map(async (station) => {
-        const count = await this.prisma.guestCheckin.count({
-          where: { stationId: station.id }
-        });
-
-        return {
-          ...this.mapToResponse(station),
-          checkinCount: count
-        };
-      })
-    );
-
-    return stationsWithCount;
+    return stations.map(station => ({
+      ...this.mapToResponse(station),
+      checkinCount: station._count.checkins
+    }));
   }
 
   async getStationById(stationId: string): Promise<StationResponseDto | null> {

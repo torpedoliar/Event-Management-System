@@ -142,6 +142,8 @@ model GuestCheckin {
   @@index([stationId])
   @@index([isOffline])
   @@index([syncedAt])
+  @@index([checkinAt, stationId])
+  @@index([guestId, checkinAt])
 }
 
 // Check-in stations for multi-station support

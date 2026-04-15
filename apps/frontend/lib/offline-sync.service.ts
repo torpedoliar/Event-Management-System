@@ -141,8 +141,11 @@ class OfflineSyncService {
     this.notifyQueueListeners();
 
     try {
-      // Get station config for lastSyncAt
-      const stationConfig = await indexedDBService.getStationConfig();
+      // OPTIMIZATION: Batch get station config (avoid sequential await)
+      const [stationConfig] = await Promise.all([
+        indexedDBService.getStationConfig()
+      ]);
+      
       const lastSyncAt = stationConfig?.lastSyncAt;
 
       // Build payload
@@ -169,43 +172,27 @@ class OfflineSyncService {
 
       const result: SyncResult = await response.json();
 
-      // Update pending checkins based on results
-      for (let i = 0; i < result.results.length; i++) {
-        const itemResult = result.results[i];
-        const pendingItem = pending[i];
+      // OPTIMIZATION: Batch update all pending check-ins (parallel)
+      await Promise.all(
+        pending.map(async (pendingItem, i) => {
+          const itemResult = result.results[i];
+          if (!itemResult) return;
 
-        if (itemResult.success) {
-          await indexedDBService.updatePendingCheckin(pendingItem.id, {
-            status: 'synced',
-            error: undefined
-          });
-        } else if (itemResult.conflict) {
-          // Mark conflict but keep for review
-          await indexedDBService.updatePendingCheckin(pendingItem.id, {
-            status: 'failed',
-            error: `Conflict: ${itemResult.reason}`,
-            retryCount: pendingItem.retryCount + 1
-          });
-        } else {
-          // Other error
-          await indexedDBService.updatePendingCheckin(pendingItem.id, {
-            status: 'failed',
-            error: itemResult.reason || 'Unknown error',
-            retryCount: pendingItem.retryCount + 1
-          });
-        }
-      }
+          const updates: Partial<PendingCheckin> = itemResult.success
+            ? { status: 'synced', error: undefined }
+            : itemResult.conflict
+              ? { status: 'failed', error: `Conflict: ${itemResult.reason}`, retryCount: pendingItem.retryCount + 1 }
+              : { status: 'failed', error: itemResult.reason || 'Unknown error', retryCount: pendingItem.retryCount + 1 };
 
-      // Clear synced check-ins
-      await indexedDBService.clearSyncedCheckins();
+          return indexedDBService.updatePendingCheckin(pendingItem.id, updates);
+        })
+      );
 
-      // Update station lastSyncAt
-      if (stationConfig) {
-        await indexedDBService.saveStationConfig({
-          ...stationConfig,
-          lastSyncAt: result.serverTimestamp
-        });
-      }
+      // OPTIMIZATION: Parallel cleanup and station update
+      await Promise.all([
+        indexedDBService.clearSyncedCheckins(),
+        stationConfig ? indexedDBService.saveStationConfig({ ...stationConfig, lastSyncAt: result.serverTimestamp }) : Promise.resolve()
+      ]);
 
       // Log sync
       await indexedDBService.addSyncLogEntry({
@@ -217,17 +204,19 @@ class OfflineSyncService {
         }
       });
 
-      // Update local guest cache with remote updates
-      for (const remoteUpdate of result.remoteUpdates) {
+      // OPTIMIZATION: Batch update local guest cache (parallel)
+      const cacheUpdates = result.remoteUpdates.map(async (remoteUpdate) => {
         const cachedGuest = await indexedDBService.getCachedGuest(remoteUpdate.guestId);
         if (cachedGuest) {
-          await indexedDBService.updateCachedGuest(remoteUpdate.guestId, {
+          return indexedDBService.updateCachedGuest(remoteUpdate.guestId, {
             checkedIn: true,
             checkinCount: cachedGuest.checkinCount + 1,
             lastCheckinAt: remoteUpdate.checkinAt
           });
         }
-      }
+        return Promise.resolve();
+      });
+      await Promise.all(cacheUpdates);
 
       // Notify listeners
       this.notifySyncListeners(result);
@@ -237,14 +226,16 @@ class OfflineSyncService {
     } catch (error: any) {
       console.error('Sync error:', error);
 
-      // Mark all as failed
-      for (const checkin of pending) {
-        await indexedDBService.updatePendingCheckin(checkin.id, {
-          status: 'failed',
-          error: error.message || 'Sync failed',
-          retryCount: checkin.retryCount + 1
-        });
-      }
+      // OPTIMIZATION: Batch mark all as failed (parallel)
+      await Promise.all(
+        pending.map(checkin =>
+          indexedDBService.updatePendingCheckin(checkin.id, {
+            status: 'failed',
+            error: error.message || 'Sync failed',
+            retryCount: checkin.retryCount + 1
+          })
+        )
+      );
 
       this.notifyQueueListeners();
 
