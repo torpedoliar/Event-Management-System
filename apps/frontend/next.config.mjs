@@ -1,4 +1,4 @@
-import withPWA from 'next-pwa';
+import withPWAInit from '@ducanh2912/next-pwa';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -30,23 +30,15 @@ const nextConfig = {
   },
 };
 
-const withPWAConfig = withPWA({
+const withPWA = withPWAInit({
   dest: 'public',
   register: true,
   skipWaiting: true,
   disable: process.env.NODE_ENV === 'development',
+  cacheStartUrl: true,
+  dynamicStartUrl: true,
+  reloadOnOnline: true,
   runtimeCaching: [
-    {
-      urlPattern: /^https?.*/,
-      handler: 'NetworkFirst',
-      options: {
-        cacheName: 'offline-cache',
-        expiration: {
-          maxEntries: 50,
-          maxAgeSeconds: 24 * 60 * 60,
-        },
-      },
-    },
     {
       urlPattern: /^\/api\/.*/,
       handler: 'NetworkFirst',
@@ -58,7 +50,18 @@ const withPWAConfig = withPWA({
         },
       },
     },
+    {
+      urlPattern: /^https?.*/,
+      handler: 'NetworkFirst',
+      options: {
+        cacheName: 'offline-cache',
+        expiration: {
+          maxEntries: 50,
+          maxAgeSeconds: 24 * 60 * 60,
+        },
+      },
+    },
   ],
 });
 
-export default { ...nextConfig, ...withPWAConfig, rewrites: nextConfig.rewrites };
+export default withPWA(nextConfig);

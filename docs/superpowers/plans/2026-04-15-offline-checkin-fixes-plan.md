@@ -14,7 +14,7 @@
 
 | File | Action | Responsibility |
 |------|--------|----------------|
-| `apps/frontend/package.json` | Modify | Add `next-pwa` dependency |
+| `apps/frontend/package.json` | Modify | Add `@ducanh2912/next-pwa` dependency |
 | `apps/frontend/next.config.mjs` | Modify | Wrap config with `withPWA` |
 | `apps/frontend/public/sw.js` | Create | Fallback service worker (if needed) |
 | `apps/frontend/app/checkin/page.tsx` | Modify | Fix doSearch, add bulk download button, fix offline search |
@@ -23,31 +23,31 @@
 
 ---
 
-### Task 1: Add next-pwa Dependency
+### Task 1: Add @ducanh2912/next-pwa Dependency
 
 **Files:**
 - Modify: `apps/frontend/package.json`
 
-- [ ] **Step 1: Install next-pwa package**
+- [ ] **Step 1: Install @ducanh2912/next-pwa package**
 
 Run in `apps/frontend` directory:
 ```bash
-cd apps/frontend && npm install next-pwa
+cd apps/frontend && npm install @ducanh2912/next-pwa
 ```
 
 - [ ] **Step 2: Verify installation**
 
-Check package.json has `next-pwa` in dependencies:
+Check package.json has `@ducanh2912/next-pwa` in dependencies:
 ```bash
-cd apps/frontend && npm list next-pwa
+cd apps/frontend && npm list @ducanh2912/next-pwa
 ```
-Expected: `next-pwa@<version>` listed.
+Expected: `@ducanh2912/next-pwa@<version>` listed.
 
 - [ ] **Step 3: Commit**
 
 ```bash
 git add apps/frontend/package.json apps/frontend/package-lock.json
-git commit -m "feat: add next-pwa for offline PWA support"
+git commit -m "feat: add @ducanh2912/next-pwa for offline PWA support"
 ```
 
 ---
@@ -62,7 +62,7 @@ git commit -m "feat: add next-pwa for offline PWA support"
 Modify `apps/frontend/next.config.mjs`:
 
 ```javascript
-import withPWA from 'next-pwa';
+import withPWAInit from '@ducanh2912/next-pwa';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -94,23 +94,15 @@ const nextConfig = {
   },
 };
 
-const withPWAConfig = withPWA({
+const withPWA = withPWAInit({
   dest: 'public',
   register: true,
   skipWaiting: true,
   disable: process.env.NODE_ENV === 'development',
+  cacheStartUrl: true,
+  dynamicStartUrl: true,
+  reloadOnOnline: true,
   runtimeCaching: [
-    {
-      urlPattern: /^https?.*/,
-      handler: 'NetworkFirst',
-      options: {
-        cacheName: 'offline-cache',
-        expiration: {
-          maxEntries: 50,
-          maxAgeSeconds: 24 * 60 * 60, // 24 hours
-        },
-      },
-    },
     {
       urlPattern: /^\/api\/.*/,
       handler: 'NetworkFirst',
@@ -122,10 +114,21 @@ const withPWAConfig = withPWA({
         },
       },
     },
+    {
+      urlPattern: /^https?.*/,
+      handler: 'NetworkFirst',
+      options: {
+        cacheName: 'offline-cache',
+        expiration: {
+          maxEntries: 50,
+          maxAgeSeconds: 24 * 60 * 60, // 24 hours
+        },
+      },
+    },
   ],
 });
 
-export default { ...nextConfig, ...withPWAConfig, rewrites: nextConfig.rewrites };
+export default withPWA(nextConfig);
 ```
 
 - [ ] **Step 2: Test build**
@@ -139,7 +142,7 @@ Expected: Build succeeds without errors. PWA service worker generated in `public
 
 ```bash
 git add apps/frontend/next.config.mjs
-git commit -m "feat: configure PWA with next-pwa for offline resilience"
+git commit -m "feat: configure PWA with @ducanh2912/next-pwa for offline resilience"
 ```
 
 ---
@@ -190,14 +193,17 @@ Modify `apps/frontend/lib/indexeddb.ts`, add after the `cacheGuest` method:
     let success = 0;
     let failed = 0;
 
-    for (const guest of guests) {
-      try {
-        await this.db!.put('localGuests', guest);
-        success++;
-      } catch {
-        failed++;
-      }
-    }
+    const tx = this.db!.transaction('localGuests', 'readwrite');
+    const store = tx.objectStore('localGuests');
+
+    await Promise.all(
+      guests.map((guest) =>
+        store.put(guest)
+          .then(() => { success++; })
+          .catch(() => { failed++; })
+      )
+    );
+    await tx.done;
 
     return { success, failed };
   }
@@ -236,7 +242,7 @@ Add after the `toggleMultipleCheckinPerCounter` function:
       setDownloadProgress(`Menyimpan ${guests.length} tamu ke cache...`);
 
       // Map to LocalGuest format
-      const localGuests: any[] = guests.map((g: any) => ({
+      const localGuests: LocalGuest[] = guests.map((g: any) => ({
         id: g.id,
         guestId: g.guestId,
         name: g.name,

@@ -18,7 +18,13 @@
       "Bash(docker ps *)",
       "Bash(npm install *)",
       "Bash(mkdir *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(d *)",
+      "Bash(@mklink *)",
+      "Bash(npm *)",
+      "Bash(type *)"
     ]
   },
   "$version": 3

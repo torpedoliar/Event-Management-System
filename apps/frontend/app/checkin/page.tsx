@@ -6,7 +6,7 @@ import { Search, QrCode, Loader2, CheckCircle, Clock, Users, X, XCircle, UserPlu
 import StationSetupModal from "../../components/StationSetupModal";
 import ConnectionStatusIndicator from "../../components/ConnectionStatusIndicator";
 import QueueManagementPanel from "../../components/QueueManagementPanel";
-import { indexedDBService, StationConfig as StationConfigType } from "../../lib/indexeddb";
+import { indexedDBService, StationConfig as StationConfigType, LocalGuest } from "../../lib/indexeddb";
 import { offlineSyncService } from "../../lib/offline-sync.service";
 import { connectionStatusService } from "../../lib/connection-status";
 
@@ -244,7 +244,7 @@ export default function CheckinPage() {
       const guests = await res.json();
       setDownloadProgress(`Menyimpan ${guests.length} tamu ke cache...`);
 
-      const localGuests: any[] = guests.map((g: any) => ({
+      const localGuests: LocalGuest[] = guests.map((g: any) => ({
         id: g.id,
         guestId: g.guestId,
         name: g.name,

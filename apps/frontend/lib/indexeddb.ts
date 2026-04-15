@@ -183,14 +183,18 @@ class IndexedDBService {
     let success = 0;
     let failed = 0;
 
-    for (const guest of guests) {
-      try {
-        await this.db!.put('localGuests', guest);
-        success++;
-      } catch {
-        failed++;
-      }
-    }
+    const tx = this.db!.transaction('localGuests', 'readwrite');
+    const store = tx.objectStore('localGuests');
+
+    // we can use Promise.all for all puts within the transaction
+    await Promise.all(
+      guests.map((guest) =>
+        store.put(guest)
+          .then(() => { success++; })
+          .catch(() => { failed++; })
+      )
+    );
+    await tx.done;
 
     return { success, failed };
   }
