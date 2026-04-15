@@ -359,9 +359,20 @@ export default function CheckinPage() {
       const isNetworkError = e.message?.includes('Gagal terhubung') || e.message?.includes('NetworkError') || e.message?.includes('Failed to fetch');
 
       if (isNetworkError && stationConfig) {
-        // Offline mode: queue check-in if guest found in local cache
-        if (results.length === 1) {
-          try {
+        // Offline mode: search in local cache
+        try {
+          const cachedGuests = await indexedDBService.getAllCachedGuests();
+          const cleanSearchQ = cleanQrContent(q.trim());
+
+          // Search by guestId or name
+          const matchedGuests = cachedGuests.filter(g =>
+            g.guestId.toLowerCase().includes(cleanSearchQ.toLowerCase()) ||
+            g.name.toLowerCase().includes(q.trim().toLowerCase())
+          );
+
+          if (matchedGuests.length === 1) {
+            // Found single match - proceed with offline check-in
+            const matchedGuest = matchedGuests[0];
             const queueLimit = cfg?.offlineQueueLimit || 500;
             const pendingCount = await offlineSyncService.getPendingCount();
 
@@ -374,19 +385,49 @@ export default function CheckinPage() {
               setError(`⚠️ Antrian hampir penuh (${pendingCount}/${queueLimit}). Segera hubungkan ke internet.`);
             }
 
-            await offlineSyncService.addToQueue(results[0].guestId);
-            setCheckedGuest(results[0]);
-            setSelected(results[0]);
+            // Create a Guest object from cached data
+            const guestFromCache: Guest = {
+              id: matchedGuest.id,
+              guestId: matchedGuest.guestId,
+              name: matchedGuest.name,
+              queueNumber: 0,
+              tableLocation: '',
+              checkedIn: matchedGuest.checkedIn,
+              checkedInAt: matchedGuest.lastCheckinAt,
+              checkinCount: matchedGuest.checkinCount,
+            };
+
+            await offlineSyncService.addToQueue(guestFromCache.guestId);
+            setResults([guestFromCache]);
+            setSelected(guestFromCache);
+            setCheckedGuest(guestFromCache);
             setIsDuplicateCheckIn(false);
+            setQ('');
             refreshHistory();
             startPopupTimeout();
             return;
-          } catch (queueErr) {
-            console.error('Queue error:', queueErr);
+          } else if (matchedGuests.length > 1) {
+            // Multiple matches - show list for selection
+            const guestResults: Guest[] = matchedGuests.map(g => ({
+              id: g.id,
+              guestId: g.guestId,
+              name: g.name,
+              queueNumber: 0,
+              tableLocation: '',
+              checkedIn: g.checkedIn,
+              checkedInAt: g.lastCheckinAt,
+              checkinCount: g.checkinCount,
+            }));
+            setResults(guestResults);
+            setError(`Ditemukan ${matchedGuests.length} tamu secara lokal. Pilih satu untuk check-in.`);
+            return;
           }
-        }
 
-        setError('Tidak ada koneksi internet. Check-in akan disimpan secara lokal.');
+          setError('Tamu tidak ditemukan dalam cache lokal. Hubungkan ke internet untuk pencarian server.');
+        } catch (cacheErr) {
+          console.error('Cache search error:', cacheErr);
+          setError('Tidak ada koneksi internet dan cache tidak tersedia.');
+        }
       } else {
         setError(e.message || 'Gagal mencari tamu');
       }
