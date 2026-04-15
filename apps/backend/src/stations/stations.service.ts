@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, ConflictException } from '@nestjs/common
 import { PrismaService } from '../prisma/prisma.service';
 import { RegisterStationDto } from './dto/register-station.dto';
 import { StationResponseDto } from './dto/station-response.dto';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class StationsService {
@@ -42,7 +42,7 @@ export class StationsService {
     }
 
     // Create new station
-    const newStationId = stationId || uuidv4();
+    const newStationId = stationId || randomUUID();
     
     const station = await this.prisma.checkinStation.create({
       data: {
