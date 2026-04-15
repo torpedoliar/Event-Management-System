@@ -9,6 +9,7 @@ import React, { useState, useEffect } from 'react';
 import { connectionStatusService, ConnectionInfo } from '../lib/connection-status';
 import { offlineSyncService } from '../lib/offline-sync.service';
 import { ConnectionStatus } from '../types/offline.types';
+import { indexedDBService } from '../lib/indexeddb';
 
 interface ConnectionStatusIndicatorProps {
   className?: string;
@@ -20,6 +21,7 @@ export default function ConnectionStatusIndicator({ className = '', onShowQueue 
   const [pendingCount, setPendingCount] = useState(0);
   const [lastSync, setLastSync] = useState<string | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [cachedGuestCount, setCachedGuestCount] = useState(0);
 
   useEffect(() => {
     // Listen to connection status
@@ -40,6 +42,18 @@ export default function ConnectionStatusIndicator({ className = '', onShowQueue 
       unsubStatus();
       unsubQueue();
     };
+  }, []);
+
+  useEffect(() => {
+    const loadCachedCount = async () => {
+      try {
+        const guests = await indexedDBService.getAllCachedGuests();
+        setCachedGuestCount(guests.length);
+      } catch (err) {
+        console.error('Failed to load cached guest count:', err);
+      }
+    };
+    loadCachedCount();
   }, []);
 
   const handleSyncNow = async () => {
@@ -75,7 +89,7 @@ export default function ConnectionStatusIndicator({ className = '', onShowQueue 
 
   const getStatusBg = () => {
     if (status === 'online') {
-      return pendingCount > 0 
+      return pendingCount > 0
         ? 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800'
         : 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800';
     } else {
@@ -99,10 +113,10 @@ export default function ConnectionStatusIndicator({ className = '', onShowQueue 
             {pendingCount}
           </span>
         )}
-        <svg 
-          className={`w-4 h-4 text-gray-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`} 
-          fill="none" 
-          viewBox="0 0 24 24" 
+        <svg
+          className={`w-4 h-4 text-gray-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+          fill="none"
+          viewBox="0 0 24 24"
           stroke="currentColor"
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -138,9 +152,28 @@ export default function ConnectionStatusIndicator({ className = '', onShowQueue 
                       {pendingCount} check-in pending sync
                     </p>
                     <p className="text-xs text-yellow-600 dark:text-yellow-400 mt-1">
-                      {status === 'online' 
-                        ? 'Will sync automatically' 
+                      {status === 'online'
+                        ? 'Will sync automatically'
                         : 'Will sync when connection restored'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Cached Guests Info */}
+            {cachedGuestCount > 0 && (
+              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3">
+                <div className="flex items-start gap-2">
+                  <svg className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2 1 3 3 3h10c2 0 3-1 3-3V7c0-2-1-3-3-3H7c-2 0-3 1-3 3z" />
+                  </svg>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-blue-800 dark:text-blue-300">
+                      {cachedGuestCount} tamu ditarik cache lokal
+                    </p>
+                    <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                      Tersedia untuk pencarian offline
                     </p>
                   </div>
                 </div>
