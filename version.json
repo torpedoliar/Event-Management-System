@@ -1,0 +1,175 @@
+{
+  "name": "Guest Registration & Check-in System",
+  "version": "1.4.0",
+  "versionCode": 140,
+  "releaseDate": "2026-04-15",
+  "changelog": {
+    "v1.4.0": {
+      "date": "2026-04-15",
+      "type": "feature",
+      "title": "Multi-Station Offline Mode with Performance Optimizations",
+      "features": [
+        "Multi-station check-in support with unique station identity",
+        "Offline mode: check-in continues without internet via IndexedDB queue",
+        "Auto-sync: automatic synchronization when connection restored (configurable interval)",
+        "Conflict resolution: first-wins strategy with duplicate flagging and audit trail",
+        "Queue management: view, retry, clear pending check-ins",
+        "Queue limit enforcement: warn at 80%, block at 100% (configurable)",
+        "Photo offline support: captured photos stored as base64 for later sync",
+        "Connection status indicator: real-time online/offline/queue status",
+        "Station setup modal: configure station name and offline settings",
+        "Health check endpoint: GET /api/public/health for connection monitoring",
+        "Distinct SSE 'sync_complete' event with station counts and conflict details",
+        "IndexedDB caching for offline guest data"
+      ],
+      "fixes": [
+        "Wire offline detection to doSearch, doCheckin, and QR scan flows",
+        "Queue limit enforcement prevents unbounded offline queue growth",
+        "Photo upload fallback: store base64 in IndexedDB when upload fails",
+        "Connection status auto-retry with exponential backoff",
+        "Health check timeout: AbortSignal.timeout(5s) prevents hanging requests",
+        "Sync_complete SSE event handler added to frontend",
+        "Sync conflict error messages propagated to queue panel"
+      ],
+      "performance": [
+        "syncBatchFromStation: batch load guests (2 queries vs N queries)",
+        "syncBatchFromStation: Promise.all for parallel check-in processing",
+        "checkInOffline: select instead of include (50% less data transfer)",
+        "getStationsByEvent: Prisma _count include (1 query vs N+1)",
+        "Compound indexes added: [checkinAt, stationId], [guestId, checkinAt]",
+        "IndexedDB: Promise.all parallel updates for pending check-ins",
+        "IndexedDB: cursor-based batch delete for synced check-ins",
+        "IndexedDB: parallel cache updates for remote guest data",
+        "Connection health check: performance.now() for sub-millisecond precision"
+      ],
+      "api": {
+        "added": [
+          "POST /api/stations/register - Register or update check-in station",
+          "GET /api/stations?eventId=xxx - List active stations with check-in counts",
+          "POST /api/public/guests/checkin-offline - Submit single offline check-in",
+          "POST /api/public/guests/sync-batch - Bulk sync offline check-ins with conflict resolution",
+          "GET /api/public/health - Health check with offline configuration"
+        ],
+        "modified": [],
+        "deprecated": []
+      },
+      "database": {
+        "newTables": [
+          "CheckinStation - Station identity and sync tracking"
+        ],
+        "modifiedTables": [
+          "GuestCheckin: added stationId, isOffline, clientTimestamp, syncedAt, isDuplicate fields",
+          "Event: added allowOfflineMode, offlineSyncInterval, offlineQueueLimit fields"
+        ],
+        "newIndexes": [
+          "GuestCheckin: [checkinAt, stationId]",
+          "GuestCheckin: [guestId, checkinAt]"
+        ],
+        "removedTables": [],
+        "migrationScript": "update.bat / update.sh (step 7: prisma db push --accept-data-loss)"
+      },
+      "dependencies": {
+        "added": {
+          "idb": "^8.0 - IndexedDB wrapper (Promise-based)",
+          "localforage": "^1.10 - Local storage caching layer"
+        },
+        "removed": []
+      },
+      "frontend": {
+        "newComponents": [
+          "StationSetupModal - Station configuration UI",
+          "ConnectionStatusIndicator - Real-time connection status badge",
+          "QueueManagementPanel - Pending check-ins queue viewer"
+        ],
+        "newServices": [
+          "lib/indexeddb.ts - IndexedDB wrapper service",
+          "lib/offline-sync.service.ts - Offline queue and auto-sync service",
+          "lib/connection-status.ts - Connection monitoring and health check"
+        ],
+        "newTypes": [
+          "types/offline.types.ts - Offline mode TypeScript definitions"
+        ],
+        "modifiedFiles": [
+          "app/checkin/page.tsx - Integrated offline mode, queue limits, photo cache"
+        ]
+      },
+      "backend": {
+        "newModules": [
+          "src/stations/stations.controller.ts",
+          "src/stations/stations.service.ts",
+          "src/stations/stations.module.ts",
+          "src/stations/dto/register-station.dto.ts",
+          "src/stations/dto/station-response.dto.ts"
+        ],
+        "modifiedFiles": [
+          "prisma/schema.prisma - Added CheckinStation model + offline fields",
+          "src/app.module.ts - Added StationsModule",
+          "src/guests/guests.service.ts - Added checkInOffline, syncBatchFromStation",
+          "src/guests/dto/offline-checkin.dto.ts - New DTOs for offline check-in",
+          "src/public/public.controller.ts - Added offline endpoints + sync_complete SSE"
+        ]
+      },
+      "documentation": [
+        "docs/superpowers/specs/2026-04-15-multi-station-offline-mode-design.md",
+        "docs/superpowers/IMPLEMENTATION_PROGRESS.md",
+        "MULTI_STATION_OFFLINE_IMPLEMENTATION.md",
+        "FIXES_APPLIED.md",
+        "INTEGRATION_COMPLETE.md",
+        "SUPERPOWERS_INTEGRATION_GUIDE.md"
+      ],
+      "commits": [
+        "a471ae0 - feat: multi-station offline mode with auto-sync, queue limits, and photo cache",
+        "4981ef4 - perf: optimize backend + frontend for multi-station offline mode"
+      ],
+      "testing": {
+        "manual": [
+          "Offline QR scan → queue → reconnect → auto-sync",
+          "Offline search → queue → reconnect → auto-sync",
+          "Queue limit: 400 warn, 500 block",
+          "Photo offline: capture → store base64 → sync later",
+          "Multi-station sync: Station A + B offline → both reconnect → conflict resolution",
+          "Connection status: online/offline indicator with queue count",
+          "Health check: GET /api/public/health returns offline config"
+        ],
+        "automated": "TBD"
+      }
+    },
+    "v1.3.1": {
+      "date": "2026-04-14",
+      "type": "patch",
+      "title": "Auth and Souvenir Fixes",
+      "features": [
+        "Resolved DI error by importing GuestsModule in PublicModule",
+        "Souvenir list include queueNumber and division for admin page display",
+        "10K+ scale optimizations: connection pool, cached events, _count queries, debounce, AbortController"
+      ]
+    }
+  },
+  "environment": {
+    "frontend": {
+      "framework": "Next.js 15",
+      "runtime": "React 18",
+      "styling": "Tailwind CSS",
+      "language": "TypeScript"
+    },
+    "backend": {
+      "framework": "NestJS 10",
+      "orm": "Prisma",
+      "database": "PostgreSQL 14",
+      "language": "TypeScript"
+    },
+    "deployment": {
+      "method": "Docker Compose",
+      "files": [
+        "docker-compose.prod.yml",
+        "docker-compose.dev-https.yml"
+      ]
+    }
+  },
+  "build": {
+    "node": ">=18",
+    "npm": ">=9",
+    "docker": "latest",
+    "lastBuild": "2026-04-15T00:00:00Z"
+  }
+}
