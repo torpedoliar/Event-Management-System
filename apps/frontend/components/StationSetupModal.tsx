@@ -6,8 +6,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { indexedDBService, StationConfig } from '@/lib/indexeddb';
-import { offlineSyncService } from '@/lib/offline-sync.service';
+import { indexedDBService, StationConfig } from '../lib/indexeddb';
+import { offlineSyncService } from '../lib/offline-sync.service';
 
 interface StationSetupModalProps {
   isOpen: boolean;

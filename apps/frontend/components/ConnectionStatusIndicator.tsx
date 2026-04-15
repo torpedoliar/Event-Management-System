@@ -6,9 +6,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { connectionStatusService, ConnectionInfo } from '@/lib/connection-status';
-import { offlineSyncService } from '@/lib/offline-sync.service';
-import { ConnectionStatus } from '@/types/offline.types';
+import { connectionStatusService, ConnectionInfo } from '../lib/connection-status';
+import { offlineSyncService } from '../lib/offline-sync.service';
+import { ConnectionStatus } from '../types/offline.types';
 
 interface ConnectionStatusIndicatorProps {
   className?: string;
