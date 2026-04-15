@@ -18,7 +18,7 @@ export interface ConnectionInfo {
 }
 
 class ConnectionStatusService {
-  private status: ConnectionStatus = navigator.onLine ? 'online' : 'offline';
+  private status: ConnectionStatus = typeof navigator !== 'undefined' ? (navigator.onLine ? 'online' : 'offline') : 'online';
   private listeners: StatusListener[] = [];
   private healthCheckInterval: NodeJS.Timeout | null = null;
   private currentInfo: ConnectionInfo = {
@@ -100,7 +100,7 @@ class ConnectionStatusService {
         throw new Error(`Health check failed: ${response.status}`);
       }
     } catch (error) {
-      if (!navigator.onLine) {
+      if (typeof navigator !== 'undefined' && !navigator.onLine) {
         this.setOffline();
       }
       this.currentInfo.status = this.status;
