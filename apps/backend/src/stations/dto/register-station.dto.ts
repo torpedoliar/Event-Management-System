@@ -6,8 +6,8 @@ export class RegisterStationDto {
   stationId?: string; // UUID - optional for new stations
 
   @IsString()
-  stationName: string;
+  stationName!: string;
 
   @IsUUID()
-  eventId: string;
+  eventId!: string;
 }

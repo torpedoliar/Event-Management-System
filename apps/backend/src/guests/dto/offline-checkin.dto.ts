@@ -1,26 +1,27 @@
-import { IsString, IsOptional, IsDateString } from 'class-validator';
+import { IsString, IsOptional, IsDateString, IsArray, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class OfflineCheckinDto {
   @IsString()
-  stationId: string;
+  stationId!: string;
 
   @IsString()
-  guestIdentifier: string; // guestId or UUID from QR
+  guestIdentifier!: string;
 
   @IsDateString()
-  clientTimestamp: string;
+  clientTimestamp!: string;
 
   @IsString()
   @IsOptional()
-  photo?: string; // Base64 encoded photo (optional)
+  photo?: string;
 }
 
 export class SyncBatchItemDto {
   @IsString()
-  guestIdentifier: string;
+  guestIdentifier!: string;
 
   @IsDateString()
-  clientTimestamp: string;
+  clientTimestamp!: string;
 
   @IsString()
   @IsOptional()
@@ -29,12 +30,15 @@ export class SyncBatchItemDto {
 
 export class SyncBatchDto {
   @IsString()
-  stationId: string;
+  stationId!: string;
 
   @IsDateString()
   @IsOptional()
   lastSyncAt?: string;
 
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SyncBatchItemDto)
   @IsOptional()
   pendingCheckins?: SyncBatchItemDto[];
 }

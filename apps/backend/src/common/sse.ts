@@ -14,7 +14,8 @@ export type ServerEvent =
   | { type: 'prize_collected'; data: any }
   | { type: 'prize_uncollected'; data: any }
   | { type: 'guest_created_souvenir'; data: any }
-  | { type: 'event_change'; data: any };
+  | { type: 'event_change'; data: any }
+  | { type: 'sync_complete'; data: any };
 
 const emitter = new EventEmitter();
 emitter.setMaxListeners(1000);
