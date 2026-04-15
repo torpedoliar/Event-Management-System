@@ -45,11 +45,18 @@ model Event {
   allowMultipleCheckinPerCounter Boolean     @default(false) // Allow 1 check-in per admin/counter
   requireCheckinForSouvenir Boolean         @default(true)  // Require check-in before taking souvenir/consumption
   customCategories      Json?                // Array of {value: string, label: string, color: string}
+  
+  // Offline mode settings
+  allowOfflineMode        Boolean            @default(true)  // Enable offline check-in
+  offlineSyncInterval     Int                @default(30)    // Seconds between sync attempts
+  offlineQueueLimit       Int                @default(500)   // Max pending check-ins before warning
+  
   createdAt             DateTime             @default(now())
   updatedAt             DateTime             @updatedAt
   guests                Guest[]
   prizes                Prize[]
   souvenirs             Souvenir[]
+  stations              CheckinStation[]
 }
 
 enum GuestCategory {
@@ -118,10 +125,41 @@ model GuestCheckin {
   checkinAt     DateTime @default(now())
   checkinById   String?
   checkinByName String?
-  counterName   String?  // Optional: name of the counter/station
+  counterName   String?  // Name of the counter/station
+  
+  // Station tracking
+  stationId     String?  // FK to CheckinStation
+  station       CheckinStation? @relation(fields: [stationId], references: [id])
+  
+  // Offline sync fields
+  isOffline           Boolean  @default(false) // Created while offline
+  clientTimestamp     DateTime? // When check-in happened on client
+  syncedAt            DateTime? // When synced to server
+  isDuplicate         Boolean  @default(false) // Marked as duplicate during sync
 
   @@index([guestId])
   @@index([checkinById])
+  @@index([stationId])
+  @@index([isOffline])
+  @@index([syncedAt])
+}
+
+// Check-in stations for multi-station support
+model CheckinStation {
+  id          String   @id @default(uuid())
+  name        String   // Friendly name (e.g., "Station A - Main Door")
+  stationId   String   @unique // UUID for identification
+  eventId     String
+  isActive    Boolean  @default(true)
+  lastSyncAt  DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  checkins    GuestCheckin[]
+  event       Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  
+  @@index([eventId])
+  @@index([stationId])
 }
 
 model Prize {

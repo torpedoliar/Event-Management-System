@@ -3,6 +3,12 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { apiBase, toApiUrl, parseErrorMessage } from "../../lib/api";
 import { Html5Qrcode } from "html5-qrcode";
 import { Search, QrCode, Loader2, CheckCircle, Clock, Users, X, XCircle, UserPlus, Settings, Camera, UserCheck } from 'lucide-react';
+import StationSetupModal from "../../components/StationSetupModal";
+import ConnectionStatusIndicator from "../../components/ConnectionStatusIndicator";
+import QueueManagementPanel from "../../components/QueueManagementPanel";
+import { indexedDBService, StationConfig as StationConfigType } from "../../lib/indexeddb";
+import { offlineSyncService } from "../../lib/offline-sync.service";
+import { connectionStatusService } from "../../lib/connection-status";
 
 type EventConfig = {
   id: string;
@@ -110,6 +116,40 @@ export default function CheckinPage() {
   const searchAbortRef = useRef<AbortController | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { addEventListener, removeEventListener } = useSSE();
+
+  // Offline mode state
+  const [showStationSetup, setShowStationSetup] = useState(false);
+  const [showQueuePanel, setShowQueuePanel] = useState(false);
+  const [stationConfig, setStationConfig] = useState<StationConfigType | null>(null);
+
+  // Initialize offline mode on mount
+  useEffect(() => {
+    const initOfflineMode = async () => {
+      try {
+        // Load station config from IndexedDB
+        const config = await indexedDBService.getStationConfig();
+        if (config) {
+          setStationConfig(config);
+          
+          // Initialize sync service
+          await offlineSyncService.init(config.stationId, config.stationName, 30);
+        } else {
+          // Show station setup on first visit
+          setShowStationSetup(true);
+        }
+      } catch (err) {
+        console.error('Failed to init offline mode:', err);
+      }
+    };
+
+    initOfflineMode();
+
+    // Cleanup on unmount
+    return () => {
+      offlineSyncService.destroy();
+      connectionStatusService.destroy();
+    };
+  }, []);
 
   useEffect(() => {
     fetch(`${apiBase()}/config/event`).then(async (r) => {
@@ -268,7 +308,40 @@ export default function CheckinPage() {
       }
       // Jika > 1, biarkan user memilih dari list
     } catch (e: any) {
-      setError(e.message || 'Gagal mencari tamu');
+      const isNetworkError = e.message?.includes('Gagal terhubung') || e.message?.includes('NetworkError') || e.message?.includes('Failed to fetch');
+      
+      if (isNetworkError && stationConfig) {
+        // Offline mode: queue check-in if guest found in local cache
+        if (results.length === 1) {
+          try {
+            const queueLimit = cfg?.offlineQueueLimit || 500;
+            const pendingCount = await offlineSyncService.getPendingCount();
+            
+            if (pendingCount >= queueLimit) {
+              setError(`Antrian offline penuh (${pendingCount}/${queueLimit}). Hubungkan ke internet untuk sinkronisasi.`);
+              return;
+            }
+            
+            if (pendingCount >= queueLimit * 0.8) {
+              setError(`⚠️ Antrian hampir penuh (${pendingCount}/${queueLimit}). Segera hubungkan ke internet.`);
+            }
+            
+            await offlineSyncService.addToQueue(results[0].guestId);
+            setCheckedGuest(results[0]);
+            setSelected(results[0]);
+            setIsDuplicateCheckIn(false);
+            refreshHistory();
+            startPopupTimeout();
+            return;
+          } catch (queueErr) {
+            console.error('Queue error:', queueErr);
+          }
+        }
+        
+        setError('Tidak ada koneksi internet. Check-in akan disimpan secara lokal.');
+      } else {
+        setError(e.message || 'Gagal mencari tamu');
+      }
     } finally {
       setSearching(false);
       // Keep focus on input for next checkin
@@ -286,15 +359,15 @@ export default function CheckinPage() {
       const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
-      
+
       // Use internal ID endpoint if explicitly requested or if there are multiple results
-      const endpoint = useInternalId || results.length > 1 
+      const endpoint = useInternalId || results.length > 1
         ? `${apiBase()}/public/guests/checkin-by-id`
         : `${apiBase()}/public/guests/checkin`;
       const body = useInternalId || results.length > 1
         ? { id: g.id }
         : { guestId: g.guestId };
-      
+
       const res = await fetch(endpoint, {
         method: 'POST',
         headers,
@@ -329,6 +402,35 @@ export default function CheckinPage() {
         autoCapturephoto(updated);
       }
     } catch (e: any) {
+      const isNetworkError = e.message?.includes('Gagal terhubung') || e.message?.includes('NetworkError') || e.message?.includes('Failed to fetch');
+      
+      if (isNetworkError && stationConfig) {
+        // Offline mode: queue check-in
+        try {
+          const queueLimit = cfg?.offlineQueueLimit || 500;
+          const pendingCount = await offlineSyncService.getPendingCount();
+          
+          if (pendingCount >= queueLimit) {
+            setError(`Antrian offline penuh (${pendingCount}/${queueLimit}). Hubungkan ke internet untuk sinkronisasi.`);
+            return;
+          }
+          
+          if (pendingCount >= queueLimit * 0.8) {
+            setError(`⚠️ Antrian hampir penuh (${pendingCount}/${queueLimit}). Segera hubungkan ke internet.`);
+          }
+          
+          await offlineSyncService.addToQueue(g.guestId);
+          setCheckedGuest(g);
+          setSelected(g);
+          setIsDuplicateCheckIn(false);
+          refreshHistory();
+          startPopupTimeout();
+          return;
+        } catch (queueErr) {
+          console.error('Queue error:', queueErr);
+        }
+      }
+      
       setError(e.message || 'Gagal check-in');
     } finally {
       setChecking(false);
@@ -606,13 +708,33 @@ export default function CheckinPage() {
               headers: token ? { Authorization: `Bearer ${token}` } : undefined,
               body: fd,
             });
-            
+
             if (res.ok) {
               const updated = await res.json();
               setCheckedGuest(updated);
               setAutoCaptureStatus('Foto berhasil disimpan!');
             } else {
-              setAutoCaptureStatus('Gagal menyimpan foto');
+              // Upload failed - store base64 in IndexedDB for later sync
+              if (stationConfig) {
+                try {
+                  await indexedDBService.cacheGuest({
+                    id: guest.id,
+                    guestId: guest.guestId,
+                    name: guest.name,
+                    checkedIn: true,
+                    checkinCount: guest.checkinCount || 1,
+                    lastCheckinAt: new Date().toISOString(),
+                    photoUrl: dataUrl, // Store base64 for offline upload
+                    updatedAt: new Date().toISOString()
+                  });
+                  setAutoCaptureStatus('Foto disimpan offline (akan sync)');
+                } catch (dbErr) {
+                  console.error('Failed to cache photo:', dbErr);
+                  setAutoCaptureStatus('Gagal menyimpan foto');
+                }
+              } else {
+                setAutoCaptureStatus('Gagal menyimpan foto');
+              }
             }
           }
         }
@@ -681,17 +803,26 @@ export default function CheckinPage() {
       setQ('');
       refreshHistory();
     };
+    
+    // Handle sync_complete event
+    const onSyncComplete = (data: any) => {
+      console.log(`Sync complete: ${data.successCount} success, ${data.conflictCount} conflicts from ${data.stationName}`);
+      refreshHistory();
+    };
+    
     addEventListener('config', onConfig);
     addEventListener('preview', onPreview);
     addEventListener('checkin', onChange);
     addEventListener('uncheckin', onChange);
     addEventListener('event_change', onEventChange);
+    addEventListener('sync_complete', onSyncComplete);
     return () => {
       removeEventListener('config', onConfig);
       removeEventListener('preview', onPreview);
       removeEventListener('checkin', onChange);
       removeEventListener('uncheckin', onChange);
       removeEventListener('event_change', onEventChange);
+      removeEventListener('sync_complete', onSyncComplete);
     };
   }, [addEventListener, removeEventListener]);
 
@@ -779,6 +910,37 @@ export default function CheckinPage() {
         autoCapturephoto(updated);
       }
     } catch (e: any) {
+      const isNetworkError = e.message?.includes('Gagal terhubung') || e.message?.includes('NetworkError') || e.message?.includes('Failed to fetch');
+      
+      if (isNetworkError && stationConfig) {
+        // Offline mode: queue check-in with QR code
+        try {
+          const queueLimit = cfg?.offlineQueueLimit || 500;
+          const pendingCount = await offlineSyncService.getPendingCount();
+          
+          if (pendingCount >= queueLimit) {
+            setError(`Antrian offline penuh (${pendingCount}/${queueLimit}). Hubungkan ke internet untuk sinkronisasi.`);
+            return;
+          }
+          
+          if (pendingCount >= queueLimit * 0.8) {
+            setError(`⚠️ Antrian hampir penuh (${pendingCount}/${queueLimit}). Segera hubungkan ke internet.`);
+          }
+          
+          // Queue with photo if captured
+          await offlineSyncService.addToQueue(cleanQrContent(decodedText));
+          setError(null);
+          setCheckedGuest({ guestId: cleanQrContent(decodedText), name: 'Queued (offline)', id: 'offline', queueNumber: 0, tableLocation: '', checkedIn: false } as Guest);
+          setSelected({ guestId: cleanQrContent(decodedText), name: 'Queued (offline)', id: 'offline', queueNumber: 0, tableLocation: '', checkedIn: false } as Guest);
+          setIsDuplicateCheckIn(false);
+          refreshHistory();
+          startPopupTimeout();
+          return;
+        } catch (queueErr) {
+          console.error('Queue error:', queueErr);
+        }
+      }
+      
       setError(e.message || 'Gagal scan QR');
     } finally {
       setChecking(false);
@@ -833,6 +995,35 @@ export default function CheckinPage() {
               <span className="text-amber-300 text-sm">Tidak Login</span>
             </div>
           )}
+        </div>
+
+        {/* Station & Connection Status */}
+        <div className="mt-4 flex items-center justify-between max-w-5xl mx-auto">
+          {stationConfig && (
+            <div className="flex items-center gap-2 bg-blue-500/20 border border-blue-500/30 rounded-lg px-3 py-2">
+              <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <span className="text-blue-300 text-sm font-medium">{stationConfig.stationName}</span>
+            </div>
+          )}
+          <div className="flex items-center gap-3 ml-auto">
+            <button
+              onClick={() => setShowQueuePanel(true)}
+              className="text-white/60 hover:text-white text-sm underline"
+              title="View Pending Queue"
+            >
+              Queue
+            </button>
+            <button
+              onClick={() => setShowStationSetup(true)}
+              className="text-white/60 hover:text-white text-sm underline"
+              title="Station Settings"
+            >
+              Station
+            </button>
+            <ConnectionStatusIndicator onShowQueue={() => setShowQueuePanel(true)} />
+          </div>
         </div>
       </div>
 
@@ -1692,6 +1883,22 @@ const Html5QrcodePlugin = ({ qrCodeSuccessCallback, onScanFailure, fps, qrbox }:
           onChange={handleFileUpload}
         />
       </div>
+
+      {/* Station Setup Modal */}
+      <StationSetupModal
+        isOpen={showStationSetup}
+        onComplete={(config) => {
+          setStationConfig(config);
+          setShowStationSetup(false);
+        }}
+        existingConfig={stationConfig}
+      />
+
+      {/* Queue Management Panel */}
+      <QueueManagementPanel
+        isOpen={showQueuePanel}
+        onClose={() => setShowQueuePanel(false)}
+      />
     </div>
   );
 };

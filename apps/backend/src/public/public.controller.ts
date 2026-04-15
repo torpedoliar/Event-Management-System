@@ -79,6 +79,66 @@ export class PublicController {
     return newGuest;
   }
 
+  @Post('guests/checkin-offline')
+  async checkinOffline(
+    @Body('stationId') stationId: string,
+    @Body('guestIdentifier') guestIdentifier: string,
+    @Body('clientTimestamp') clientTimestamp: string,
+    @Body('stationName') stationName?: string,
+  ) {
+    const result = await this.guests.checkInOffline(
+      stationId,
+      guestIdentifier,
+      clientTimestamp,
+      stationName
+    );
+    
+    // Emit event for real-time update (even for offline check-ins)
+    if (result.success) {
+      emitEvent({ type: 'checkin', data: result.guest });
+    }
+    
+    return result;
+  }
+
+  @Post('guests/sync-batch')
+  async syncBatch(
+    @Body('stationId') stationId: string,
+    @Body('lastSyncAt') lastSyncAt?: string,
+    @Body('pendingCheckins') pendingCheckins?: Array<{
+      guestIdentifier: string;
+      clientTimestamp: string;
+    }>,
+    @Body('stationName') stationName?: string,
+  ) {
+    const lastSyncDate = lastSyncAt ? new Date(lastSyncAt) : null;
+    const checkins = pendingCheckins || [];
+
+    const result = await this.guests.syncBatchFromStation(
+      stationId,
+      lastSyncDate,
+      checkins,
+      stationName
+    );
+
+    // Emit distinct sync_complete event with counts
+    if (result.successCount > 0 || result.conflictCount > 0) {
+      emitEvent({ 
+        type: 'sync_complete', 
+        data: { 
+          stationId,
+          stationName,
+          processed: result.processed,
+          successCount: result.successCount,
+          conflictCount: result.conflictCount,
+          serverTimestamp: result.serverTimestamp
+        } 
+      });
+    }
+
+    return result;
+  }
+
   @Get('guests/history')
   history(@Query('limit') limit?: string) {
     const lim = limit ? Number(limit) : 20;
@@ -115,6 +175,7 @@ export class PublicController {
       if (ev.type === 'souvenir_removed') send('souvenir_removed', ev.data);
       if (ev.type === 'souvenir_reset') send('souvenir_reset', ev.data);
       if (ev.type === 'event_change') send('event_change', ev.data);
+      if (ev.type === 'sync_complete') send('sync_complete', ev.data);
     });
 
     const heartbeat = setInterval(() => {
@@ -126,6 +187,21 @@ export class PublicController {
       clearInterval(heartbeat);
       off();
     });
+  }
+
+  @Get('health')
+  async health() {
+    const activeEvent = await this.guests.getActiveEvent();
+    
+    return {
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      eventId: activeEvent?.id || null,
+      eventName: activeEvent?.name || null,
+      allowOfflineMode: activeEvent?.allowOfflineMode ?? true,
+      offlineSyncInterval: activeEvent?.offlineSyncInterval ?? 30,
+      offlineQueueLimit: activeEvent?.offlineQueueLimit ?? 500
+    };
   }
 }
 

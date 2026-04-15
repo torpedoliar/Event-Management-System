@@ -593,6 +593,200 @@ export class GuestsService {
     }
   }
 
+  /**
+   * Process offline check-in submitted by station
+   * Used when station was offline and now submitting individual check-in
+   */
+  async checkInOffline(
+    stationId: string,
+    guestIdentifier: string,
+    clientTimestamp: string,
+    stationName?: string
+  ) {
+    const eventId = await this.getActiveEventId();
+    if (!eventId) throw new NotFoundException('No active event');
+
+    // Find guest
+    let guest: any = null;
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(guestIdentifier);
+
+    if (isUuid) {
+      guest = await this.prisma.guest.findUnique({ 
+        where: { id: guestIdentifier },
+        include: { event: true, checkins: true }
+      });
+    }
+
+    if (!guest) {
+      guest = await this.prisma.guest.findFirst({ 
+        where: { eventId, guestId: guestIdentifier },
+        include: { event: true, checkins: true }
+      });
+    }
+
+    if (!guest) throw new NotFoundException('Guest not found');
+
+    // Check event settings
+    const allowMultiple = guest.event?.allowMultipleCheckin ?? false;
+    const maxCheckins = guest.event?.maxCheckinCount ?? 1;
+
+    // Conflict detection for offline check-ins
+    const existingCheckins = guest.checkins || [];
+    const isDuplicate = !allowMultiple && existingCheckins.length > 0;
+    const maxReached = existingCheckins.length >= maxCheckins;
+
+    // Create check-in record (even if duplicate, for audit trail)
+    const now = new Date();
+    const clientTime = new Date(clientTimestamp);
+
+    const [newCheckin, updatedGuest] = await this.prisma.$transaction(async (tx) => {
+      // Create check-in with offline flags
+      const checkin = await tx.guestCheckin.create({
+        data: {
+          guestId: guest.id,
+          stationId: stationId,
+          counterName: stationName || null,
+          checkinAt: clientTime, // Use client timestamp as actual check-in time
+          isOffline: true,
+          clientTimestamp: clientTime,
+          syncedAt: now,
+          isDuplicate: isDuplicate || maxReached,
+        }
+      });
+
+      // Only update guest if this is not a duplicate
+      let updated: any;
+      if (!isDuplicate && !maxReached) {
+        updated = await tx.guest.update({
+          where: { id: guest.id },
+          data: {
+            checkedIn: true,
+            checkedInAt: guest.checkedInAt || clientTime,
+            checkinCount: { increment: 1 },
+          },
+        });
+      } else {
+        // Guest already checked in, just return as-is
+        updated = guest;
+      }
+
+      return [checkin, updated];
+    });
+
+    return {
+      success: !newCheckin.isDuplicate,
+      guest: updatedGuest,
+      checkin: newCheckin,
+      conflict: newCheckin.isDuplicate,
+      reason: newCheckin.isDuplicate ? (maxReached ? 'max_checkins_reached' : 'already_checked_in') : null
+    };
+  }
+
+  /**
+   * Bulk sync offline check-ins from station
+   * Processes all pending check-ins and returns remote updates
+   */
+  async syncBatchFromStation(
+    stationId: string,
+    lastSyncAt: Date | null,
+    pendingCheckins: Array<{
+      guestIdentifier: string;
+      clientTimestamp: string;
+    }>,
+    stationName?: string
+  ) {
+    const now = new Date();
+    const results: Array<{
+      clientTimestamp: string;
+      success: boolean;
+      checkinId?: string;
+      conflict?: boolean;
+      reason?: string;
+    }> = [];
+
+    // Process each pending check-in
+    for (const item of pendingCheckins) {
+      try {
+        const result = await this.checkInOffline(
+          stationId,
+          item.guestIdentifier,
+          item.clientTimestamp,
+          stationName
+        );
+
+        results.push({
+          clientTimestamp: item.clientTimestamp,
+          success: result.success,
+          checkinId: result.checkin.id,
+          conflict: result.conflict,
+          reason: result.reason || undefined
+        });
+      } catch (error) {
+        results.push({
+          clientTimestamp: item.clientTimestamp,
+          success: false,
+          conflict: false,
+          reason: error.message || 'Unknown error'
+        });
+      }
+    }
+
+    // Fetch remote updates (check-ins from OTHER stations since lastSyncAt)
+    const remoteUpdates: Array<{
+      guestId: string;
+      guestName: string;
+      checkinAt: Date;
+      stationName: string | null;
+    }> = [];
+
+    if (lastSyncAt) {
+      const remoteCheckins = await this.prisma.guestCheckin.findMany({
+        where: {
+          checkinAt: { gt: lastSyncAt },
+          OR: [
+            { stationId: { not: stationId } },
+            { stationId: null }
+          ]
+        },
+        include: {
+          guest: {
+            select: {
+              id: true,
+              name: true,
+              guestId: true
+            }
+          }
+        },
+        orderBy: { checkinAt: 'asc' }
+      });
+
+      for (const checkin of remoteCheckins) {
+        remoteUpdates.push({
+          guestId: checkin.guest.id,
+          guestName: checkin.guest.name,
+          checkinAt: checkin.checkinAt,
+          stationName: checkin.counterName || null
+        });
+      }
+    }
+
+    // Update station's lastSyncAt
+    await this.prisma.checkinStation.update({
+      where: { stationId },
+      data: { lastSyncAt: now }
+    });
+
+    return {
+      success: true,
+      serverTimestamp: now.toISOString(),
+      processed: results.length,
+      successCount: results.filter(r => r.success).length,
+      conflictCount: results.filter(r => r.conflict).length,
+      results,
+      remoteUpdates
+    };
+  }
+
   async publicHistory(limit = 20) {
     const eventId = await this.getActiveEventId();
     if (!eventId) return [];

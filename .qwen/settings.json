@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(github.com)",
+      "WebFetch(raw.githubusercontent.com)",
+      "Bash(git clone *)",
+      "Read(C:\\Users\\IT10\\.qwen\\superpowers/**)",
+      "Read(C:\\Users\\IT10\\.qwen/**)",
+      "Read(C:\\Users\\IT10\\.qwen\\superpowers\\skills\\brainstorming/**)",
+      "Read(C:\\Users\\IT10\\.qwen\\superpowers\\skills\\writing-plans/**)",
+      "Read(C:\\Users\\IT10\\.qwen\\superpowers\\skills\\using-superpowers/**)",
+      "Bash(xcopy *)",
+      "Bash(dir *)",
+      "Bash(do *)",
+      "Bash(findstr *)",
+      "Bash(powershell *)",
+      "Bash(npx *)",
+      "Bash(docker ps *)",
+      "Bash(npm install *)",
+      "Bash(mkdir *)",
+      "Bash(git add *)"
+    ]
+  },
+  "$version": 3
+}
