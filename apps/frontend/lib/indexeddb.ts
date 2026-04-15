@@ -130,17 +130,14 @@ class IndexedDBService {
     // OPTIMIZATION: Delete in single transaction instead of loop
     const tx = this.db!.transaction('pendingCheckins', 'readwrite');
     const store = tx.objectStore('pendingCheckins');
-    const cursor = await store.openCursor();
+    let cursor = await store.openCursor();
     const toDelete: string[] = [];
     
-    if (cursor) {
-      let current = cursor;
-      while (current) {
-        if (current.value.status === 'synced') {
-          toDelete.push(current.value.id);
-        }
-        current = await current.continue();
+    while (cursor) {
+      if (cursor.value.status === 'synced') {
+        toDelete.push(cursor.value.id);
       }
+      cursor = await cursor.continue();
     }
     
     // Batch delete

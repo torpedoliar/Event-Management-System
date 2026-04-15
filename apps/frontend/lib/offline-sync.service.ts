@@ -11,6 +11,7 @@ export interface SyncResult {
   processed: number;
   successCount: number;
   conflictCount: number;
+  serverTimestamp: string;
   results: Array<{
     clientTimestamp: string;
     success: boolean;
@@ -250,6 +251,7 @@ class OfflineSyncService {
         processed: pending.length,
         successCount: 0,
         conflictCount: 0,
+        serverTimestamp: new Date().toISOString(),
         results: [],
         remoteUpdates: []
       };

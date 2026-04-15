@@ -24,6 +24,9 @@ type EventConfig = {
   autoCreateGuestOnCheckin?: boolean;
   enablePhotoCapture?: boolean;
   allowMultipleCheckinPerCounter?: boolean;
+  allowOfflineMode?: boolean;
+  offlineSyncInterval?: number;
+  offlineQueueLimit?: number;
 };
 
 type GuestCheckin = {
@@ -1710,7 +1713,22 @@ export default function CheckinPage() {
           </div>
         </div>
       )}
-    </div >
+      {/* Station Setup Modal */}
+      <StationSetupModal
+        isOpen={showStationSetup}
+        onComplete={(config) => {
+          setStationConfig(config);
+          setShowStationSetup(false);
+        }}
+        existingConfig={stationConfig}
+      />
+
+      {/* Queue Management Panel */}
+      <QueueManagementPanel
+        isOpen={showQueuePanel}
+        onClose={() => setShowQueuePanel(false)}
+      />
+    </div>
   );
 }
 
@@ -1884,21 +1902,6 @@ const Html5QrcodePlugin = ({ qrCodeSuccessCallback, onScanFailure, fps, qrbox }:
         />
       </div>
 
-      {/* Station Setup Modal */}
-      <StationSetupModal
-        isOpen={showStationSetup}
-        onComplete={(config) => {
-          setStationConfig(config);
-          setShowStationSetup(false);
-        }}
-        existingConfig={stationConfig}
-      />
-
-      {/* Queue Management Panel */}
-      <QueueManagementPanel
-        isOpen={showQueuePanel}
-        onClose={() => setShowQueuePanel(false)}
-      />
     </div>
   );
 };
