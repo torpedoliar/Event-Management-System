@@ -183,14 +183,17 @@ class IndexedDBService {
     const tx = this.db!.transaction('localGuests', 'readwrite');
     const store = tx.objectStore('localGuests');
 
-    // we can use Promise.all for all puts within the transaction
-    await Promise.all(
-      guests.map((guest) =>
-        store.put(guest)
-          .then(() => { success++; })
-          .catch(() => { failed++; })
-      )
-    );
+    // Use sequential loop instead of mapping all promises at once.
+    // This allows the transaction microtasks to queue stably and saves Heap space.
+    for (const guest of guests) {
+      try {
+        await store.put(guest);
+        success++;
+      } catch (err) {
+        failed++;
+      }
+    }
+    
     await tx.done;
 
     return { success, failed };

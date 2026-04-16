@@ -138,6 +138,20 @@ class OfflineSyncService {
     const pending = await indexedDBService.getPendingCheckins();
     if (pending.length === 0) return null;
 
+    // Use Web Locks API to prevent cross-tab race conditions
+    if (typeof navigator !== 'undefined' && navigator.locks) {
+      return navigator.locks.request('offline-sync-lock', { mode: 'exclusive' }, async () => {
+        return this.executeSync(pending);
+      });
+    } else {
+      // Fallback for browsers without Web Locks API
+      return this.executeSync(pending);
+    }
+  }
+
+  private async executeSync(pending: PendingCheckin[]): Promise<SyncResult | null> {
+    if (!this.stationId) return null;
+
     this.isSyncing = true;
     this.notifyQueueListeners();
 

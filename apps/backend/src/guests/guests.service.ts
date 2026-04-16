@@ -703,6 +703,7 @@ export class GuestsService {
     pendingCheckins: Array<{
       guestIdentifier: string;
       clientTimestamp: string;
+      photo?: string;
     }>,
     stationName?: string
   ) {
@@ -756,6 +757,22 @@ export class GuestsService {
         const maxReached = existingCheckins.length >= maxCheckins;
         const clientTime = new Date(item.clientTimestamp);
 
+        // Idempotency check: prevent duplicate checkin insertion due to network flapping
+        const alreadySynced = existingCheckins.some(
+          (c: any) => c.clientTimestamp && new Date(c.clientTimestamp).getTime() === clientTime.getTime() && c.stationId === stationId
+        );
+
+        if (alreadySynced) {
+          const matchedCheckin = existingCheckins.find((c: any) => c.clientTimestamp && new Date(c.clientTimestamp).getTime() === clientTime.getTime() && c.stationId === stationId);
+          return {
+            clientTimestamp: item.clientTimestamp,
+            success: true, // Mark success so frontend clears its queue
+            checkinId: matchedCheckin?.id,
+            conflict: false,
+            reason: 'already_synced'
+          };
+        }
+
         try {
           const checkin = await this.prisma.guestCheckin.create({
             data: {
@@ -772,13 +789,18 @@ export class GuestsService {
 
           // Update guest only if not duplicate
           if (!isDuplicate && !maxReached) {
+            const guestUpdateData: Prisma.GuestUpdateInput = {
+              checkedIn: true,
+              checkedInAt: guest.checkedInAt || clientTime,
+              checkinCount: { increment: 1 },
+            };
+            if (item.photo) {
+              guestUpdateData.photoUrl = item.photo;
+            }
+
             await this.prisma.guest.update({
               where: { id: guest.id },
-              data: {
-                checkedIn: true,
-                checkedInAt: guest.checkedInAt || clientTime,
-                checkinCount: { increment: 1 },
-              }
+              data: guestUpdateData
             });
           }
 

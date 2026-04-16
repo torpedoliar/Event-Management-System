@@ -108,6 +108,7 @@ export class PublicController {
     @Body('pendingCheckins') pendingCheckins?: Array<{
       guestIdentifier: string;
       clientTimestamp: string;
+      photo?: string;
     }>,
     @Body('stationName') stationName?: string,
   ) {

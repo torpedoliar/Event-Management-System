@@ -242,7 +242,7 @@ export default function CheckinPage() {
 
       let allGuests: any[] = [];
       let page = 1;
-      const pageSize = 10000;
+      const pageSize = 500;
       let hasMore = true;
 
       while (hasMore) {
@@ -387,12 +387,24 @@ export default function CheckinPage() {
           if (exactMatch) {
             matchedGuests = [exactMatch];
           } else {
-            // Fallback to full scan for name search
+            // Menggunakan fast greedy loop agar UI thread tidak stuck meload 10,000 data
             const cachedGuests = await indexedDBService.getAllCachedGuests();
-            matchedGuests = cachedGuests.filter(g =>
-              g.guestId.toLowerCase().includes(cleanSearchQ.toLowerCase()) ||
-              g.name.toLowerCase().includes(q.trim().toLowerCase())
-            );
+            matchedGuests = [];
+            let matchCount = 0;
+            const maxResults = 50;
+            const searchLowerQ = cleanSearchQ.toLowerCase();
+            const searchNameQ = q.trim().toLowerCase();
+
+            for (const g of cachedGuests) {
+              if (
+                g.guestId.toLowerCase().includes(searchLowerQ) ||
+                g.name.toLowerCase().includes(searchNameQ)
+              ) {
+                matchedGuests.push(g);
+                matchCount++;
+                if (matchCount >= maxResults) break;
+              }
+            }
           }
 
           if (matchedGuests.length === 1) {
@@ -846,47 +858,50 @@ export default function CheckinPage() {
             ctx.drawImage(video, 0, 0);
             const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
 
-            // Upload photo
-            setAutoCaptureStatus('Menyimpan foto...');
-            const response = await fetch(dataUrl);
-            const blob = await response.blob();
-            const file = new File([blob], `photo_${guest.id}.jpg`, { type: 'image/jpeg' });
-
-            const fd = new FormData();
-            fd.append('photo', file);
-
-            const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-            const res = await fetch(`${apiBase()}/guests/${guest.id}`, {
-              method: 'PUT',
-              headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-              body: fd,
-            });
-
-            if (res.ok) {
-              const updated = await res.json();
-              setCheckedGuest(updated);
-              setAutoCaptureStatus('Foto berhasil disimpan!');
-            } else {
-              // Upload failed - store base64 in IndexedDB for later sync
-              if (stationConfig) {
-                try {
-                  await indexedDBService.cacheGuest({
-                    id: guest.id,
-                    guestId: guest.guestId,
-                    name: guest.name,
-                    checkedIn: true,
-                    checkinCount: guest.checkinCount || 1,
-                    lastCheckinAt: new Date().toISOString(),
-                    photoUrl: dataUrl, // Store base64 for offline upload
-                    updatedAt: new Date().toISOString()
-                  });
-                  setAutoCaptureStatus('Foto disimpan offline (akan sync)');
-                } catch (dbErr) {
-                  console.error('Failed to cache photo:', dbErr);
-                  setAutoCaptureStatus('Gagal menyimpan foto');
-                }
+            // Upload photo based on connectivity
+            const isOffline = connectionStatusService.getStatus() !== 'online';
+            
+            if (isOffline && stationConfig) {
+              setAutoCaptureStatus('Foto disimpan di antrean offline');
+              const pending = await indexedDBService.getPendingCheckins();
+              const pCheckin = pending.find(p => p.guestIdentifier === guest.guestId || p.guestIdentifier === guest.id);
+              if (pCheckin) {
+                await indexedDBService.updatePendingCheckin(pCheckin.id, { photo: dataUrl });
               } else {
-                setAutoCaptureStatus('Gagal menyimpan foto');
+                await offlineSyncService.addToQueue(guest.guestId, dataUrl);
+              }
+              // Update local cache
+              await indexedDBService.updateCachedGuest(guest.id, { photoUrl: dataUrl }).catch(() => {});
+            } else {
+              setAutoCaptureStatus('Menyimpan foto...');
+              const response = await fetch(dataUrl);
+              const blob = await response.blob();
+              const file = new File([blob], `photo_${guest.id}.jpg`, { type: 'image/jpeg' });
+
+              const fd = new FormData();
+              fd.append('photo', file);
+
+              const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+              const res = await fetch(`${apiBase()}/guests/${guest.id}`, {
+                method: 'PUT',
+                headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+                body: fd,
+              });
+
+              if (res.ok) {
+                const updated = await res.json();
+                setCheckedGuest(updated);
+                setAutoCaptureStatus('Foto berhasil disimpan!');
+              } else {
+                // Upload failed - fallback to offline queue
+                setAutoCaptureStatus('Foto masuk daftar sync');
+                const pending = await indexedDBService.getPendingCheckins();
+                const pCheckin = pending.find(p => p.guestIdentifier === guest.guestId || p.guestIdentifier === guest.id);
+                if (pCheckin) {
+                  await indexedDBService.updatePendingCheckin(pCheckin.id, { photo: dataUrl });
+                } else {
+                  await offlineSyncService.addToQueue(guest.guestId, dataUrl);
+                }
               }
             }
           }
