@@ -25,12 +25,14 @@ class ConnectionStatusService {
     status: this.status,
     lastCheck: new Date().toISOString()
   };
+  private onlineHandler = () => this.setOnline();
+  private offlineHandler = () => this.setOffline();
 
   constructor() {
     // Listen to browser events
     if (typeof window !== 'undefined') {
-      window.addEventListener('online', () => this.setOnline());
-      window.addEventListener('offline', () => this.setOffline());
+      window.addEventListener('online', this.onlineHandler);
+      window.addEventListener('offline', this.offlineHandler);
     }
   }
 
@@ -138,6 +140,10 @@ class ConnectionStatusService {
   destroy() {
     this.stopPeriodicCheck();
     this.listeners = [];
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('online', this.onlineHandler);
+      window.removeEventListener('offline', this.offlineHandler);
+    }
   }
 }
 

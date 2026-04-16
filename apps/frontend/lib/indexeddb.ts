@@ -127,27 +127,24 @@ class IndexedDBService {
 
   async clearSyncedCheckins(): Promise<void> {
     await this.init();
-    // OPTIMIZATION: Delete in single transaction instead of loop
     const tx = this.db!.transaction('pendingCheckins', 'readwrite');
     const store = tx.objectStore('pendingCheckins');
     let cursor = await store.openCursor();
-    const toDelete: string[] = [];
 
     while (cursor) {
       if (cursor.value.status === 'synced') {
-        toDelete.push(cursor.value.id);
+        cursor.delete();
       }
       cursor = await cursor.continue();
     }
-
-    // Batch delete
-    await Promise.all(toDelete.map(id => this.db!.delete('pendingCheckins', id)));
+    await tx.done;
   }
 
   async getPendingCount(): Promise<number> {
     await this.init();
-    const all = await this.db!.getAll('pendingCheckins');
-    return all.filter(c => c.status === 'pending' || c.status === 'failed').length;
+    const pending = await this.db!.countFromIndex('pendingCheckins', 'status', 'pending');
+    const failed = await this.db!.countFromIndex('pendingCheckins', 'status', 'failed');
+    return pending + failed;
   }
 
   // ==================== STATION CONFIG ====================

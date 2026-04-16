@@ -14,14 +14,14 @@ import { indexedDBService } from '../lib/indexeddb';
 interface ConnectionStatusIndicatorProps {
   className?: string;
   onShowQueue?: () => void;
+  cachedGuestCount?: number;
 }
 
-export default function ConnectionStatusIndicator({ className = '', onShowQueue }: ConnectionStatusIndicatorProps) {
+export default function ConnectionStatusIndicator({ className = '', onShowQueue, cachedGuestCount = 0 }: ConnectionStatusIndicatorProps) {
   const [status, setStatus] = useState<ConnectionStatus>('online');
   const [pendingCount, setPendingCount] = useState(0);
   const [lastSync, setLastSync] = useState<string | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [cachedGuestCount, setCachedGuestCount] = useState(0);
 
   useEffect(() => {
     // Listen to connection status
@@ -42,18 +42,6 @@ export default function ConnectionStatusIndicator({ className = '', onShowQueue 
       unsubStatus();
       unsubQueue();
     };
-  }, []);
-
-  useEffect(() => {
-    const loadCachedCount = async () => {
-      try {
-        const guests = await indexedDBService.getAllCachedGuests();
-        setCachedGuestCount(guests.length);
-      } catch (err) {
-        console.error('Failed to load cached guest count:', err);
-      }
-    };
-    loadCachedCount();
   }, []);
 
   const handleSyncNow = async () => {

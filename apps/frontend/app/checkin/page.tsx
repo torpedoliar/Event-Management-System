@@ -127,6 +127,7 @@ export default function CheckinPage() {
   const [showStationSetup, setShowStationSetup] = useState(false);
   const [showQueuePanel, setShowQueuePanel] = useState(false);
   const [stationConfig, setStationConfig] = useState<StationConfigType | null>(null);
+  const [cachedGuestCount, setCachedGuestCount] = useState(0);
 
   // Initialize offline mode on mount
   useEffect(() => {
@@ -155,6 +156,10 @@ export default function CheckinPage() {
       offlineSyncService.destroy();
       connectionStatusService.destroy();
     };
+  }, []);
+
+  useEffect(() => {
+    indexedDBService.getAllCachedGuests().then(guests => setCachedGuestCount(guests.length)).catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -235,16 +240,27 @@ export default function CheckinPage() {
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
-      const res = await fetch(`${apiBase()}/guests?limit=10000`, { headers });
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(parseErrorMessage(errorText));
+      let allGuests: any[] = [];
+      let page = 0;
+      const pageSize = 5000;
+      let hasMore = true;
+
+      while (hasMore) {
+        const res = await fetch(`${apiBase()}/guests?limit=${pageSize}&offset=${page * pageSize}`, { headers });
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(parseErrorMessage(errorText));
+        }
+        const batch = await res.json();
+        allGuests = allGuests.concat(batch);
+        setDownloadProgress(`Mengambil data tamu... (${allGuests.length} sejauh ini)`);
+        hasMore = batch.length === pageSize;
+        page++;
       }
 
-      const guests = await res.json();
-      setDownloadProgress(`Menyimpan ${guests.length} tamu ke cache...`);
+      setDownloadProgress(`Menyimpan ${allGuests.length} tamu ke cache...`);
 
-      const localGuests: LocalGuest[] = guests.map((g: any) => ({
+      const localGuests: LocalGuest[] = allGuests.map((g: any) => ({
         id: g.id,
         guestId: g.guestId,
         name: g.name,
@@ -257,6 +273,7 @@ export default function CheckinPage() {
 
       const result = await indexedDBService.cacheGuestsBulk(localGuests);
       setDownloadProgress(`Berhasil: ${result.success} tamu tersimpan, ${result.failed} gagal.`);
+      setCachedGuestCount(result.success);
 
       setTimeout(() => setDownloadProgress(null), 5000);
     } catch (e: any) {
@@ -361,14 +378,21 @@ export default function CheckinPage() {
       if (isNetworkError && stationConfig) {
         // Offline mode: search in local cache
         try {
-          const cachedGuests = await indexedDBService.getAllCachedGuests();
           const cleanSearchQ = cleanQrContent(q.trim());
+          let matchedGuests: LocalGuest[];
 
-          // Search by guestId or name
-          const matchedGuests = cachedGuests.filter(g =>
-            g.guestId.toLowerCase().includes(cleanSearchQ.toLowerCase()) ||
-            g.name.toLowerCase().includes(q.trim().toLowerCase())
-          );
+          // Try exact match on guestId index first (fast path)
+          const exactMatch = await indexedDBService.getCachedGuestByGuestId(cleanSearchQ);
+          if (exactMatch) {
+            matchedGuests = [exactMatch];
+          } else {
+            // Fallback to full scan for name search
+            const cachedGuests = await indexedDBService.getAllCachedGuests();
+            matchedGuests = cachedGuests.filter(g =>
+              g.guestId.toLowerCase().includes(cleanSearchQ.toLowerCase()) ||
+              g.name.toLowerCase().includes(q.trim().toLowerCase())
+            );
+          }
 
           if (matchedGuests.length === 1) {
             // Found single match - proceed with offline check-in
@@ -385,6 +409,27 @@ export default function CheckinPage() {
               setError(`⚠️ Antrian hampir penuh (${pendingCount}/${queueLimit}). Segera hubungkan ke internet.`);
             }
 
+            // Check for duplicate check-in offline
+            if (matchedGuest.checkedIn && !cfg?.allowMultipleCheckinPerCounter) {
+              const guestFromCache: Guest = {
+                id: matchedGuest.id,
+                guestId: matchedGuest.guestId,
+                name: matchedGuest.name,
+                queueNumber: 0,
+                tableLocation: '',
+                checkedIn: matchedGuest.checkedIn,
+                checkedInAt: matchedGuest.lastCheckinAt,
+                checkinCount: matchedGuest.checkinCount,
+              };
+              setResults([guestFromCache]);
+              setSelected(guestFromCache);
+              setCheckedGuest(guestFromCache);
+              setIsDuplicateCheckIn(true);
+              setQ('');
+              startPopupTimeout();
+              return;
+            }
+
             // Create a Guest object from cached data
             const guestFromCache: Guest = {
               id: matchedGuest.id,
@@ -392,12 +437,20 @@ export default function CheckinPage() {
               name: matchedGuest.name,
               queueNumber: 0,
               tableLocation: '',
-              checkedIn: matchedGuest.checkedIn,
-              checkedInAt: matchedGuest.lastCheckinAt,
-              checkinCount: matchedGuest.checkinCount,
+              checkedIn: true,
+              checkedInAt: new Date().toISOString(),
+              checkinCount: matchedGuest.checkinCount + 1,
             };
 
             await offlineSyncService.addToQueue(guestFromCache.guestId);
+            
+            // Update local cache to reflect check-in
+            await indexedDBService.updateCachedGuest(matchedGuest.id, {
+              checkedIn: true,
+              checkinCount: matchedGuest.checkinCount + 1,
+              lastCheckinAt: new Date().toISOString(),
+            });
+
             setResults([guestFromCache]);
             setSelected(guestFromCache);
             setCheckedGuest(guestFromCache);
@@ -1112,7 +1165,7 @@ export default function CheckinPage() {
               >
                 Station
               </button>
-              <ConnectionStatusIndicator onShowQueue={() => setShowQueuePanel(true)} />
+              <ConnectionStatusIndicator onShowQueue={() => setShowQueuePanel(true)} cachedGuestCount={cachedGuestCount} />
             </div>
           </div>
         </div>

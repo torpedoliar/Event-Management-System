@@ -162,9 +162,14 @@ class OfflineSyncService {
       };
 
       // Call sync endpoint
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
       const response = await fetch('/api/public/guests/sync-batch', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
+        headers,
+        body: JSON.stringify(payload)
       });
 
       if (!response.ok) {
