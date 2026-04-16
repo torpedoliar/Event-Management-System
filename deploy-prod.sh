@@ -105,11 +105,11 @@ if [ -z "$LOCAL_IP" ]; then LOCAL_IP="localhost"; fi
 echo ""
 echo -e "${YELLOW}[1/11] Creating shared Docker network...${NC}"
 
-if docker network inspect npm-network &>/dev/null; then
-    echo "  - Network 'npm-network' sudah ada"
+if docker network inspect proxy-network &>/dev/null; then
+    echo "  - Network 'proxy-network' sudah ada"
 else
-    docker network create npm-network
-    echo "  - Network 'npm-network' created"
+    docker network create proxy-network
+    echo "  - Network 'proxy-network' created"
 fi
 
 # ==========================================
@@ -274,10 +274,10 @@ if docker exec nginx-proxy-manager wget -q -O /dev/null --timeout=5 http://guest
     echo -e "  - NPM → Frontend: ${GREEN}Connected${NC}"
 else
     echo -e "  - NPM → Frontend: ${YELLOW}Checking...${NC}"
-    # Ensure frontend is on npm-network
-    if ! docker network inspect npm-network --format '{{range .Containers}}{{.Name}} {{end}}' | grep -q "guest-frontend-prod"; then
-        echo "  - Connecting frontend to npm-network..."
-        docker network connect npm-network guest-frontend-prod 2>/dev/null || true
+    # Ensure frontend is on proxy-network
+    if ! docker network inspect proxy-network --format '{{range .Containers}}{{.Name}} {{end}}' | grep -q "guest-frontend-prod"; then
+        echo "  - Connecting frontend to proxy-network..."
+        docker network connect proxy-network guest-frontend-prod 2>/dev/null || true
     fi
     sleep 3
     if docker exec nginx-proxy-manager wget -q -O /dev/null --timeout=5 http://guest-frontend-prod:3000 2>/dev/null; then

@@ -98,12 +98,12 @@ REM ==========================================
 echo.
 echo [1/11] Creating shared Docker network...
 
-docker network inspect npm-network >nul 2>&1
+docker network inspect proxy-network >nul 2>&1
 if %ERRORLEVEL% equ 0 (
-    echo   - Network 'npm-network' sudah ada
+    echo   - Network 'proxy-network' sudah ada
 ) else (
-    docker network create npm-network
-    echo   - Network 'npm-network' created
+    docker network create proxy-network
+    echo   - Network 'proxy-network' created
 )
 
 REM ==========================================
@@ -284,7 +284,7 @@ if %ERRORLEVEL% equ 0 (
     echo   - NPM - Frontend: Connected
 ) else (
     echo   - NPM - Frontend: Checking...
-    docker network connect npm-network guest-frontend-prod >nul 2>&1
+    docker network connect proxy-network guest-frontend-prod >nul 2>&1
     timeout /t 3 /nobreak >nul
     docker exec nginx-proxy-manager wget -q -O /dev/null --timeout=5 http://guest-frontend-prod:3000 >nul 2>&1
     if %ERRORLEVEL% equ 0 (
