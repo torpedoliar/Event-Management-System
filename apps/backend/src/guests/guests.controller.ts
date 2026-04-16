@@ -27,6 +27,7 @@ import { UpdateGuestDto } from './dto/update-guest.dto';
 import { GuestsService } from './guests.service';
 import * as multer from 'multer';
 import { parseString } from '@fast-csv/parse';
+import { SkipThrottle } from '@nestjs/throttler';
 import type { Request as ExpressRequest } from 'express';
 import { emitEvent } from '../common/sse';
 import * as XLSX from 'xlsx';
@@ -41,6 +42,7 @@ export class GuestsController {
     private readonly auth: AuthService,
   ) { }
 
+  @SkipThrottle()
   @UseGuards(JwtAuthGuard)
   @Get('guests')
   list(@Query() query: QueryGuestsDto) {
