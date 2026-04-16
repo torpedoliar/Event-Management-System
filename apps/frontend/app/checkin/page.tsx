@@ -562,6 +562,16 @@ export default function CheckinPage() {
           }
 
           await offlineSyncService.addToQueue(g.guestId);
+          
+          // Update local cache to reflect offline check-in
+          try {
+            await indexedDBService.updateCachedGuest(g.id, {
+              checkedIn: true,
+              checkinCount: (g.checkinCount || 0) + 1,
+              lastCheckinAt: new Date().toISOString(),
+            });
+          } catch {}
+
           setCheckedGuest(g);
           setSelected(g);
           setIsDuplicateCheckIn(false);
@@ -1069,11 +1079,41 @@ export default function CheckinPage() {
             setError(`⚠️ Antrian hampir penuh (${pendingCount}/${queueLimit}). Segera hubungkan ke internet.`);
           }
 
-          // Queue with photo if captured
-          await offlineSyncService.addToQueue(cleanQrContent(decodedText));
-          setError(null);
-          setCheckedGuest({ guestId: cleanQrContent(decodedText), name: 'Queued (offline)', id: 'offline', queueNumber: 0, tableLocation: '', checkedIn: false } as Guest);
-          setSelected({ guestId: cleanQrContent(decodedText), name: 'Queued (offline)', id: 'offline', queueNumber: 0, tableLocation: '', checkedIn: false } as Guest);
+          const cleanCode = cleanQrContent(decodedText);
+
+          // Try to find guest in local cache for better UX
+          const cachedGuest = await indexedDBService.getCachedGuestByGuestId(cleanCode);
+
+          await offlineSyncService.addToQueue(cleanCode);
+
+          if (cachedGuest) {
+            // Update local cache
+            await indexedDBService.updateCachedGuest(cachedGuest.id, {
+              checkedIn: true,
+              checkinCount: cachedGuest.checkinCount + 1,
+              lastCheckinAt: new Date().toISOString(),
+            });
+
+            const guestObj: Guest = {
+              id: cachedGuest.id,
+              guestId: cachedGuest.guestId,
+              name: cachedGuest.name,
+              queueNumber: 0,
+              tableLocation: '',
+              checkedIn: true,
+              checkedInAt: new Date().toISOString(),
+              checkinCount: cachedGuest.checkinCount + 1,
+            };
+            setError(null);
+            setCheckedGuest(guestObj);
+            setSelected(guestObj);
+          } else {
+            // Fallback: no cache data available
+            setError(null);
+            setCheckedGuest({ guestId: cleanCode, name: 'Queued (offline)', id: 'offline', queueNumber: 0, tableLocation: '', checkedIn: false } as Guest);
+            setSelected({ guestId: cleanCode, name: 'Queued (offline)', id: 'offline', queueNumber: 0, tableLocation: '', checkedIn: false } as Guest);
+          }
+
           setIsDuplicateCheckIn(false);
           refreshHistory();
           startPopupTimeout();
