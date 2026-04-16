@@ -241,12 +241,12 @@ export default function CheckinPage() {
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
       let allGuests: any[] = [];
-      let page = 0;
+      let page = 1;
       const pageSize = 5000;
       let hasMore = true;
 
       while (hasMore) {
-        const res = await fetch(`${apiBase()}/guests?limit=${pageSize}&offset=${page * pageSize}`, { headers });
+        const res = await fetch(`${apiBase()}/guests?page=${page}&pageSize=${pageSize}`, { headers });
         if (!res.ok) {
           const errorText = await res.text();
           throw new Error(parseErrorMessage(errorText));
