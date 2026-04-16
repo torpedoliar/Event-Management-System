@@ -9,6 +9,8 @@
 #   Password: changeme
 # ============================================
 
+name: nginx-proxy
+
 services:
   npm:
     image: jc21/nginx-proxy-manager:latest
