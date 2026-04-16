@@ -40,7 +40,7 @@ const withPWA = withPWAInit({
   reloadOnOnline: true,
   runtimeCaching: [
     {
-      urlPattern: /^\/api\/.*/,
+      urlPattern: /\/api\/.*/i,
       handler: 'NetworkOnly',
       options: {
         cacheName: 'api-bypass',
