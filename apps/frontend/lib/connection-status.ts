@@ -73,7 +73,7 @@ class ConnectionStatusService {
 
   async checkHealth(backendUrl?: string): Promise<ConnectionInfo> {
     const baseUrl = backendUrl || (typeof window !== 'undefined' ? window.location.origin : '');
-    const healthUrl = `${baseUrl}/api/public/health`;
+    const healthUrl = `${baseUrl}/api/public/health?t=${Date.now()}`;
 
     try {
       const startTime = performance.now();
@@ -102,9 +102,7 @@ class ConnectionStatusService {
         throw new Error(`Health check failed: ${response.status}`);
       }
     } catch (error) {
-      if (typeof navigator !== 'undefined' && !navigator.onLine) {
-        this.setOffline();
-      }
+      this.setOffline();
       this.currentInfo.status = this.status;
       this.currentInfo.lastCheck = new Date().toISOString();
     }
