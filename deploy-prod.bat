@@ -112,29 +112,22 @@ REM ==========================================
 echo.
 echo [2/11] Deploying Nginx Proxy Manager...
 
-docker ps -q -f name=nginx-proxy-manager >nul 2>&1
-for /f %%i in ('docker ps -q -f name^=nginx-proxy-manager') do set "NPM_RUNNING=%%i"
-
-if defined NPM_RUNNING (
-    echo   - NPM sudah running, skip deploy
-) else (
-    %DOCKER_COMPOSE_CMD% -f docker-compose.npm.yml up -d
-    echo   - NPM container started
-    echo   - Waiting for NPM to be ready...
-    set RETRY=0
-    :npm_wait
-    docker exec nginx-proxy-manager /bin/check-health >nul 2>&1
-    if %ERRORLEVEL% equ 0 goto npm_ready
-    set /a RETRY+=1
-    if !RETRY! gtr 30 (
-        echo   - [WARNING] NPM health check timeout, continuing...
-        goto npm_ready
-    )
-    timeout /t 2 /nobreak >nul
-    goto npm_wait
-    :npm_ready
-    echo   - NPM ready
+%DOCKER_COMPOSE_CMD% -f docker-compose.npm.yml up -d
+echo   - NPM container started/verified
+echo   - Waiting for NPM to be ready...
+set RETRY=0
+:npm_wait
+docker exec nginx-proxy-manager /bin/check-health >nul 2>&1
+if %ERRORLEVEL% equ 0 goto npm_ready
+set /a RETRY+=1
+if !RETRY! gtr 30 (
+    echo   - [WARNING] NPM health check timeout, continuing...
+    goto npm_ready
 )
+timeout /t 2 /nobreak >nul
+goto npm_wait
+:npm_ready
+echo   - NPM ready
 
 REM ==========================================
 REM [3/11] Optional Backup

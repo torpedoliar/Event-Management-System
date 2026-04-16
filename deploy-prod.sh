@@ -118,25 +118,23 @@ fi
 echo ""
 echo -e "${YELLOW}[2/11] Deploying Nginx Proxy Manager...${NC}"
 
-if docker ps -q -f name=nginx-proxy-manager | grep -q .; then
-    echo "  - NPM sudah running, skip deploy"
-else
-    $DOCKER_COMPOSE_CMD -f docker-compose.npm.yml up -d
-    echo "  - NPM container started"
+echo -e "${YELLOW}[2/11] Deploying Nginx Proxy Manager...${NC}"
 
-    # Wait for NPM to be ready
-    echo "  - Waiting for NPM to be ready..."
-    RETRY=0
-    while ! docker exec nginx-proxy-manager /bin/check-health &>/dev/null; do
-        RETRY=$((RETRY+1))
-        if [ $RETRY -gt 30 ]; then
-            echo -e "${YELLOW}  - [WARNING] NPM health check timeout, continuing...${NC}"
-            break
-        fi
-        sleep 2
-    done
-    echo "  - NPM ready"
-fi
+$DOCKER_COMPOSE_CMD -f docker-compose.npm.yml up -d
+echo "  - NPM container started/verified"
+
+# Wait for NPM to be ready
+echo "  - Waiting for NPM to be ready..."
+RETRY=0
+while ! docker exec nginx-proxy-manager /bin/check-health &>/dev/null; do
+    RETRY=$((RETRY+1))
+    if [ $RETRY -gt 30 ]; then
+        echo -e "${YELLOW}  - [WARNING] NPM health check timeout, continuing...${NC}"
+        break
+    fi
+    sleep 2
+done
+echo "  - NPM ready"
 
 # ==========================================
 # [3/11] Optional Backup
