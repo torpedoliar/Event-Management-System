@@ -41,13 +41,9 @@ const withPWA = withPWAInit({
   runtimeCaching: [
     {
       urlPattern: /^\/api\/.*/,
-      handler: 'NetworkFirst',
+      handler: 'NetworkOnly',
       options: {
-        cacheName: 'api-cache',
-        expiration: {
-          maxEntries: 20,
-          maxAgeSeconds: 60 * 60,
-        },
+        cacheName: 'api-bypass',
       },
     },
     {
