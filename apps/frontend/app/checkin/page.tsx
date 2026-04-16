@@ -242,7 +242,7 @@ export default function CheckinPage() {
 
       let allGuests: any[] = [];
       let page = 1;
-      const pageSize = 5000;
+      const pageSize = 10000;
       let hasMore = true;
 
       while (hasMore) {
