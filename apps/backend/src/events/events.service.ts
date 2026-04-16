@@ -1,36 +1,41 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, Inject } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 import { PrismaService } from '../prisma/prisma.service';
 import { Event } from '@prisma/client';
 import { CreateEventDto } from './dto/create-event.dto';
 
 @Injectable()
 export class EventsService {
-  private activeEventCache: Event | null = null;
-  private cacheTimestamp = 0;
-  private readonly CACHE_TTL = 5000; // 5 seconds cache
+  private readonly CACHE_KEY = 'active_event';
+  private readonly CACHE_TTL = 30000; // 30 seconds
 
-  constructor(private prisma: PrismaService) { }
+  constructor(
+    private prisma: PrismaService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache
+  ) { }
 
   async getActive(): Promise<Event | null> {
-    const now = Date.now();
-    
-    // Return cached if still valid
-    if (this.activeEventCache && (now - this.cacheTimestamp) < this.CACHE_TTL) {
-      return this.activeEventCache;
+    // Try to get from Redis cache
+    const cached = await this.cacheManager.get<Event>(this.CACHE_KEY);
+    if (cached) {
+      return cached;
     }
     
     // Fetch from database
     const event = await this.prisma.event.findFirst({ where: { isActive: true } });
-    this.activeEventCache = event;
-    this.cacheTimestamp = now;
+    
+    // Save to Redis cache
+    if (event) {
+      await this.cacheManager.set(this.CACHE_KEY, event, this.CACHE_TTL);
+    }
     
     return event;
   }
 
   // Invalidate cache when event is updated
-  invalidateCache() {
-    this.activeEventCache = null;
-    this.cacheTimestamp = 0;
+  async invalidateCache() {
+    await this.cacheManager.del(this.CACHE_KEY);
   }
 
   // Get all events
@@ -80,7 +85,7 @@ export class EventsService {
     }
     
     const updated = await this.prisma.event.update({ where: { id }, data });
-    if (updated.isActive) this.invalidateCache();
+    if (updated.isActive) await this.invalidateCache();
     return updated;
   }
 
@@ -111,7 +116,7 @@ export class EventsService {
       data: { isActive: true },
     });
 
-    this.invalidateCache();
+    await this.invalidateCache();
     return activated;
   }
 
@@ -236,7 +241,7 @@ export class EventsService {
         }
       }
       const created = await this.prisma.event.create({ data });
-      this.invalidateCache();
+      await this.invalidateCache();
       return created;
     }
     const data: any = { ...input };
@@ -258,7 +263,7 @@ export class EventsService {
       }
     }
     const updated = await this.prisma.event.update({ where: { id: active.id }, data });
-    this.invalidateCache();
+    await this.invalidateCache();
     return updated;
   }
 
@@ -276,7 +281,7 @@ export class EventsService {
           backgroundVideoUrl: null,
         },
       });
-      this.invalidateCache();
+      await this.invalidateCache();
     }
     return { success: true };
   }

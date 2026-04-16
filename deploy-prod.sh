@@ -262,8 +262,10 @@ ALL_OK=1
 DB_STATUS="FAIL"
 BACKEND_STATUS="FAIL"
 FRONTEND_STATUS="FAIL"
+REDIS_STATUS="FAIL"
 
 if docker ps -q -f name=guest-db-prod | grep -q .; then DB_STATUS="OK"; else ALL_OK=0; fi
+if docker ps -q -f name=guest-redis-prod | grep -q .; then REDIS_STATUS="OK"; else ALL_OK=0; fi
 if docker ps -q -f name=guest-backend-prod | grep -q .; then BACKEND_STATUS="OK"; else ALL_OK=0; fi
 if docker ps -q -f name=guest-frontend-prod | grep -q .; then FRONTEND_STATUS="OK"; else ALL_OK=0; fi
 
@@ -273,6 +275,7 @@ echo "                    DEPLOYMENT STATUS"
 echo "================================================================"
 echo ""
 echo "  Database  : [$DB_STATUS]"
+echo "  Redis     : [$REDIS_STATUS]"
 echo "  Backend   : [$BACKEND_STATUS]"
 echo "  Frontend  : [$FRONTEND_STATUS]"
 echo ""
@@ -281,6 +284,7 @@ if [ $ALL_OK -eq 0 ]; then
     echo -e "${RED}[WARNING] Some services may have issues!${NC}"
     echo "Troubleshooting commands:"
     echo "  docker logs guest-db-prod"
+    echo "  docker logs guest-redis-prod"
     echo "  docker logs guest-backend-prod"
     echo "  docker logs guest-frontend-prod"
 else

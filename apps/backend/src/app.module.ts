@@ -19,10 +19,13 @@ import { throttlerConfig } from './common/throttler/throttler.config';
 
 import { HealthController } from './health.controller';
 
+import { RedisCacheModule } from './common/redis/redis.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     ThrottlerModule.forRoot(throttlerConfig),
+    RedisCacheModule,
     LoggerModule,
     AuditModule,
     AuthModule,

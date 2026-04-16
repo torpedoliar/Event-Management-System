@@ -318,8 +318,10 @@ set ALL_OK=1
 set DB_STATUS=FAIL
 set BACKEND_STATUS=FAIL
 set FRONTEND_STATUS=FAIL
+set REDIS_STATUS=FAIL
 
 docker ps -q -f name=guest-db-prod | findstr . >nul && set DB_STATUS=OK || set ALL_OK=0
+docker ps -q -f name=guest-redis-prod | findstr . >nul && set REDIS_STATUS=OK || set ALL_OK=0
 docker ps -q -f name=guest-backend-prod | findstr . >nul && set BACKEND_STATUS=OK || set ALL_OK=0
 docker ps -q -f name=guest-frontend-prod | findstr . >nul && set FRONTEND_STATUS=OK || set ALL_OK=0
 
@@ -329,6 +331,7 @@ echo                     DEPLOYMENT STATUS
 echo ================================================================
 echo.
 echo   [ !DB_STATUS! ] Database  (Port Internal)
+echo   [ !REDIS_STATUS! ] Redis Cache (Port Internal)
 echo   [ !BACKEND_STATUS! ] Backend   (Port Internal HTTP)
 echo   [ !FRONTEND_STATUS! ] Frontend  (Port Eksternal HTTPS)
 echo.

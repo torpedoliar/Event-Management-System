@@ -1,4 +1,6 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, Inject } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService, AuditAction } from '../common/audit/audit.service';
 import { EventsService } from '../events/events.service';
@@ -15,7 +17,14 @@ export class GuestsService {
     private prisma: PrismaService,
     private audit: AuditService,
     private events: EventsService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache
   ) { }
+
+  private async invalidateGuestCache(eventId: string) {
+    if (!eventId) return;
+    await this.cacheManager.del(`guest_stats:${eventId}`);
+    await this.cacheManager.del(`company_stats:${eventId}`);
+  }
 
   /** Uses cached EventsService — no DB hit within 5s TTL */
   async getActiveEventId(): Promise<string | null> {
@@ -494,11 +503,19 @@ export class GuestsService {
       if (!activeId) return { total: 0, checkedIn: 0, notCheckedIn: 0 };
       eId = activeId;
     }
+    
+    const cacheKey = `guest_stats:${eId}`;
+    const cached = await this.cacheManager.get<any>(cacheKey);
+    if (cached) return cached;
+
     const [total, checkedIn] = await this.prisma.$transaction([
       this.prisma.guest.count({ where: { eventId: eId } }),
       this.prisma.guest.count({ where: { eventId: eId, checkedIn: true } }),
     ]);
-    return { total, checkedIn, notCheckedIn: total - checkedIn };
+    
+    const result = { total, checkedIn, notCheckedIn: total - checkedIn };
+    await this.cacheManager.set(cacheKey, result, 10000);
+    return result;
   }
 
   async publicSearch(params: { guestId?: string; name?: string; exact?: boolean }) {
@@ -872,11 +889,19 @@ export class GuestsService {
   async publicHistory(limit = 20) {
     const eventId = await this.getActiveEventId();
     if (!eventId) return [];
-    return this.prisma.guest.findMany({
+    
+    const cacheKey = `public_history:${eventId}:${limit}`;
+    const cached = await this.cacheManager.get<any>(cacheKey);
+    if (cached) return cached;
+
+    const data = await this.prisma.guest.findMany({
       where: { eventId, checkedIn: true },
       orderBy: [{ checkedInAt: 'desc' }],
       take: limit,
     });
+    
+    await this.cacheManager.set(cacheKey, data, 5000);
+    return data;
   }
   async companyStats(eventId?: string) {
     let eId = eventId;
@@ -885,6 +910,10 @@ export class GuestsService {
       if (!activeId) return [];
       eId = activeId;
     }
+
+    const cacheKey = `company_stats:${eId}`;
+    const cached = await this.cacheManager.get<any>(cacheKey);
+    if (cached) return cached;
 
     // Get all guests grouped by company
     const allGuests = await this.prisma.guest.groupBy({
@@ -916,7 +945,9 @@ export class GuestsService {
     });
 
     // Sort by total guests descending
-    return stats.sort((a, b) => b.total - a.total);
+    const result = stats.sort((a, b) => b.total - a.total);
+    await this.cacheManager.set(cacheKey, result, 10000);
+    return result;
   }
 
   async createAndCheckIn(guestIdOrName: string, adminId?: string, adminName?: string) {
