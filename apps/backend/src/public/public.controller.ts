@@ -5,7 +5,7 @@ import { Response } from 'express';
 import { onEvent, emitEvent } from '../common/sse';
 import { JwtService } from '@nestjs/jwt';
 
-@SkipThrottle()
+@SkipThrottle({ default: true, short: true, medium: true, long: true })
 @Controller('public')
 export class PublicController {
   constructor(

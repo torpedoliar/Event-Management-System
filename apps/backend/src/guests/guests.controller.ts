@@ -42,13 +42,14 @@ export class GuestsController {
     private readonly auth: AuthService,
   ) { }
 
-  @SkipThrottle()
+  @SkipThrottle({ default: true, short: true, medium: true, long: true })
   @UseGuards(JwtAuthGuard)
   @Get('guests')
   list(@Query() query: QueryGuestsDto) {
     return this.guests.list(query);
   }
 
+  @SkipThrottle({ default: true, short: true, medium: true, long: true })
   @UseGuards(JwtAuthGuard)
   @Get('guests/cursor')
   listCursor(@Query() query: QueryGuestsDto) {

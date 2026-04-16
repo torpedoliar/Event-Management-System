@@ -257,6 +257,7 @@ export default function CheckinPage() {
         setDownloadProgress(`Mengambil data tamu... (${allGuests.length} sejauh ini)`);
         hasMore = batch.length === pageSize;
         page++;
+        if (hasMore) await new Promise(r => setTimeout(r, 200)); // Small delay to prevent rate limiting
       }
 
       setDownloadProgress(`Menyimpan ${allGuests.length} tamu ke cache...`);

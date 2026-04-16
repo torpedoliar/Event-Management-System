@@ -13,7 +13,7 @@ import { emitEvent } from '../common/sse';
 export class EventsController {
   constructor(private readonly events: EventsService) { }
 
-  @SkipThrottle()
+  @SkipThrottle({ default: true, short: true, medium: true, long: true })
   @Get('config/event')
   async getPublicConfig(@Res() res: Response) {
     const cfg = await this.events.getActive();
