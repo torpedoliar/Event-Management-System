@@ -1,7 +1,7 @@
 #!/bin/bash
 # ================================================================
-#     EVENT MANAGEMENT SYSTEM - Production Deployment
-#     Version: 1.3.0
+#     EVENT MANAGEMENT SYSTEM - Production Deployment with NPM
+#     Version: 2.0.0
 #     Linux / Bash Version
 # ================================================================
 
@@ -11,10 +11,12 @@ set -e
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
+CYAN='\033[0;36m'
 NC='\033[0m'
 
 echo -e "${GREEN}================================================================${NC}"
-echo -e "${GREEN}    EVENT MANAGEMENT SYSTEM - Production Deployment (Linux)     ${NC}"
+echo -e "${GREEN}  EVENT MANAGEMENT SYSTEM + NGINX PROXY MANAGER Deployment     ${NC}"
+echo -e "${GREEN}  Version 2.0.0                                                ${NC}"
 echo -e "${GREEN}================================================================${NC}"
 echo ""
 
@@ -23,9 +25,9 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 cd "$ROOT_DIR"
 
 # ==========================================
-# [0/9] Pre-flight Checks
+# [0/11] Pre-flight Checks
 # ==========================================
-echo -e "${YELLOW}[0/9] Pre-flight checks...${NC}"
+echo -e "${YELLOW}[0/11] Pre-flight checks...${NC}"
 
 # Check Docker
 if ! command -v docker &> /dev/null; then
@@ -35,7 +37,7 @@ if ! command -v docker &> /dev/null; then
 fi
 echo -e "  - Docker: OK"
 
-# Check Docker Compose (support both docker-compose and docker compose plugin)
+# Check Docker Compose
 DOCKER_COMPOSE_CMD=""
 if docker compose version &> /dev/null; then
     DOCKER_COMPOSE_CMD="docker compose"
@@ -48,7 +50,7 @@ fi
 echo -e "  - Docker Compose: OK ($DOCKER_COMPOSE_CMD)"
 
 # Check required files
-for file in "docker-compose.prod.yml" "apps/backend/Dockerfile" "apps/frontend/Dockerfile.prod"; do
+for file in "docker-compose.prod.yml" "docker-compose.npm.yml" "apps/backend/Dockerfile" "apps/frontend/Dockerfile.prod"; do
     if [ ! -f "$file" ]; then
         echo -e "${RED}[ERROR] File $file tidak ditemukan!${NC}"
         exit 1
@@ -62,7 +64,7 @@ if [ ! -f ".env.production" ]; then
         echo -e "${YELLOW}  - Membuat .env.production dari template...${NC}"
         cp .env.production.example .env.production
     else
-        echo -e "${RED}[ERROR] File .env.production dan .env.production.example tidak ditemukan!${NC}"
+        echo -e "${RED}[ERROR] File .env.production tidak ditemukan!${NC}"
         exit 1
     fi
 fi
@@ -86,7 +88,6 @@ if [ $ENV_VALID -eq 0 ]; then
     echo "   - JWT_SECRET     : ${JWT_SECRET:0:20}..."
     echo "   - ADMIN_PASSWORD : $ADMIN_PASSWORD"
     echo ""
-    echo " Jika nilai masih default, edit file .env.production"
     read -p " Lanjutkan deploy dengan nilai ini? (y/n): " confirm
     if [[ $confirm != [yY] && $confirm != [yY][eE][sS] ]]; then
         echo "Edit file: $ROOT_DIR/.env.production"
@@ -99,47 +100,49 @@ LOCAL_IP=$(hostname -I | awk '{print $1}')
 if [ -z "$LOCAL_IP" ]; then LOCAL_IP="localhost"; fi
 
 # ==========================================
-# [1/9] SSL Certificate Check/Generate
+# [1/11] Create Shared Network
 # ==========================================
 echo ""
-echo -e "${YELLOW}[1/9] Checking SSL certificates...${NC}"
+echo -e "${YELLOW}[1/11] Creating shared Docker network...${NC}"
 
-mkdir -p certs apps/backend/certs apps/frontend/certs
-
-if [ ! -f "certs/server.key" ]; then
-    echo "  - SSL certificate tidak ditemukan, generating..."
-    
-    if ! command -v openssl &> /dev/null; then
-        echo -e "${RED}[ERROR] OpenSSL tidak terinstall.${NC}"
-        read -p " Lanjutkan tanpa HTTPS? (y/n): " confirm
-        if [[ $confirm != [yY] && $confirm != [yY][eE][sS] ]]; then
-            exit 1
-        fi
-    else
-        openssl genrsa -out certs/server.key 2048 2>/dev/null
-        openssl req -new -x509 -key certs/server.key -out certs/server.crt -days 365 -subj "/C=ID/ST=Jakarta/L=Jakarta/O=EventManagement/CN=$LOCAL_IP" 2>/dev/null
-        
-        if [ ! -f "certs/server.key" ]; then
-            echo -e "${RED}[ERROR] Gagal generate SSL certificate!${NC}"
-            exit 1
-        fi
-        echo "  - SSL certificate generated for $LOCAL_IP"
-    fi
-fi
-
-if [ -f "certs/server.key" ]; then
-    cp certs/server.key apps/backend/certs/ 2>/dev/null || true
-    cp certs/server.crt apps/backend/certs/ 2>/dev/null || true
-    cp certs/server.key apps/frontend/certs/ 2>/dev/null || true
-    cp certs/server.crt apps/frontend/certs/ 2>/dev/null || true
-    echo -e "  - SSL certificates: OK"
+if docker network inspect npm-network &>/dev/null; then
+    echo "  - Network 'npm-network' sudah ada"
+else
+    docker network create npm-network
+    echo "  - Network 'npm-network' created"
 fi
 
 # ==========================================
-# [2/9] Optional Backup
+# [2/11] Deploy Nginx Proxy Manager
 # ==========================================
 echo ""
-echo -e "${YELLOW}[2/9] Checking for existing deployment...${NC}"
+echo -e "${YELLOW}[2/11] Deploying Nginx Proxy Manager...${NC}"
+
+if docker ps -q -f name=nginx-proxy-manager | grep -q .; then
+    echo "  - NPM sudah running, skip deploy"
+else
+    $DOCKER_COMPOSE_CMD -f docker-compose.npm.yml up -d
+    echo "  - NPM container started"
+
+    # Wait for NPM to be ready
+    echo "  - Waiting for NPM to be ready..."
+    RETRY=0
+    while ! docker exec nginx-proxy-manager /bin/check-health &>/dev/null; do
+        RETRY=$((RETRY+1))
+        if [ $RETRY -gt 30 ]; then
+            echo -e "${YELLOW}  - [WARNING] NPM health check timeout, continuing...${NC}"
+            break
+        fi
+        sleep 2
+    done
+    echo "  - NPM ready"
+fi
+
+# ==========================================
+# [3/11] Optional Backup
+# ==========================================
+echo ""
+echo -e "${YELLOW}[3/11] Checking for existing EMS deployment...${NC}"
 
 if docker ps -q -f name=guest-db-prod | grep -q .; then
     echo "  - Existing deployment found"
@@ -156,26 +159,26 @@ if docker ps -q -f name=guest-db-prod | grep -q .; then
         fi
     fi
 else
-    echo "  - No existing deployment (fresh install)"
+    echo "  - No existing EMS deployment (fresh install)"
 fi
 
 # ==========================================
-# [3/9] Stop Existing Containers
+# [4/11] Stop Existing EMS Containers
 # ==========================================
 echo ""
-echo -e "${YELLOW}[3/9] Stopping existing containers...${NC}"
+echo -e "${YELLOW}[4/11] Stopping existing EMS containers...${NC}"
 $DOCKER_COMPOSE_CMD -f docker-compose.prod.yml --env-file .env.production down >/dev/null 2>&1
-echo "  - Containers stopped"
+echo "  - EMS containers stopped"
 
 # ==========================================
-# [4/9] Build Containers
+# [5/11] Build EMS Containers
 # ==========================================
 echo ""
-echo -e "${YELLOW}[4/9] Building containers (this may take 5-10 minutes)...${NC}"
+echo -e "${YELLOW}[5/11] Building EMS containers (may take 5-10 minutes)...${NC}"
 if ! $DOCKER_COMPOSE_CMD -f docker-compose.prod.yml --env-file .env.production build --no-cache; then
     echo ""
-    echo -e "${RED}[ERROR] Build failed! Checking common issues...${NC}"
-    echo "Possible fixes:"
+    echo -e "${RED}[ERROR] Build failed!${NC}"
+    echo "Troubleshooting:"
     echo "  1. Check internet connection"
     echo "  2. Check disk space: docker system df"
     echo "  3. Check logs above for specific errors"
@@ -184,11 +187,11 @@ fi
 echo "  - Build completed successfully"
 
 # ==========================================
-# [5/9] Start Database
+# [6/11] Start Database & Redis
 # ==========================================
 echo ""
-echo -e "${YELLOW}[5/9] Starting database...${NC}"
-$DOCKER_COMPOSE_CMD -f docker-compose.prod.yml --env-file .env.production up -d postgres
+echo -e "${YELLOW}[6/11] Starting database & Redis...${NC}"
+$DOCKER_COMPOSE_CMD -f docker-compose.prod.yml --env-file .env.production up -d postgres redis
 
 echo "  - Waiting for database to be ready..."
 RETRY=0
@@ -200,23 +203,34 @@ while ! docker exec guest-db-prod pg_isready -U postgres >/dev/null 2>&1; do
     fi
     sleep 2
 done
-echo "  - Database ready (took $RETRY attempts)"
+echo "  - Database ready"
+
+echo "  - Waiting for Redis to be ready..."
+RETRY=0
+while ! docker exec guest-redis-prod redis-cli ping >/dev/null 2>&1; do
+    RETRY=$((RETRY+1))
+    if [ $RETRY -gt 30 ]; then
+        echo -e "${YELLOW}  - [WARNING] Redis health check timeout${NC}"
+        break
+    fi
+    sleep 2
+done
+echo "  - Redis ready"
 
 # ==========================================
-# [6/9] Database Initialization
+# [7/11] Database Initialization
 # ==========================================
 echo ""
-echo -e "${YELLOW}[6/9] Prisma Database Initialization...${NC}"
-# Use a temporary backend container to push the schema
+echo -e "${YELLOW}[7/11] Prisma Database Initialization...${NC}"
 echo "  - Pushing database schema via Prisma..."
 $DOCKER_COMPOSE_CMD -f docker-compose.prod.yml --env-file .env.production run --rm backend sh -c "npx prisma generate && npx prisma db push --accept-data-loss"
-echo "  - Database schema is synced."
+echo "  - Database schema synced"
 
 # ==========================================
-# [7/9] Start Backend
+# [8/11] Start Backend
 # ==========================================
 echo ""
-echo -e "${YELLOW}[7/9] Starting backend...${NC}"
+echo -e "${YELLOW}[8/11] Starting backend...${NC}"
 $DOCKER_COMPOSE_CMD -f docker-compose.prod.yml --env-file .env.production up -d backend
 
 echo "  - Waiting for backend API..."
@@ -237,10 +251,10 @@ done
 echo "  - Backend ready"
 
 # ==========================================
-# [8/9] Start Frontend
+# [9/11] Start Frontend
 # ==========================================
 echo ""
-echo -e "${YELLOW}[8/9] Starting frontend...${NC}"
+echo -e "${YELLOW}[9/11] Starting frontend...${NC}"
 $DOCKER_COMPOSE_CMD -f docker-compose.prod.yml --env-file .env.production up -d frontend
 
 sleep 5
@@ -252,18 +266,44 @@ fi
 echo "  - Frontend started"
 
 # ==========================================
-# [9/9] Final Verification
+# [10/11] Verify NPM ↔ Frontend Connectivity
 # ==========================================
 echo ""
-echo -e "${YELLOW}[9/9] Verifying deployment...${NC}"
+echo -e "${YELLOW}[10/11] Verifying NPM ↔ Frontend connectivity...${NC}"
+
+# Check that frontend is reachable from NPM's network
+if docker exec nginx-proxy-manager wget -q -O /dev/null --timeout=5 http://guest-frontend-prod:3000 2>/dev/null; then
+    echo -e "  - NPM → Frontend: ${GREEN}Connected${NC}"
+else
+    echo -e "  - NPM → Frontend: ${YELLOW}Checking...${NC}"
+    # Ensure frontend is on npm-network
+    if ! docker network inspect npm-network --format '{{range .Containers}}{{.Name}} {{end}}' | grep -q "guest-frontend-prod"; then
+        echo "  - Connecting frontend to npm-network..."
+        docker network connect npm-network guest-frontend-prod 2>/dev/null || true
+    fi
+    sleep 3
+    if docker exec nginx-proxy-manager wget -q -O /dev/null --timeout=5 http://guest-frontend-prod:3000 2>/dev/null; then
+        echo -e "  - NPM → Frontend: ${GREEN}Connected (after retry)${NC}"
+    else
+        echo -e "  - NPM → Frontend: ${YELLOW}Not verified (configure in NPM dashboard)${NC}"
+    fi
+fi
+
+# ==========================================
+# [11/11] Final Verification
+# ==========================================
+echo ""
+echo -e "${YELLOW}[11/11] Final verification...${NC}"
 sleep 3
 
 ALL_OK=1
+NPM_STATUS="FAIL"
 DB_STATUS="FAIL"
+REDIS_STATUS="FAIL"
 BACKEND_STATUS="FAIL"
 FRONTEND_STATUS="FAIL"
-REDIS_STATUS="FAIL"
 
+if docker ps -q -f name=nginx-proxy-manager | grep -q .; then NPM_STATUS="OK"; else ALL_OK=0; fi
 if docker ps -q -f name=guest-db-prod | grep -q .; then DB_STATUS="OK"; else ALL_OK=0; fi
 if docker ps -q -f name=guest-redis-prod | grep -q .; then REDIS_STATUS="OK"; else ALL_OK=0; fi
 if docker ps -q -f name=guest-backend-prod | grep -q .; then BACKEND_STATUS="OK"; else ALL_OK=0; fi
@@ -274,22 +314,24 @@ echo "================================================================"
 echo "                    DEPLOYMENT STATUS"
 echo "================================================================"
 echo ""
-echo "  Database  : [$DB_STATUS]"
-echo "  Redis     : [$REDIS_STATUS]"
-echo "  Backend   : [$BACKEND_STATUS]"
-echo "  Frontend  : [$FRONTEND_STATUS]"
+echo "  Nginx Proxy Manager : [$NPM_STATUS]"
+echo "  Database            : [$DB_STATUS]"
+echo "  Redis               : [$REDIS_STATUS]"
+echo "  Backend             : [$BACKEND_STATUS]"
+echo "  Frontend            : [$FRONTEND_STATUS]"
 echo ""
 
 if [ $ALL_OK -eq 0 ]; then
     echo -e "${RED}[WARNING] Some services may have issues!${NC}"
-    echo "Troubleshooting commands:"
+    echo "Troubleshooting:"
+    echo "  docker logs nginx-proxy-manager"
     echo "  docker logs guest-db-prod"
     echo "  docker logs guest-redis-prod"
     echo "  docker logs guest-backend-prod"
     echo "  docker logs guest-frontend-prod"
 else
     echo -e "${GREEN}================================================================${NC}"
-    echo -e "${GREEN}          EVENT MANAGEMENT SYSTEM v1.3.0 DEPLOYED!              ${NC}"
+    echo -e "${GREEN}               ALL SERVICES DEPLOYED SUCCESSFULLY!              ${NC}"
     echo -e "${GREEN}================================================================${NC}"
 fi
 
@@ -297,13 +339,26 @@ echo ""
 echo "================================================================"
 echo "                      ACCESS URLS"
 echo "================================================================"
-echo "  Local:"
-echo "    https://localhost:${FRONTEND_PORT:-443}"
 echo ""
-echo "  Network:"
-echo "    https://$LOCAL_IP:${FRONTEND_PORT:-443}"
+echo -e "  ${CYAN}NPM Dashboard (Admin Proxy):${NC}"
+echo "    http://$LOCAL_IP:81"
+echo "    Default login: admin@example.com / changeme"
 echo ""
-echo "  Login: https://$LOCAL_IP:${FRONTEND_PORT:-443}/admin/login"
+echo -e "  ${CYAN}Direct Access (tanpa domain, HTTP):${NC}"
+echo "    http://$LOCAL_IP:${FRONTEND_PORT:-3000}"
+echo ""
+echo -e "  ${CYAN}Via NPM (setelah konfigurasi proxy host):${NC}"
+echo "    https://your-domain.com"
+echo ""
+echo "================================================================"
+echo -e "  ${YELLOW}LANGKAH SELANJUTNYA:${NC}"
+echo "  1. Buka NPM Dashboard: http://$LOCAL_IP:81"
+echo "  2. Login → ganti password default"
+echo "  3. Tambah Proxy Host:"
+echo "     - Domain: your-domain.com"
+echo "     - Forward: guest-frontend-prod:3000"
+echo "     - SSL: Request Let's Encrypt certificate"
+echo "  4. Tambah Advanced Config SSE (lihat panduan)"
 echo "================================================================"
 echo ""
 echo " Deployment selesai."

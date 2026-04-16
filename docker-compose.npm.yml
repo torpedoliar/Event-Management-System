@@ -1,0 +1,40 @@
+# ============================================
+# Nginx Proxy Manager - Standalone
+# ============================================
+# Deploy terpisah dari Event Management System
+# Jalankan: docker compose -f docker-compose.npm.yml up -d
+#
+# Dashboard Admin NPM: http://<IP_SERVER>:81
+# Default login:
+#   Email:    admin@example.com
+#   Password: changeme
+# ============================================
+
+services:
+  npm:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: nginx-proxy-manager
+    restart: unless-stopped
+    ports:
+      - "80:80"       # HTTP (redirect ke HTTPS)
+      - "443:443"     # HTTPS (SSL termination)
+      - "81:81"       # Dashboard Admin NPM
+    volumes:
+      - npm_data:/data
+      - npm_letsencrypt:/etc/letsencrypt
+    networks:
+      - npm-network
+    healthcheck:
+      test: ["CMD", "/bin/check-health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  npm_data:
+  npm_letsencrypt:
+
+networks:
+  npm-network:
+    name: npm-network
+    driver: bridge

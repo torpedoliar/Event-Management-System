@@ -86,22 +86,22 @@ services:
       BACKEND_PORT: ${BACKEND_PORT:-4000}
       NEXT_PUBLIC_API_BASE_URL: /api
       IS_DOCKER: "true"
-      USE_HTTPS: "true"
-      SSL_KEY_PATH: /app/certs/server.key
-      SSL_CERT_PATH: /app/certs/server.crt
+      USE_HTTPS: "false"
     ports:
-      - "${FRONTEND_PORT:-443}:3000"
-    volumes:
-      - ./certs:/app/certs:ro
+      - "${FRONTEND_PORT:-3000}:3000"
     networks:
       - guest-network-prod
+      - npm-network
 
 volumes:
   postgres_data_prod:
   redis_data_prod:
   backend_uploads:
 
-
 networks:
   guest-network-prod:
     driver: bridge
+  npm-network:
+    external: true
+    name: npm-network
+
