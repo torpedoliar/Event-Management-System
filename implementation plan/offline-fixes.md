@@ -9,47 +9,26 @@ Dokumen ini merangkum rencana implementasi teknis untuk mengatasi kelemahan (fla
 
 ---
 
-## Proposed Changes
+## Proposed Changes (IMPLEMENTED 16 April 2026)
 
-### 1. Offline & PWA Support
-
-#### [MODIFY] `e:\Vibe\Registrasi Tamu\apps\frontend\package.json`
+### 1. Offline & PWA Support (ALREADY CONFIGURED)
 - Menambahkan *dependency* `next-pwa` untuk Service Worker otomatis.
+- Membungkus *config* saat ini dengan `withPWA` agar aplikasi menghasilkan / memasang Service Worker yang melayani cache HTML dan struktur App Router Next.js.
 
-#### [MODIFY] `e:\Vibe\Registrasi Tamu\apps\frontend\next.config.mjs`
-- Membungkus *config* saat ini dengan `withPWA` agar aplikasi menghasilkan / memasang Service Worker yang melayani cache HTML dan struktur App Router Next.js, menutupi celah *dinosaur error* saat mati internet mendadak lalu direload.
+### 2. Memperbaiki Bug `doSearch` dan Pencarian Lokal (DONE)
+- **Hapus Cache Lama Sebelum Mencari**: Tambahkan `setResults([])` di awal `doSearch`. (Implementasi lebih lanjut: Memaksa pencarian lokal seketika jika status offline).
+- **Download Database Lokal & Throttler Fix**: Menangani error 429 (Too Many Requests) saat download tamu massal dengan `@SkipThrottle` (backend) dan jeda 200ms per batch (frontend).
+- **Instant Offline Switch**: Mengubah logika `doSearch`, `doCheckin`, dan `onScanSuccess` untuk langsung menggunakan pencarian lokal (IndexedDB) jika `connectionStatusService` melaporkan status offline, tanpa menunggu *timeout* jaringan.
 
----
-
-### 2. Memperbaiki Bug `doSearch` dan Pencarian Lokal
-
-#### [MODIFY] `e:\Vibe\Registrasi Tamu\apps\frontend\app\checkin\page.tsx`
-- **Hapus Cache Lama Sebelum Mencari**: Tambahkan `setResults([])` di awal `doSearch` untuk memastikan array hasil pencarian lama terhapus dan tidak memicu input ke antrean offline secara salah sasaran.
-- **Tombol Download Database Lokal**: Tambahkan tombol di menu *Settings* -> **"Download Tamu untuk Akses Offline"**. Sistem akan menggunakan `$fetch(apiBase()/guests?limit=10000)` dan memakai `indexedDBService.cacheGuest` secara massal untuk mengisi semua data cache ke penyimpanan *browser* perangkat masing-masing stasiun.
-- **Ubah Logika Catch Offline Search**:
-  Apabila *NetworkError* terjadi, program TIDAK akan menggunakan `results[0]` sisa. Sistem akan memanggil `indexedDBService.getAllCachedGuests()` dan menyaring nama/ID. Jika ketemu, maka diarahkan untuk offline check-in di stasiun lokal.
+### 3. Peningkatan Feedback Admin & Akurasi Koneksi (DONE)
+- **Bypass Health Cache**: Menambahkan parameter unik `?t=${Date.now()}` pada health check untuk menembus cache Service Worker.
+- **Forced Offline**: Jika request health check gagal, status otomatis diset ke `offline`.
+- **Indikator Panel**: Tampilkan indikator spesifik: **"X tamu ditarik cache lokal"** di panel.
 
 ---
 
-### 3. Peningkatan Feedback Admin
+## Final Status (16 April 2026)
 
-#### [MODIFY] `e:\Vibe\Registrasi Tamu\apps\frontend\components\ConnectionStatusIndicator.tsx`
-- Tampilkan indikator spesifik: **"X tamu ditarik cache lokal"** di panel untuk menginformasikan admin di stasiun bahwa stasiunnya telah menyinkronkan daftar tamu untuk mode offline tanpa kendala.
-
----
-
-## Open Questions
-
-> [!WARNING]
-> Sebelum eksekusi, mohon konfirmasi:
-> 1. Apakah Anda setuju instalasi `next-pwa` di dalam direktori `apps/frontend`?
-> 2. Untuk tarikan data `guests` offline secara lengkap, apakah target tarik 10.000 data tamu sudah cukup aman dengan *limit* pendaftaran acara saat ini?
-
-## Verification Plan
-
-### Automated Tests
-- Menghapus riwayat *cache* lokal peramban, lalu menekan opsi *"Download database"*.
-- Mematikan koneksi lewat profil jaringan DevTools `Offline`.
-- Menyegarkan ulang / reload halaman -> Halaman aplikasi harus tetap stabil termuat.
-- Mengetik dan mencari input tanpa internet jaringan -> Aplikasi merespon menggunakan pencarian IndexedDB secara akurat.
-- Koneksi diputuskan balik *Online* -> *Auto-Sync Queue* melempar isian *Offline* ke backend.
+✅ **Throttler & Responsivitas Fixes**: Selesai diimplementasikan.
+✅ **Auto-Sync Queue**: Berjalan normal saat koneksi kembali online.
+✅ **Instant Switching**: Aplikasi responsif saat simulasi offline.
