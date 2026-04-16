@@ -1159,7 +1159,7 @@ export default function CheckinPage() {
         <div className="absolute inset-0" style={overlayStyle} />
 
         {/* Header brand */}
-        <div className="relative z-10 p-4 md:p-6">
+        <div className="relative z-30 p-4 md:p-6 pb-8 md:pb-12">
           <div className="flex items-center justify-between max-w-5xl mx-auto">
             <div className="flex items-center gap-4">
               {cfg?.logoUrl ? (
@@ -1228,7 +1228,7 @@ export default function CheckinPage() {
         </div>
 
         {/* Search (single input: ID atau Nama) */}
-        <div className="relative z-10 px-4 py-6 flex flex-col items-center">
+        <div className="relative z-10 mt-4 px-4 py-6 flex flex-col items-center">
           <div className="w-full max-w-3xl">
             <div className="glass-card-dark p-6 md:p-8">
               {/* Search Input */}

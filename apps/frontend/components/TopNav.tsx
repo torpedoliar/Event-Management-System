@@ -133,7 +133,7 @@ export default function TopNav() {
   );
 
   return (
-    <nav className="w-full sticky top-0 z-40 glass-nav">
+    <nav className="w-full sticky top-0 z-50 glass-nav">
       <div className="w-full px-4 py-3">
         <div className="grid grid-cols-[1fr_auto_1fr] items-center relative">
           {/* Logo / Brand */}
