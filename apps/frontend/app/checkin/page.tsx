@@ -351,7 +351,14 @@ export default function CheckinPage() {
     if (searchAbortRef.current) searchAbortRef.current.abort();
     const controller = new AbortController();
     searchAbortRef.current = controller;
+
+    const isCurrentlyOffline = connectionStatusService.getStatus() !== 'online';
+
     try {
+      if (isCurrentlyOffline && stationConfig) {
+        throw new Error('OfflineMode');
+      }
+
       const res = await fetch(`${apiBase()}/public/guests/search?${params.toString()}`, {
         signal: controller.signal
       });
@@ -375,7 +382,15 @@ export default function CheckinPage() {
       }
       // Jika > 1, biarkan user memilih dari list
     } catch (e: any) {
-      const isNetworkError = e.message?.includes('Gagal terhubung') || e.message?.includes('NetworkError') || e.message?.includes('Failed to fetch');
+      if (e.name === 'AbortError') return;
+
+      const isForcedOffline = e.message === 'OfflineMode';
+      const isNetworkError = isForcedOffline || 
+                           e.message?.includes('Gagal terhubung') || 
+                           e.message?.includes('NetworkError') || 
+                           e.message?.includes('Failed to fetch') ||
+                           e.message?.includes('network error') ||
+                           !navigator.onLine;
 
       if (isNetworkError && stationConfig) {
         // Offline mode: search in local cache
@@ -511,7 +526,14 @@ export default function CheckinPage() {
     setChecking(true);
     setCheckingId(g.id);
     clearPopupTimeout(); // Clear existing before starting new checkin
+
+    const isCurrentlyOffline = connectionStatusService.getStatus() !== 'online';
+
     try {
+      if (isCurrentlyOffline && stationConfig) {
+        throw new Error('OfflineMode');
+      }
+
       const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
@@ -558,7 +580,13 @@ export default function CheckinPage() {
         autoCapturephoto(updated);
       }
     } catch (e: any) {
-      const isNetworkError = e.message?.includes('Gagal terhubung') || e.message?.includes('NetworkError') || e.message?.includes('Failed to fetch');
+      const isForcedOffline = e.message === 'OfflineMode';
+      const isNetworkError = isForcedOffline || 
+                           e.message?.includes('Gagal terhubung') || 
+                           e.message?.includes('NetworkError') || 
+                           e.message?.includes('Failed to fetch') ||
+                           e.message?.includes('network error') ||
+                           !navigator.onLine;
 
       if (isNetworkError && stationConfig) {
         // Offline mode: queue check-in
@@ -1043,7 +1071,14 @@ export default function CheckinPage() {
     setChecking(true);
     setError(null);
     clearPopupTimeout();
+
+    const isCurrentlyOffline = connectionStatusService.getStatus() !== 'online';
+
     try {
+      if (isCurrentlyOffline && stationConfig) {
+        throw new Error('OfflineMode');
+      }
+
       const cleanCode = cleanQrContent(decodedText);
       const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
@@ -1079,7 +1114,13 @@ export default function CheckinPage() {
         autoCapturephoto(updated);
       }
     } catch (e: any) {
-      const isNetworkError = e.message?.includes('Gagal terhubung') || e.message?.includes('NetworkError') || e.message?.includes('Failed to fetch');
+      const isForcedOffline = e.message === 'OfflineMode';
+      const isNetworkError = isForcedOffline || 
+                           e.message?.includes('Gagal terhubung') || 
+                           e.message?.includes('NetworkError') || 
+                           e.message?.includes('Failed to fetch') ||
+                           e.message?.includes('network error') ||
+                           !navigator.onLine;
 
       if (isNetworkError && stationConfig) {
         // Offline mode: queue check-in with QR code
