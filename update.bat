@@ -141,9 +141,14 @@ echo      - Build Kompilasi Image: Selesai.
 :: ==========================================
 echo.
 echo [6/7] Merestart kontainer dengan image terbaru...
+
+echo      - Update Nginx Proxy Manager...
+!DOCKER_COMPOSE_CMD! -f docker-compose.npm.yml up -d >nul 2>&1
+
+echo      - Update Event Management System...
 !DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production down --remove-orphans >nul 2>&1
 !DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production up -d --force-recreate
-echo      - Node Backend, Database, dan Frontend hidup kembali di versi baru.
+echo      - Node NPM, Backend, Database, dan Frontend hidup kembali di versi baru.
 
 :: Tunggu backend healthy sebelum lanjut
 echo      - Menunggu Backend siap menerima koneksi...
