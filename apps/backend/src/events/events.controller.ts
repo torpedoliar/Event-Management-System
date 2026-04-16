@@ -1,4 +1,5 @@
 import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, UploadedFile, UseGuards, UseInterceptors, Res } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 import { EventsService } from './events.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -12,6 +13,7 @@ import { emitEvent } from '../common/sse';
 export class EventsController {
   constructor(private readonly events: EventsService) { }
 
+  @SkipThrottle()
   @Get('config/event')
   async getPublicConfig(@Res() res: Response) {
     const cfg = await this.events.getActive();

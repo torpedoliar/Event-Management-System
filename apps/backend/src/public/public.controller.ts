@@ -1,9 +1,11 @@
 import { Body, Controller, Get, Post, Query, Res, Headers, UnauthorizedException } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 import { GuestsService } from '../guests/guests.service';
 import { Response } from 'express';
 import { onEvent, emitEvent } from '../common/sse';
 import { JwtService } from '@nestjs/jwt';
 
+@SkipThrottle()
 @Controller('public')
 export class PublicController {
   constructor(

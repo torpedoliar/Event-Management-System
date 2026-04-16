@@ -1158,7 +1158,7 @@ export default function CheckinPage() {
         <div className="absolute inset-0" style={overlayStyle} />
 
         {/* Header brand */}
-        <div className="relative z-50 p-4 md:p-6">
+        <div className="relative z-10 p-4 md:p-6">
           <div className="flex items-center justify-between max-w-5xl mx-auto">
             <div className="flex items-center gap-4">
               {cfg?.logoUrl ? (
