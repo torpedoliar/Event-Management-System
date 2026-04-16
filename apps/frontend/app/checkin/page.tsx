@@ -251,7 +251,8 @@ export default function CheckinPage() {
           const errorText = await res.text();
           throw new Error(parseErrorMessage(errorText));
         }
-        const batch = await res.json();
+        const responseData = await res.json();
+        const batch = responseData.data || [];
         allGuests = allGuests.concat(batch);
         setDownloadProgress(`Mengambil data tamu... (${allGuests.length} sejauh ini)`);
         hasMore = batch.length === pageSize;

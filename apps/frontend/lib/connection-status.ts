@@ -136,7 +136,6 @@ class ConnectionStatusService {
       }
     }
   }
-
   destroy() {
     this.stopPeriodicCheck();
     this.listeners = [];
