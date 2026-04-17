@@ -1,13 +1,14 @@
 "use client";
 import { useEffect, useState, useRef } from 'react';
 import { apiFetch, apiBase, toApiUrl } from '../../lib/api';
-import { Trophy, Sparkles, PartyPopper } from 'lucide-react';
+import { Trophy, Sparkles, PartyPopper, History, X } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface Prize {
     id: string;
     name: string;
     description?: string;
+    category?: string;
     quantity: number;
     winners: any[];
 }
@@ -27,6 +28,7 @@ export default function LuckyDrawPage() {
     const [prizes, setPrizes] = useState<Prize[]>([]);
     const [selectedPrizeId, setSelectedPrizeId] = useState<string>('');
     const [spinning, setSpinning] = useState(false);
+    const [showHistory, setShowHistory] = useState(false);
     const spinningRef = useRef(false);
     const [winner, setWinner] = useState<Guest | null>(null);
     const [candidates, setCandidates] = useState<Guest[]>([]);
@@ -194,7 +196,7 @@ export default function LuckyDrawPage() {
                         LUCKY DRAW
                     </h1>
 
-                    <div className="flex justify-center">
+                    <div className="flex justify-center gap-4">
                         <select
                             value={selectedPrizeId}
                             onChange={(e) => {
@@ -210,6 +212,14 @@ export default function LuckyDrawPage() {
                                 </option>
                             ))}
                         </select>
+                        
+                        <button
+                            onClick={() => setShowHistory(true)}
+                            className="bg-white/10 hover:bg-white/20 border border-white/20 text-white text-lg rounded-full px-6 py-2 focus:outline-none focus:ring-2 focus:ring-brand-accent backdrop-blur-md transition-colors flex items-center gap-2"
+                        >
+                            <History size={20} />
+                            Riwayat
+                        </button>
                     </div>
                 </div>
 
@@ -308,6 +318,70 @@ export default function LuckyDrawPage() {
                 )}
 
             </div>
+
+            {/* History Modal */}
+            {showHistory && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+                    <div className="bg-slate-900 border border-white/20 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl animate-in fade-in zoom-in duration-200">
+                        <div className="p-6 border-b border-white/10 flex justify-between items-center bg-slate-800/50">
+                            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                                <Trophy className="text-yellow-400" />
+                                Riwayat Pemenang Undian
+                            </h2>
+                            <button
+                                onClick={() => setShowHistory(false)}
+                                className="p-2 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors"
+                            >
+                                <X size={24} />
+                            </button>
+                        </div>
+                        <div className="p-6 overflow-y-auto flex-1 space-y-8">
+                            {['UTAMA', 'HIBURAN'].map(category => {
+                                const categoryPrizes = prizes.filter(p => (p.category || 'HIBURAN') === category);
+                                if (categoryPrizes.length === 0 || !categoryPrizes.some(p => p.winners.length > 0)) return null;
+
+                                return (
+                                    <div key={category}>
+                                        <h3 className="text-xl font-bold text-brand-accent mb-4 border-b border-white/10 pb-2">
+                                            Kategori {category}
+                                        </h3>
+                                        <div className="space-y-6">
+                                            {categoryPrizes.filter(p => p.winners.length > 0).map(prize => (
+                                                <div key={prize.id} className="bg-slate-800/50 rounded-xl p-4 border border-white/5">
+                                                    <h4 className="font-bold text-white mb-4 flex items-center gap-2">
+                                                        <PartyPopper size={18} className="text-purple-400" />
+                                                        {prize.name}
+                                                    </h4>
+                                                    <div className="flex flex-wrap gap-3">
+                                                        {prize.winners.map((w: any) => (
+                                                            <div key={w.id} className="bg-slate-700/50 rounded-lg p-3 flex items-center gap-3 min-w-[200px] border border-slate-600">
+                                                                <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center font-bold text-sm text-white/80">
+                                                                    {w.queueNumber}
+                                                                </div>
+                                                                <div>
+                                                                    <div className="font-bold text-sm text-white">{w.name}</div>
+                                                                    <div className="text-xs text-white/50">{w.company || '-'}</div>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                            
+                            {!prizes.some(p => p.winners.length > 0) && (
+                                <div className="text-center py-12 text-white/40">
+                                    <Sparkles className="mx-auto mb-3 opacity-50" size={32} />
+                                    Belum ada pemenang yang diundi
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
