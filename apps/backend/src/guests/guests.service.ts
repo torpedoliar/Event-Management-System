@@ -862,10 +862,22 @@ export class GuestsService {
             orderBy: { checkinAt: 'asc' }
           })
         : Promise.resolve([]),
-      this.prisma.checkinStation.update({
-        where: { stationId },
-        data: { lastSyncAt: now }
-      })
+      eventId
+        ? this.prisma.checkinStation.upsert({
+            where: { stationId },
+            create: {
+              stationId,
+              name: stationName || stationId,
+              eventId: eventId,
+              lastSyncAt: now,
+              isActive: true
+            },
+            update: {
+              lastSyncAt: now,
+              name: stationName || stationId
+            }
+          })
+        : Promise.resolve()
     ]);
 
     const remoteUpdates = remoteCheckins.map(checkin => ({
