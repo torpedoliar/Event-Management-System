@@ -113,9 +113,9 @@ export default function StatisticsPage() {
         addEventListener('prize_collected', onChange);
         addEventListener('prize_uncollected', onChange);
 
-        // Event change
         addEventListener('event_change', onEventChange);
         addEventListener('config', onEventChange);
+        addEventListener('sync_complete', onChange);
 
         return () => {
             removeEventListener('checkin', onChange);
@@ -131,6 +131,7 @@ export default function StatisticsPage() {
             removeEventListener('prize_uncollected', onChange);
             removeEventListener('event_change', onEventChange);
             removeEventListener('config', onEventChange);
+            removeEventListener('sync_complete', onChange);
             clearTimeout(timeout);
         };
     }, [addEventListener, removeEventListener]);

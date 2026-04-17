@@ -60,12 +60,14 @@ export default function DashboardPage() {
     addEventListener('guest-update', onChange);
     addEventListener('event_change', onEventChange);
     addEventListener('config', onEventChange);
+    addEventListener('sync_complete', onChange);
     return () => {
       removeEventListener('checkin', onChange);
       removeEventListener('uncheckin', onChange);
       removeEventListener('guest-update', onChange);
       removeEventListener('event_change', onEventChange);
       removeEventListener('config', onEventChange);
+      removeEventListener('sync_complete', onChange);
     };
   }, [addEventListener, removeEventListener, invalidateStats, invalidateAll]);
 
