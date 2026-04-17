@@ -1010,7 +1010,7 @@ export default function CheckinPage() {
     // Handle guest updates (like bulk-delete)
     const onGuestUpdate = (data: any) => {
       if (data && data.action === 'bulk-delete') {
-        indexedDBService.clearAllGuests().then(() => {
+        indexedDBService.clearGuestCache().then(() => {
           setCachedGuestCount(0);
           console.log('[CheckinPage] Guest cache automatically cleared due to bulk-delete action from server.');
         }).catch(err => {
