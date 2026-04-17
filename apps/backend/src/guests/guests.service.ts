@@ -665,11 +665,28 @@ export class GuestsService {
     const now = new Date();
     const clientTime = new Date(clientTimestamp);
 
+    // SAFEGUARD: Ensure CheckinStation exists before GuestCheckin
+    const station = await this.prisma.checkinStation.upsert({
+      where: { stationId },
+      create: {
+        stationId,
+        name: stationName || stationId,
+        eventId,
+        lastSyncAt: now,
+        isActive: true
+      },
+      update: {
+        name: stationName || stationId,
+        lastSyncAt: now,
+        isActive: true
+      }
+    });
+
     const [newCheckin, updatedGuest] = await this.prisma.$transaction(async (tx) => {
       const checkin = await tx.guestCheckin.create({
         data: {
           guestId: guest.id,
-          stationId: stationId,
+          stationId: station.id,
           counterName: stationName || null,
           checkinAt: clientTime,
           isOffline: true,
@@ -754,8 +771,9 @@ export class GuestsService {
     const eventId = await this.getActiveEventId();
     
     // SAFEGUARD: Ensure CheckinStation exists before creating GuestCheckins (fixes Foreign Key violation)
+    let dbStationId: string | null = null;
     if (eventId) {
-      await this.prisma.checkinStation.upsert({
+      const station = await this.prisma.checkinStation.upsert({
         where: { stationId },
         create: {
           stationId,
@@ -770,6 +788,7 @@ export class GuestsService {
           isActive: true
         }
       });
+      dbStationId = station.id;
     }
 
     // Process all check-ins in parallel using pre-loaded guests
@@ -795,11 +814,11 @@ export class GuestsService {
 
         // Idempotency check: prevent duplicate checkin insertion due to network flapping
         const alreadySynced = existingCheckins.some(
-          (c: any) => c.clientTimestamp && new Date(c.clientTimestamp).getTime() === clientTime.getTime() && c.stationId === stationId
+          (c: any) => c.clientTimestamp && new Date(c.clientTimestamp).getTime() === clientTime.getTime() && c.stationId === dbStationId
         );
 
         if (alreadySynced) {
-          const matchedCheckin = existingCheckins.find((c: any) => c.clientTimestamp && new Date(c.clientTimestamp).getTime() === clientTime.getTime() && c.stationId === stationId);
+          const matchedCheckin = existingCheckins.find((c: any) => c.clientTimestamp && new Date(c.clientTimestamp).getTime() === clientTime.getTime() && c.stationId === dbStationId);
           return {
             clientTimestamp: item.clientTimestamp,
             success: true, // Mark success so frontend clears its queue
@@ -813,7 +832,7 @@ export class GuestsService {
           const checkin = await this.prisma.guestCheckin.create({
             data: {
               guestId: guest.id,
-              stationId: stationId,
+              stationId: dbStationId,
               counterName: stationName || null,
               checkinAt: clientTime,
               isOffline: true,
