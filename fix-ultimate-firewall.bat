@@ -20,9 +20,9 @@ netsh advfirewall firewall delete rule name="Nginx Proxy HTTP 80" >nul 2>&1
 netsh advfirewall firewall delete rule name="Nginx Proxy HTTPS 443" >nul 2>&1
 
 :: Menambahkan aturan Port Global (Universal untuk NPM)
-netsh advfirewall firewall add rule name="Nginx Proxy HTTP 80" dir=in action=allow protocol=TCP localport=80 remoteip=any profile=any EdgeTraversal=yes
-netsh advfirewall firewall add rule name="Nginx Proxy HTTPS 443" dir=in action=allow protocol=TCP localport=443 remoteip=any profile=any EdgeTraversal=yes
-netsh advfirewall firewall add rule name="NPM Admin Dashboard" dir=in action=allow protocol=TCP localport=81 remoteip=any profile=any EdgeTraversal=yes
+netsh advfirewall firewall add rule name="Nginx Proxy HTTP 80" dir=in action=allow protocol=TCP localport=80 remoteip=any profile=any edge=yes
+netsh advfirewall firewall add rule name="Nginx Proxy HTTPS 443" dir=in action=allow protocol=TCP localport=443 remoteip=any profile=any edge=yes
+netsh advfirewall firewall add rule name="NPM Admin Dashboard" dir=in action=allow protocol=TCP localport=81 remoteip=any profile=any edge=yes
 
 :: Proteksi Khusus Docker Desktop
 echo Mengoreksi proteksi Docker Desktop...
