@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { apiFetch, apiBase, toApiUrl } from '../../lib/api';
 import { Trophy, Sparkles, PartyPopper } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -27,6 +27,7 @@ export default function LuckyDrawPage() {
     const [prizes, setPrizes] = useState<Prize[]>([]);
     const [selectedPrizeId, setSelectedPrizeId] = useState<string>('');
     const [spinning, setSpinning] = useState(false);
+    const spinningRef = useRef(false);
     const [winner, setWinner] = useState<Guest | null>(null);
     const [candidates, setCandidates] = useState<Guest[]>([]);
     const [displayCandidate, setDisplayCandidate] = useState<Guest | null>(null);
@@ -63,7 +64,10 @@ export default function LuckyDrawPage() {
         const onPrizeDraw = (e: MessageEvent) => {
             const data = JSON.parse(e.data);
             if (data.prizeId === selectedPrizeId) {
-                loadData();
+                // Abaikan update live bila halaman ini sedang menjalankan animasi undian
+                if (!spinningRef.current) {
+                    loadData();
+                }
             }
         };
         const onConfig = (e: MessageEvent) => {
@@ -98,6 +102,7 @@ export default function LuckyDrawPage() {
         if (!selectedPrizeId || spinning) return;
 
         setSpinning(true);
+        spinningRef.current = true;
         setWinner(null);
 
         // Start animation loop
@@ -130,6 +135,7 @@ export default function LuckyDrawPage() {
                 setWinner(result);
                 setDisplayCandidate(result);
                 setSpinning(false);
+                spinningRef.current = false;
                 confetti({
                     particleCount: 150,
                     spread: 70,
@@ -142,6 +148,7 @@ export default function LuckyDrawPage() {
         } catch (e: any) {
             clearInterval(interval);
             setSpinning(false);
+            spinningRef.current = false;
             alert(e.message || 'Gagal mengundi pemenang');
         }
     };
