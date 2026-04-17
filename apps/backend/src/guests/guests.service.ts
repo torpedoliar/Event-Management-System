@@ -752,6 +752,25 @@ export class GuestsService {
     for (const g of guestsByGuestId) guestMap.set(g.guestId, g);
 
     const eventId = await this.getActiveEventId();
+    
+    // SAFEGUARD: Ensure CheckinStation exists before creating GuestCheckins (fixes Foreign Key violation)
+    if (eventId) {
+      await this.prisma.checkinStation.upsert({
+        where: { stationId },
+        create: {
+          stationId,
+          name: stationName || stationId,
+          eventId,
+          lastSyncAt: now,
+          isActive: true
+        },
+        update: {
+          name: stationName || stationId,
+          lastSyncAt: now,
+          isActive: true
+        }
+      });
+    }
 
     // Process all check-ins in parallel using pre-loaded guests
     const results = await Promise.all(
@@ -839,46 +858,28 @@ export class GuestsService {
       })
     );
 
-    // OPTIMIZATION: Fetch remote updates and update station lastSyncAt in parallel
-    const [remoteCheckins] = await Promise.all([
-      lastSyncAt
-        ? this.prisma.guestCheckin.findMany({
-            where: {
-              checkinAt: { gt: lastSyncAt },
-              OR: [
-                { stationId: { not: stationId } },
-                { stationId: null }
-              ]
-            },
-            include: {
-              guest: {
-                select: {
-                  id: true,
-                  name: true,
-                  guestId: true
-                }
+    // OPTIMIZATION: Fetch remote updates
+    const remoteCheckins = lastSyncAt
+      ? await this.prisma.guestCheckin.findMany({
+          where: {
+            checkinAt: { gt: lastSyncAt },
+            OR: [
+              { stationId: { not: stationId } },
+              { stationId: null }
+            ]
+          },
+          include: {
+            guest: {
+              select: {
+                id: true,
+                name: true,
+                guestId: true
               }
-            },
-            orderBy: { checkinAt: 'asc' }
-          })
-        : Promise.resolve([]),
-      eventId
-        ? this.prisma.checkinStation.upsert({
-            where: { stationId },
-            create: {
-              stationId,
-              name: stationName || stationId,
-              eventId: eventId,
-              lastSyncAt: now,
-              isActive: true
-            },
-            update: {
-              lastSyncAt: now,
-              name: stationName || stationId
             }
-          })
-        : Promise.resolve()
-    ]);
+          },
+          orderBy: { checkinAt: 'asc' }
+        })
+      : [];
 
     const remoteUpdates = remoteCheckins.map(checkin => ({
       guestId: checkin.guest.id,
