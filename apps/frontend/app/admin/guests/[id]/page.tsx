@@ -200,7 +200,7 @@ export default function EditGuestPage() {
                   className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 >
                   {CATEGORY_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value} className="bg-slate-800 text-white">
+                    <option key={opt.value} value={opt.value} className="bg-brand-secondary text-brand-surface">
                       {opt.label}
                     </option>
                   ))}

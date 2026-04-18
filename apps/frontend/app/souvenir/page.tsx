@@ -614,13 +614,13 @@ export default function SouvenirPage() {
                 {cfg?.logoUrl && <img src={toApiUrl(cfg.logoUrl)} className="h-12 w-auto" alt="logo" />}
                 <div className="text-white">
                     <div className="text-2xl md:text-4xl font-bold text-shadow-lg flex items-center gap-3">
-                        <Gift className="text-purple-400" size={32} />
+                        <Gift className="text-brand-primary" size={32} />
                         Souvenir Check-in
                     </div>
                     <div className="text-sm md:text-base opacity-80 text-shadow flex items-center gap-2">
                         {cfg?.name}
                         <span className="mx-2">•</span>
-                        <Radio size={12} className={`${connected ? 'text-emerald-400 animate-pulse' : 'text-red-400'}`} />
+                        <Radio size={12} className={`${connected ? 'text-brand-success animate-pulse' : 'text-brand-danger'}`} />
                         <span className="text-xs">{connected ? 'Live' : 'Offline'}</span>
                     </div>
                 </div>
@@ -628,29 +628,29 @@ export default function SouvenirPage() {
 
             {/* Search */}
             <div className="relative z-10 p-6 flex flex-col items-center">
-                <div className="w-full max-w-3xl rounded-2xl border border-white/20 bg-slate-900/75 px-4 py-5 shadow-glass">
+                <div className="w-full max-w-3xl rounded-2xl border border-brand-primary/20 bg-brand-secondary/75 px-4 py-5 shadow-glass">
                     {/* Souvenir Selector Dropdown */}
                     {souvenirs.length > 0 && (
                         <div className="mb-4">
                             <label className="text-sm text-white/70 mb-2 block flex items-center gap-2">
-                                <Package size={16} className="text-purple-400" />
+                                <Package size={16} className="text-brand-primary" />
                                 Pilih Souvenir untuk Check-in:
                             </label>
                             <select
                                 value={selectedSouvenir}
                                 onChange={(e) => setSelectedSouvenir(e.target.value)}
-                                className="w-full rounded-lg border border-purple-500/50 bg-purple-500/10 px-3 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/70 appearance-none cursor-pointer"
+                                className="w-full rounded-lg border border-brand-primary/50 bg-brand-primary/10 px-3 py-3 text-white focus:outline-none focus:ring-2 focus:ring-brand-primary/70 appearance-none cursor-pointer"
                                 disabled={searching || processing || creatingGuest}
                             >
-                                <option value="" className="bg-slate-900 text-white">-- Pilih Souvenir --</option>
+                                <option value="" className="bg-brand-secondary text-brand-surface">-- Pilih Souvenir --</option>
                                 {souvenirs.filter(s => s.remaining > 0).map((s) => (
-                                    <option key={s.id} value={s.id} className="bg-slate-900 text-white">
+                                    <option key={s.id} value={s.id} className="bg-brand-secondary text-brand-surface">
                                         {s.name} (Sisa: {s.remaining}/{s.quantity})
                                     </option>
                                 ))}
                             </select>
                             {selectedSouvenir && (
-                                <div className="mt-2 text-sm text-purple-300 flex items-center gap-2">
+                                <div className="mt-2 text-sm text-brand-primarySoft flex items-center gap-2">
                                     <CheckCircle size={14} />
                                     <span>Pencarian akan otomatis memberikan souvenir ini</span>
                                 </div>
@@ -664,12 +664,12 @@ export default function SouvenirPage() {
                         onChange={(e) => setQ(e.target.value)}
                         onKeyDown={(e) => { if (e.key === 'Enter' && !searching && !processing && !creatingGuest) { e.preventDefault(); doSearch(); } }}
                         placeholder="Masukkan Guest ID atau Nama..."
-                        className="w-full rounded-lg border border-white/30 bg-white/10 px-3 py-3 text-white placeholder:text-white/60 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-purple-500/70"
+                        className="w-full rounded-lg border border-white/30 bg-white/10 px-3 py-3 text-white placeholder:text-white/60 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-brand-primary/70"
                         disabled={searching || processing || creatingGuest}
                         autoFocus
                     />
                     {error && (
-                        <div className="text-red-300 mt-2 flex items-center justify-between">
+                        <div className="text-brand-danger mt-2 flex items-center justify-between">
                             <span>{error}</span>
                             {error === 'Tamu tidak ditemukan' && !autoCreateGuest && (
                                 <button
@@ -678,7 +678,7 @@ export default function SouvenirPage() {
                                         localStorage.setItem('souvenirAutoCreateGuest', 'true');
                                         doSearch();
                                     }}
-                                    className="text-sm text-purple-300 hover:text-purple-100 flex items-center gap-1 underline"
+                                    className="text-sm text-brand-primarySoft hover:text-white flex items-center gap-1 underline"
                                 >
                                     <UserPlus size={14} />
                                     Buat & Berikan Souvenir
@@ -690,7 +690,7 @@ export default function SouvenirPage() {
                         <button
                             disabled={searching || processing || creatingGuest}
                             onClick={doSearch}
-                            className="flex items-center gap-2 rounded-lg bg-purple-600 px-6 py-3 text-lg font-semibold text-white shadow-soft hover:bg-purple-700 disabled:opacity-50 transition-all active:scale-95"
+                            className="flex items-center gap-2 rounded-lg bg-brand-primary px-6 py-3 text-lg font-semibold text-white shadow-soft hover:bg-brand-primarySoft disabled:opacity-50 transition-all active:scale-95"
                         >
                             {searching || creatingGuest ? <Loader2 className="animate-spin" size={24} /> : <Search size={24} />}
                             {searching ? 'Mencari...' : (creatingGuest ? 'Membuat Tamu...' : 'Cari Souvenir')}
@@ -698,7 +698,7 @@ export default function SouvenirPage() {
                         <button
                             disabled={searching || processing || creatingGuest}
                             onClick={() => setShowScanner(true)}
-                            className="flex items-center gap-2 rounded-lg bg-emerald-600 px-6 py-3 text-lg font-semibold text-white shadow-soft hover:bg-emerald-700 disabled:opacity-50 transition-all active:scale-95"
+                            className="flex items-center gap-2 rounded-lg bg-brand-success px-6 py-3 text-lg font-semibold text-white shadow-soft hover:opacity-90 disabled:opacity-50 transition-all active:scale-95"
                         >
                             <QrCode size={24} />
                             Scan QR
@@ -717,10 +717,10 @@ export default function SouvenirPage() {
             {/* Settings Modal */}
             {showSettings && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div className="w-full max-w-md rounded-xl border border-white/20 bg-slate-900/95 text-white shadow-glass p-6 animate-in fade-in zoom-in duration-300">
+                    <div className="w-full max-w-md rounded-xl border border-brand-border bg-brand-secondary/95 text-brand-surface shadow-glass p-6 animate-in fade-in zoom-in duration-300">
                         <div className="flex items-center justify-between mb-6">
                             <h3 className="text-xl font-bold flex items-center gap-2">
-                                <Settings size={24} className="text-purple-400" />
+                                <Settings size={24} className="text-brand-primary" />
                                 Pengaturan Souvenir
                             </h3>
                             <button
@@ -733,15 +733,15 @@ export default function SouvenirPage() {
 
                         <div className="space-y-4">
                             {/* Require Check-in Toggle - Event Level Setting */}
-                            <label className="flex items-center justify-between p-4 rounded-lg border border-purple-500/30 bg-purple-500/10 cursor-pointer hover:bg-purple-500/20 transition-colors">
+                            <label className="flex items-center justify-between p-4 rounded-lg border border-brand-primary/30 bg-brand-primary/10 cursor-pointer hover:bg-brand-primary/20 transition-colors">
                                 <div className="flex items-center gap-3">
-                                    <UserCheck size={20} className="text-purple-400" />
+                                    <UserCheck size={20} className="text-brand-primary" />
                                     <div>
                                         <div className="font-medium text-white">Wajib Check-in Dulu</div>
                                         <div className="text-sm text-white/60">Tamu harus check-in sebelum bisa mengambil souvenir/konsumsi</div>
                                     </div>
                                 </div>
-                                <div className={`w-12 h-7 rounded-full transition-colors relative ${requireCheckinForSouvenir ? 'bg-purple-500' : 'bg-white/20'}`}>
+                                <div className={`w-12 h-7 rounded-full transition-colors relative ${requireCheckinForSouvenir ? 'bg-brand-primary' : 'bg-white/20'}`}>
                                     <div className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transform ${requireCheckinForSouvenir ? 'translate-x-5' : 'translate-x-0'}`} />
                                     <input
                                         type="checkbox"
@@ -774,13 +774,13 @@ export default function SouvenirPage() {
 
                             <label className="flex items-center justify-between p-4 rounded-lg border border-white/20 bg-white/5 cursor-pointer hover:bg-white/10 transition-colors">
                                 <div className="flex items-center gap-3">
-                                    <UserPlus size={20} className="text-purple-400" />
+                                    <UserPlus size={20} className="text-brand-primary" />
                                     <div>
                                         <div className="font-medium text-white">Auto Buat Tamu Baru</div>
                                         <div className="text-sm text-white/60">Jika tamu tidak ditemukan, buat tamu baru dan langsung berikan souvenir</div>
                                     </div>
                                 </div>
-                                <div className={`w-12 h-7 rounded-full transition-colors relative ${autoCreateGuest ? 'bg-purple-500' : 'bg-white/20'}`}>
+                                <div className={`w-12 h-7 rounded-full transition-colors relative ${autoCreateGuest ? 'bg-brand-primary' : 'bg-white/20'}`}>
                                     <div className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transform ${autoCreateGuest ? 'translate-x-5' : 'translate-x-0'}`} />
                                     <input
                                         type="checkbox"
@@ -800,7 +800,7 @@ export default function SouvenirPage() {
                             <button
                                 onClick={() => setShowSettings(false)}
                                 disabled={savingSettings}
-                                className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-purple-600 px-4 py-3 font-medium text-white hover:bg-purple-700 disabled:opacity-50 transition-colors"
+                                className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-brand-primary px-4 py-3 font-medium text-white hover:bg-brand-primarySoft disabled:opacity-50 transition-colors"
                             >
                                 {savingSettings ? <Loader2 className="animate-spin" size={18} /> : <CheckCircle size={18} />}
                                 {savingSettings ? 'Menyimpan...' : 'Selesai'}
@@ -812,7 +812,7 @@ export default function SouvenirPage() {
 
             {/* Results */}
             <div className="relative z-10 p-6 flex justify-center">
-                <div className="w-full max-w-5xl rounded-xl border border-white/20 bg-slate-900/75 p-4 text-white shadow-glass backdrop-blur-sm">
+                <div className="w-full max-w-5xl rounded-xl border border-brand-border bg-brand-secondary/75 p-4 text-brand-surface shadow-glass backdrop-blur-sm">
                     {!results.length && (
                         <div className="text-center text-white/80 py-8 flex flex-col items-center gap-3">
                             <Gift size={48} className="text-white/20" />
@@ -825,7 +825,7 @@ export default function SouvenirPage() {
                                 <div
                                     key={g.id}
                                     onClick={() => selectGuest(g)}
-                                    className={`cursor-pointer flex items-center justify-between rounded border p-3 bg-white/5 transition-colors ${selected?.id === g.id ? 'border-purple-500/80 bg-purple-500/10' : 'border-white/20 hover:bg-white/10'}`}
+                                    className={`cursor-pointer flex items-center justify-between rounded border p-3 bg-white/5 transition-colors ${selected?.id === g.id ? 'border-brand-primary/80 bg-brand-primary/10' : 'border-white/20 hover:bg-white/10'}`}
                                 >
                                     <div className="flex items-center gap-3">
                                         <div className="h-12 w-12 bg-white/10 rounded overflow-hidden flex-shrink-0">
@@ -848,7 +848,7 @@ export default function SouvenirPage() {
                                         <button
                                             className={`flex items-center gap-2 rounded-full px-4 py-2 font-medium text-white shadow-soft disabled:opacity-50 transition-colors ${g.souvenirTaken
                                                 ? 'bg-green-600 hover:bg-green-700'
-                                                : 'bg-purple-600 hover:bg-purple-700'
+                                                : 'bg-brand-primary hover:bg-brand-primarySoft'
                                                 }`}
                                             disabled={processing}
                                             onClick={(e) => { e.stopPropagation(); toggleSouvenir(g); }}
@@ -875,16 +875,16 @@ export default function SouvenirPage() {
             {/* Prize Collection Section - Shows when guest is selected */}
             {selected && prizeWins.length > 0 && (
                 <div className="relative z-10 px-6 pb-6 flex justify-center">
-                    <div className="w-full max-w-5xl rounded-xl border border-amber-500/30 bg-amber-900/30 p-4 text-white shadow-glass backdrop-blur-sm">
+                    <div className="w-full max-w-5xl rounded-xl border border-brand-warning/30 bg-brand-warning/10 p-4 text-white shadow-glass backdrop-blur-sm">
                         <div
                             className="flex items-center justify-between cursor-pointer"
                             onClick={() => setShowPrizes(!showPrizes)}
                         >
-                            <div className="font-semibold flex items-center gap-2 text-amber-300">
+                            <div className="font-semibold flex items-center gap-2 text-brand-warning">
                                 <Trophy size={20} />
                                 Hadiah Lucky Draw ({uncollectedPrizes.length} belum diambil, {collectedPrizes.length} sudah diambil)
                             </div>
-                            <button className="text-amber-300 hover:text-amber-100">
+                            <button className="text-brand-warning hover:text-white">
                                 {showPrizes ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                             </button>
                         </div>
@@ -894,14 +894,14 @@ export default function SouvenirPage() {
                                 {/* Uncollected Prizes */}
                                 {uncollectedPrizes.length > 0 && (
                                     <div className="space-y-2">
-                                        <div className="text-xs uppercase tracking-wider text-amber-400/80 font-medium">
+                                        <div className="text-xs uppercase tracking-wider text-brand-warning font-medium">
                                             Belum Diambil - Pilih hadiah yang akan diambil:
                                         </div>
                                         {uncollectedPrizes.map((pw) => (
-                                            <div key={pw.id} className="flex items-center justify-between rounded-lg border border-amber-500/30 bg-amber-500/10 p-3">
+                                            <div key={pw.id} className="flex items-center justify-between rounded-lg border border-brand-warning/30 bg-brand-warning/10 p-3">
                                                 <div>
                                                     <div className="font-semibold text-white flex items-center gap-2">
-                                                        <Trophy size={16} className="text-amber-400" />
+                                                        <Trophy size={16} className="text-brand-warning" />
                                                         {pw.prize.name}
                                                     </div>
                                                     <div className="text-xs text-white/60">
@@ -912,7 +912,7 @@ export default function SouvenirPage() {
                                                 <button
                                                     onClick={() => collectPrize(pw.id)}
                                                     disabled={collectingPrize === pw.id}
-                                                    className="flex items-center gap-2 rounded-lg bg-amber-600 px-4 py-2 font-medium text-white hover:bg-amber-700 disabled:opacity-50 transition-colors"
+                                                    className="flex items-center gap-2 rounded-lg bg-brand-warning px-4 py-2 font-medium text-white hover:opacity-90 disabled:opacity-50 transition-colors"
                                                 >
                                                     {collectingPrize === pw.id ? (
                                                         <Loader2 className="animate-spin" size={16} />
@@ -960,7 +960,7 @@ export default function SouvenirPage() {
             {/* Loading Prizes Indicator */}
             {selected && loadingPrizes && (
                 <div className="relative z-10 px-6 pb-6 flex justify-center">
-                    <div className="w-full max-w-5xl rounded-xl border border-white/20 bg-slate-900/75 p-4 text-white/60 flex items-center justify-center gap-2">
+                    <div className="w-full max-w-5xl rounded-xl border border-brand-border bg-brand-secondary/75 p-4 text-brand-surface/60 flex items-center justify-center gap-2">
                         <Loader2 className="animate-spin" size={16} />
                         Memuat data hadiah...
                     </div>
@@ -969,7 +969,7 @@ export default function SouvenirPage() {
 
             {/* History */}
             <div className="relative z-10 p-6 flex justify-center">
-                <div className="w-full max-w-5xl rounded-xl border border-white/20 bg-slate-900/75 p-4 text-white shadow-glass backdrop-blur-sm">
+                <div className="w-full max-w-5xl rounded-xl border border-brand-border bg-brand-secondary/75 p-4 text-brand-surface shadow-glass backdrop-blur-sm">
                     <div className="mb-3 font-semibold flex items-center gap-2 border-b border-white/10 pb-2">
                         <Clock size={18} />
                         Riwayat Pengambilan Terbaru
@@ -1004,10 +1004,10 @@ export default function SouvenirPage() {
             {/* Souvenir Selection Modal */}
             {showSouvenirSelect && selected && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div className="w-full max-w-lg rounded-xl border border-white/20 bg-slate-900/95 text-white shadow-glass p-6 animate-in fade-in zoom-in duration-300">
+                    <div className="w-full max-w-lg rounded-xl border border-brand-border bg-brand-secondary/95 text-brand-surface shadow-glass p-6 animate-in fade-in zoom-in duration-300">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-xl font-bold flex items-center gap-2">
-                                <Package size={24} className="text-purple-400" />
+                                <Package size={24} className="text-brand-primary" />
                                 Pilih Souvenir untuk {selected.name}
                             </h3>
                             <button
@@ -1028,7 +1028,7 @@ export default function SouvenirPage() {
                                     <div
                                         key={s.id}
                                         className={`flex items-center justify-between rounded-lg border p-4 cursor-pointer transition-colors ${selectedSouvenir === s.id
-                                            ? 'border-purple-500 bg-purple-500/20'
+                                            ? 'border-brand-primary bg-brand-primary/20'
                                             : 'border-white/20 bg-white/5 hover:bg-white/10'
                                             }`}
                                         onClick={() => setSelectedSouvenir(s.id)}
@@ -1038,12 +1038,12 @@ export default function SouvenirPage() {
                                             {s.description && (
                                                 <div className="text-sm text-white/60">{s.description}</div>
                                             )}
-                                            <div className="text-xs text-purple-300 mt-1">
+                                            <div className="text-xs text-brand-primarySoft mt-1">
                                                 Sisa: {s.remaining} / {s.quantity}
                                             </div>
                                         </div>
                                         <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedSouvenir === s.id
-                                            ? 'border-purple-400 bg-purple-400'
+                                            ? 'border-brand-primary bg-brand-primary'
                                             : 'border-white/30'
                                             }`}>
                                             {selectedSouvenir === s.id && (
@@ -1066,7 +1066,7 @@ export default function SouvenirPage() {
                             <button
                                 onClick={() => selected && selectedSouvenir && giveSouvenir(selected, selectedSouvenir)}
                                 disabled={!selectedSouvenir || processing}
-                                className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-purple-600 px-4 py-3 font-medium text-white hover:bg-purple-700 disabled:opacity-50 transition-colors"
+                                className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-brand-primary px-4 py-3 font-medium text-white hover:bg-brand-primarySoft disabled:opacity-50 transition-colors"
                             >
                                 {processing ? (
                                     <Loader2 className="animate-spin" size={18} />
@@ -1084,7 +1084,7 @@ export default function SouvenirPage() {
             {
                 checkedGuest && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                        <div className="w-full max-w-5xl overflow-hidden rounded-xl border border-white/20 bg-slate-900/90 text-white shadow-glass grid grid-cols-1 md:grid-cols-[320px_1fr] animate-in fade-in zoom-in duration-300">
+                        <div className="w-full max-w-5xl overflow-hidden rounded-xl border border-brand-border bg-brand-secondary/90 text-brand-surface shadow-glass grid grid-cols-1 md:grid-cols-[320px_1fr] animate-in fade-in zoom-in duration-300">
                             <div className="bg-white/10 flex items-center justify-center min-h-[300px] md:min-h-full">
                                 {checkedGuest.photoUrl ? (
                                     <img src={toApiUrl(checkedGuest.photoUrl)} alt={checkedGuest.name} className="w-full h-full object-cover" />
@@ -1096,7 +1096,7 @@ export default function SouvenirPage() {
                                 )}
                             </div>
                             <div className="p-6 md:p-10 space-y-4 relative overflow-y-auto max-h-[60vh] md:max-h-full">
-                                <div className="text-purple-400 text-xl font-bold flex items-center gap-2">
+                                <div className="text-brand-primary text-xl font-bold flex items-center gap-2">
                                     <Gift size={24} />
                                     SOUVENIR DIAMBIL
                                 </div>
@@ -1140,9 +1140,9 @@ export default function SouvenirPage() {
             {/* Already Taken Popup - Shows when souvenir was already given */}
             {alreadyTakenInfo && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div className="w-full max-w-lg rounded-xl border border-amber-500/30 bg-slate-900/95 text-white shadow-glass p-6 animate-in fade-in zoom-in duration-300">
+                    <div className="w-full max-w-lg rounded-xl border border-brand-warning/30 bg-brand-secondary/95 text-brand-surface shadow-glass p-6 animate-in fade-in zoom-in duration-300">
                         <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-xl font-bold flex items-center gap-2 text-amber-400">
+                            <h3 className="text-xl font-bold flex items-center gap-2 text-brand-warning">
                                 <AlertTriangle size={24} />
                                 Souvenir Sudah Diambil
                             </h3>
@@ -1161,15 +1161,15 @@ export default function SouvenirPage() {
                         </div>
 
                         <div className="mb-4">
-                            <div className="text-sm text-amber-400 font-medium mb-2 flex items-center gap-2">
+                            <div className="text-sm text-brand-warning font-medium mb-2 flex items-center gap-2">
                                 <Package size={16} />
                                 Riwayat Pengambilan Souvenir:
                             </div>
                             <div className="space-y-2 max-h-[40vh] overflow-y-auto">
                                 {alreadyTakenInfo.takes.map((take, idx) => (
-                                    <div key={idx} className="p-3 rounded-lg border border-amber-500/20 bg-amber-500/10">
+                                    <div key={idx} className="p-3 rounded-lg border border-brand-warning/20 bg-brand-warning/10">
                                         <div className="font-semibold text-white flex items-center gap-2">
-                                            <Gift size={16} className="text-amber-400" />
+                                            <Gift size={16} className="text-brand-warning" />
                                             {take.souvenirName}
                                         </div>
                                         <div className="text-sm text-white/70 mt-1 flex items-center gap-4">
@@ -1198,7 +1198,7 @@ export default function SouvenirPage() {
                         <div className="flex gap-3">
                             <button
                                 onClick={() => setAlreadyTakenInfo(null)}
-                                className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-amber-600 px-4 py-3 font-medium text-white hover:bg-amber-700 transition-colors"
+                                className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-brand-warning px-4 py-3 font-medium text-white hover:opacity-90 transition-colors"
                             >
                                 <CheckCircle size={18} />
                                 Mengerti
@@ -1223,7 +1223,7 @@ export default function SouvenirPage() {
                                 qrCodeSuccessCallback={onScanSuccess}
                             />
                             <button
-                                className="mt-6 flex items-center justify-center gap-2 w-full rounded-lg bg-red-600 px-4 py-3 text-white font-medium hover:bg-red-700 transition-colors"
+                                className="mt-6 flex items-center justify-center gap-2 w-full rounded-lg bg-brand-danger px-4 py-3 text-white font-medium hover:opacity-90 transition-colors"
                                 onClick={() => setShowScanner(false)}
                             >
                                 <X size={20} />
@@ -1341,9 +1341,9 @@ const Html5QrcodePlugin = ({ qrCodeSuccessCallback, onScanFailure, fps, qrbox }:
         <div className="w-full">
             <div id={uniqueIdRef.current} className="w-full overflow-hidden rounded-lg bg-black border-2 border-gray-200 relative min-h-[300px]">
                 {startError && (
-                    <div className="absolute inset-0 flex items-center justify-center p-4 text-center bg-slate-900 text-white overflow-y-auto">
+                    <div className="absolute inset-0 flex items-center justify-center p-4 text-center bg-brand-secondary text-brand-surface overflow-y-auto">
                         <div className="max-h-full py-4">
-                            <p className="text-red-400 font-bold mb-2">Kamera Error</p>
+                            <p className="text-brand-danger font-bold mb-2">Kamera Error</p>
                             <p className="text-sm text-white/70 mb-4">
                                 {startError}
                             </p>
@@ -1363,7 +1363,7 @@ const Html5QrcodePlugin = ({ qrCodeSuccessCallback, onScanFailure, fps, qrbox }:
                 )}
             </div>
             <div className="mt-4 text-center">
-                <button onClick={() => fileInputRef.current?.click()} className="text-sm text-blue-600 hover:underline font-medium">Masalah dengan kamera? Upload Foto</button>
+                <button onClick={() => fileInputRef.current?.click()} className="text-sm text-brand-primary hover:underline font-medium">Masalah dengan kamera? Upload Foto</button>
                 <input type="file" accept="image/*" capture="environment" ref={fileInputRef} className="hidden" onChange={handleFileUpload} />
             </div>
         </div>

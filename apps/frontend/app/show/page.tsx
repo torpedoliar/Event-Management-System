@@ -141,8 +141,8 @@ export default function ShowPage() {
             {cfg?.logoUrl ? (
               <img src={toApiUrl(cfg.logoUrl)} className="h-14 md:h-20 w-auto drop-shadow-2xl" alt="logo" />
             ) : (
-              <div className="w-14 h-14 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-2xl">
-                <Users size={32} className="text-white" />
+              <div className="w-14 h-14 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center shadow-2xl">
+                <Users size={32} className="text-brand-secondary" />
               </div>
             )}
             <div className="text-white">
@@ -151,13 +151,13 @@ export default function ShowPage() {
                 <div className="text-base md:text-xl text-white/80 mt-1 flex items-center gap-3 text-shadow">
                   {cfg?.date && (
                     <span className="flex items-center gap-1.5">
-                      <Clock size={16} className="text-blue-400" />
+                      <Clock size={16} className="text-brand-primary" />
                       {new Date(cfg.date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
                     </span>
                   )}
                   {cfg?.location && (
                     <span className="flex items-center gap-1.5">
-                      <MapPin size={16} className="text-pink-400" />
+                      <MapPin size={16} className="text-brand-accent" />
                       {cfg.location}
                     </span>
                   )}
@@ -168,9 +168,9 @@ export default function ShowPage() {
 
           {/* Live status and clock */}
           <div className="hidden md:flex flex-col items-end gap-2">
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20">
-              <Radio size={16} className={`${connected ? 'text-emerald-400 pulse-live' : 'text-red-400'}`} />
-              <span className="text-white/80 text-sm font-medium">{connected ? 'Live Display' : 'Reconnecting...'}</span>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-brand-surface/10 backdrop-blur-md border border-brand-surface/20">
+              <Radio size={16} className={`${connected ? 'text-brand-success pulse-live' : 'text-brand-danger'}`} />
+              <span className="text-brand-surface/80 text-sm font-medium uppercase tracking-widest">{connected ? 'Live Display' : 'Reconnecting...'}</span>
             </div>
             <div className="text-4xl font-bold text-white/90 font-mono text-shadow-lg">
               {currentTime.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
@@ -205,9 +205,9 @@ export default function ShowPage() {
           {/* Card */}
           <div className="relative w-full max-w-6xl popup-success">
             {/* Glow effect */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 via-blue-500 to-purple-500 rounded-3xl blur-lg opacity-50" />
+            <div className="absolute -inset-1 bg-gradient-to-r from-brand-primary via-brand-accent to-brand-primarySoft rounded-3xl blur-lg opacity-50" />
 
-            <div className="relative overflow-hidden rounded-2xl md:rounded-3xl border border-white/20 bg-slate-900/95 text-white shadow-2xl grid grid-cols-1 md:grid-cols-[380px_1fr]">
+            <div className="relative overflow-hidden rounded-2xl md:rounded-3xl border border-brand-primary/20 bg-brand-secondary/95 text-brand-surface shadow-2xl grid grid-cols-1 md:grid-cols-[380px_1fr]">
               {/* Photo Section */}
               <div className="relative bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center min-h-[280px] md:min-h-full overflow-hidden">
                 {selected.photoUrl ? (
@@ -237,12 +237,12 @@ export default function ShowPage() {
               <div className="p-6 md:p-10 space-y-6 relative overflow-y-auto max-h-[60vh] md:max-h-[80vh]">
                 {/* Success Header */}
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center">
-                    <CheckCircle size={28} className="text-emerald-400" />
+                  <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center border border-brand-primary/20">
+                    <CheckCircle size={28} className="text-brand-primary" />
                   </div>
                   <div>
-                    <div className="text-emerald-400 text-xl md:text-2xl font-bold">CHECK-IN BERHASIL</div>
-                    <div className="text-white/60 text-sm">
+                    <div className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-primarySoft text-xl md:text-2xl font-bold tracking-wider">CHECK-IN BERHASIL</div>
+                    <div className="text-brand-surface/60 text-sm">
                       {new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                     </div>
                   </div>
@@ -251,11 +251,11 @@ export default function ShowPage() {
                 {/* Guest Info */}
                 <div className="space-y-6">
                   <div>
-                    <div className="text-sm text-white/50 uppercase tracking-wider font-medium flex items-center gap-2 mb-1">
-                      <Hash size={14} />
+                    <div className="text-sm text-brand-surface/50 uppercase tracking-wider font-medium flex items-center gap-2 mb-1">
+                      <Hash size={14} className="text-brand-primary" />
                       Guest ID
                     </div>
-                    <div className="text-xl md:text-2xl font-mono font-semibold text-blue-300">{selected.guestId}</div>
+                    <div className="text-xl md:text-2xl font-mono font-semibold text-brand-primarySoft">{selected.guestId}</div>
                   </div>
 
                   <div>
@@ -266,39 +266,39 @@ export default function ShowPage() {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                      <div className="text-sm text-white/50 uppercase tracking-wider font-medium flex items-center gap-2 mb-1">
-                        <MapPin size={14} className="text-pink-400" />
+                    <div className="p-4 rounded-xl bg-brand-surface/5 border border-brand-border">
+                      <div className="text-sm text-brand-surface/50 uppercase tracking-wider font-medium flex items-center gap-2 mb-1">
+                        <MapPin size={14} className="text-brand-accent" />
                         Meja / Ruangan
                       </div>
-                      <div className="text-2xl md:text-3xl font-bold text-white">{selected.tableLocation}</div>
+                      <div className="text-2xl md:text-3xl font-bold text-brand-surface">{selected.tableLocation}</div>
                     </div>
 
                     {selected.company && (
-                      <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                        <div className="text-sm text-white/50 uppercase tracking-wider font-medium flex items-center gap-2 mb-1">
-                          <Building2 size={14} className="text-blue-400" />
+                      <div className="p-4 rounded-xl bg-brand-surface/5 border border-brand-border">
+                        <div className="text-sm text-brand-surface/50 uppercase tracking-wider font-medium flex items-center gap-2 mb-1">
+                          <Building2 size={14} className="text-brand-primarySoft" />
                           Perusahaan
                         </div>
-                        <div className="text-xl md:text-2xl font-bold text-white">{selected.company}</div>
+                        <div className="text-xl md:text-2xl font-bold text-brand-surface">{selected.company}</div>
                       </div>
                     )}
                   </div>
 
                   {selected.division && (
-                    <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                      <div className="text-sm text-white/50 uppercase tracking-wider font-medium flex items-center gap-2 mb-1">
-                        <Layers size={14} className="text-purple-400" />
+                    <div className="p-4 rounded-xl bg-brand-surface/5 border border-brand-border">
+                      <div className="text-sm text-brand-surface/50 uppercase tracking-wider font-medium flex items-center gap-2 mb-1">
+                        <Layers size={14} className="text-brand-info" />
                         Divisi
                       </div>
-                      <div className="text-xl md:text-2xl font-bold text-white">{selected.division}</div>
+                      <div className="text-xl md:text-2xl font-bold text-brand-surface">{selected.division}</div>
                     </div>
                   )}
 
                   {selected.notes && (
-                    <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
-                      <div className="text-sm text-amber-300/80 uppercase tracking-wider font-medium mb-2">Catatan</div>
-                      <div className="text-lg text-amber-100 italic">"{selected.notes}"</div>
+                    <div className="p-4 rounded-xl bg-brand-warning/10 border border-brand-warning/20">
+                      <div className="text-sm text-brand-warning/80 uppercase tracking-wider font-medium mb-2">Catatan</div>
+                      <div className="text-lg text-brand-warning/90 italic">"{selected.notes}"</div>
                     </div>
                   )}
                 </div>

@@ -174,14 +174,14 @@ export default function LuckyDrawPage() {
 
             {/* Default Gradient Fallback if no background */}
             {(!eventCfg?.backgroundType || eventCfg?.backgroundType === 'NONE') && (
-                <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900" />
+                <div className="absolute inset-0 bg-gradient-to-br from-brand-secondary via-[#1e1a30] to-brand-secondary" />
             )}
 
             {/* Background Effects (only if no custom background) */}
             {(!eventCfg?.backgroundType || eventCfg?.backgroundType === 'NONE') && (
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] bg-purple-500/20 rounded-full blur-[120px]" />
-                    <div className="absolute top-[40%] -right-[10%] w-[40%] h-[40%] bg-blue-500/20 rounded-full blur-[100px]" />
+                    <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] bg-brand-primary/15 rounded-full blur-[120px]" />
+                    <div className="absolute top-[40%] -right-[10%] w-[40%] h-[40%] bg-brand-accent/15 rounded-full blur-[100px]" />
                 </div>
             )}
 
@@ -192,7 +192,7 @@ export default function LuckyDrawPage() {
                     {eventCfg?.logoUrl && (
                         <img src={toApiUrl(eventCfg.logoUrl)} className="h-16 mx-auto mb-4" alt="logo" />
                     )}
-                    <h1 className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-200 drop-shadow-lg tracking-tight">
+                    <h1 className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-brand-primarySoft via-brand-primary to-brand-primarySoft drop-shadow-lg tracking-tight">
                         LUCKY DRAW
                     </h1>
 
@@ -204,10 +204,10 @@ export default function LuckyDrawPage() {
                                 setWinner(null);
                                 setDisplayCandidate(null);
                             }}
-                            className="bg-white/10 border border-white/20 text-white text-lg rounded-full px-6 py-2 focus:outline-none focus:ring-2 focus:ring-brand-accent backdrop-blur-md"
+                            className="bg-brand-surface/10 border border-brand-primary/30 text-brand-surface text-lg rounded-full px-6 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-md"
                         >
                             {prizes.map(p => (
-                                <option key={p.id} value={p.id} className="bg-slate-800 text-white">
+                                <option key={p.id} value={p.id} className="bg-brand-secondary text-brand-surface">
                                     {p.name} ({p.winners.length}/{p.quantity})
                                 </option>
                             ))}
@@ -215,7 +215,7 @@ export default function LuckyDrawPage() {
                         
                         <button
                             onClick={() => setShowHistory(true)}
-                            className="bg-white/10 hover:bg-white/20 border border-white/20 text-white text-lg rounded-full px-6 py-2 focus:outline-none focus:ring-2 focus:ring-brand-accent backdrop-blur-md transition-colors flex items-center gap-2"
+                            className="bg-brand-surface/10 hover:bg-brand-surface/20 border border-brand-primary/30 text-brand-surface text-lg rounded-full px-6 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-md transition-colors flex items-center gap-2"
                         >
                             <History size={20} />
                             Riwayat
@@ -225,18 +225,18 @@ export default function LuckyDrawPage() {
 
                 {/* Main Slot Machine Area */}
                 <div className="relative group">
-                    <div className="absolute -inset-1 bg-gradient-to-r from-pink-600 to-purple-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
-                    <div className="relative bg-slate-900 ring-1 ring-white/10 rounded-2xl p-8 md:p-12 flex flex-col items-center justify-center min-h-[400px]">
+                    <div className="absolute -inset-1 bg-gradient-to-r from-brand-primary to-brand-accent rounded-2xl blur opacity-60 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+                    <div className="relative bg-brand-secondary ring-1 ring-brand-primary/20 rounded-2xl p-8 md:p-12 flex flex-col items-center justify-center min-h-[400px]">
 
                         {selectedPrize && (
                             <div className="mb-8 text-center">
-                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">{selectedPrize.name}</h2>
-                                {selectedPrize.description && <p className="text-white/60">{selectedPrize.description}</p>}
+                                <h2 className="text-2xl md:text-3xl font-bold text-brand-surface mb-2">{selectedPrize.name}</h2>
+                                {selectedPrize.description && <p className="text-brand-surface/60">{selectedPrize.description}</p>}
                             </div>
                         )}
 
                         {/* Display Area */}
-                        <div className="w-full max-w-md aspect-video bg-black/50 rounded-xl border-2 border-white/10 flex flex-col items-center justify-center p-6 relative overflow-hidden mb-8">
+                        <div className="w-full max-w-md aspect-video bg-black/40 rounded-xl border-2 border-brand-primary/20 flex flex-col items-center justify-center p-6 relative overflow-hidden mb-8">
                             {displayCandidate ? (
                                 <div className="text-center animate-in zoom-in duration-300">
                                     {displayCandidate.photoUrl ? (
@@ -246,18 +246,18 @@ export default function LuckyDrawPage() {
                                             className="w-32 h-32 rounded-full object-cover border-4 border-brand-accent mx-auto mb-4 shadow-xl"
                                         />
                                     ) : (
-                                        <div className="w-32 h-32 rounded-full bg-gradient-to-br from-brand-primary to-purple-600 flex items-center justify-center text-4xl font-bold text-white mx-auto mb-4 shadow-xl border-4 border-white/20">
+                                        <div className="w-32 h-32 rounded-full bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center text-4xl font-bold text-brand-secondary mx-auto mb-4 shadow-xl border-4 border-brand-primary/40">
                                             {displayCandidate.queueNumber}
                                         </div>
                                     )}
-                                    <h3 className="text-3xl md:text-4xl font-bold text-white mb-2">{displayCandidate.name}</h3>
+                                    <h3 className="text-3xl md:text-4xl font-bold text-brand-surface mb-2">{displayCandidate.name}</h3>
                                     <p className="text-xl text-brand-accent">
                                         {displayCandidate.company || 'Tamu Undangan'}
                                         {displayCandidate.division && <span className="opacity-70 ml-2">({displayCandidate.division})</span>}
                                     </p>
                                 </div>
                             ) : (
-                                <div className="text-center text-white/30">
+                                <div className="text-center text-brand-surface/30">
                                     <Sparkles size={48} className="mx-auto mb-4 opacity-50" />
                                     <p className="text-lg">Siap untuk mengundi?</p>
                                 </div>
@@ -271,10 +271,10 @@ export default function LuckyDrawPage() {
                             className={`
                 relative px-12 py-4 rounded-full font-bold text-xl tracking-wider uppercase transition-all transform hover:scale-105 active:scale-95
                 ${spinning
-                                    ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
+                                    ? 'bg-brand-border text-brand-textMuted cursor-not-allowed'
                                     : isSoldOut
-                                        ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
-                                        : 'bg-gradient-to-r from-brand-primary to-purple-600 text-white shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50'
+                                        ? 'bg-brand-border text-brand-textMuted cursor-not-allowed'
+                                        : 'bg-gradient-to-r from-brand-primary to-brand-accent text-brand-secondary shadow-lg shadow-brand-primary/30 hover:shadow-brand-primary/50'
                                 }
               `}
                         >
@@ -295,18 +295,18 @@ export default function LuckyDrawPage() {
                 {/* Winners List for this Prize */}
                 {selectedPrize && selectedPrize.winners.length > 0 && (
                     <div className="mt-12">
-                        <h3 className="text-xl font-bold text-white mb-6 flex items-center justify-center gap-2">
-                            <PartyPopper className="text-yellow-400" /> Pemenang {selectedPrize.name}
+                        <h3 className="text-xl font-bold text-brand-surface mb-6 flex items-center justify-center gap-2">
+                            <PartyPopper className="text-brand-primary" /> Pemenang {selectedPrize.name}
                         </h3>
                         <div className="flex flex-wrap justify-center gap-4">
                             {selectedPrize.winners.map((w: any) => (
-                                <div key={w.id} className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl p-4 flex items-center gap-4 min-w-[250px]">
+                                <div key={w.id} className="bg-brand-surface/10 backdrop-blur-sm border border-brand-primary/20 rounded-xl p-4 flex items-center gap-4 min-w-[250px]">
                                     <div className="w-10 h-10 rounded-full bg-brand-primary/20 flex items-center justify-center font-bold text-brand-primary">
                                         {w.queueNumber}
                                     </div>
                                     <div className="text-left">
-                                        <div className="font-bold text-white">{w.name}</div>
-                                        <div className="text-xs text-white/60">
+                                        <div className="font-bold text-brand-surface">{w.name}</div>
+                                        <div className="text-xs text-brand-surface/60">
                                             {w.company || '-'}
                                             {w.division && <span className="ml-1">({w.division})</span>}
                                         </div>
@@ -322,15 +322,15 @@ export default function LuckyDrawPage() {
             {/* History Modal */}
             {showHistory && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-                    <div className="bg-slate-900 border border-white/20 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl animate-in fade-in zoom-in duration-200">
-                        <div className="p-6 border-b border-white/10 flex justify-between items-center bg-slate-800/50">
-                            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                                <Trophy className="text-yellow-400" />
+                    <div className="bg-brand-secondary border border-brand-primary/20 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl animate-in fade-in zoom-in duration-200">
+                        <div className="p-6 border-b border-brand-border flex justify-between items-center bg-brand-surface/5">
+                            <h2 className="text-2xl font-bold text-brand-surface flex items-center gap-2">
+                                <Trophy className="text-brand-primary" />
                                 Riwayat Pemenang Undian
                             </h2>
                             <button
                                 onClick={() => setShowHistory(false)}
-                                className="p-2 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors"
+                                className="p-2 hover:bg-brand-surface/10 rounded-full text-brand-surface/70 hover:text-brand-surface transition-colors"
                             >
                                 <X size={24} />
                             </button>
@@ -342,25 +342,25 @@ export default function LuckyDrawPage() {
 
                                 return (
                                     <div key={category}>
-                                        <h3 className="text-xl font-bold text-brand-accent mb-4 border-b border-white/10 pb-2">
+                                        <h3 className="text-xl font-bold text-brand-primary mb-4 border-b border-brand-border pb-2">
                                             Kategori {category}
                                         </h3>
                                         <div className="space-y-6">
                                             {categoryPrizes.filter(p => p.winners.length > 0).map(prize => (
-                                                <div key={prize.id} className="bg-slate-800/50 rounded-xl p-4 border border-white/5">
-                                                    <h4 className="font-bold text-white mb-4 flex items-center gap-2">
-                                                        <PartyPopper size={18} className="text-purple-400" />
+                                                <div key={prize.id} className="bg-brand-surface/5 rounded-xl p-4 border border-brand-border">
+                                                    <h4 className="font-bold text-brand-surface mb-4 flex items-center gap-2">
+                                                        <PartyPopper size={18} className="text-brand-accent" />
                                                         {prize.name}
                                                     </h4>
                                                     <div className="flex flex-wrap gap-3">
                                                         {prize.winners.map((w: any) => (
-                                                            <div key={w.id} className="bg-slate-700/50 rounded-lg p-3 flex items-center gap-3 min-w-[200px] border border-slate-600">
-                                                                <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center font-bold text-sm text-white/80">
+                                                            <div key={w.id} className="bg-brand-secondary/80 rounded-lg p-3 flex items-center gap-3 min-w-[200px] border border-brand-border">
+                                                                <div className="w-8 h-8 rounded-full bg-brand-primary/15 flex items-center justify-center font-bold text-sm text-brand-primary">
                                                                     {w.queueNumber}
                                                                 </div>
                                                                 <div>
-                                                                    <div className="font-bold text-sm text-white">{w.name}</div>
-                                                                    <div className="text-xs text-white/50">{w.company || '-'}</div>
+                                                                    <div className="font-bold text-sm text-brand-surface">{w.name}</div>
+                                                                    <div className="text-xs text-brand-surface/50">{w.company || '-'}</div>
                                                                 </div>
                                                             </div>
                                                         ))}
@@ -373,7 +373,7 @@ export default function LuckyDrawPage() {
                             })}
                             
                             {!prizes.some(p => p.winners.length > 0) && (
-                                <div className="text-center py-12 text-white/40">
+                                <div className="text-center py-12 text-brand-surface/40">
                                     <Sparkles className="mx-auto mb-3 opacity-50" size={32} />
                                     Belum ada pemenang yang diundi
                                 </div>

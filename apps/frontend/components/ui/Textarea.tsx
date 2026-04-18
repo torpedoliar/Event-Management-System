@@ -7,7 +7,7 @@ interface Props extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   variant?: Variant;
 }
 
-const base = 'w-full rounded-lg border border-brand-border bg-white/10 px-3 py-2 text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary';
+const base = 'w-full rounded-lg border border-brand-border bg-brand-surface/5 px-3 py-2 text-sm text-brand-text placeholder:text-brand-textMuted focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-colors';
 
 export const Textarea = forwardRef<HTMLTextAreaElement, Props>(function Textarea({ className, variant = 'default', ...props }, ref) {
   const style = variant === 'glass' ? 'glass-input' : base;

@@ -5,6 +5,6 @@ type Variant = 'neutral' | 'success' | 'warning' | 'danger';
 
 export default function Badge({ className, children, ...rest }: HTMLAttributes<HTMLSpanElement> & { variant?: Variant }) {
   const v = (rest as any).variant as Variant | undefined;
-  const style = v === 'success' ? 'bg-emerald-50 text-emerald-700' : v === 'warning' ? 'bg-amber-50 text-amber-700' : v === 'danger' ? 'bg-red-50 text-red-700' : 'bg-brand-primarySoft text-brand-text';
+  const style = v === 'success' ? 'bg-brand-success/20 text-brand-success border border-brand-success/30' : v === 'warning' ? 'bg-brand-warning/20 text-brand-warning border border-brand-warning/30' : v === 'danger' ? 'bg-brand-danger/20 text-brand-danger border border-brand-danger/30' : 'bg-brand-surface/10 text-brand-surface border border-brand-border';
   return <span className={cn('inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium', style, className)} {...rest}>{children}</span>;
 }

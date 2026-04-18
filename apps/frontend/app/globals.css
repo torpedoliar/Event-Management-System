@@ -17,18 +17,18 @@
   --color-text: #0f172a;
   --color-text-muted: #6b7280;
 
-  /* Enhanced Glassmorphism tokens */
-  --glass-bg: rgba(255, 255, 255, 0.08);
-  --glass-bg-strong: rgba(255, 255, 255, 0.12);
-  --glass-bg-dark: rgba(15, 23, 42, 0.75);
-  --glass-border: rgba(255, 255, 255, 0.18);
-  --glass-border-light: rgba(255, 255, 255, 0.25);
+  /* Enhanced Glassmorphism tokens - Luxury Edition */
+  --glass-bg: rgba(28, 28, 40, 0.4);
+  --glass-bg-strong: rgba(28, 28, 40, 0.65);
+  --glass-bg-dark: rgba(22, 22, 34, 0.85);
+  --glass-border: rgba(212, 168, 83, 0.15); /* Warm Gold tint border */
+  --glass-border-light: rgba(212, 168, 83, 0.35);
   --glass-blur-light: 8px;
   --glass-blur: 20px;
   --glass-blur-strong: 32px;
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   --glass-shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-  --glass-glow: 0 0 40px rgba(59, 130, 246, 0.15);
+  --glass-glow: 0 0 50px rgba(212, 168, 83, 0.12);
 
   /* Overlay for full-screen backgrounds */
   --bg-overlay: rgba(0, 0, 0, 0.5);
@@ -40,8 +40,8 @@ html, body {
 }
 
 body {
-  @apply bg-slate-950 text-slate-50 font-sans antialiased;
-  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+  @apply bg-brand-secondary text-brand-surface font-sans antialiased;
+  background: linear-gradient(135deg, #1A1A2E 0%, #151525 50%, #10101C 100%);
 }
 
 /* Text Shadows */
@@ -55,7 +55,7 @@ body {
   text-shadow: 0 4px 12px rgba(0,0,0,0.7);
 }
 .text-glow {
-  text-shadow: 0 0 20px rgba(255,255,255,0.3), 0 0 40px rgba(59,130,246,0.2);
+  text-shadow: 0 0 20px rgba(212, 168, 83, 0.3), 0 0 40px rgba(212, 168, 83, 0.15);
 }
 
 /* Custom Scrollbar */
@@ -64,15 +64,15 @@ body {
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(26, 26, 46, 0.5);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(212, 168, 83, 0.2);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(212, 168, 83, 0.4);
 }
 
 @layer components {
@@ -110,11 +110,11 @@ body {
   }
 
   .glass-nav {
-    background: rgba(15, 23, 42, 0.85);
+    background: rgba(26, 26, 46, 0.85); /* Deep Charcoal */
     backdrop-filter: blur(var(--glass-blur-strong));
     -webkit-backdrop-filter: blur(var(--glass-blur-strong));
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(212, 168, 83, 0.15); /* Warm Gold subtle */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   }
 
   .glass-input {
@@ -129,16 +129,18 @@ body {
   }
 
   .glass-button {
-    @apply inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 disabled:opacity-50 disabled:pointer-events-none;
-    background: linear-gradient(135deg, rgba(59,130,246,0.9), rgba(99,102,241,0.9));
-    border: 1px solid rgba(191,219,254,0.3);
+    @apply inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold shadow-lg transition-all duration-300 disabled:opacity-50 disabled:pointer-events-none;
+    color: var(--color-surface); /* Off-White for contrast */
+    background: linear-gradient(135deg, rgba(212, 168, 83, 0.95), rgba(198, 125, 90, 0.95)); /* Warm Gold to Rose Copper */
+    border: 1px solid rgba(245, 236, 215, 0.4); /* Pale Gold tint */
     backdrop-filter: blur(var(--glass-blur-light));
     -webkit-backdrop-filter: blur(var(--glass-blur-light));
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
   }
 
   .glass-button:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 10px 40px rgba(59, 130, 246, 0.4);
+    box-shadow: 0 10px 40px rgba(212, 168, 83, 0.35); /* Warm Gold glow */
   }
 
   .glass-button:active:not(:disabled) {
@@ -151,7 +153,7 @@ body {
 
   /* Gradient text */
   .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-primary via-brand-primarySoft to-brand-accent;
   }
 
   /* Animated gradient border */
@@ -167,7 +169,7 @@ body {
     inset: -1px;
     border-radius: 1.25rem;
     padding: 1px;
-    background: linear-gradient(135deg, rgba(59,130,246,0.5), rgba(168,85,247,0.5), rgba(236,72,153,0.5));
+    background: linear-gradient(135deg, rgba(212, 168, 83, 0.6), rgba(198, 125, 90, 0.6), rgba(212, 168, 83, 0.3));
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
@@ -269,18 +271,18 @@ body {
   }
 
   .badge-success {
-    @apply badge bg-emerald-500/20 text-emerald-300 border border-emerald-500/30;
+    @apply badge bg-brand-success/20 text-brand-success border border-brand-success/30;
   }
 
   .badge-warning {
-    @apply badge bg-amber-500/20 text-amber-300 border border-amber-500/30;
+    @apply badge bg-brand-warning/20 text-brand-warning border border-brand-warning/30;
   }
 
   .badge-danger {
-    @apply badge bg-red-500/20 text-red-300 border border-red-500/30;
+    @apply badge bg-brand-danger/20 text-brand-danger border border-brand-danger/30;
   }
 
   .badge-info {
-    @apply badge bg-blue-500/20 text-blue-300 border border-blue-500/30;
+    @apply badge bg-brand-info/20 text-brand-info border border-brand-info/30;
   }
 }

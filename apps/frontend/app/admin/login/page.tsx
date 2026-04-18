@@ -72,13 +72,13 @@ export default function LoginPage() {
       )}
 
       {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900/90 via-purple-900/50 to-slate-900/90" style={{ opacity: overlayOpacity + 0.3 }} />
+      <div className="absolute inset-0 bg-gradient-to-br from-brand-secondary/90 via-[#1e1a30]/60 to-brand-secondary/90" style={{ opacity: overlayOpacity + 0.3 }} />
 
       {/* Decorative Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-[30%] -left-[10%] w-[50%] h-[50%] bg-blue-500/20 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute top-[50%] -right-[10%] w-[40%] h-[40%] bg-purple-500/20 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute -bottom-[20%] left-[30%] w-[35%] h-[35%] bg-pink-500/15 rounded-full blur-[80px] animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute -top-[30%] -left-[10%] w-[50%] h-[50%] bg-brand-primary/15 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute top-[50%] -right-[10%] w-[40%] h-[40%] bg-brand-accent/15 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute -bottom-[20%] left-[30%] w-[35%] h-[35%] bg-brand-primarySoft/10 rounded-full blur-[80px] animate-pulse" style={{ animationDelay: '2s' }} />
       </div>
 
       <div className="w-full max-w-md relative z-10">
@@ -87,14 +87,14 @@ export default function LoginPage() {
           {eventCfg?.logoUrl ? (
             <img src={toApiUrl(eventCfg.logoUrl)} alt="Logo" className="h-16 mx-auto mb-4 drop-shadow-2xl" />
           ) : (
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mx-auto mb-4 shadow-2xl">
-              <Users size={40} className="text-white" />
+            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center mx-auto mb-4 shadow-2xl">
+              <Users size={40} className="text-brand-secondary" />
             </div>
           )}
-          <h1 className="text-3xl md:text-4xl font-bold text-white text-shadow-lg mb-2">
+          <h1 className="text-3xl md:text-4xl font-bold text-brand-surface text-shadow-lg mb-2 tracking-wide">
             {eventCfg?.name || 'Event Management System'}
           </h1>
-          <p className="text-white/60 text-sm">Admin Panel</p>
+          <p className="text-brand-surface/60 text-sm uppercase tracking-widest">Admin Panel</p>
         </div>
 
         {/* Login Card */}
@@ -104,22 +104,22 @@ export default function LoginPage() {
             className="glass-card-dark p-8 space-y-6"
           >
             <div className="text-center space-y-2">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-white/10 mb-2">
-                <Shield size={24} className="text-blue-400" />
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-brand-primary/10 border border-brand-primary/20 mb-2">
+                <Shield size={24} className="text-brand-primary" />
               </div>
-              <h2 className="text-xl font-semibold text-white">Admin Login</h2>
-              <p className="text-sm text-white/60">Masuk untuk mengelola event dan tamu</p>
+              <h2 className="text-xl font-semibold text-brand-surface">Admin Login</h2>
+              <p className="text-sm text-brand-surface/60">Masuk untuk mengelola event dan tamu</p>
             </div>
 
             {error && (
-              <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 text-center">
-                <p className="text-sm text-red-300">{error}</p>
+              <div className="bg-brand-danger/10 border border-brand-danger/30 rounded-xl p-4 text-center">
+                <p className="text-sm text-brand-danger">{error}</p>
               </div>
             )}
 
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="username" className="text-white/80">Username</Label>
+                <Label htmlFor="username" className="text-brand-surface/80">Username</Label>
                 <div className="relative">
                   <Input
                     id="username"
@@ -127,14 +127,14 @@ export default function LoginPage() {
                     onChange={(e) => setUsername(e.target.value)}
                     autoComplete="username"
                     placeholder="Masukkan username"
-                    className="pl-4 pr-4 py-3 bg-white/5 border-white/20 focus:border-blue-500/50 rounded-xl text-white"
+                    className="pl-4 pr-4 py-3 bg-brand-surface/5 border-brand-border focus:border-brand-primary/50 rounded-xl text-brand-surface"
                     disabled={loading}
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-white/80">Password</Label>
+                <Label htmlFor="password" className="text-brand-surface/80">Password</Label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -143,13 +143,13 @@ export default function LoginPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     autoComplete="current-password"
                     placeholder="Masukkan password"
-                    className="pl-4 pr-12 py-3 bg-white/5 border-white/20 focus:border-blue-500/50 rounded-xl text-white"
+                    className="pl-4 pr-12 py-3 bg-brand-surface/5 border-brand-border focus:border-brand-primary/50 rounded-xl text-brand-surface"
                     disabled={loading}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-brand-surface/40 hover:text-brand-surface/70 transition-colors"
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
@@ -159,7 +159,7 @@ export default function LoginPage() {
 
             <Button
               type="submit"
-              className="w-full flex items-center justify-center gap-2 py-3 text-base font-semibold rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
+              className="w-full flex items-center justify-center gap-2 py-3 text-base font-semibold rounded-xl bg-gradient-to-r from-brand-primary to-brand-accent text-brand-secondary hover:opacity-90 shadow-lg hover:shadow-brand-primary/20 transition-all duration-300 hover:-translate-y-0.5"
               disabled={loading}
             >
               {loading ? (
@@ -175,12 +175,12 @@ export default function LoginPage() {
               )}
             </Button>
 
-            <div className="pt-4 border-t border-white/10">
+            <div className="pt-4 border-t border-brand-border">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-white/50">Guest Registration System</span>
+                <span className="text-brand-surface/50">Guest Registration System</span>
                 <Link
                   href="/about"
-                  className="text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1"
+                  className="text-brand-primary hover:text-brand-primarySoft transition-colors flex items-center gap-1"
                 >
                   About
                 </Link>
@@ -193,7 +193,7 @@ export default function LoginPage() {
         <div className="mt-6 text-center">
           <Link
             href="/checkin"
-            className="text-white/50 hover:text-white text-sm transition-colors"
+            className="text-brand-surface/50 hover:text-brand-surface text-sm transition-colors"
           >
             ← Kembali ke halaman Check-in
           </Link>

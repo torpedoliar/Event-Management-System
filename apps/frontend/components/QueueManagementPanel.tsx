@@ -74,8 +74,8 @@ export default function QueueManagementPanel({ isOpen, onClose }: QueueManagemen
         {/* Header */}
         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-10 h-10 bg-brand-primary/10 rounded-lg flex items-center justify-center">
+              <svg className="w-6 h-6 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
             </div>
@@ -119,7 +119,7 @@ export default function QueueManagementPanel({ isOpen, onClose }: QueueManagemen
                   key={checkin.id}
                   className={`p-4 rounded-lg border transition-all ${
                     checkin.status === 'failed'
-                      ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
+                      ? 'bg-brand-danger/10 border-brand-danger/30'
                       : 'bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-700'
                   }`}
                 >
@@ -133,7 +133,7 @@ export default function QueueManagementPanel({ isOpen, onClose }: QueueManagemen
                           </svg>
                         )}
                         {checkin.status === 'failed' && (
-                          <svg className="w-5 h-5 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg className="w-5 h-5 text-brand-danger" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                         )}
@@ -146,7 +146,7 @@ export default function QueueManagementPanel({ isOpen, onClose }: QueueManagemen
                           Time: {new Date(checkin.clientTimestamp).toLocaleString('id-ID')}
                         </p>
                         {checkin.error && (
-                          <p className="text-red-600 dark:text-red-400">
+                          <p className="text-brand-danger">
                             Error: {checkin.error}
                           </p>
                         )}
@@ -157,7 +157,7 @@ export default function QueueManagementPanel({ isOpen, onClose }: QueueManagemen
                     </div>
                     <button
                       onClick={() => handleDeleteItem(checkin.id)}
-                      className="text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                      className="text-gray-400 hover:text-brand-danger transition-colors"
                       title="Remove from queue"
                     >
                       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -178,7 +178,7 @@ export default function QueueManagementPanel({ isOpen, onClose }: QueueManagemen
               <button
                 onClick={handleSyncNow}
                 disabled={isSyncing || pendingCheckins.length === 0}
-                className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+                className="flex-1 px-4 py-2 bg-brand-primary hover:bg-brand-primarySoft disabled:bg-gray-400 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
               >
                 {isSyncing ? (
                   <>
@@ -212,7 +212,7 @@ export default function QueueManagementPanel({ isOpen, onClose }: QueueManagemen
             </div>
             <button
               onClick={handleClearQueue}
-              className="w-full px-4 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 text-sm font-medium rounded-lg transition-colors"
+              className="w-full px-4 py-2 text-brand-danger hover:bg-brand-danger/10 text-sm font-medium rounded-lg transition-colors"
             >
               Clear All Pending
             </button>

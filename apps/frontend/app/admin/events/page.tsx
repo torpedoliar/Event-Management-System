@@ -309,7 +309,7 @@ export default function EventsPage() {
       className={`
         group p-4 rounded-xl border transition-all
         ${event.isActive 
-          ? 'bg-emerald-500/10 border-emerald-500/30' 
+          ? 'bg-brand-success/10 border-emerald-500/30' 
           : 'bg-white/5 border-white/10 hover:bg-white/10'
         }
         ${draggedEvent?.id === event.id ? 'opacity-50 scale-95' : ''}
@@ -325,7 +325,7 @@ export default function EventsPage() {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             {event.isActive && (
-              <span className="px-1.5 py-0.5 text-[10px] font-medium bg-emerald-500/20 text-emerald-400 rounded-full">
+              <span className="px-1.5 py-0.5 text-[10px] font-medium bg-brand-success/20 text-brand-success rounded-full">
                 ACTIVE
               </span>
             )}
@@ -351,15 +351,15 @@ export default function EventsPage() {
           </div>
           {event.stats && (
             <div className="flex items-center gap-3 mt-2 text-xs">
-              <span className="flex items-center gap-1 text-blue-400">
+              <span className="flex items-center gap-1 text-brand-primary">
                 <Users size={10} />
                 {event.stats.checkedIn}/{event.stats.totalGuests}
               </span>
-              <span className="flex items-center gap-1 text-purple-400">
+              <span className="flex items-center gap-1 text-brand-accent">
                 <Package size={10} />
                 {event.stats.souvenirs}
               </span>
-              <span className="flex items-center gap-1 text-amber-400">
+              <span className="flex items-center gap-1 text-brand-warning">
                 <Gift size={10} />
                 {event.stats.prizes}
               </span>
@@ -373,7 +373,7 @@ export default function EventsPage() {
           <button
             onClick={() => activateEvent(event.id)}
             disabled={actionLoading === event.id}
-            className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-xs rounded-lg bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 transition-colors disabled:opacity-50"
+            className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-xs rounded-lg bg-brand-success/20 text-brand-success hover:bg-brand-success/30 transition-colors disabled:opacity-50"
           >
             {actionLoading === event.id ? <Loader2 size={12} className="animate-spin" /> : <Check size={12} />}
             Aktifkan
@@ -398,7 +398,7 @@ export default function EventsPage() {
           <button
             onClick={() => deleteEvent(event.id, event.name)}
             disabled={actionLoading === event.id}
-            className="p-1.5 rounded-lg text-red-400/50 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+            className="p-1.5 rounded-lg text-brand-danger/50 hover:text-brand-danger hover:bg-brand-danger/10 transition-colors"
             title="Hapus"
           >
             <Trash2 size={12} />
@@ -426,9 +426,9 @@ export default function EventsPage() {
       
       switch (column) {
         case 'upcoming':
-          return `${baseStyles} ${isOver ? 'border-blue-500/50 bg-blue-500/5' : 'border-white/10 bg-white/5'}`;
+          return `${baseStyles} ${isOver ? 'border-blue-500/50 bg-brand-primary/5' : 'border-white/10 bg-white/5'}`;
         case 'active':
-          return `${baseStyles} ${isOver ? 'border-emerald-500/50 bg-emerald-500/5' : 'border-white/10 bg-white/5'}`;
+          return `${baseStyles} ${isOver ? 'border-emerald-500/50 bg-brand-success/5' : 'border-white/10 bg-white/5'}`;
         case 'past':
           return `${baseStyles} ${isOver ? 'border-gray-500/50 bg-gray-500/5' : 'border-white/10 bg-white/5'}`;
         default:
@@ -439,9 +439,9 @@ export default function EventsPage() {
     const getIconStyles = () => {
       switch (column) {
         case 'upcoming':
-          return { bg: 'bg-blue-500/20', text: 'text-blue-400' };
+          return { bg: 'bg-brand-primary/20', text: 'text-brand-primary' };
         case 'active':
-          return { bg: 'bg-emerald-500/20', text: 'text-emerald-400' };
+          return { bg: 'bg-brand-success/20', text: 'text-brand-success' };
         case 'past':
           return { bg: 'bg-gray-500/20', text: 'text-gray-400' };
         default:
@@ -478,7 +478,7 @@ export default function EventsPage() {
               {column === 'upcoming' && (
                 <button
                   onClick={() => setShowCreate(true)}
-                  className="mt-2 text-blue-400 hover:text-blue-300 text-xs flex items-center gap-1"
+                  className="mt-2 text-brand-primary hover:text-brand-primarySoft text-xs flex items-center gap-1"
                 >
                   <Plus size={12} />
                   Tambah event
@@ -541,12 +541,12 @@ export default function EventsPage() {
           </div>
 
           {error && (
-            <div className="text-sm text-red-400 bg-red-500/10 p-3 rounded-lg border border-red-500/20">
+            <div className="text-sm text-brand-danger bg-brand-danger/10 p-3 rounded-lg border border-brand-danger/20">
               {error}
             </div>
           )}
           {message && (
-            <div className="text-sm text-emerald-400 bg-emerald-500/10 p-3 rounded-lg border border-emerald-500/20">
+            <div className="text-sm text-brand-success bg-brand-success/10 p-3 rounded-lg border border-brand-success/20">
               {message}
             </div>
           )}
@@ -690,7 +690,7 @@ export default function EventsPage() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-3 mb-2">
                           {event.isActive && (
-                            <span className="px-2 py-0.5 text-xs font-medium bg-emerald-500/20 text-emerald-400 rounded-full border border-emerald-500/30">
+                            <span className="px-2 py-0.5 text-xs font-medium bg-brand-success/20 text-brand-success rounded-full border border-brand-success/30">
                               Active
                             </span>
                           )}
@@ -716,15 +716,15 @@ export default function EventsPage() {
                         </div>
                         {event.stats && (
                           <div className="flex flex-wrap items-center gap-4 mt-3 text-sm">
-                            <span className="flex items-center gap-1.5 text-blue-400">
+                            <span className="flex items-center gap-1.5 text-brand-primary">
                               <Users size={14} />
                               {event.stats.checkedIn}/{event.stats.totalGuests} tamu
                             </span>
-                            <span className="flex items-center gap-1.5 text-purple-400">
+                            <span className="flex items-center gap-1.5 text-brand-accent">
                               <Package size={14} />
                               {event.stats.souvenirs} souvenir
                             </span>
-                            <span className="flex items-center gap-1.5 text-amber-400">
+                            <span className="flex items-center gap-1.5 text-brand-warning">
                               <Gift size={14} />
                               {event.stats.prizes} hadiah
                             </span>

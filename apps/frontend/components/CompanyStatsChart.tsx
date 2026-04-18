@@ -63,7 +63,7 @@ export default function CompanyStatsChart({ stats }: CompanyStatsChartProps) {
                                     const d = payload[0].payload as CompanyStats;
                                     const percentage = d.total > 0 ? Math.round((d.checkedIn / d.total) * 100) : 0;
                                     return (
-                                        <div className="bg-slate-900/95 border border-white/10 p-3 rounded-lg shadow-xl backdrop-blur-md z-50 min-w-[200px]">
+                                        <div className="bg-brand-secondary/95 border border-brand-border p-3 rounded-lg shadow-xl backdrop-blur-md z-50 min-w-[200px]">
                                             <p className="text-sm font-bold text-white mb-2 border-b border-white/10 pb-1">{d.company}</p>
                                             <div className="space-y-1 text-xs">
                                                 <div className="flex justify-between gap-4">
@@ -71,12 +71,12 @@ export default function CompanyStatsChart({ stats }: CompanyStatsChartProps) {
                                                     <span className="font-mono font-bold text-white">{d.total}</span>
                                                 </div>
                                                 <div className="flex justify-between gap-4">
-                                                    <span className="text-emerald-400">Sudah Check-in:</span>
-                                                    <span className="font-mono font-bold text-emerald-400">{d.checkedIn} ({percentage}%)</span>
+                                                    <span className="text-brand-success">Sudah Check-in:</span>
+                                                    <span className="font-mono font-bold text-brand-success">{d.checkedIn} ({percentage}%)</span>
                                                 </div>
                                                 <div className="flex justify-between gap-4">
-                                                    <span className="text-pink-400">Belum Check-in:</span>
-                                                    <span className="font-mono font-bold text-pink-400">{d.notCheckedIn}</span>
+                                                    <span className="text-brand-accent">Belum Check-in:</span>
+                                                    <span className="font-mono font-bold text-brand-accent">{d.notCheckedIn}</span>
                                                 </div>
                                                 <div className="mt-2 pt-1 border-t border-white/10">
                                                     <div className="w-full bg-white/10 rounded-full h-1.5">

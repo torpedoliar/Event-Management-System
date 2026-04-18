@@ -9,23 +9,24 @@ export default {
     extend: {
       colors: {
         brand: {
-          primary: '#3B82F6',
-          primarySoft: '#DBEAFE',
-          secondary: '#1E3A8A',
-          accent: '#10B981',
-          success: '#10B981',
-          warning: '#F59E0B',
-          danger: '#EF4444',
-          info: '#3B82F6',
-          surface: '#FFFFFF',
-          surfaceMuted: '#F8FAFC',
-          border: '#E2E8F0',
-          text: '#0F172A',
-          textMuted: '#6B7280',
+          primary: '#D4A853',      // Warm Gold
+          primarySoft: '#F5ECD7',  // Pale Gold
+          secondary: '#1A1A2E',    // Deep Charcoal
+          accent: '#C67D5A',       // Rose Copper
+          success: '#5B9A6F',      // Sage Green
+          warning: '#E8A539',      // Amber
+          danger: '#C0544E',       // Muted Crimson
+          info: '#5B7FA5',         // Steel Blue
+          surface: '#FAF7F2',      // Off-White
+          surfaceMuted: '#F3EFE9', 
+          border: '#3F3F56',       // Disesuaikan agar harmonis dengan charcoal
+          text: '#1C1C28',         // Charcoal
+          textMuted: '#6C6C77',
         },
       },
       fontFamily: {
-        sans: ['system-ui', 'ui-sans-serif', 'sans-serif'],
+        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-mono)', 'monospace'],
       },
       borderRadius: {
         xl: '1rem',

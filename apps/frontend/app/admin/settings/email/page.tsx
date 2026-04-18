@@ -339,8 +339,8 @@ export default function EmailSettingsPage() {
             </div>
 
             {/* Info box */}
-            <div className="flex items-start gap-3 p-4 rounded-lg bg-blue-500/10 border border-blue-500/20">
-              <Info size={20} className="text-blue-400 flex-shrink-0 mt-0.5" />
+            <div className="flex items-start gap-3 p-4 rounded-lg bg-brand-primary/10 border border-blue-500/20">
+              <Info size={20} className="text-brand-primary flex-shrink-0 mt-0.5" />
               <div className="text-sm text-white/70">
                 <p className="font-medium text-white mb-1">Tips untuk Gmail:</p>
                 <ul className="list-disc list-inside space-y-1">
@@ -397,28 +397,28 @@ export default function EmailSettingsPage() {
             Template Email (Opsional)
           </h3>
           <div className="space-y-4">
-            <div className="flex items-start gap-3 p-4 rounded-lg bg-amber-500/10 border border-amber-500/20">
-              <Info size={20} className="text-amber-400 flex-shrink-0 mt-0.5" />
+            <div className="flex items-start gap-3 p-4 rounded-lg bg-brand-warning/10 border border-amber-500/20">
+              <Info size={20} className="text-brand-warning flex-shrink-0 mt-0.5" />
               <div className="text-sm text-white/70">
                 <p className="font-medium text-white mb-1">Placeholder yang tersedia:</p>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-1 mt-2">
-                  <code className="text-amber-400">{"{{guest_name}}"}</code>
+                  <code className="text-brand-warning">{"{{guest_name}}"}</code>
                   <span>Nama tamu</span>
-                  <code className="text-amber-400">{"{{guest_id}}"}</code>
+                  <code className="text-brand-warning">{"{{guest_id}}"}</code>
                   <span>ID tamu</span>
-                  <code className="text-amber-400">{"{{event_name}}"}</code>
+                  <code className="text-brand-warning">{"{{event_name}}"}</code>
                   <span>Nama event</span>
-                  <code className="text-amber-400">{"{{event_date}}"}</code>
+                  <code className="text-brand-warning">{"{{event_date}}"}</code>
                   <span>Tanggal event</span>
-                  <code className="text-amber-400">{"{{event_time}}"}</code>
+                  <code className="text-brand-warning">{"{{event_time}}"}</code>
                   <span>Jam event</span>
-                  <code className="text-amber-400">{"{{event_location}}"}</code>
+                  <code className="text-brand-warning">{"{{event_location}}"}</code>
                   <span>Lokasi</span>
-                  <code className="text-amber-400">{"{{table_location}}"}</code>
+                  <code className="text-brand-warning">{"{{table_location}}"}</code>
                   <span>Meja/Area</span>
-                  <code className="text-amber-400">{"{{qr_code}}"}</code>
+                  <code className="text-brand-warning">{"{{qr_code}}"}</code>
                   <span>QR Code image</span>
-                  <code className="text-amber-400">{"{{custom_message}}"}</code>
+                  <code className="text-brand-warning">{"{{custom_message}}"}</code>
                   <span>Pesan kustom</span>
                 </div>
               </div>
@@ -463,7 +463,7 @@ export default function EmailSettingsPage() {
                 Test Connection
               </Button>
               {testResult && (
-                <div className={`flex items-center gap-2 text-sm ${testResult.success ? 'text-emerald-400' : 'text-red-400'}`}>
+                <div className={`flex items-center gap-2 text-sm ${testResult.success ? 'text-brand-success' : 'text-brand-danger'}`}>
                   {testResult.success ? <CheckCircle size={16} /> : <XCircle size={16} />}
                   {testResult.message}
                 </div>

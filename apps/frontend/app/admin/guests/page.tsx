@@ -15,17 +15,17 @@ type RegistrationSource = 'MANUAL' | 'IMPORT' | 'WALKIN';
 
 const CATEGORY_CONFIG: Record<GuestCategory, { label: string; color: string; bg: string; border: string }> = {
   REGULAR: { label: 'Regular', color: 'text-gray-300', bg: 'bg-gray-500/20', border: 'border-gray-500/30' },
-  VIP: { label: 'VIP', color: 'text-amber-300', bg: 'bg-amber-500/20', border: 'border-amber-500/30' },
-  VVIP: { label: 'VVIP', color: 'text-purple-300', bg: 'bg-purple-500/20', border: 'border-purple-500/30' },
-  MEDIA: { label: 'Media', color: 'text-blue-300', bg: 'bg-blue-500/20', border: 'border-blue-500/30' },
-  SPONSOR: { label: 'Sponsor', color: 'text-emerald-300', bg: 'bg-emerald-500/20', border: 'border-emerald-500/30' },
+  VIP: { label: 'VIP', color: 'text-brand-warning', bg: 'bg-brand-warning/20', border: 'border-brand-warning/30' },
+  VVIP: { label: 'VVIP', color: 'text-brand-accent', bg: 'bg-brand-accent/20', border: 'border-purple-500/30' },
+  MEDIA: { label: 'Media', color: 'text-brand-primarySoft', bg: 'bg-brand-primary/20', border: 'border-brand-primary/30' },
+  SPONSOR: { label: 'Sponsor', color: 'text-brand-success', bg: 'bg-brand-success/20', border: 'border-emerald-500/30' },
   SPEAKER: { label: 'Speaker', color: 'text-rose-300', bg: 'bg-rose-500/20', border: 'border-rose-500/30' },
   ORGANIZER: { label: 'Organizer', color: 'text-cyan-300', bg: 'bg-cyan-500/20', border: 'border-cyan-500/30' },
 };
 
 const SOURCE_CONFIG: Record<RegistrationSource, { label: string; color: string; bg: string; border: string }> = {
   MANUAL: { label: 'Manual', color: 'text-gray-300', bg: 'bg-gray-500/20', border: 'border-gray-500/30' },
-  IMPORT: { label: 'Import', color: 'text-blue-300', bg: 'bg-blue-500/20', border: 'border-blue-500/30' },
+  IMPORT: { label: 'Import', color: 'text-brand-primarySoft', bg: 'bg-brand-primary/20', border: 'border-brand-primary/30' },
   WALKIN: { label: 'Walk-in', color: 'text-orange-300', bg: 'bg-orange-500/20', border: 'border-orange-500/30' },
 };
 
@@ -540,7 +540,7 @@ export default function GuestsListPage() {
           <Button
             size="sm"
             variant="ghost"
-            className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10"
+            className="text-brand-primary hover:text-brand-primarySoft hover:bg-brand-primary/10"
             onClick={async () => {
               try {
                 setError(null);
@@ -617,8 +617,8 @@ export default function GuestsListPage() {
 
         {/* Bulk Actions Bar */}
         {selectedIds.size > 0 && (
-          <div className="flex flex-wrap items-center gap-3 p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
-            <span className="text-sm text-blue-300 font-medium">
+          <div className="flex flex-wrap items-center gap-3 p-3 rounded-lg bg-brand-primary/10 border border-brand-primary/20">
+            <span className="text-sm text-brand-primarySoft font-medium">
               {selectedIds.size} tamu dipilih
             </span>
             <div className="flex-1" />
@@ -652,7 +652,7 @@ export default function GuestsListPage() {
             <Button
               size="sm"
               variant="ghost"
-              className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+              className="text-brand-danger hover:text-brand-danger hover:bg-brand-danger/10"
               onClick={doBulkDelete}
               disabled={bulkActionLoading}
             >
@@ -675,11 +675,11 @@ export default function GuestsListPage() {
 
         {/* Import Result with Duplicates Warning */}
         {importResult && importResult.duplicates.length > 0 && (
-          <Card variant="glass" className="p-4 border-amber-500/30 bg-amber-500/10">
+          <Card variant="glass" className="p-4 border-brand-warning/30 bg-brand-warning/10">
             <div className="flex items-start gap-3">
-              <AlertTriangle className="text-amber-400 shrink-0 mt-0.5" size={20} />
+              <AlertTriangle className="text-brand-warning shrink-0 mt-0.5" size={20} />
               <div className="flex-1">
-                <h4 className="font-medium text-amber-300 mb-2">
+                <h4 className="font-medium text-brand-warning mb-2">
                   {importResult.skipped} data dilewati karena duplikat
                 </h4>
                 <div className="max-h-40 overflow-y-auto text-sm space-y-1">
@@ -696,7 +696,7 @@ export default function GuestsListPage() {
                 </div>
                 <button
                   onClick={() => setImportResult(null)}
-                  className="mt-3 text-xs text-amber-400 hover:text-amber-300"
+                  className="mt-3 text-xs text-brand-warning hover:text-brand-warning"
                 >
                   Tutup
                 </button>
@@ -741,7 +741,7 @@ export default function GuestsListPage() {
                   const cat = CATEGORY_CONFIG[g.category] || CATEGORY_CONFIG.REGULAR;
                   const src = g.registrationSource ? SOURCE_CONFIG[g.registrationSource] : null;
                   return (
-                    <tr key={g.id} className={`hover:bg-white/5 transition-colors ${selectedIds.has(g.id) ? 'bg-blue-500/10' : ''}`}>
+                    <tr key={g.id} className={`hover:bg-white/5 transition-colors ${selectedIds.has(g.id) ? 'bg-brand-primary/10' : ''}`}>
                       <td className="px-2 py-3 align-middle">
                         <input
                           type="checkbox"
@@ -764,7 +764,7 @@ export default function GuestsListPage() {
                       <td className="px-2 py-3 text-white font-medium align-middle">
                         {g.name}
                         {g.notes && (
-                          <div className="text-xs text-amber-300/80 mt-1 px-2 py-1 bg-amber-500/10 rounded border border-amber-500/20 max-w-xs truncate">
+                          <div className="text-xs text-brand-warning/80 mt-1 px-2 py-1 bg-brand-warning/10 rounded border border-amber-500/20 max-w-xs truncate">
                             {g.notes}
                           </div>
                         )}
@@ -772,7 +772,7 @@ export default function GuestsListPage() {
                       <td className="px-2 py-3 text-white/70 text-xs align-middle">
                         {g.email ? (
                           <span className="flex items-center gap-1">
-                            <Mail size={12} className="text-blue-400" />
+                            <Mail size={12} className="text-brand-primary" />
                             <span>{g.email}</span>
                           </span>
                         ) : '-'}
@@ -800,7 +800,7 @@ export default function GuestsListPage() {
                         <td className="px-2 py-3 align-middle text-center">
                           {g.souvenirTakes && g.souvenirTakes.length > 0 ? (
                             <div className="flex flex-col items-center gap-1">
-                              <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                              <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-brand-accent/20 text-brand-accent border border-purple-500/30">
                                 <Package size={12} />
                                 {g.souvenirTakes.length}
                               </span>
@@ -809,7 +809,7 @@ export default function GuestsListPage() {
                               </span>
                             </div>
                           ) : g.souvenirTaken ? (
-                            <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                            <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-brand-accent/20 text-brand-accent border border-purple-500/30">
                               <Gift size={12} />
                               Ya
                             </span>
@@ -825,8 +825,8 @@ export default function GuestsListPage() {
                               <span
                                 key={idx}
                                 className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${pw.collection
-                                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                                  : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                                  ? 'bg-brand-success/20 text-brand-success border border-emerald-500/30'
+                                  : 'bg-brand-warning/20 text-brand-warning border border-brand-warning/30'
                                   }`}
                                 title={`${pw.prize.name} - ${pw.collection ? 'Sudah diambil' : 'Belum diambil'}`}
                               >
@@ -840,7 +840,7 @@ export default function GuestsListPage() {
                         )}
                       </td>
                       <td className="px-2 py-3 align-middle text-center">
-                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${g.checkedIn ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'}`}>
+                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${g.checkedIn ? 'bg-brand-success/20 text-brand-success border border-emerald-500/30' : 'bg-brand-warning/20 text-brand-warning border border-brand-warning/30'}`}>
                           {g.checkedIn ? 'Checked-in' : 'Belum'}
                         </span>
                       </td>
@@ -855,7 +855,7 @@ export default function GuestsListPage() {
                           </button>
                           <button
                             title={g.checkedIn ? "Sudah Check-in" : "Check-in Manual"}
-                            className={`p-1.5 rounded-lg transition-colors disabled:opacity-50 ${g.checkedIn ? 'text-emerald-400/50 cursor-not-allowed' : 'text-emerald-400 hover:bg-emerald-400/10 hover:text-emerald-300'}`}
+                            className={`p-1.5 rounded-lg transition-colors disabled:opacity-50 ${g.checkedIn ? 'text-brand-success/50 cursor-not-allowed' : 'text-brand-success hover:bg-brand-success/10 hover:text-brand-success'}`}
                             disabled={g.checkedIn || busyCheckinId === g.id}
                             onClick={() => markCheckedIn(g.id)}
                           >
@@ -863,7 +863,7 @@ export default function GuestsListPage() {
                           </button>
                           <a
                             title="Edit Tamu"
-                            className="p-1.5 rounded-lg text-blue-400 hover:bg-blue-400/10 hover:text-blue-300 transition-colors"
+                            className="p-1.5 rounded-lg text-brand-primary hover:bg-blue-400/10 hover:text-brand-primarySoft transition-colors"
                             href={`/admin/guests/${g.id}`}
                           >
                             <Edit size={18} />
@@ -871,7 +871,7 @@ export default function GuestsListPage() {
                           {g.email && (
                             <button
                               title="Kirim Email Undangan"
-                              className="p-1.5 rounded-lg text-cyan-400 hover:bg-cyan-400/10 hover:text-cyan-300 transition-colors"
+                              className="p-1.5 rounded-lg text-brand-info hover:bg-cyan-400/10 hover:text-cyan-300 transition-colors"
                               onClick={() => openEmailModal([g.id])}
                             >
                               <Send size={18} />
@@ -879,7 +879,7 @@ export default function GuestsListPage() {
                           )}
                           <button
                             title="Hapus Tamu"
-                            className="p-1.5 rounded-lg text-red-400 hover:bg-red-400/10 hover:text-red-300 transition-colors disabled:opacity-50"
+                            className="p-1.5 rounded-lg text-brand-danger hover:bg-red-400/10 hover:text-brand-danger transition-colors disabled:opacity-50"
                             disabled={busyDeleteId === g.id}
                             onClick={() => removeGuest(g.id)}
                           >
@@ -937,9 +937,9 @@ export default function GuestsListPage() {
         {/* Bulk Edit Modal */}
         {showBulkEditModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => setShowBulkEditModal(false)}>
-            <div className="w-full max-w-md rounded-xl bg-slate-900 border border-white/20 p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="w-full max-w-md rounded-xl bg-brand-secondary border border-brand-border p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
               <h3 className="mb-4 text-lg font-bold text-white flex items-center gap-2">
-                <Tag size={20} className="text-blue-400" />
+                <Tag size={20} className="text-brand-primary" />
                 Ubah Kategori ({selectedIds.size} tamu)
               </h3>
               <div className="mb-6">
@@ -985,14 +985,14 @@ export default function GuestsListPage() {
         {/* Email Modal */}
         {showEmailModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => setShowEmailModal(false)}>
-            <div className="w-full max-w-lg rounded-xl bg-slate-900 border border-white/20 p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="w-full max-w-lg rounded-xl bg-brand-secondary border border-brand-border p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
               <h3 className="mb-4 text-lg font-bold text-white flex items-center gap-2">
-                <Mail size={20} className="text-blue-400" />
+                <Mail size={20} className="text-brand-primary" />
                 Kirim Email Undangan
               </h3>
 
-              <div className="mb-4 p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
-                <p className="text-sm text-blue-300">
+              <div className="mb-4 p-3 rounded-lg bg-brand-primary/10 border border-brand-primary/20">
+                <p className="text-sm text-brand-primarySoft">
                   <strong>{emailTargetIds.length}</strong> tamu dengan email akan menerima undangan
                 </p>
               </div>
@@ -1012,8 +1012,8 @@ export default function GuestsListPage() {
                 </p>
               </div>
 
-              <div className="mb-4 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
-                <p className="text-sm text-amber-300 flex items-start gap-2">
+              <div className="mb-4 p-3 rounded-lg bg-brand-warning/10 border border-amber-500/20">
+                <p className="text-sm text-brand-warning flex items-start gap-2">
                   <AlertTriangle size={16} className="mt-0.5 flex-shrink-0" />
                   <span>
                     Pastikan pengaturan email sudah dikonfigurasi di{' '}

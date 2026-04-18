@@ -90,14 +90,14 @@ export default function DashboardPage() {
           {/* Header */}
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
-                <TrendingUp size={24} className="text-white" />
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center shadow-lg">
+                <TrendingUp size={24} className="text-brand-secondary" />
               </div>
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-white">Dashboard</h1>
+                <h1 className="text-2xl md:text-3xl font-bold text-brand-surface">Dashboard</h1>
                 <div className="flex items-center gap-2 mt-1">
-                  <Radio size={12} className={`${connected ? 'text-emerald-400 pulse-live' : 'text-red-400'}`} />
-                  <span className="text-sm text-white/60">{connected ? 'Realtime Connected' : 'Reconnecting...'}</span>
+                  <Radio size={12} className={`${connected ? 'text-brand-success pulse-live' : 'text-brand-danger'}`} />
+                  <span className="text-sm text-brand-surface/60">{connected ? 'Realtime Connected' : 'Reconnecting...'}</span>
                 </div>
               </div>
             </div>
@@ -105,35 +105,35 @@ export default function DashboardPage() {
             {/* Quick Actions */}
             <div className="flex flex-wrap items-center gap-2">
               <a
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-600 px-4 py-2 text-sm font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-accent to-brand-primary px-4 py-2 text-sm font-semibold text-brand-secondary shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
                 href="/admin/statistics"
               >
                 <BarChart3 size={16} />
                 Statistik
               </a>
               <a
-                className="inline-flex items-center gap-2 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-2 text-sm font-medium text-white hover:bg-white/20 transition-all duration-200"
+                className="inline-flex items-center gap-2 rounded-xl bg-brand-surface/10 backdrop-blur-sm border border-brand-surface/20 px-4 py-2 text-sm font-medium text-brand-surface hover:bg-brand-surface/20 transition-all duration-200"
                 href="/admin/guests"
               >
                 <Users size={16} />
                 Tamu
               </a>
               <a
-                className="inline-flex items-center gap-2 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-2 text-sm font-medium text-white hover:bg-white/20 transition-all duration-200"
+                className="inline-flex items-center gap-2 rounded-xl bg-brand-surface/10 backdrop-blur-sm border border-brand-surface/20 px-4 py-2 text-sm font-medium text-brand-surface hover:bg-brand-surface/20 transition-all duration-200"
                 href="/luckydraw"
               >
                 <Dices size={16} />
                 Lucky Draw
               </a>
               <a
-                className="inline-flex items-center gap-2 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-2 text-sm font-medium text-white hover:bg-white/20 transition-all duration-200"
+                className="inline-flex items-center gap-2 rounded-xl bg-brand-surface/10 backdrop-blur-sm border border-brand-surface/20 px-4 py-2 text-sm font-medium text-brand-surface hover:bg-brand-surface/20 transition-all duration-200"
                 href="/souvenir"
               >
                 <Package size={16} />
                 Souvenir
               </a>
               <a
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 px-4 py-2 text-sm font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-primary to-brand-accent px-4 py-2 text-sm font-semibold text-brand-secondary shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
                 href="/checkin"
                 target="_blank"
               >
@@ -141,7 +141,7 @@ export default function DashboardPage() {
                 Kiosk
               </a>
               <a
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 rounded-xl bg-brand-success/20 border border-brand-success/30 px-4 py-2 text-sm font-semibold text-brand-success shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
                 href="/show"
                 target="_blank"
               >
@@ -149,7 +149,7 @@ export default function DashboardPage() {
                 Display
               </a>
               <a
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-600 px-4 py-2 text-sm font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 rounded-xl bg-brand-warning/20 border border-brand-warning/30 px-4 py-2 text-sm font-semibold text-brand-warning shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
                 href="/show/my"
                 target="_blank"
               >
@@ -160,21 +160,21 @@ export default function DashboardPage() {
           </div>
 
           {message && (
-            <div className="text-emerald-300 text-sm bg-emerald-500/10 p-4 rounded-xl border border-emerald-500/20 flex items-center gap-3 animate-fade-in">
-              <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center shrink-0">
-                <CheckCircle size={18} className="text-emerald-400" />
+            <div className="text-brand-success text-sm bg-brand-success/10 p-4 rounded-xl border border-brand-success/20 flex items-center gap-3 animate-fade-in">
+              <div className="w-8 h-8 rounded-lg bg-brand-success/20 flex items-center justify-center shrink-0">
+                <CheckCircle size={18} className="text-brand-success" />
               </div>
               {message}
-              <button onClick={() => setMessage(null)} className="ml-auto text-emerald-400 hover:text-emerald-300">
+              <button onClick={() => setMessage(null)} className="ml-auto text-brand-success hover:opacity-80">
                 <X size={16} />
               </button>
             </div>
           )}
 
           {error && (
-            <div className="text-red-300 text-sm bg-red-500/10 p-4 rounded-xl border border-red-500/20 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center shrink-0">
-                <XCircle size={18} className="text-red-400" />
+            <div className="text-brand-danger text-sm bg-brand-danger/10 p-4 rounded-xl border border-brand-danger/20 flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-brand-danger/20 flex items-center justify-center shrink-0">
+                <XCircle size={18} className="text-brand-danger" />
               </div>
               {error}
             </div>
@@ -496,20 +496,20 @@ export default function DashboardPage() {
         {/* Uncheckin Modal */}
         {showUncheckModal && uncheckGuestInfo && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => { setShowUncheckModal(false); setUncheckPassword(''); setUncheckReason(''); setUncheckError(null); setUncheckGuestInfo(null); }}>
-            <div className="w-full max-w-md rounded-xl bg-slate-900 border border-white/20 p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-              <h3 className="mb-4 text-lg font-bold text-white flex items-center gap-2">
-                <XCircle size={20} className="text-red-400" />
+            <div className="w-full max-w-md rounded-xl bg-brand-secondary border border-brand-border p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+              <h3 className="mb-4 text-lg font-bold text-brand-surface flex items-center gap-2">
+                <XCircle size={20} className="text-brand-danger" />
                 Batalkan Check-in: {uncheckGuestInfo.name}
               </h3>
-              <div className="mb-4 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
-                <p className="text-sm text-amber-300">
+              <div className="mb-4 p-3 rounded-lg bg-brand-warning/10 border border-brand-warning/20">
+                <p className="text-sm text-brand-warning">
                   Tindakan ini memerlukan password admin dan alasan pembatalan.
                 </p>
               </div>
               {uncheckError && (
-                <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center gap-2">
-                  <XCircle size={16} className="text-red-400 shrink-0" />
-                  <p className="text-sm text-red-300">{uncheckError}</p>
+                <div className="mb-4 p-3 rounded-lg bg-brand-danger/10 border border-brand-danger/20 flex items-center gap-2">
+                  <XCircle size={16} className="text-brand-danger shrink-0" />
+                  <p className="text-sm text-brand-danger">{uncheckError}</p>
                 </div>
               )}
               <div className="space-y-4">
@@ -576,10 +576,10 @@ export default function DashboardPage() {
 }
 
 const colorMap: Record<string, { bg: string; text: string; border: string }> = {
-  blue: { bg: 'from-blue-500/20 to-blue-600/10', text: 'text-blue-400', border: 'border-blue-500/20' },
-  emerald: { bg: 'from-emerald-500/20 to-emerald-600/10', text: 'text-emerald-400', border: 'border-emerald-500/20' },
-  amber: { bg: 'from-amber-500/20 to-amber-600/10', text: 'text-amber-400', border: 'border-amber-500/20' },
-  purple: { bg: 'from-purple-500/20 to-purple-600/10', text: 'text-purple-400', border: 'border-purple-500/20' },
+  blue: { bg: 'from-brand-primary/20 to-brand-primary/10', text: 'text-brand-primary', border: 'border-brand-primary/20' },
+  emerald: { bg: 'from-brand-success/20 to-brand-success/10', text: 'text-brand-success', border: 'border-brand-success/20' },
+  amber: { bg: 'from-brand-warning/20 to-brand-warning/10', text: 'text-brand-warning', border: 'border-brand-warning/20' },
+  purple: { bg: 'from-brand-accent/20 to-brand-accent/10', text: 'text-brand-accent', border: 'border-brand-accent/20' },
 };
 
 function StatsCard({ 
@@ -619,7 +619,7 @@ function StatsCard({
         <div className="mt-3">
           <div className="h-2 bg-white/10 rounded-full overflow-hidden">
             <div 
-              className={`h-full bg-gradient-to-r ${color === 'purple' ? 'from-purple-500 to-pink-500' : 'from-blue-500 to-cyan-500'} transition-all duration-500`}
+              className={`h-full bg-gradient-to-r ${color === 'purple' ? 'from-brand-accent to-brand-primary' : 'from-brand-primary to-brand-primarySoft'} transition-all duration-500`}
               style={{ width: `${percent}%` }}
             />
           </div>

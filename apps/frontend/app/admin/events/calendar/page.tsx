@@ -276,12 +276,12 @@ export default function EventCalendarPage() {
           </div>
 
           {error && (
-            <div className="text-sm text-red-400 bg-red-500/10 p-3 rounded-lg border border-red-500/20">
+            <div className="text-sm text-brand-danger bg-brand-danger/10 p-3 rounded-lg border border-brand-danger/20">
               {error}
             </div>
           )}
           {message && (
-            <div className="text-sm text-emerald-400 bg-emerald-500/10 p-3 rounded-lg border border-emerald-500/20">
+            <div className="text-sm text-brand-success bg-brand-success/10 p-3 rounded-lg border border-brand-success/20">
               {message}
             </div>
           )}
@@ -395,14 +395,14 @@ export default function EventCalendarPage() {
                           relative min-h-[80px] md:min-h-[100px] p-1 md:p-2 rounded-lg border transition-all text-left cursor-pointer group
                           ${day.isCurrentMonth ? 'bg-white/5' : 'bg-transparent'}
                           ${day.isToday ? 'border-blue-500/50 ring-1 ring-blue-500/30' : 'border-white/10'}
-                          ${isSelected ? 'border-purple-500/50 ring-2 ring-purple-500/30 bg-purple-500/10' : ''}
+                          ${isSelected ? 'border-purple-500/50 ring-2 ring-purple-500/30 bg-brand-accent/10' : ''}
                           ${hasEvents ? 'hover:bg-white/10' : 'hover:bg-white/5'}
                         `}
                       >
                         <div className={`
                           text-sm font-medium mb-1
                           ${day.isCurrentMonth ? 'text-white' : 'text-white/30'}
-                          ${day.isToday ? 'text-blue-400' : ''}
+                          ${day.isToday ? 'text-brand-primary' : ''}
                         `}>
                           {day.date.getDate()}
                         </div>
@@ -415,10 +415,10 @@ export default function EventCalendarPage() {
                               className={`
                                 text-[10px] md:text-xs px-1 py-0.5 rounded truncate
                                 ${event.isActive 
-                                  ? 'bg-emerald-500/30 text-emerald-300 border border-emerald-500/30' 
+                                  ? 'bg-brand-success/30 text-brand-success border border-emerald-500/30' 
                                   : isEventPast(event.date)
                                     ? 'bg-gray-500/20 text-gray-400'
-                                    : 'bg-blue-500/20 text-blue-300'
+                                    : 'bg-brand-primary/20 text-brand-primarySoft'
                                 }
                               `}
                             >
@@ -453,11 +453,11 @@ export default function EventCalendarPage() {
               {/* Legend */}
               <div className="flex flex-wrap items-center gap-4 mt-4 pt-4 border-t border-white/10 text-xs">
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded bg-emerald-500/30 border border-emerald-500/30" />
+                  <div className="w-3 h-3 rounded bg-brand-success/30 border border-emerald-500/30" />
                   <span className="text-white/60">Event Aktif</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded bg-blue-500/20" />
+                  <div className="w-3 h-3 rounded bg-brand-primary/20" />
                   <span className="text-white/60">Event Mendatang</span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -488,7 +488,7 @@ export default function EventCalendarPage() {
                           className={`
                             p-3 rounded-lg border transition-all
                             ${event.isActive 
-                              ? 'bg-emerald-500/10 border-emerald-500/30' 
+                              ? 'bg-brand-success/10 border-emerald-500/30' 
                               : 'bg-white/5 border-white/10 hover:bg-white/10'
                             }
                           `}
@@ -504,7 +504,7 @@ export default function EventCalendarPage() {
                               )}
                             </div>
                             {event.isActive ? (
-                              <span className="flex-shrink-0 px-2 py-0.5 text-xs bg-emerald-500/20 text-emerald-400 rounded-full">
+                              <span className="flex-shrink-0 px-2 py-0.5 text-xs bg-brand-success/20 text-brand-success rounded-full">
                                 Aktif
                               </span>
                             ) : (
@@ -571,7 +571,7 @@ export default function EventCalendarPage() {
                             month: 'short' 
                           })}
                           {isEventToday(event.date) && (
-                            <span className="ml-2 text-blue-400">Hari Ini</span>
+                            <span className="ml-2 text-brand-primary">Hari Ini</span>
                           )}
                         </div>
                       </button>
@@ -596,14 +596,14 @@ export default function EventCalendarPage() {
                         className={`
                           p-2 rounded-lg border text-sm
                           ${event.isActive 
-                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300' 
+                            ? 'bg-brand-success/10 border-emerald-500/30 text-brand-success' 
                             : 'bg-white/5 border-white/10 text-white/70'
                           }
                         `}
                       >
                         {event.name}
                         {event.isActive && (
-                          <span className="ml-2 text-xs text-emerald-400">(Aktif)</span>
+                          <span className="ml-2 text-xs text-brand-success">(Aktif)</span>
                         )}
                       </div>
                     ))}

@@ -15,20 +15,20 @@ interface CustomCategory {
 
 const DEFAULT_CATEGORIES: CustomCategory[] = [
   { value: 'REGULAR', label: 'Regular', color: 'text-gray-300' },
-  { value: 'VIP', label: 'VIP', color: 'text-amber-300' },
-  { value: 'VVIP', label: 'VVIP', color: 'text-purple-300' },
-  { value: 'MEDIA', label: 'Media', color: 'text-blue-300' },
-  { value: 'SPONSOR', label: 'Sponsor', color: 'text-emerald-300' },
+  { value: 'VIP', label: 'VIP', color: 'text-brand-warning' },
+  { value: 'VVIP', label: 'VVIP', color: 'text-brand-accent' },
+  { value: 'MEDIA', label: 'Media', color: 'text-brand-primarySoft' },
+  { value: 'SPONSOR', label: 'Sponsor', color: 'text-brand-success' },
   { value: 'SPEAKER', label: 'Speaker', color: 'text-rose-300' },
   { value: 'ORGANIZER', label: 'Organizer', color: 'text-cyan-300' },
 ];
 
 const COLOR_OPTIONS = [
   { value: 'text-gray-300', label: 'Gray', bg: 'bg-gray-500' },
-  { value: 'text-amber-300', label: 'Amber', bg: 'bg-amber-500' },
-  { value: 'text-purple-300', label: 'Purple', bg: 'bg-purple-500' },
-  { value: 'text-blue-300', label: 'Blue', bg: 'bg-blue-500' },
-  { value: 'text-emerald-300', label: 'Green', bg: 'bg-emerald-500' },
+  { value: 'text-brand-warning', label: 'Amber', bg: 'bg-brand-warning' },
+  { value: 'text-brand-accent', label: 'Purple', bg: 'bg-brand-accent' },
+  { value: 'text-brand-primarySoft', label: 'Blue', bg: 'bg-brand-primary' },
+  { value: 'text-brand-success', label: 'Green', bg: 'bg-brand-success' },
   { value: 'text-rose-300', label: 'Rose', bg: 'bg-rose-500' },
   { value: 'text-cyan-300', label: 'Cyan', bg: 'bg-cyan-500' },
   { value: 'text-orange-300', label: 'Orange', bg: 'bg-orange-500' },
@@ -293,11 +293,11 @@ export default function EventSettingsPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <Link
               href="/admin/prizes"
-              className="flex items-center justify-between p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 transition-colors group"
+              className="flex items-center justify-between p-4 rounded-xl bg-brand-warning/10 border border-amber-500/20 hover:bg-brand-warning/20 transition-colors group"
             >
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-amber-500/20">
-                  <Trophy size={20} className="text-amber-400" />
+                <div className="p-2 rounded-lg bg-brand-warning/20">
+                  <Trophy size={20} className="text-brand-warning" />
                 </div>
                 <div>
                   <div className="font-medium text-white">Prize Inventory</div>
@@ -309,11 +309,11 @@ export default function EventSettingsPage() {
 
             <Link
               href="/admin/souvenirs"
-              className="flex items-center justify-between p-4 rounded-xl bg-purple-500/10 border border-purple-500/20 hover:bg-purple-500/20 transition-colors group"
+              className="flex items-center justify-between p-4 rounded-xl bg-brand-accent/10 border border-purple-500/20 hover:bg-brand-accent/20 transition-colors group"
             >
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-purple-500/20">
-                  <Package size={20} className="text-purple-400" />
+                <div className="p-2 rounded-lg bg-brand-accent/20">
+                  <Package size={20} className="text-brand-accent" />
                 </div>
                 <div>
                   <div className="font-medium text-white">Souvenir Inventory</div>
@@ -325,11 +325,11 @@ export default function EventSettingsPage() {
 
             <Link
               href="/admin/settings/users"
-              className="flex items-center justify-between p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 hover:bg-blue-500/20 transition-colors group"
+              className="flex items-center justify-between p-4 rounded-xl bg-brand-primary/10 border border-brand-primary/20 hover:bg-brand-primary/20 transition-colors group"
             >
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-blue-500/20">
-                  <UserCog size={20} className="text-blue-400" />
+                <div className="p-2 rounded-lg bg-brand-primary/20">
+                  <UserCog size={20} className="text-brand-primary" />
                 </div>
                 <div>
                   <div className="font-medium text-white">User Management</div>
@@ -345,7 +345,7 @@ export default function EventSettingsPage() {
             >
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-cyan-500/20">
-                  <Mail size={20} className="text-cyan-400" />
+                  <Mail size={20} className="text-brand-info" />
                 </div>
                 <div>
                   <div className="font-medium text-white">Email Settings</div>
@@ -356,7 +356,7 @@ export default function EventSettingsPage() {
             </Link>
           </div>
 
-          {error && <div className="text-sm text-brand-danger bg-red-500/10 p-3 rounded-lg border border-red-500/20">{error}</div>}
+          {error && <div className="text-sm text-brand-danger bg-brand-danger/10 p-3 rounded-lg border border-brand-danger/20">{error}</div>}
           {message && <div className="text-sm text-brand-accent bg-brand-primary/10 p-3 rounded-lg border border-brand-primary/20">{message}</div>}
 
           <Card variant="glass" className="space-y-8 p-6 md:p-8">
@@ -456,13 +456,13 @@ export default function EventSettingsPage() {
               <div className="pt-4 border-t border-white/10 space-y-3">
                 <label className="flex items-center justify-between p-3 rounded-lg border border-white/10 bg-white/5 cursor-pointer hover:bg-white/10 transition-colors">
                   <div className="flex items-center gap-3">
-                    <Camera size={20} className="text-emerald-400" />
+                    <Camera size={20} className="text-brand-success" />
                     <div>
                       <div className="font-medium text-white">Photo Capture saat Check-in</div>
                       <div className="text-sm text-white/60">Aktifkan opsi mengambil foto tamu via webcam setelah check-in</div>
                     </div>
                   </div>
-                  <div className={`w-12 h-7 rounded-full transition-colors relative ${cfg.enablePhotoCapture ? 'bg-emerald-500' : 'bg-white/20'}`}>
+                  <div className={`w-12 h-7 rounded-full transition-colors relative ${cfg.enablePhotoCapture ? 'bg-brand-success' : 'bg-white/20'}`}>
                     <div className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transform ${cfg.enablePhotoCapture ? 'translate-x-5' : 'translate-x-0'}`} />
                     <input
                       type="checkbox"
@@ -475,13 +475,13 @@ export default function EventSettingsPage() {
 
                 <label className="flex items-center justify-between p-3 rounded-lg border border-white/10 bg-white/5 cursor-pointer hover:bg-white/10 transition-colors">
                   <div className="flex items-center gap-3">
-                    <Users size={20} className="text-amber-400" />
+                    <Users size={20} className="text-brand-warning" />
                     <div>
                       <div className="font-medium text-white">Izinkan Duplikat Guest ID</div>
                       <div className="text-sm text-white/60">Tamu dengan ID sama bisa didaftarkan lebih dari satu (misal: beda perusahaan)</div>
                     </div>
                   </div>
-                  <div className={`w-12 h-7 rounded-full transition-colors relative ${cfg.allowDuplicateGuestId ? 'bg-amber-500' : 'bg-white/20'}`}>
+                  <div className={`w-12 h-7 rounded-full transition-colors relative ${cfg.allowDuplicateGuestId ? 'bg-brand-warning' : 'bg-white/20'}`}>
                     <div className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transform ${cfg.allowDuplicateGuestId ? 'translate-x-5' : 'translate-x-0'}`} />
                     <input
                       type="checkbox"
@@ -494,13 +494,13 @@ export default function EventSettingsPage() {
 
                 <label className="flex items-center justify-between p-3 rounded-lg border border-white/10 bg-white/5 cursor-pointer hover:bg-white/10 transition-colors">
                   <div className="flex items-center gap-3">
-                    <UserCheck size={20} className="text-blue-400" />
+                    <UserCheck size={20} className="text-brand-primary" />
                     <div>
                       <div className="font-medium text-white">Multiple Check-in Per Counter</div>
                       <div className="text-sm text-white/60">Tamu dapat check-in di berbagai admin/counter (maksimal 1x per counter)</div>
                     </div>
                   </div>
-                  <div className={`w-12 h-7 rounded-full transition-colors relative ${cfg.allowMultipleCheckinPerCounter ? 'bg-blue-500' : 'bg-white/20'}`}>
+                  <div className={`w-12 h-7 rounded-full transition-colors relative ${cfg.allowMultipleCheckinPerCounter ? 'bg-brand-primary' : 'bg-white/20'}`}>
                     <div className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transform ${cfg.allowMultipleCheckinPerCounter ? 'translate-x-5' : 'translate-x-0'}`} />
                     <input
                       type="checkbox"
@@ -539,7 +539,7 @@ export default function EventSettingsPage() {
                       <button
                         type="button"
                         onClick={() => removeCategory(cat.value)}
-                        className="ml-1 p-0.5 rounded-full hover:bg-red-500/20 text-white/40 hover:text-red-400 transition-colors"
+                        className="ml-1 p-0.5 rounded-full hover:bg-brand-danger/20 text-white/40 hover:text-brand-danger transition-colors"
                         title="Hapus kategori"
                       >
                         <X size={14} />
@@ -579,7 +579,7 @@ export default function EventSettingsPage() {
                       className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
                     >
                       {COLOR_OPTIONS.map((opt) => (
-                        <option key={opt.value} value={opt.value} className="bg-slate-800">
+                        <option key={opt.value} value={opt.value} className="bg-brand-secondary">
                           {opt.label}
                         </option>
                       ))}

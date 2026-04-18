@@ -108,7 +108,7 @@ export default function PrizesPage() {
                     </h1>
                 </div>
 
-                {error && <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-200">{error}</div>}
+                {error && <div className="p-4 rounded-lg bg-brand-danger/10 border border-brand-danger/20 text-brand-danger">{error}</div>}
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Create Form */}
@@ -152,7 +152,7 @@ export default function PrizesPage() {
                                     className="w-full rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
                                 >
                                     {PRIZE_CATEGORIES.map((cat) => (
-                                        <option key={cat.value} value={cat.value} className="bg-slate-800">{cat.label}</option>
+                                        <option key={cat.value} value={cat.value} className="bg-brand-secondary">{cat.label}</option>
                                     ))}
                                 </select>
                             </div>
@@ -193,8 +193,8 @@ export default function PrizesPage() {
                                             <h3 className="font-bold text-lg text-white">{p.name}</h3>
                                             <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${
                                                 p.category === 'UTAMA' 
-                                                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' 
-                                                    : 'bg-blue-500/20 text-blue-300 border-blue-500/30'
+                                                    ? 'bg-brand-warning/20 text-brand-warning border-brand-warning/30' 
+                                                    : 'bg-brand-primary/20 text-brand-primarySoft border-brand-primary/30'
                                             }`}>
                                                 <Tag size={10} className="inline mr-1" />
                                                 {PRIZE_CATEGORIES.find(c => c.value === p.category)?.label || p.category}
@@ -203,7 +203,7 @@ export default function PrizesPage() {
                                                 {p.winners.length} / {p.quantity} Pemenang
                                             </span>
                                             {p.allowMultipleWins && (
-                                                <span className="px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 text-xs font-medium border border-purple-500/30">
+                                                <span className="px-2 py-0.5 rounded-full bg-brand-accent/20 text-brand-accent text-xs font-medium border border-purple-500/30">
                                                     <RefreshCw size={10} className="inline mr-1" />
                                                     Bisa Menang Ulang
                                                 </span>
@@ -217,8 +217,8 @@ export default function PrizesPage() {
                                                 <div className="text-xs font-medium text-brand-textMuted mb-2 uppercase tracking-wider">Pemenang Terpilih</div>
                                                 <div className="flex flex-wrap gap-2">
                                                     {p.winners.map((w: any) => (
-                                                        <div key={w.id} className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-3 py-1.5">
-                                                            <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-xs font-bold text-emerald-300">
+                                                        <div key={w.id} className="flex items-center gap-2 bg-brand-success/10 border border-emerald-500/20 rounded-lg px-3 py-1.5">
+                                                            <div className="w-6 h-6 rounded-full bg-brand-success/20 flex items-center justify-center text-xs font-bold text-brand-success">
                                                                 {w.queueNumber}
                                                             </div>
                                                             <div className="text-sm text-emerald-100">
@@ -235,7 +235,7 @@ export default function PrizesPage() {
                                     <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                         <button
                                             onClick={() => deletePrize(p.id)}
-                                            className="p-2 rounded-lg text-red-400 hover:bg-red-400/10 transition-colors"
+                                            className="p-2 rounded-lg text-brand-danger hover:bg-red-400/10 transition-colors"
                                             title="Hapus Hadiah"
                                         >
                                             <Trash2 size={18} />
@@ -243,7 +243,7 @@ export default function PrizesPage() {
                                         {p.winners.length > 0 && (
                                             <button
                                                 onClick={() => resetPrize(p.id)}
-                                                className="p-2 rounded-lg text-amber-400 hover:bg-amber-400/10 transition-colors"
+                                                className="p-2 rounded-lg text-brand-warning hover:bg-amber-400/10 transition-colors"
                                                 title="Reset Pemenang"
                                             >
                                                 <Gift size={18} />

@@ -106,7 +106,7 @@ export default function EventSelector() {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-2 w-72 bg-slate-800 border border-white/20 rounded-xl shadow-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute top-full left-0 mt-2 w-72 bg-brand-secondary border border-brand-primary/20 rounded-xl shadow-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="p-2 border-b border-white/10">
             <div className="text-xs text-white/50 px-2 py-1">Pilih Event</div>
           </div>
@@ -118,7 +118,7 @@ export default function EventSelector() {
                 disabled={switching}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-left ${
                   event.isActive
-                    ? 'bg-blue-500/20 border border-blue-500/30'
+                    ? 'bg-brand-primary/20 border border-brand-primary/30'
                     : 'hover:bg-white/10 border border-transparent'
                 }`}
               >
@@ -132,7 +132,7 @@ export default function EventSelector() {
                     </div>
                   )}
                 </div>
-                {event.isActive && <Check size={16} className="text-emerald-400 flex-shrink-0" />}
+                {event.isActive && <Check size={16} className="text-brand-success flex-shrink-0" />}
               </button>
             ))}
           </div>

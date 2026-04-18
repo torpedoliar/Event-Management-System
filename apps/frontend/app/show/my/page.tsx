@@ -131,16 +131,16 @@ export default function MyShowPage() {
   // Not logged in
   if (!adminInfo) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-brand-secondary flex items-center justify-center p-4">
         <div className="text-center">
-          <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-amber-500/20 flex items-center justify-center">
-            <LogIn size={48} className="text-amber-400" />
+          <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-brand-warning/20 flex items-center justify-center">
+            <LogIn size={48} className="text-brand-warning" />
           </div>
           <h1 className="text-2xl font-bold text-white mb-2">Login Diperlukan</h1>
           <p className="text-white/60 mb-6">Silakan login terlebih dahulu untuk menggunakan My Display</p>
           <a
             href="/admin/login"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold hover:shadow-lg transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-brand-primary to-brand-accent text-brand-secondary font-semibold hover:shadow-lg hover:shadow-brand-primary/20 transition-all"
           >
             <LogIn size={20} />
             Login
@@ -168,8 +168,8 @@ export default function MyShowPage() {
             {cfg?.logoUrl ? (
               <img src={toApiUrl(cfg.logoUrl)} className="h-14 md:h-20 w-auto drop-shadow-2xl" alt="logo" />
             ) : (
-              <div className="w-14 h-14 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-2xl">
-                <Users size={32} className="text-white" />
+              <div className="w-14 h-14 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center shadow-2xl">
+                <Users size={32} className="text-brand-secondary" />
               </div>
             )}
             <div className="text-white">
@@ -178,13 +178,13 @@ export default function MyShowPage() {
                 <div className="text-base md:text-xl text-white/80 mt-1 flex items-center gap-3 text-shadow">
                   {cfg?.date && (
                     <span className="flex items-center gap-1.5">
-                      <Clock size={16} className="text-blue-400" />
+                      <Clock size={16} className="text-brand-primary" />
                       {new Date(cfg.date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
                     </span>
                   )}
                   {cfg?.location && (
                     <span className="flex items-center gap-1.5">
-                      <MapPin size={16} className="text-pink-400" />
+                      <MapPin size={16} className="text-brand-accent" />
                       {cfg.location}
                     </span>
                   )}
@@ -195,13 +195,13 @@ export default function MyShowPage() {
 
           {/* Admin info and clock */}
           <div className="hidden md:flex flex-col items-end gap-2">
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/20 backdrop-blur-md border border-amber-500/30">
-              <User size={16} className="text-amber-400" />
-              <span className="text-amber-100 text-sm font-medium">{adminInfo.name}</span>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-brand-warning/20 backdrop-blur-md border border-brand-warning/30">
+              <User size={16} className="text-brand-warning" />
+              <span className="text-brand-surface text-sm font-medium">{adminInfo.name}</span>
             </div>
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20">
-              <Radio size={16} className={`${connected ? 'text-emerald-400 pulse-live' : 'text-red-400'}`} />
-              <span className="text-white/80 text-sm font-medium">{connected ? 'My Display' : 'Reconnecting...'}</span>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-brand-surface/10 backdrop-blur-md border border-brand-surface/20">
+              <Radio size={16} className={`${connected ? 'text-brand-success pulse-live' : 'text-brand-danger'}`} />
+              <span className="text-brand-surface/80 text-sm font-medium uppercase tracking-widest">{connected ? 'My Display' : 'Reconnecting...'}</span>
             </div>
             <div className="text-4xl font-bold text-white/90 font-mono text-shadow-lg">
               {currentTime.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
@@ -217,8 +217,8 @@ export default function MyShowPage() {
             {/* Waiting state */}
             <div className="flex items-center justify-center">
               <div className="text-center">
-                <div className="w-32 h-32 mx-auto mb-8 rounded-full bg-amber-500/20 backdrop-blur-md border border-amber-500/30 flex items-center justify-center float">
-                  <User size={56} className="text-amber-400" />
+                <div className="w-32 h-32 mx-auto mb-8 rounded-full bg-brand-warning/20 backdrop-blur-md border border-brand-warning/30 flex items-center justify-center float">
+                  <User size={56} className="text-brand-warning" />
                 </div>
                 <h2 className="text-3xl md:text-4xl font-bold text-white/80 text-shadow-lg mb-4">
                   Check-in Anda
@@ -233,7 +233,7 @@ export default function MyShowPage() {
             {recentCheckins.length > 0 && (
               <div className="glass-card-dark p-6 overflow-hidden">
                 <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                  <Clock size={20} className="text-amber-400" />
+                  <Clock size={20} className="text-brand-warning" />
                   Riwayat Check-in Anda
                 </h3>
                 <div className="space-y-3 max-h-[60vh] overflow-y-auto">
@@ -251,13 +251,13 @@ export default function MyShowPage() {
                       <div className="flex-1 min-w-0">
                         <div className="font-semibold text-white truncate">{g.name}</div>
                         <div className="text-sm text-white/50 flex items-center gap-2">
-                          <span className="font-mono text-blue-300/70">{g.guestId}</span>
+                          <span className="font-mono text-brand-primarySoft/70">{g.guestId}</span>
                           <span>•</span>
                           <span>{g.tableLocation}</span>
                         </div>
                       </div>
                       <div className="text-right shrink-0">
-                        <div className="text-xs text-emerald-400 font-medium">#{g.queueNumber}</div>
+                        <div className="text-xs text-brand-success font-medium">#{g.queueNumber}</div>
                         {g.checkedInAt && (
                           <div className="text-xs text-white/40">
                             {new Date(g.checkedInAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
@@ -279,9 +279,9 @@ export default function MyShowPage() {
           <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={() => setSelected(null)} />
           
           <div className="relative w-full max-w-6xl popup-success">
-            <div className="absolute -inset-1 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 rounded-3xl blur-lg opacity-50" />
+            <div className="absolute -inset-1 bg-gradient-to-r from-brand-warning via-brand-primary to-brand-accent rounded-3xl blur-lg opacity-50" />
             
-            <div className="relative overflow-hidden rounded-2xl md:rounded-3xl border border-white/20 bg-slate-900/95 text-white shadow-2xl grid grid-cols-1 md:grid-cols-[380px_1fr]">
+            <div className="relative overflow-hidden rounded-2xl md:rounded-3xl border border-brand-warning/20 bg-brand-secondary/95 text-brand-surface shadow-2xl grid grid-cols-1 md:grid-cols-[380px_1fr]">
               {/* Photo Section */}
               <div className="relative bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center min-h-[280px] md:min-h-full overflow-hidden">
                 {selected.photoUrl ? (
@@ -309,12 +309,12 @@ export default function MyShowPage() {
               {/* Info Section */}
               <div className="p-6 md:p-10 space-y-6 relative overflow-y-auto max-h-[60vh] md:max-h-[80vh]">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center">
-                    <CheckCircle size={28} className="text-amber-400" />
+                  <div className="w-12 h-12 rounded-xl bg-brand-warning/20 flex items-center justify-center border border-brand-warning/30">
+                    <CheckCircle size={28} className="text-brand-warning" />
                   </div>
                   <div>
-                    <div className="text-amber-400 text-xl md:text-2xl font-bold">ANDA CHECK-IN</div>
-                    <div className="text-white/60 text-sm">
+                    <div className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-warning text-xl md:text-2xl font-bold tracking-wider">ANDA CHECK-IN</div>
+                    <div className="text-brand-surface/60 text-sm">
                       {new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                     </div>
                   </div>
@@ -322,11 +322,11 @@ export default function MyShowPage() {
 
                 <div className="space-y-6">
                   <div>
-                    <div className="text-sm text-white/50 uppercase tracking-wider font-medium flex items-center gap-2 mb-1">
-                      <Hash size={14} />
+                    <div className="text-sm text-brand-surface/50 uppercase tracking-wider font-medium flex items-center gap-2 mb-1">
+                      <Hash size={14} className="text-brand-warning" />
                       Guest ID
                     </div>
-                    <div className="text-xl md:text-2xl font-mono font-semibold text-blue-300">{selected.guestId}</div>
+                    <div className="text-xl md:text-2xl font-mono font-semibold text-brand-primarySoft">{selected.guestId}</div>
                   </div>
 
                   <div>
@@ -337,32 +337,32 @@ export default function MyShowPage() {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                      <div className="text-sm text-white/50 uppercase tracking-wider font-medium flex items-center gap-2 mb-1">
-                        <MapPin size={14} className="text-pink-400" />
+                    <div className="p-4 rounded-xl bg-brand-surface/5 border border-brand-border">
+                      <div className="text-sm text-brand-surface/50 uppercase tracking-wider font-medium flex items-center gap-2 mb-1">
+                        <MapPin size={14} className="text-brand-accent" />
                         Meja / Ruangan
                       </div>
-                      <div className="text-2xl md:text-3xl font-bold text-white">{selected.tableLocation}</div>
+                      <div className="text-2xl md:text-3xl font-bold text-brand-surface">{selected.tableLocation}</div>
                     </div>
 
                     {selected.company && (
-                      <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                        <div className="text-sm text-white/50 uppercase tracking-wider font-medium flex items-center gap-2 mb-1">
-                          <Building2 size={14} className="text-blue-400" />
+                      <div className="p-4 rounded-xl bg-brand-surface/5 border border-brand-border">
+                        <div className="text-sm text-brand-surface/50 uppercase tracking-wider font-medium flex items-center gap-2 mb-1">
+                          <Building2 size={14} className="text-brand-primarySoft" />
                           Perusahaan
                         </div>
-                        <div className="text-xl md:text-2xl font-bold text-white">{selected.company}</div>
+                        <div className="text-xl md:text-2xl font-bold text-brand-surface">{selected.company}</div>
                       </div>
                     )}
                   </div>
 
                   {selected.division && (
-                    <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                      <div className="text-sm text-white/50 uppercase tracking-wider font-medium flex items-center gap-2 mb-1">
-                        <Layers size={14} className="text-purple-400" />
+                    <div className="p-4 rounded-xl bg-brand-surface/5 border border-brand-border">
+                      <div className="text-sm text-brand-surface/50 uppercase tracking-wider font-medium flex items-center gap-2 mb-1">
+                        <Layers size={14} className="text-brand-info" />
                         Divisi
                       </div>
-                      <div className="text-xl md:text-2xl font-bold text-white">{selected.division}</div>
+                      <div className="text-xl md:text-2xl font-bold text-brand-surface">{selected.division}</div>
                     </div>
                   )}
                 </div>

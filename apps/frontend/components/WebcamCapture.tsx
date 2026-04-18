@@ -153,14 +153,14 @@ export default function WebcamCapture({ open, onClose, onCapture, aspect = "squa
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-slate-900 border border-white/20 rounded-xl shadow-2xl p-6 w-full max-w-lg">
+      <div className="bg-brand-secondary border border-brand-border rounded-xl shadow-2xl p-6 w-full max-w-lg">
         <div className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-          <Camera size={24} className="text-emerald-400" />
+          <Camera size={24} className="text-brand-success" />
           Ambil Foto via Webcam
         </div>
         
         {error && (
-          <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-sm p-3 rounded-lg mb-4">
+          <div className="bg-brand-danger/10 border border-brand-danger/30 text-brand-danger text-sm p-3 rounded-lg mb-4">
             <p className="font-medium mb-1">Error:</p>
             <p>{error}</p>
             {error.includes("HTTPS") && (

@@ -35,7 +35,7 @@ function GuestStatsChart({ stats }: GuestStatsChartProps) {
                     <p className="text-xs text-white/60">Real-time update</p>
                 </div>
                 <div className="text-right">
-                    <div className="text-2xl font-bold text-emerald-400">{attendanceRate}%</div>
+                    <div className="text-2xl font-bold text-brand-success">{attendanceRate}%</div>
                     <div className="text-xs text-white/60">Kehadiran</div>
                 </div>
             </div>
@@ -66,7 +66,7 @@ function GuestStatsChart({ stats }: GuestStatsChartProps) {
                             if (active && payload && payload.length) {
                                 const data = payload[0].payload;
                                 return (
-                                    <div className="bg-slate-900/90 border border-white/10 p-3 rounded-lg shadow-xl backdrop-blur-md">
+                                    <div className="bg-brand-secondary/90 border border-brand-border p-3 rounded-lg shadow-xl backdrop-blur-md">
                                         <p className="text-sm font-medium text-white mb-1">{data.name}</p>
                                         <p className="text-lg font-bold" style={{ color: payload[0].color }}>
                                             {data.value} Tamu

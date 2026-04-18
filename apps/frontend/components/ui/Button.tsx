@@ -13,11 +13,11 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 const base = 'inline-flex items-center justify-center rounded-lg font-medium transition duration-fast ease-smooth disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/70';
 
 const variants: Record<Variant, string> = {
-  primary: 'bg-brand-primary text-white shadow-soft hover:bg-blue-600',
+  primary: 'bg-brand-primary text-brand-secondary shadow-soft hover:opacity-90',
   secondary: 'border border-brand-border bg-brand-surface text-brand-text hover:bg-brand-surfaceMuted',
-  outline: 'border border-brand-border bg-transparent text-brand-text hover:bg-brand-primarySoft',
-  danger: 'border border-red-200 bg-red-50 text-red-700 hover:bg-red-100',
-  ghost: 'bg-transparent text-brand-text hover:bg-brand-primarySoft',
+  outline: 'border border-brand-border bg-transparent text-brand-text hover:bg-brand-secondary hover:text-brand-surface',
+  danger: 'border border-brand-danger/30 bg-brand-danger/10 text-brand-danger hover:bg-brand-danger/20',
+  ghost: 'bg-transparent text-brand-text hover:bg-brand-border/50',
   glass: 'glass-button',
 };
 

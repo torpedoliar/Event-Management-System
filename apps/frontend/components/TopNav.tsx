@@ -71,8 +71,8 @@ export default function TopNav() {
   const linkCls = (href: string) => {
     const active = pathname === href || (href !== '/' && pathname?.startsWith(href));
     return `inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 ${active
-      ? 'bg-white/15 text-white shadow-lg border border-white/20'
-      : 'text-white/70 hover:text-white hover:bg-white/10 border border-transparent'
+      ? 'bg-brand-primary/15 text-brand-primary shadow-lg border border-brand-primary/30'
+      : 'text-brand-surface/70 hover:text-brand-surface hover:bg-brand-surface/10 border border-transparent hover:border-brand-surface/10'
       }`;
   };
 
@@ -138,20 +138,20 @@ export default function TopNav() {
         <div className="grid grid-cols-[1fr_auto_1fr] items-center relative">
           {/* Logo / Brand */}
           <div className="flex items-center gap-3 flex-shrink-0 justify-self-start">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
-                <Users size={16} className="text-white" />
+            <div className="flex items-center gap-2 group cursor-default">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center shadow-lg group-hover:shadow-brand-primary/20 transition-all">
+                <Users size={16} className="text-brand-secondary" />
               </div>
-              <span className="font-bold text-white text-lg hidden sm:block">
+              <span className="font-bold text-brand-surface text-lg hidden sm:block tracking-wide">
                 {eventCfg?.name || 'Event Management System'}
               </span>
             </div>
             {/* Event Selector - only for authenticated users */}
             {isAuth && <EventSelector />}
             {/* Live indicator */}
-            <div className="hidden sm:flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/5 border border-white/10">
-              <Radio size={12} className={`${connected ? 'text-emerald-400 pulse-live' : 'text-red-400'}`} />
-              <span className="text-xs text-white/60">{connected ? 'Live' : 'Offline'}</span>
+            <div className="hidden sm:flex items-center gap-1.5 px-2 py-1 rounded-full bg-brand-surface/5 border border-brand-surface/10">
+              <Radio size={12} className={`${connected ? 'text-brand-success pulse-live' : 'text-brand-danger'}`} />
+              <span className="text-xs text-brand-surface/60 font-medium tracking-wide uppercase">{connected ? 'Live' : 'Offline'}</span>
             </div>
           </div>
 
@@ -175,7 +175,7 @@ export default function TopNav() {
             <div className="hidden lg:flex items-center gap-2">
               {!isAuth ? (
                 <Link
-                  className="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold bg-gradient-to-r from-brand-primary to-brand-accent text-brand-secondary hover:opacity-90 transition-all duration-200 shadow-lg hover:shadow-brand-primary/20 hover:-translate-y-0.5"
                   href="/admin/login"
                 >
                   <LogIn size={16} />
@@ -183,7 +183,7 @@ export default function TopNav() {
                 </Link>
               ) : (
                 <button
-                  className="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 border border-white/20 transition-all duration-200"
+                  className="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium text-brand-surface/70 hover:text-brand-surface hover:bg-brand-surface/10 border border-brand-surface/20 transition-all duration-200"
                   onClick={logout}
                 >
                   <LogOut size={16} />
@@ -198,7 +198,7 @@ export default function TopNav() {
 
             {/* Mobile menu button */}
             <button
-              className="lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+              className="lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-xl text-brand-surface/70 hover:text-brand-surface hover:bg-brand-surface/10 transition-colors"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -215,7 +215,7 @@ export default function TopNav() {
             <div className="border-t border-white/10 pt-3 mt-3 flex flex-col gap-1">
               {!isAuth ? (
                 <Link
-                  className="inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold bg-gradient-to-r from-blue-500 to-purple-600 text-white"
+                  className="inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold bg-gradient-to-r from-brand-primary to-brand-accent text-brand-secondary"
                   href="/admin/login"
                 >
                   <LogIn size={16} />

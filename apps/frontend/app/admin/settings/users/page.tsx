@@ -151,14 +151,14 @@ export default function UsersManagementPage() {
                 <ArrowLeft size={20} />
               </Link>
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
-                  <UserCog size={24} className="text-white" />
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center shadow-lg">
+                  <UserCog size={24} className="text-brand-secondary" />
                 </div>
                 <div>
-                  <h1 className="text-2xl md:text-3xl font-bold text-white">User Management</h1>
+                  <h1 className="text-2xl md:text-3xl font-bold text-brand-surface">User Management</h1>
                   <div className="flex items-center gap-2 mt-1">
-                    <Radio size={12} className={`${connected ? 'text-emerald-400 pulse-live' : 'text-red-400'}`} />
-                    <span className="text-sm text-white/60">Kelola akun admin</span>
+                    <Radio size={12} className={`${connected ? 'text-brand-success pulse-live' : 'text-brand-danger'}`} />
+                    <span className="text-sm text-brand-surface/60">Kelola akun admin</span>
                   </div>
                 </div>
               </div>
@@ -166,7 +166,7 @@ export default function UsersManagementPage() {
 
             <button
               onClick={() => { setShowAddForm(true); setEditingId(null); setFormData({ username: '', password: '', displayName: '', isActive: true }); }}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-primary to-brand-accent px-5 py-2.5 text-sm font-semibold text-brand-secondary shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
             >
               <UserPlus size={18} />
               Tambah User
@@ -174,7 +174,7 @@ export default function UsersManagementPage() {
           </div>
 
           {error && (
-            <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 text-red-300 text-sm">
+            <div className="bg-brand-danger/10 border border-brand-danger/30 rounded-xl p-4 text-brand-danger text-sm">
               {error}
             </div>
           )}
@@ -183,7 +183,7 @@ export default function UsersManagementPage() {
           {showAddForm && (
             <Card variant="glass" className="p-6">
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                <UserPlus size={20} className="text-blue-400" />
+                <UserPlus size={20} className="text-brand-primary" />
                 Tambah User Baru
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -235,7 +235,7 @@ export default function UsersManagementPage() {
                 <button
                   onClick={handleAdd}
                   disabled={saving}
-                  className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-brand-success to-brand-success/80 text-brand-secondary font-medium disabled:opacity-50"
                 >
                   {saving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
                   Simpan
@@ -247,7 +247,7 @@ export default function UsersManagementPage() {
           {/* Users List */}
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 size={40} className="animate-spin text-blue-400" />
+              <Loader2 size={40} className="animate-spin text-brand-primary" />
             </div>
           ) : (
             <div className="space-y-3">
@@ -315,7 +315,7 @@ export default function UsersManagementPage() {
                         <button
                           onClick={() => handleUpdate(user.id)}
                           disabled={saving}
-                          className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium disabled:opacity-50"
+                          className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-brand-success to-brand-success/80 text-brand-secondary font-medium disabled:opacity-50"
                         >
                           {saving ? <Loader2 size={18} className="animate-spin" /> : <Check size={18} />}
                           Update
@@ -326,14 +326,14 @@ export default function UsersManagementPage() {
                     // View mode
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${user.isActive ? 'bg-emerald-500/20' : 'bg-red-500/20'}`}>
-                          <Shield size={24} className={user.isActive ? 'text-emerald-400' : 'text-red-400'} />
+                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${user.isActive ? 'bg-brand-success/20' : 'bg-brand-danger/20'}`}>
+                          <Shield size={24} className={user.isActive ? 'text-brand-success' : 'text-brand-danger'} />
                         </div>
                         <div>
                           <div className="font-semibold text-white flex items-center gap-2">
                             {user.displayName || user.username}
                             {!user.isActive && (
-                              <span className="text-xs px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 border border-red-500/30">
+                              <span className="text-xs px-2 py-0.5 rounded-full bg-brand-danger/20 text-brand-danger border border-brand-danger/30">
                                 Nonaktif
                               </span>
                             )}
@@ -350,7 +350,7 @@ export default function UsersManagementPage() {
                         </button>
                         <button
                           onClick={() => handleDelete(user.id, user.username)}
-                          className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 transition-colors"
+                          className="p-2 rounded-lg bg-brand-danger/10 hover:bg-brand-danger/20 text-brand-danger hover:opacity-80 transition-colors"
                         >
                           <Trash2 size={18} />
                         </button>
@@ -372,8 +372,8 @@ export default function UsersManagementPage() {
           {/* Info Card */}
           <Card variant="glass" className="p-4">
             <div className="flex items-start gap-3">
-              <div className="p-2 rounded-lg bg-blue-500/20">
-                <Shield size={20} className="text-blue-400" />
+              <div className="p-2 rounded-lg bg-brand-primary/20">
+                <Shield size={20} className="text-brand-primary" />
               </div>
               <div className="text-sm text-white/60">
                 <p className="font-medium text-white/80 mb-1">Tentang User Management</p>

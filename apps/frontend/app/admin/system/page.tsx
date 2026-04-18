@@ -197,9 +197,9 @@ function SystemPage() {
 
   const getLevelColor = (level: string) => {
     switch (level) {
-      case 'error': return 'text-red-400 bg-red-500/20';
-      case 'warn': return 'text-yellow-400 bg-yellow-500/20';
-      case 'info': return 'text-blue-400 bg-blue-500/20';
+      case 'error': return 'text-brand-danger bg-brand-danger/20';
+      case 'warn': return 'text-brand-warning bg-brand-warning/20';
+      case 'info': return 'text-brand-primary bg-brand-primary/20';
       case 'debug': return 'text-gray-400 bg-gray-500/20';
       default: return 'text-white/60 bg-white/10';
     }
@@ -207,9 +207,9 @@ function SystemPage() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'healthy': return <CheckCircle className="w-5 h-5 text-green-400" />;
-      case 'unhealthy': return <AlertCircle className="w-5 h-5 text-red-400" />;
-      case 'degraded': return <AlertTriangle className="w-5 h-5 text-yellow-400" />;
+      case 'healthy': return <CheckCircle className="w-5 h-5 text-brand-success" />;
+      case 'unhealthy': return <AlertCircle className="w-5 h-5 text-brand-danger" />;
+      case 'degraded': return <AlertTriangle className="w-5 h-5 text-brand-warning" />;
       default: return <Activity className="w-5 h-5 text-gray-400" />;
     }
   };
@@ -252,7 +252,7 @@ function SystemPage() {
           <button
             onClick={() => setTab('health')}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-              tab === 'health' ? 'bg-blue-600 text-white' : 'text-white/60 hover:bg-white/10'
+              tab === 'health' ? 'bg-brand-primary text-white' : 'text-white/60 hover:bg-white/10'
             }`}
           >
             <Activity className="w-4 h-4" />
@@ -261,7 +261,7 @@ function SystemPage() {
           <button
             onClick={() => setTab('logs')}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-              tab === 'logs' ? 'bg-blue-600 text-white' : 'text-white/60 hover:bg-white/10'
+              tab === 'logs' ? 'bg-brand-primary text-white' : 'text-white/60 hover:bg-white/10'
             }`}
           >
             <FileText className="w-4 h-4" />
@@ -270,7 +270,7 @@ function SystemPage() {
           <button
             onClick={() => setTab('audit')}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-              tab === 'audit' ? 'bg-blue-600 text-white' : 'text-white/60 hover:bg-white/10'
+              tab === 'audit' ? 'bg-brand-primary text-white' : 'text-white/60 hover:bg-white/10'
             }`}
           >
             <Clock className="w-4 h-4" />
@@ -287,9 +287,9 @@ function SystemPage() {
                 <div className="flex items-center justify-between mb-3">
                   {getStatusIcon(health.status)}
                   <span className={`text-xs px-2 py-1 rounded-full ${
-                    health.status === 'healthy' ? 'bg-green-500/20 text-green-400' :
-                    health.status === 'degraded' ? 'bg-yellow-500/20 text-yellow-400' :
-                    'bg-red-500/20 text-red-400'
+                    health.status === 'healthy' ? 'bg-brand-success/20 text-brand-success' :
+                    health.status === 'degraded' ? 'bg-brand-warning/20 text-brand-warning' :
+                    'bg-brand-danger/20 text-brand-danger'
                   }`}>
                     {health.status.toUpperCase()}
                   </span>
@@ -300,7 +300,7 @@ function SystemPage() {
 
               <div className="glass-card p-5">
                 <div className="flex items-center justify-between mb-3">
-                  <Server className="w-5 h-5 text-blue-400" />
+                  <Server className="w-5 h-5 text-brand-primary" />
                 </div>
                 <p className="text-white/60 text-sm">Uptime</p>
                 <p className="text-2xl font-bold text-white">{formatUptime(health.uptime)}</p>
@@ -308,11 +308,11 @@ function SystemPage() {
 
               <div className="glass-card p-5">
                 <div className="flex items-center justify-between mb-3">
-                  <Database className="w-5 h-5 text-purple-400" />
+                  <Database className="w-5 h-5 text-brand-accent" />
                   <span className={`text-xs px-2 py-1 rounded-full ${
                     health.checks.database.status === 'healthy' 
-                      ? 'bg-green-500/20 text-green-400' 
-                      : 'bg-red-500/20 text-red-400'
+                      ? 'bg-brand-success/20 text-brand-success' 
+                      : 'bg-brand-danger/20 text-brand-danger'
                   }`}>
                     {health.checks.database.responseTime}ms
                   </span>
@@ -323,11 +323,11 @@ function SystemPage() {
 
               <div className="glass-card p-5">
                 <div className="flex items-center justify-between mb-3">
-                  <HardDrive className="w-5 h-5 text-orange-400" />
+                  <HardDrive className="w-5 h-5 text-brand-warning" />
                   <span className={`text-xs px-2 py-1 rounded-full ${
-                    health.checks.memory.percentUsed > 90 ? 'bg-red-500/20 text-red-400' :
-                    health.checks.memory.percentUsed > 70 ? 'bg-yellow-500/20 text-yellow-400' :
-                    'bg-green-500/20 text-green-400'
+                    health.checks.memory.percentUsed > 90 ? 'bg-brand-danger/20 text-brand-danger' :
+                    health.checks.memory.percentUsed > 70 ? 'bg-brand-warning/20 text-brand-warning' :
+                    'bg-brand-success/20 text-brand-success'
                   }`}>
                     {health.checks.memory.percentUsed}%
                   </span>
@@ -509,7 +509,7 @@ function SystemPage() {
                             {new Date(log.createdAt).toLocaleString('id-ID')}
                           </td>
                           <td className="px-4 py-2">
-                            <span className="px-2 py-0.5 rounded text-xs bg-blue-500/20 text-blue-400">
+                            <span className="px-2 py-0.5 rounded text-xs bg-brand-primary/20 text-brand-primary">
                               {log.action}
                             </span>
                           </td>

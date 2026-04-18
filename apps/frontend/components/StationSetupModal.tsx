@@ -103,8 +103,8 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
         {/* Header */}
         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-10 h-10 bg-brand-primary/10 rounded-lg flex items-center justify-center">
+              <svg className="w-6 h-6 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
@@ -144,7 +144,7 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
                 setError('');
               }}
               placeholder="Contoh: Station A - Pintu Utama"
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent dark:bg-gray-700 dark:text-white"
               disabled={isLoading}
             />
             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
@@ -172,7 +172,7 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
               id="enableOffline"
               checked={enableOfflineMode}
               onChange={(e) => setEnableOfflineMode(e.target.checked)}
-              className="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              className="mt-1 w-4 h-4 text-brand-primary border-gray-300 rounded focus:ring-brand-primary"
               disabled={isLoading}
             />
             <label htmlFor="enableOffline" className="flex-1">
@@ -197,7 +197,7 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
                 max="120"
                 value={syncInterval}
                 onChange={(e) => setSyncInterval(parseInt(e.target.value) || 30)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent dark:bg-gray-700 dark:text-white"
                 disabled={isLoading}
               />
               <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
@@ -208,8 +208,8 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
 
           {/* Error Message */}
           {error && (
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
-              <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+            <div className="bg-brand-danger/10 border border-brand-danger/30 rounded-lg p-3">
+              <p className="text-sm text-brand-danger">{error}</p>
             </div>
           )}
         </div>
@@ -228,7 +228,7 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
           <button
             onClick={handleSave}
             disabled={isLoading || !stationName.trim()}
-            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-lg transition-colors font-medium flex items-center gap-2"
+            className="px-6 py-2 bg-brand-primary hover:bg-brand-primarySoft disabled:bg-gray-400 text-white rounded-lg transition-colors font-medium flex items-center gap-2"
           >
             {isLoading ? (
               <>

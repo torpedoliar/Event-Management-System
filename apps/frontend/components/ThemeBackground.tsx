@@ -71,6 +71,17 @@ export default function ThemeBackground() {
 
   return (
     <div aria-hidden className="pointer-events-none">
+      {/* Fallback & Decorative Orbs for luxury feel */}
+      {(!effectiveType || effectiveType === 'NONE') && (
+        <>
+          <div className="fixed inset-0 -z-10 bg-brand-secondary" />
+          <div className="fixed inset-0 -z-10 overflow-hidden opacity-40">
+            <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-brand-primary/10 rounded-full blur-[140px]" />
+            <div className="absolute top-[40%] -right-[10%] w-[50%] h-[50%] bg-brand-accent/10 rounded-full blur-[120px]" />
+          </div>
+        </>
+      )}
+
       {effectiveType === 'IMAGE' && effectiveImage && (
         <div className="fixed inset-0 -z-10 bg-center bg-cover" style={{ backgroundImage: `url(${toApiUrl(effectiveImage)})` }} />
       )}
@@ -79,7 +90,7 @@ export default function ThemeBackground() {
         <video className="fixed inset-0 -z-10 w-full h-full object-cover" src={toApiUrl(effectiveVideo)} muted loop autoPlay playsInline />
       )}
       {(effectiveType === 'IMAGE' || effectiveType === 'VIDEO') && (
-        <div className="fixed inset-0 -z-10" style={overlayStyle} />
+        <div className="fixed inset-0 -z-10 bg-brand-secondary" style={overlayStyle} />
       )}
     </div>
   );

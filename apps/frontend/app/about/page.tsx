@@ -10,32 +10,32 @@ import Link from 'next/link';
 export default function AboutPage() {
   const features = [
     {
-      icon: <QrCode className="text-blue-400" size={24} />,
+      icon: <QrCode className="text-brand-primary" size={24} />,
       title: "Smart Check-in",
       description: "Scan QR Code atau input manual dengan auto check-in. Mendukung pembuatan tamu baru secara otomatis."
     },
     {
-      icon: <Gift className="text-purple-400" size={24} />,
+      icon: <Gift className="text-brand-accent" size={24} />,
       title: "Souvenir Distribution",
       description: "Kelola dan distribusikan souvenir dengan tracking inventory real-time."
     },
     {
-      icon: <Trophy className="text-yellow-400" size={24} />,
+      icon: <Trophy className="text-brand-warning" size={24} />,
       title: "Lucky Draw",
       description: "Sistem undian berhadiah dengan animasi menarik dan tracking pengambilan hadiah."
     },
     {
-      icon: <BarChart3 className="text-emerald-400" size={24} />,
+      icon: <BarChart3 className="text-brand-success" size={24} />,
       title: "Live Statistics",
       description: "Dashboard statistik real-time untuk monitoring kehadiran dan distribusi."
     },
     {
-      icon: <Monitor className="text-pink-400" size={24} />,
+      icon: <Monitor className="text-brand-danger" size={24} />,
       title: "Display Board",
       description: "Tampilan layar besar untuk branding event dengan popup konfirmasi check-in."
     },
     {
-      icon: <Users className="text-cyan-400" size={24} />,
+      icon: <Users className="text-brand-info" size={24} />,
       title: "Multi-Admin",
       description: "Dukungan banyak admin bekerja bersamaan dengan sinkronisasi real-time."
     }
@@ -43,19 +43,19 @@ export default function AboutPage() {
 
   const techStack = [
     { name: "Next.js 14", icon: <Globe size={18} />, color: "text-white" },
-    { name: "React 18", icon: <Code size={18} />, color: "text-blue-400" },
-    { name: "TypeScript", icon: <Code size={18} />, color: "text-blue-300" },
-    { name: "TailwindCSS", icon: <Layers size={18} />, color: "text-cyan-400" },
-    { name: "NestJS", icon: <Server size={18} />, color: "text-red-400" },
-    { name: "Prisma", icon: <Database size={18} />, color: "text-emerald-400" },
-    { name: "PostgreSQL", icon: <Database size={18} />, color: "text-blue-500" },
-    { name: "SSE Realtime", icon: <Zap size={18} />, color: "text-yellow-400" },
+    { name: "React 18", icon: <Code size={18} />, color: "text-brand-primary" },
+    { name: "TypeScript", icon: <Code size={18} />, color: "text-brand-primarySoft" },
+    { name: "TailwindCSS", icon: <Layers size={18} />, color: "text-brand-info" },
+    { name: "NestJS", icon: <Server size={18} />, color: "text-brand-danger" },
+    { name: "Prisma", icon: <Database size={18} />, color: "text-brand-success" },
+    { name: "PostgreSQL", icon: <Database size={18} />, color: "text-brand-primary" },
+    { name: "SSE Realtime", icon: <Zap size={18} />, color: "text-brand-warning" },
   ];
 
   return (
     <div className="min-h-screen">
       {/* Background gradient */}
-      <div className="fixed inset-0 bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900" />
+      <div className="fixed inset-0 bg-gradient-to-br from-brand-secondary via-brand-primary/10 to-brand-secondary" />
       <div className="fixed inset-0 bg-[url('/grid.svg')] opacity-10" />
       
       <div className="relative z-10">
@@ -70,7 +70,7 @@ export default function AboutPage() {
               <span>Kembali</span>
             </Link>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center">
                 <Users size={18} className="text-white" />
               </div>
               <span className="text-white font-semibold">Event Management System</span>
@@ -81,13 +81,13 @@ export default function AboutPage() {
         {/* Hero Section */}
         <div className="max-w-6xl mx-auto px-6 py-16 md:py-24">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-primary/10 border border-brand-primary/20 text-brand-primary text-sm font-medium mb-6">
               <Zap size={14} />
               Powered by Modern Technology
             </div>
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
               Guest Registration &<br />
-              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-brand-primary via-brand-primarySoft to-brand-accent bg-clip-text text-transparent">
                 Check-in System
               </span>
             </h1>
@@ -134,31 +134,31 @@ export default function AboutPage() {
 
           {/* Architecture */}
           <div className="mb-20">
-            <div className="p-8 rounded-2xl bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-white/10">
+            <div className="p-8 rounded-2xl bg-gradient-to-br from-brand-primary/10 to-brand-accent/10 border border-white/10">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
-                  <Layers className="text-blue-400" size={20} />
+                <div className="w-10 h-10 rounded-xl bg-brand-primary/20 flex items-center justify-center">
+                  <Layers className="text-brand-primary" size={20} />
                 </div>
                 <h2 className="text-xl font-bold text-white">Arsitektur Sistem</h2>
               </div>
               <div className="grid md:grid-cols-3 gap-6">
                 <div className="p-4 rounded-xl bg-black/20 border border-white/10">
                   <div className="flex items-center gap-2 mb-2">
-                    <Globe className="text-blue-400" size={18} />
+                    <Globe className="text-brand-primary" size={18} />
                     <span className="text-white font-medium">Frontend</span>
                   </div>
-                  <p className="text-white/60 text-sm">Next.js dengan App Router, menggunakan same-origin proxy ke <code className="text-blue-400">/api</code></p>
+                  <p className="text-white/60 text-sm">Next.js dengan App Router, menggunakan same-origin proxy ke <code className="text-brand-primary">/api</code></p>
                 </div>
                 <div className="p-4 rounded-xl bg-black/20 border border-white/10">
                   <div className="flex items-center gap-2 mb-2">
-                    <Server className="text-red-400" size={18} />
+                    <Server className="text-brand-danger" size={18} />
                     <span className="text-white font-medium">Backend</span>
                   </div>
                   <p className="text-white/60 text-sm">NestJS REST API dengan JWT authentication dan SSE untuk real-time updates</p>
                 </div>
                 <div className="p-4 rounded-xl bg-black/20 border border-white/10">
                   <div className="flex items-center gap-2 mb-2">
-                    <Database className="text-emerald-400" size={18} />
+                    <Database className="text-brand-success" size={18} />
                     <span className="text-white font-medium">Database</span>
                   </div>
                   <p className="text-white/60 text-sm">PostgreSQL dengan Prisma ORM untuk type-safe database access</p>
@@ -169,10 +169,10 @@ export default function AboutPage() {
 
           {/* Security */}
           <div className="mb-20">
-            <div className="p-8 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 border border-white/10">
+            <div className="p-8 rounded-2xl bg-gradient-to-br from-brand-success/10 to-brand-info/10 border border-white/10">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center">
-                  <Shield className="text-emerald-400" size={20} />
+                <div className="w-10 h-10 rounded-xl bg-brand-success/20 flex items-center justify-center">
+                  <Shield className="text-brand-success" size={20} />
                 </div>
                 <h2 className="text-xl font-bold text-white">Keamanan & Fitur</h2>
               </div>
@@ -186,7 +186,7 @@ export default function AboutPage() {
                   "Responsive design untuk semua device"
                 ].map((item, index) => (
                   <div key={index} className="flex items-center gap-3">
-                    <CheckCircle className="text-emerald-400 flex-shrink-0" size={18} />
+                    <CheckCircle className="text-brand-success flex-shrink-0" size={18} />
                     <span className="text-white/80 text-sm">{item}</span>
                   </div>
                 ))}
@@ -199,7 +199,7 @@ export default function AboutPage() {
             <div className="text-center">
               <div className="flex items-center justify-center gap-2 mb-4">
                 <span className="text-white/60">Dibuat dengan</span>
-                <Heart className="text-red-400" size={18} fill="currentColor" />
+                <Heart className="text-brand-danger" size={18} fill="currentColor" />
                 <span className="text-white/60">oleh</span>
               </div>
               <h3 className="text-xl font-bold text-white mb-2">Yohanes Octavian Rizky</h3>

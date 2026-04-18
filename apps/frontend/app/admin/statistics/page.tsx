@@ -158,7 +158,7 @@ export default function StatisticsPage() {
                                 <div>
                                     <h1 className="text-2xl md:text-3xl font-bold text-white">Statistik Tamu</h1>
                                     <div className="flex items-center gap-2 mt-1">
-                                        <Radio size={12} className={`${connected ? 'text-emerald-400 pulse-live' : 'text-red-400'}`} />
+                                        <Radio size={12} className={`${connected ? 'text-brand-success pulse-live' : 'text-brand-danger'}`} />
                                         <span className="text-sm text-white/60">{connected ? 'Realtime Updates' : 'Reconnecting...'}</span>
                                     </div>
                                 </div>
@@ -167,14 +167,14 @@ export default function StatisticsPage() {
                     </div>
 
                     {error && (
-                        <div className="text-red-300 text-sm bg-red-500/10 p-4 rounded-xl border border-red-500/20">
+                        <div className="text-brand-danger text-sm bg-brand-danger/10 p-4 rounded-xl border border-brand-danger/20">
                             {error}
                         </div>
                     )}
 
                     {loading ? (
                         <div className="flex flex-col items-center justify-center h-64 gap-4">
-                            <Loader2 className="animate-spin text-blue-400" size={48} />
+                            <Loader2 className="animate-spin text-brand-primary" size={48} />
                             <span className="text-white/60">Memuat statistik...</span>
                         </div>
                     ) : (
@@ -218,14 +218,14 @@ export default function StatisticsPage() {
                                 <div className="glass-card p-6">
                                     <div className="flex items-center justify-between mb-3">
                                         <div className="flex items-center gap-2">
-                                            <TrendingUp size={18} className="text-blue-400" />
+                                            <TrendingUp size={18} className="text-brand-primary" />
                                             <span className="text-white font-medium">Progress Kehadiran</span>
                                         </div>
                                         <span className="text-2xl font-bold text-white">{checkinPercent}%</span>
                                     </div>
                                     <div className="h-4 bg-white/10 rounded-full overflow-hidden">
                                         <div 
-                                            className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition-all duration-1000 ease-out"
+                                            className="h-full bg-gradient-to-r from-brand-primary via-brand-accent to-brand-primarySoft transition-all duration-1000 ease-out"
                                             style={{ width: `${checkinPercent}%` }}
                                         />
                                     </div>
@@ -293,7 +293,7 @@ export default function StatisticsPage() {
                                     {/* Souvenir Detail Chart */}
                                     <div className="glass-card p-6">
                                         <h3 className="text-white font-medium mb-4 flex items-center gap-2">
-                                            <Gift size={18} className="text-purple-400" />
+                                            <Gift size={18} className="text-brand-accent" />
                                             Detail Souvenir
                                         </h3>
                                         <div className="space-y-4">
@@ -369,18 +369,18 @@ export default function StatisticsPage() {
                                                     <div className="flex items-center justify-between mb-1">
                                                         <span className="text-white text-sm">{p.name} <span className="text-white/40 text-xs">({p.category})</span></span>
                                                         <div className="flex items-center gap-3 text-sm">
-                                                            <span className="text-emerald-400">{p.collected} diambil</span>
-                                                            <span className="text-amber-400">{p.uncollected} pending</span>
+                                                            <span className="text-brand-success">{p.collected} diambil</span>
+                                                            <span className="text-brand-warning">{p.uncollected} pending</span>
                                                             <span className="text-white/60">{p.won}/{p.quantity}</span>
                                                         </div>
                                                     </div>
                                                     <div className="h-3 bg-white/10 rounded-full overflow-hidden flex">
                                                         <div 
-                                                            className="h-full bg-emerald-500 transition-all duration-500"
+                                                            className="h-full bg-brand-success transition-all duration-500"
                                                             style={{ width: `${p.quantity > 0 ? (p.collected / p.quantity) * 100 : 0}%` }}
                                                         />
                                                         <div 
-                                                            className="h-full bg-amber-500 transition-all duration-500"
+                                                            className="h-full bg-brand-warning transition-all duration-500"
                                                             style={{ width: `${p.quantity > 0 ? (p.uncollected / p.quantity) * 100 : 0}%` }}
                                                         />
                                                     </div>
@@ -399,10 +399,10 @@ export default function StatisticsPage() {
 }
 
 const colorMap: Record<string, { bg: string; text: string; border: string }> = {
-    blue: { bg: 'from-blue-500/20 to-blue-600/10', text: 'text-blue-400', border: 'border-blue-500/20' },
-    emerald: { bg: 'from-emerald-500/20 to-emerald-600/10', text: 'text-emerald-400', border: 'border-emerald-500/20' },
-    amber: { bg: 'from-amber-500/20 to-amber-600/10', text: 'text-amber-400', border: 'border-amber-500/20' },
-    purple: { bg: 'from-purple-500/20 to-purple-600/10', text: 'text-purple-400', border: 'border-purple-500/20' },
+    blue: { bg: 'from-brand-primary/20 to-brand-primary/10', text: 'text-brand-primary', border: 'border-brand-primary/20' },
+    emerald: { bg: 'from-brand-success/20 to-brand-success/10', text: 'text-brand-success', border: 'border-brand-success/20' },
+    amber: { bg: 'from-brand-warning/20 to-brand-warning/10', text: 'text-brand-warning', border: 'border-brand-warning/20' },
+    purple: { bg: 'from-brand-accent/20 to-brand-accent/10', text: 'text-brand-accent', border: 'border-brand-accent/20' },
 };
 
 function StatsCard({ 

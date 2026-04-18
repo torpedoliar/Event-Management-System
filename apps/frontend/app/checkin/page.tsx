@@ -1228,8 +1228,8 @@ export default function CheckinPage() {
               {cfg?.logoUrl ? (
                 <img src={toApiUrl(cfg.logoUrl)} className="h-12 md:h-16 w-auto drop-shadow-2xl" alt="logo" />
               ) : (
-                <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
-                  <Users size={28} className="text-white" />
+                <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center shadow-lg">
+                  <Users size={28} className="text-brand-secondary" />
                 </div>
               )}
               <div className="text-white">
@@ -1245,17 +1245,17 @@ export default function CheckinPage() {
             </div>
             {/* Admin indicator */}
             {currentAdmin ? (
-              <div className="flex items-center gap-2 bg-emerald-500/20 border border-emerald-500/30 rounded-lg px-3 py-2">
-                <UserCheck size={18} className="text-emerald-400" />
+              <div className="flex items-center gap-2 bg-brand-success/20 border border-brand-success/30 rounded-lg px-3 py-2">
+                <UserCheck size={18} className="text-brand-success" />
                 <div className="text-sm">
-                  <div className="text-emerald-300 font-medium">{currentAdmin.name}</div>
-                  <div className="text-emerald-400/60 text-xs font-mono">{currentAdmin.id.substring(0, 8)}...</div>
+                  <div className="text-brand-success font-medium">{currentAdmin.name}</div>
+                  <div className="text-brand-success/60 text-xs font-mono">{currentAdmin.id.substring(0, 8)}...</div>
                 </div>
               </div>
             ) : (
-              <div className="flex items-center gap-2 bg-amber-500/20 border border-amber-500/30 rounded-lg px-3 py-2">
-                <XCircle size={18} className="text-amber-400" />
-                <span className="text-amber-300 text-sm">Tidak Login</span>
+              <div className="flex items-center gap-2 bg-brand-warning/20 border border-brand-warning/30 rounded-lg px-3 py-2">
+                <XCircle size={18} className="text-brand-warning" />
+                <span className="text-brand-warning text-sm">Tidak Login</span>
               </div>
             )}
           </div>
@@ -1263,11 +1263,11 @@ export default function CheckinPage() {
           {/* Station & Connection Status */}
           <div className="mt-4 flex items-center justify-between max-w-5xl mx-auto">
             {stationConfig && (
-              <div className="flex items-center gap-2 bg-blue-500/20 border border-blue-500/30 rounded-lg px-3 py-2">
-                <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="flex items-center gap-2 bg-brand-primary/20 border border-brand-primary/30 rounded-lg px-3 py-2">
+                <svg className="w-4 h-4 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                <span className="text-blue-300 text-sm font-medium">{stationConfig.stationName}</span>
+                <span className="text-brand-primarySoft text-sm font-medium">{stationConfig.stationName}</span>
               </div>
             )}
             <div className="flex items-center gap-3 ml-auto">
@@ -1305,14 +1305,14 @@ export default function CheckinPage() {
                   onChange={(e) => setQ(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter' && !searching && !checking) { e.preventDefault(); doSearch(); } }}
                   placeholder="Masukkan Guest ID atau Nama, lalu tekan Enter"
-                  className="w-full rounded-xl border border-white/20 bg-white/5 pl-12 pr-4 py-4 text-lg text-white placeholder:text-white/40 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
+                  className="w-full rounded-xl border border-white/20 bg-white/5 pl-12 pr-4 py-4 text-lg text-white placeholder:text-white/40 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary/50 transition-all"
                   disabled={searching || checking}
                   autoFocus
                 />
               </div>
 
               {error && (
-                <div className="mt-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 flex items-center justify-between">
+                <div className="mt-4 p-3 rounded-xl bg-brand-danger/10 border border-brand-danger/20 text-brand-danger flex items-center justify-between">
                   <span>{error}</span>
                   {error === 'Tamu tidak ditemukan' && !autoCreateGuest && (
                     <button
@@ -1321,7 +1321,7 @@ export default function CheckinPage() {
                         localStorage.setItem('checkinAutoCreateGuest', 'true');
                         doSearch();
                       }}
-                      className="text-sm text-blue-300 hover:text-blue-100 flex items-center gap-1 underline ml-2"
+                      className="text-sm text-brand-primarySoft hover:text-white flex items-center gap-1 underline ml-2"
                     >
                       <UserPlus size={14} />
                       Buat & Check-in
@@ -1335,7 +1335,7 @@ export default function CheckinPage() {
                 <button
                   disabled={searching || checking || creatingGuest}
                   onClick={doSearch}
-                  className="flex-1 flex items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-4 text-lg font-semibold text-white shadow-lg hover:shadow-xl disabled:opacity-50 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
+                  className="flex-1 flex items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-brand-primary to-brand-accent px-6 py-4 text-lg font-semibold text-brand-secondary shadow-lg hover:shadow-xl disabled:opacity-50 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
                 >
                   {searching || creatingGuest ? <Loader2 className="animate-spin" size={24} /> : (checking ? <Loader2 className="animate-spin" size={24} /> : <Search size={24} />)}
                   {searching ? 'Mencari...' : (creatingGuest ? 'Membuat Tamu...' : (checking ? 'Check-in...' : 'Cari & Check-in'))}
@@ -1343,7 +1343,7 @@ export default function CheckinPage() {
                 <button
                   disabled={searching || checking || creatingGuest}
                   onClick={() => setShowScanner(true)}
-                  className="flex-1 sm:flex-initial flex items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-6 py-4 text-lg font-semibold text-white shadow-lg hover:shadow-xl disabled:opacity-50 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
+                  className="flex-1 sm:flex-initial flex items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-brand-success to-brand-success/80 px-6 py-4 text-lg font-semibold text-brand-secondary shadow-lg hover:shadow-xl disabled:opacity-50 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
                 >
                   <QrCode size={24} />
                   Scan QR
@@ -1363,10 +1363,10 @@ export default function CheckinPage() {
         {/* Settings Modal */}
         {showSettings && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-            <div className="w-full max-w-md rounded-xl border border-white/20 bg-slate-900/95 text-white shadow-2xl p-6 animate-in fade-in zoom-in duration-300">
+            <div className="w-full max-w-md rounded-xl border border-brand-border bg-brand-secondary/95 text-brand-surface shadow-2xl p-6 animate-in fade-in zoom-in duration-300">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold flex items-center gap-2">
-                  <Settings size={24} className="text-blue-400" />
+                  <Settings size={24} className="text-brand-primary" />
                   Pengaturan Check-in
                 </h3>
                 <button
@@ -1380,13 +1380,13 @@ export default function CheckinPage() {
               <div className="space-y-4">
                 <label className="flex items-center justify-between p-4 rounded-lg border border-white/20 bg-white/5 cursor-pointer hover:bg-white/10 transition-colors">
                   <div className="flex items-center gap-3">
-                    <UserPlus size={20} className="text-blue-400" />
+                    <UserPlus size={20} className="text-brand-primary" />
                     <div>
                       <div className="font-medium text-white">Auto Buat Tamu Baru</div>
                       <div className="text-sm text-white/60">Jika tamu tidak ditemukan, buat tamu baru dan langsung check-in</div>
                     </div>
                   </div>
-                  <div className={`w-12 h-7 rounded-full transition-colors relative ${autoCreateGuest ? 'bg-blue-500' : 'bg-white/20'}`}>
+                  <div className={`w-12 h-7 rounded-full transition-colors relative ${autoCreateGuest ? 'bg-brand-primary' : 'bg-white/20'}`}>
                     <div className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transform ${autoCreateGuest ? 'translate-x-5' : 'translate-x-0'}`} />
                     <input
                       type="checkbox"
@@ -1403,13 +1403,13 @@ export default function CheckinPage() {
 
                 <label className="flex items-center justify-between p-4 rounded-lg border border-white/20 bg-white/5 cursor-pointer hover:bg-white/10 transition-colors">
                   <div className="flex items-center gap-3">
-                    <Camera size={20} className="text-emerald-400" />
+                    <Camera size={20} className="text-brand-success" />
                     <div>
                       <div className="font-medium text-white">Auto Foto Saat Check-in</div>
                       <div className="text-sm text-white/60">Otomatis ambil foto tamu via webcam setelah check-in berhasil</div>
                     </div>
                   </div>
-                  <div className={`w-12 h-7 rounded-full transition-colors relative ${enablePhotoCapture ? 'bg-emerald-500' : 'bg-white/20'}`}>
+                  <div className={`w-12 h-7 rounded-full transition-colors relative ${enablePhotoCapture ? 'bg-brand-success' : 'bg-white/20'}`}>
                     <div className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transform ${enablePhotoCapture ? 'translate-x-5' : 'translate-x-0'}`} />
                     <input
                       type="checkbox"
@@ -1430,13 +1430,13 @@ export default function CheckinPage() {
                     <div className="text-xs text-white/40 uppercase tracking-wider mb-3">Pengaturan Event</div>
                     <label className={`flex items-center justify-between p-4 rounded-lg border border-white/20 bg-white/5 cursor-pointer hover:bg-white/10 transition-colors ${savingEventSetting ? 'opacity-50 pointer-events-none' : ''}`}>
                       <div className="flex items-center gap-3">
-                        <UserCheck size={20} className="text-purple-400" />
+                        <UserCheck size={20} className="text-brand-accent" />
                         <div>
                           <div className="font-medium text-white">Multiple Check-in Per Counter</div>
                           <div className="text-sm text-white/60">Tamu dapat check-in di berbagai admin/counter (maks 1x per counter)</div>
                         </div>
                       </div>
-                      <div className={`w-12 h-7 rounded-full transition-colors relative ${cfg?.allowMultipleCheckinPerCounter ? 'bg-purple-500' : 'bg-white/20'}`}>
+                      <div className={`w-12 h-7 rounded-full transition-colors relative ${cfg?.allowMultipleCheckinPerCounter ? 'bg-brand-accent' : 'bg-white/20'}`}>
                         <div className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transform ${cfg?.allowMultipleCheckinPerCounter ? 'translate-x-5' : 'translate-x-0'}`} />
                         <input
                           type="checkbox"
@@ -1461,12 +1461,12 @@ export default function CheckinPage() {
                   >
                     {downloadingGuests ? (
                       <>
-                        <Loader2 size={20} className="text-blue-400 animate-spin" />
+                        <Loader2 size={20} className="text-brand-primary animate-spin" />
                         <span className="text-sm text-white">{downloadProgress}</span>
                       </>
                     ) : (
                       <>
-                        <Users size={20} className="text-blue-400" />
+                        <Users size={20} className="text-brand-primary" />
                         <div className="text-left">
                           <div className="font-medium text-white">Download Tamu untuk Akses Offline</div>
                           <div className="text-xs text-white/60">Simpan semua data tamu ke perangkat untuk pencarian saat offline</div>
@@ -1475,7 +1475,7 @@ export default function CheckinPage() {
                     )}
                   </button>
                   {downloadProgress && !downloadingGuests && (
-                    <div className="mt-2 text-xs text-emerald-400 text-center">{downloadProgress}</div>
+                    <div className="mt-2 text-xs text-brand-success text-center">{downloadProgress}</div>
                   )}
                 </div>
               </div>
@@ -1483,7 +1483,7 @@ export default function CheckinPage() {
               <div className="mt-6 flex gap-3">
                 <button
                   onClick={() => setShowSettings(false)}
-                  className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-3 font-medium text-white hover:bg-blue-700 transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-brand-primary px-4 py-3 font-medium text-white hover:bg-brand-primarySoft transition-colors"
                 >
                   <CheckCircle size={18} />
                   Selesai
@@ -1512,13 +1512,13 @@ export default function CheckinPage() {
                 <div className="text-sm text-white/60 font-medium mb-2">
                   {results.length} tamu ditemukan
                   {results.length > 1 && (
-                    <span className="ml-2 text-amber-400">- Pilih tamu untuk check-in</span>
+                    <span className="ml-2 text-brand-warning">- Pilih tamu untuk check-in</span>
                   )}
                 </div>
                 {results.map((g) => (
                   <div
                     key={g.id}
-                    className={`flex items-center justify-between rounded-xl p-4 transition-all duration-200 ${selected?.id === g.id ? 'bg-blue-500/20 border border-blue-500/30' : 'bg-white/5 border border-white/10 hover:bg-white/10'}`}
+                    className={`flex items-center justify-between rounded-xl p-4 transition-all duration-200 ${selected?.id === g.id ? 'bg-brand-primary/20 border border-brand-primary/30' : 'bg-white/5 border border-white/10 hover:bg-white/10'}`}
                   >
                     <div className="flex items-center gap-4">
                       <div className="h-14 w-14 rounded-xl bg-white/10 overflow-hidden flex-shrink-0">
@@ -1535,12 +1535,12 @@ export default function CheckinPage() {
                           {g.name}
                         </div>
                         <div className="text-sm text-white/60 flex items-center gap-2 mt-0.5">
-                          <span className="font-mono text-blue-300">{g.guestId}</span>
+                          <span className="font-mono text-brand-primarySoft">{g.guestId}</span>
                           <span>•</span>
                           <span>{g.tableLocation}</span>
                         </div>
                         {g.company && (
-                          <div className="text-sm text-amber-300/80 mt-0.5">
+                          <div className="text-sm text-brand-warning/80 mt-0.5">
                             {g.company}
                             {g.division && <span className="text-white/50"> - {g.division}</span>}
                           </div>
@@ -1549,7 +1549,7 @@ export default function CheckinPage() {
                     </div>
                     <div className="flex items-center gap-2">
                       <button
-                        className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 px-5 py-2.5 font-semibold text-white shadow-lg disabled:opacity-50 hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
+                        className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-primary to-brand-accent px-5 py-2.5 font-semibold text-brand-secondary shadow-lg disabled:opacity-50 hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
                         disabled={checking}
                         onClick={() => doCheckin(g, true)}
                       >
@@ -1569,7 +1569,7 @@ export default function CheckinPage() {
           <div className="w-full max-w-3xl glass-card-dark p-4 md:p-6">
             <div className="mb-4 flex items-center justify-between">
               <div className="font-semibold flex items-center gap-2 text-white">
-                <Clock size={18} className="text-blue-400" />
+                <Clock size={18} className="text-brand-primary" />
                 Riwayat Check-in Terbaru
               </div>
               <span className="text-xs text-white/40">{history.length} tamu</span>
@@ -1596,13 +1596,13 @@ export default function CheckinPage() {
                     <div className="min-w-0 flex-1">
                       <div className="font-medium text-white truncate">{h.name}</div>
                       <div className="text-xs text-white/50 truncate flex items-center gap-1.5">
-                        <span className="font-mono text-blue-300/70">{h.guestId}</span>
+                        <span className="font-mono text-brand-primarySoft/70">{h.guestId}</span>
                         <span>•</span>
                         <span>{h.tableLocation}</span>
                       </div>
                     </div>
                     <div className="text-right shrink-0">
-                      <div className="text-xs text-emerald-400 font-medium">#{h.queueNumber}</div>
+                      <div className="text-xs text-brand-success font-medium">#{h.queueNumber}</div>
                     </div>
                   </div>
                 ))}
@@ -1614,7 +1614,7 @@ export default function CheckinPage() {
         {/* Confirmation full display */}
         {checkedGuest && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-            <div className="w-full max-w-5xl overflow-hidden rounded-xl border border-white/20 bg-slate-900/90 text-white shadow-glass grid grid-cols-1 md:grid-cols-[320px_1fr] animate-in fade-in zoom-in duration-300">
+            <div className="w-full max-w-5xl overflow-hidden rounded-xl border border-brand-border bg-brand-secondary/90 text-brand-surface shadow-glass grid grid-cols-1 md:grid-cols-[320px_1fr] animate-in fade-in zoom-in duration-300">
               <div className="bg-white/10 flex items-center justify-center min-h-[300px] md:min-h-full relative">
                 {autoCapturing ? (
                   <div className="w-full h-full flex flex-col items-center justify-center">
@@ -1644,16 +1644,16 @@ export default function CheckinPage() {
               </div>
               <div className="p-6 md:p-10 space-y-4 relative overflow-y-auto max-h-[60vh] md:max-h-full">
                 {isDuplicateCheckIn ? (
-                  <div className="text-amber-500 text-xl font-bold flex items-center gap-2">
+                  <div className="text-brand-warning text-xl font-bold flex items-center gap-2">
                     <XCircle size={24} />
                     SUDAH CHECK-IN
                   </div>
                 ) : (
-                  <div className="text-emerald-400 text-xl font-bold flex items-center gap-2">
+                  <div className="text-brand-success text-xl font-bold flex items-center gap-2">
                     <CheckCircle size={24} />
                     CHECK-IN BERHASIL
                     {(checkedGuest.checkinCount ?? 0) > 1 && (
-                      <span className="text-sm bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full ml-2">
+                      <span className="text-sm bg-brand-accent/20 text-brand-accent px-2 py-0.5 rounded-full ml-2">
                         Check-in ke-{checkedGuest.checkinCount}
                       </span>
                     )}
@@ -1662,21 +1662,21 @@ export default function CheckinPage() {
 
                 {/* Show check-in history for both success and duplicate */}
                 {checkedGuest.checkins && checkedGuest.checkins.length > 0 && (
-                  <div className={`mb-4 rounded-lg p-3 ${isDuplicateCheckIn ? 'bg-amber-500/10 border border-amber-500/20' : 'bg-emerald-500/10 border border-emerald-500/20'}`}>
+                  <div className={`mb-4 rounded-lg p-3 ${isDuplicateCheckIn ? 'bg-brand-warning/10 border border-brand-warning/20' : 'bg-brand-success/10 border border-brand-success/20'}`}>
                     {isDuplicateCheckIn && checkedGuest.message && (
-                      <div className="text-base text-amber-300 font-medium mb-2">{checkedGuest.message}</div>
+                      <div className="text-base text-brand-warning font-medium mb-2">{checkedGuest.message}</div>
                     )}
-                    <div className={`text-sm uppercase tracking-wider font-medium mb-2 ${isDuplicateCheckIn ? 'text-amber-200/80' : 'text-emerald-200/80'}`}>
+                    <div className={`text-sm uppercase tracking-wider font-medium mb-2 ${isDuplicateCheckIn ? 'text-brand-warning' : 'text-brand-success'}`}>
                       Riwayat Check-in ({checkedGuest.checkinCount || checkedGuest.checkins.length}x)
                     </div>
                     <div className="space-y-2 max-h-32 overflow-y-auto">
                       {checkedGuest.checkins.map((c, idx) => (
-                        <div key={c.id || idx} className={`flex items-center justify-between text-sm rounded px-2 py-1 ${isDuplicateCheckIn ? 'bg-amber-500/10' : 'bg-emerald-500/10'}`}>
-                          <span className={`font-medium ${isDuplicateCheckIn ? 'text-amber-100' : 'text-emerald-100'}`}>
+                        <div key={c.id || idx} className={`flex items-center justify-between text-sm rounded px-2 py-1 ${isDuplicateCheckIn ? 'bg-brand-warning/10' : 'bg-brand-success/10'}`}>
+                          <span className={`font-medium ${isDuplicateCheckIn ? 'text-brand-warning' : 'text-brand-success'}`}>
                             {c.checkinByName || 'Admin'}
                             {c.counterName && <span className="text-white/50 ml-1">({c.counterName})</span>}
                           </span>
-                          <span className={`font-mono text-xs ${isDuplicateCheckIn ? 'text-amber-200/70' : 'text-emerald-200/70'}`}>
+                          <span className={`font-mono text-xs ${isDuplicateCheckIn ? 'text-brand-warning' : 'text-brand-success'}`}>
                             {new Date(c.checkinAt).toLocaleString('id-ID', {
                               day: '2-digit',
                               month: 'short',
@@ -1692,12 +1692,12 @@ export default function CheckinPage() {
 
                 {/* Fallback for old data without checkins array */}
                 {isDuplicateCheckIn && (!checkedGuest.checkins || checkedGuest.checkins.length === 0) && checkedGuest.checkedInAt && (
-                  <div className="mb-4 bg-amber-500/10 border border-amber-500/20 rounded-lg p-3">
+                  <div className="mb-4 bg-brand-warning/10 border border-brand-warning/20 rounded-lg p-3">
                     {checkedGuest.message && (
-                      <div className="text-base text-amber-300 font-medium mb-2">{checkedGuest.message}</div>
+                      <div className="text-base text-brand-warning font-medium mb-2">{checkedGuest.message}</div>
                     )}
-                    <div className="text-sm text-amber-200/80 uppercase tracking-wider font-medium">Waktu Check-in Sebelumnya</div>
-                    <div className="text-xl font-mono font-bold text-amber-100">
+                    <div className="text-sm text-brand-warning uppercase tracking-wider font-medium">Waktu Check-in Sebelumnya</div>
+                    <div className="text-xl font-mono font-bold text-brand-warning">
                       {new Date(checkedGuest.checkedInAt).toLocaleString('id-ID', {
                         weekday: 'long',
                         year: 'numeric',
@@ -1709,7 +1709,7 @@ export default function CheckinPage() {
                       })}
                     </div>
                     {checkedGuest.checkedInByName && (
-                      <div className="text-sm text-amber-200/70 mt-1">Oleh: {checkedGuest.checkedInByName}</div>
+                      <div className="text-sm text-brand-warning mt-1">Oleh: {checkedGuest.checkedInByName}</div>
                     )}
                   </div>
                 )}
@@ -1777,7 +1777,7 @@ export default function CheckinPage() {
                   </button>
                   {enablePhotoCapture && !isDuplicateCheckIn && !autoCapturing && (
                     <button
-                      className="flex items-center gap-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 px-6 py-3 text-base font-medium text-white transition-colors"
+                      className="flex items-center gap-2 rounded-lg bg-brand-success hover:opacity-90 px-6 py-3 text-base font-medium text-white transition-colors"
                       onClick={() => {
                         clearPopupTimeout();
                         setShowPhotoCapture(true);
@@ -1791,7 +1791,7 @@ export default function CheckinPage() {
                   {isAuth && (
                     <button
                       disabled={unchecking}
-                      className="flex items-center gap-2 bg-red-600/80 hover:bg-red-600 text-white rounded-lg px-6 py-3 text-base font-medium disabled:opacity-50 transition-colors ml-auto"
+                      className="flex items-center gap-2 bg-brand-danger/80 hover:bg-brand-danger text-white rounded-lg px-6 py-3 text-base font-medium disabled:opacity-50 transition-colors ml-auto"
                       onClick={() => openUncheckModal(checkedGuest)}
                     >
                       <XCircle size={20} />
@@ -1841,7 +1841,7 @@ export default function CheckinPage() {
                 }}
               />
               <button
-                className="mt-6 flex items-center justify-center gap-2 w-full rounded-lg bg-red-600 px-4 py-3 text-white font-medium hover:bg-red-700 transition-colors"
+                className="mt-6 flex items-center justify-center gap-2 w-full rounded-lg bg-brand-danger px-4 py-3 text-white font-medium hover:opacity-90 transition-colors"
                 onClick={() => setShowScanner(false)}
               >
                 <X size={20} />
@@ -1854,10 +1854,10 @@ export default function CheckinPage() {
         {/* Uncheck Confirmation Modal */}
         {showUncheckModal && uncheckTarget && (
           <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/80 p-4 backdrop-blur-md">
-            <div className="w-full max-w-md rounded-xl bg-slate-900 border border-red-500/30 p-6 shadow-2xl">
+            <div className="w-full max-w-md rounded-xl bg-brand-secondary border border-brand-danger/30 p-6 shadow-2xl">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center">
-                  <XCircle size={24} className="text-red-400" />
+                <div className="w-12 h-12 rounded-full bg-brand-danger/20 flex items-center justify-center">
+                  <XCircle size={24} className="text-brand-danger" />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-white">Batalkan Check-in</h3>
@@ -1865,8 +1865,8 @@ export default function CheckinPage() {
                 </div>
               </div>
 
-              <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 mb-4">
-                <p className="text-sm text-amber-200">
+              <div className="bg-brand-warning/10 border border-brand-warning/20 rounded-lg p-3 mb-4">
+                <p className="text-sm text-brand-warning">
                   <strong>Peringatan:</strong> Membatalkan check-in akan membuat tamu <strong>{uncheckTarget.name}</strong> tidak eligible untuk lucky draw sampai check-in ulang.
                 </p>
               </div>
@@ -1874,33 +1874,33 @@ export default function CheckinPage() {
               <div className="space-y-4 mb-6">
                 <div>
                   <label className="block text-sm font-medium text-white/80 mb-2">
-                    Password Admin <span className="text-red-400">*</span>
+                    Password Admin <span className="text-brand-danger">*</span>
                   </label>
                   <input
                     type="password"
                     value={uncheckPassword}
                     onChange={(e) => setUncheckPassword(e.target.value)}
                     placeholder="Masukkan password Anda"
-                    className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50"
+                    className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-brand-danger/50 focus:border-brand-danger/50"
                     autoFocus
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-white/80 mb-2">
-                    Alasan Pembatalan <span className="text-red-400">*</span>
+                    Alasan Pembatalan <span className="text-brand-danger">*</span>
                   </label>
                   <textarea
                     value={uncheckReason}
                     onChange={(e) => setUncheckReason(e.target.value)}
                     placeholder="Jelaskan alasan pembatalan check-in (min. 5 karakter)"
                     rows={3}
-                    className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 resize-none"
+                    className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-brand-danger/50 focus:border-brand-danger/50 resize-none"
                   />
                 </div>
               </div>
 
               {error && (
-                <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-300 text-sm">
+                <div className="mb-4 p-3 rounded-lg bg-brand-danger/10 border border-brand-danger/20 text-brand-danger text-sm">
                   {error}
                 </div>
               )}
@@ -1917,7 +1917,7 @@ export default function CheckinPage() {
                 <button
                   onClick={doUncheckin}
                   disabled={unchecking || !uncheckPassword || uncheckReason.length < 5}
-                  className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-red-600 hover:bg-red-700 px-4 py-3 text-white font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-brand-danger hover:opacity-90 px-4 py-3 text-white font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {unchecking ? (
                     <>
@@ -1939,9 +1939,9 @@ export default function CheckinPage() {
         {/* Photo Capture Modal */}
         {showPhotoCapture && checkedGuest && (
           <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/90 p-4 backdrop-blur-md">
-            <div className="w-full max-w-lg rounded-xl bg-slate-900 border border-white/20 p-6 text-center shadow-2xl">
+            <div className="w-full max-w-lg rounded-xl bg-brand-secondary border border-brand-border p-6 text-center shadow-2xl">
               <h3 className="mb-4 text-xl font-bold text-white flex items-center justify-center gap-2">
-                <Camera size={24} className="text-emerald-400" />
+                <Camera size={24} className="text-brand-success" />
                 Ambil Foto: {checkedGuest.name}
               </h3>
 
@@ -1973,7 +1973,7 @@ export default function CheckinPage() {
                     </button>
                     <button
                       onClick={capturePhoto}
-                      className="flex items-center gap-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 px-6 py-3 text-white font-medium transition-colors"
+                      className="flex items-center gap-2 rounded-lg bg-brand-success hover:opacity-90 px-6 py-3 text-white font-medium transition-colors"
                     >
                       <Camera size={20} />
                       Ambil Foto
@@ -1991,7 +1991,7 @@ export default function CheckinPage() {
                     <button
                       onClick={uploadCapturedPhoto}
                       disabled={uploadingPhoto}
-                      className="flex items-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 px-6 py-3 text-white font-medium transition-colors disabled:opacity-50"
+                      className="flex items-center gap-2 rounded-lg bg-brand-primary hover:bg-brand-primarySoft px-6 py-3 text-white font-medium transition-colors disabled:opacity-50"
                     >
                       {uploadingPhoto ? <Loader2 className="animate-spin" size={20} /> : <CheckCircle size={20} />}
                       {uploadingPhoto ? 'Menyimpan...' : 'Simpan Foto'}
@@ -2147,9 +2147,9 @@ const Html5QrcodePlugin = ({ qrCodeSuccessCallback, onScanFailure, fps, qrbox }:
     <div className="w-full">
       <div id={uniqueIdRef.current} className="w-full overflow-hidden rounded-lg bg-black border-2 border-gray-200 relative min-h-[300px]">
         {startError && (
-          <div className="absolute inset-0 flex items-center justify-center p-4 text-center bg-slate-900 text-white overflow-y-auto">
+          <div className="absolute inset-0 flex items-center justify-center p-4 text-center bg-brand-secondary text-brand-surface overflow-y-auto">
             <div className="max-h-full py-4">
-              <p className="text-red-400 font-bold mb-2">Kamera Error</p>
+              <p className="text-brand-danger font-bold mb-2">Kamera Error</p>
               <p className="text-sm text-white/70 mb-4">
                 {startError}
               </p>
@@ -2178,7 +2178,7 @@ const Html5QrcodePlugin = ({ qrCodeSuccessCallback, onScanFailure, fps, qrbox }:
       <div className="mt-4 text-center">
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="text-sm text-blue-600 hover:underline font-medium"
+          className="text-sm text-brand-primary hover:underline font-medium"
         >
           Masalah dengan kamera? Upload Foto / Buka Kamera App
         </button>
