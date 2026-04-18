@@ -408,6 +408,12 @@ class IndexedDBService {
     await this.db!.clear('souvenirCache');
   }
 
+  async clearEventCaches(): Promise<void> {
+    await this.init();
+    await this.db!.clear('localGuests');
+    await this.db!.clear('souvenirCache');
+  }
+
   async clearAll(): Promise<void> {
     await this.init();
     await this.db!.clear('pendingCheckins');

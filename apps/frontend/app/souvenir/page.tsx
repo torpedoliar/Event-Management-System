@@ -211,6 +211,23 @@ export default function SouvenirPage() {
             loadSouvenirs();
             setQ('');
             setPrizeWins([]);
+
+            // Implement cache clearing for the new event
+            indexedDBService.clearEventCaches().then(async () => {
+                setCachedGuestCount(0);
+                setSouvenirs([]); // Clear souvenirs state too
+
+                // Alert the operator
+                alert("Event aktif telah diubah oleh Admin. Cache tamu lokal telah dikosongkan. Harap download ulang data tamu dan souvenir untuk akses offline event yang baru.");
+
+                // Check for pending souvenir queue from previous event
+                const pendingCount = await indexedDBService.getPendingSouvenirCount();
+                if (pendingCount > 0) {
+                    alert(`Anda masih memiliki ${pendingCount} antrean sinkronisasi souvenir dari event sebelumnya. Harap pastikan perangkat terhubung ke internet agar sinkronisasi dapat selesai.`);
+                }
+            }).catch(err => {
+                console.error('Failed to clear event caches:', err);
+            });
         };
 
         const onGuestUpdate = (e: MessageEvent) => {

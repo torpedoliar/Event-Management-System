@@ -1011,6 +1011,22 @@ export default function CheckinPage() {
       setSelected(null);
       setQ('');
       refreshHistory();
+
+      // Implement cache clearing for the new event
+      indexedDBService.clearEventCaches().then(async () => {
+        setCachedGuestCount(0);
+
+        // Alert the operator
+        alert("Event aktif telah diubah oleh Admin. Cache tamu lokal telah dikosongkan. Harap download ulang data tamu untuk akses offline event yang baru.");
+
+        // Check for pending queue from previous event
+        const pendingCount = await indexedDBService.getPendingCount();
+        if (pendingCount > 0) {
+          alert(`Anda masih memiliki ${pendingCount} antrean sinkronisasi dari event sebelumnya. Harap pastikan perangkat terhubung ke internet agar sinkronisasi dapat selesai.`);
+        }
+      }).catch(err => {
+        console.error('Failed to clear event caches:', err);
+      });
     };
 
     // Handle sync_complete event
