@@ -8,6 +8,10 @@ type Event = {
   date: string; 
   location: string; 
   logoUrl: string | null;
+  backgroundType?: 'NONE' | 'IMAGE' | 'VIDEO';
+  backgroundImageUrl?: string | null;
+  backgroundVideoUrl?: string | null;
+  overlayOpacity?: number;
 };
 
 type Guest = {
