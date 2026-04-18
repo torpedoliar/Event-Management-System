@@ -121,25 +121,50 @@ export default function DashboardPage() {
               )}
             </div>
 
-            {/* Giant Metric - No Borders, Bleeding Edges */}
-            <div className="my-auto relative">
-              <div className="absolute -inset-20 bg-brand-primary/5 rounded-full blur-[100px] -z-10 animate-pulse" />
-              <div className="text-sm font-mono text-brand-primary uppercase tracking-[0.3em] mb-4">Total Kehadiran</div>
-              <div className="text-[5rem] lg:text-[8rem] leading-none font-heading font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-brand-surface to-brand-primarySoft drop-shadow-[0_10px_30px_rgba(212,168,83,0.2)] tracking-tight">
-                {statsLoading ? '-' : stats?.checkedIn || 0}
-              </div>
-              <div className="text-2xl lg:text-4xl font-heading text-brand-surface/30 mt-2 tracking-widest">
-                / {statsLoading ? '-' : stats?.total || 0} TERDAFTAR
-              </div>
-              
-              <div className="mt-12 flex flex-wrap gap-12">
-                <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 fill-mode-both">
-                  <div className="text-sm font-mono text-brand-warning uppercase tracking-widest mb-2 opacity-70">MENUNGGU</div>
-                  <div className="text-4xl font-bold text-white font-mono">{statsLoading ? '-' : stats?.notCheckedIn || 0}</div>
+            {/* Data Grid Area */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 my-auto relative w-full pt-12">
+              {/* Primary Metric - Takes up 8 columns */}
+              <div className="col-span-1 md:col-span-8 relative group">
+                <div className="absolute -inset-10 bg-brand-primary/5 rounded-[3rem] blur-[80px] -z-10 group-hover:bg-brand-primary/10 transition-all duration-700" />
+                <div className="bg-black/20 backdrop-blur-md rounded-3xl border border-white/5 p-10 h-full flex flex-col justify-end overflow-hidden relative shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:border-white/10 transition-colors">
+                   <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+                      <TrendingUp size={120} />
+                   </div>
+                   <div className="text-sm font-mono text-brand-primary uppercase tracking-[0.3em] mb-6 relative z-10">Total Kehadiran</div>
+                   <div className="flex items-baseline gap-4 flex-wrap relative z-10">
+                     <div className="text-[6rem] lg:text-[8rem] xl:text-[10rem] leading-[0.85] font-heading font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-brand-surface to-brand-primarySoft drop-shadow-[0_10px_30px_rgba(212,168,83,0.2)] tracking-tight">
+                       {statsLoading ? '-' : stats?.checkedIn || 0}
+                     </div>
+                     <div className="text-xl lg:text-3xl font-heading text-brand-surface/40 tracking-widest uppercase pb-4">
+                       / {statsLoading ? '-' : stats?.total || 0} Register
+                     </div>
+                   </div>
                 </div>
-                <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500 fill-mode-both">
-                  <div className="text-sm font-mono text-brand-success uppercase tracking-widest mb-2 opacity-70">PROGRESS</div>
-                  <div className="text-4xl font-bold text-white font-mono">{checkinPercent}%</div>
+              </div>
+
+              {/* Secondary Metrics - Takes up 4 columns, stacked */}
+              <div className="col-span-1 md:col-span-4 flex flex-col gap-8">
+                {/* Menunggu */}
+                <div className="bg-black/20 backdrop-blur-md rounded-3xl border border-brand-warning/10 p-8 flex-1 flex flex-col justify-center animate-in fade-in slide-in-from-right-4 duration-700 delay-300 relative group overflow-hidden hover:border-brand-warning/30 transition-colors">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-brand-warning/10 rounded-full blur-[40px] -mr-10 -mt-10 group-hover:bg-brand-warning/20 transition-all" />
+                  <div className="text-xs font-mono text-brand-warning uppercase tracking-widest mb-3 opacity-90"><span className="animate-pulse mr-2 inline-block">●</span>MENUNGGU</div>
+                  <div className="text-4xl lg:text-5xl font-bold text-white font-mono relative z-10">{statsLoading ? '-' : stats?.notCheckedIn || 0}</div>
+                </div>
+
+                {/* Progress */}
+                <div className="bg-black/20 backdrop-blur-md rounded-3xl border border-brand-success/10 p-8 flex-1 flex flex-col justify-center animate-in fade-in slide-in-from-right-4 duration-700 delay-500 relative group overflow-hidden hover:border-brand-success/30 transition-colors">
+                  <div className="absolute bottom-0 right-0 w-32 h-32 bg-brand-success/10 rounded-full blur-[40px] -mr-10 -mb-10 group-hover:bg-brand-success/20 transition-all" />
+                  <div className="text-xs font-mono text-brand-success uppercase tracking-widest mb-3 opacity-90"><span className="animate-pulse mr-2 inline-block">●</span>PROGRESS</div>
+                  <div className="flex items-end gap-2 relative z-10">
+                    <div className="text-4xl lg:text-5xl font-bold text-white font-mono">{checkinPercent}</div>
+                    <div className="text-2xl text-white/50 font-mono mb-1">%</div>
+                  </div>
+                  {/* Progress Bar */}
+                  <div className="w-full h-1.5 bg-white/10 rounded-full mt-6 overflow-hidden relative z-10">
+                     <div className="h-full bg-brand-success rounded-full transition-all duration-1000 ease-out relative" style={{ width: `${checkinPercent}%` }}>
+                        <div className="absolute inset-0 bg-white/30 animate-pulse" />
+                     </div>
+                  </div>
                 </div>
               </div>
             </div>
