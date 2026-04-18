@@ -7,9 +7,9 @@ import { SSEProvider } from '../lib/sse-context';
 import { QueryProvider } from '../lib/query-provider';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 
-import { Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
+import { Inter, JetBrains_Mono, Cinzel } from 'next/font/google';
 
-const plusJakartaSans = Plus_Jakarta_Sans({ 
+const inter = Inter({ 
   subsets: ['latin'],
   variable: '--font-sans',
 });
@@ -19,14 +19,19 @@ const jetbrainsMono = JetBrains_Mono({
   variable: '--font-mono',
 });
 
+const cinzel = Cinzel({
+  subsets: ['latin'],
+  variable: '--font-heading',
+});
+
 export const metadata = {
   title: 'Event Management System',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${plusJakartaSans.variable} ${jetbrainsMono.variable}`}>
-      <body className="font-sans font-medium text-brand-surface bg-brand-secondary">
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} ${cinzel.variable}`}>
+      <body className="font-sans font-medium text-brand-surface bg-brand-secondary relative antialiased selection:bg-brand-primary/30 selection:text-brand-primarySoft">
         <ErrorBoundary>
           <QueryProvider>
             <SSEProvider>

@@ -705,13 +705,13 @@ export default function GuestsListPage() {
           </Card>
         )}
 
-        <Card variant="glass" className="overflow-hidden p-0">
-          {loading && <div className="p-3 text-sm text-white/80">Memuat data...</div>}
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-white/20 bg-white/5 text-left text-xs font-semibold uppercase tracking-wide text-white/70">
-                  <th className="px-2 py-3 w-10">
+        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-brand-secondary/40 backdrop-blur-xl shadow-glass">
+          {loading && <div className="absolute inset-0 z-20 flex items-center justify-center bg-brand-secondary/50 backdrop-blur-sm"><Loader2 className="animate-spin text-brand-primary" size={32} /></div>}
+          <div className="overflow-x-auto overflow-y-auto max-h-[70vh]">
+            <table className="w-full text-sm text-left border-collapse">
+              <thead className="sticky top-0 z-10 bg-brand-secondary/90 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
+                <tr className="text-xs font-mono uppercase tracking-widest text-brand-primarySoft/70 border-b border-brand-primary/20">
+                  <th className="px-4 py-5 w-10 whitespace-nowrap">
                     <input
                       type="checkbox"
                       checked={!!(resp?.data && resp.data.length > 0 && selectedIds.size === resp.data.length)}
@@ -719,30 +719,32 @@ export default function GuestsListPage() {
                       className="rounded border-white/30 bg-white/10 text-brand-primary focus:ring-brand-primary"
                     />
                   </th>
-                  <th className="px-2 py-3">No</th>
-                  <th className="px-2 py-3">Foto</th>
-                  <th className="px-2 py-3">ID</th>
-                  <th className="px-2 py-3">Nama</th>
-                  <th className="px-2 py-3">Email</th>
-                  <th className="px-2 py-3">Kategori</th>
-                  <th className="px-2 py-3">Meja</th>
-                  <th className="px-2 py-3">Perusahaan</th>
-                  <th className="px-2 py-3">Divisi</th>
-                  <th className="px-2 py-3">Departemen</th>
-                  <th className="px-2 py-3">Waktu Check-in</th>
-                  {eventCfg?.enableSouvenir && <th className="px-2 py-3 text-center">Souvenir</th>}
-                  <th className="px-2 py-3 text-center">Hadiah</th>
-                  <th className="px-2 py-3 text-center">Status</th>
-                  <th className="px-2 py-3 text-right">Aksi</th>
+                  <th className="px-4 py-5 whitespace-nowrap">No</th>
+                  <th className="px-4 py-5 whitespace-nowrap">Foto</th>
+                  <th className="px-4 py-5 whitespace-nowrap">ID</th>
+                  <th className="px-4 py-5 whitespace-nowrap">Nama</th>
+                  <th className="px-4 py-5 whitespace-nowrap">Email</th>
+                  <th className="px-4 py-5 whitespace-nowrap">Kategori</th>
+                  <th className="px-4 py-5 whitespace-nowrap">Meja</th>
+                  <th className="px-4 py-5 whitespace-nowrap">Perusahaan</th>
+                  <th className="px-4 py-5 whitespace-nowrap">Divisi</th>
+                  <th className="px-4 py-5 whitespace-nowrap">Departemen</th>
+                  <th className="px-4 py-5 whitespace-nowrap">Waktu Check-in</th>
+                  {eventCfg?.enableSouvenir && <th className="px-4 py-5 text-center whitespace-nowrap">Souvenir</th>}
+                  <th className="px-4 py-5 text-center whitespace-nowrap">Hadiah</th>
+                  <th className="px-4 py-5 text-center whitespace-nowrap">Status</th>
+                  <th className="px-4 py-5 text-right whitespace-nowrap">Aksi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/10">
+              <tbody className="divide-y divide-white/5">
                 {resp?.data.map((g) => {
                   const cat = CATEGORY_CONFIG[g.category] || CATEGORY_CONFIG.REGULAR;
                   const src = g.registrationSource ? SOURCE_CONFIG[g.registrationSource] : null;
                   return (
-                    <tr key={g.id} className={`hover:bg-white/5 transition-colors ${selectedIds.has(g.id) ? 'bg-brand-primary/10' : ''}`}>
-                      <td className="px-2 py-3 align-middle">
+                    <tr key={g.id} className={`group transition-all duration-300 hover:bg-brand-primary/5 hover:shadow-[inset_0_0_30px_rgba(212,168,83,0.05)] relative ${selectedIds.has(g.id) ? 'bg-brand-primary/10' : ''}`}>
+                      <td className="px-4 py-4 align-middle whitespace-nowrap">
+                        {/* Glow Row Indicator */}
+                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-primary opacity-0 group-hover:opacity-100 transition-opacity" />
                         <input
                           type="checkbox"
                           checked={selectedIds.has(g.id)}
@@ -750,26 +752,26 @@ export default function GuestsListPage() {
                           className="rounded border-white/30 bg-white/10 text-brand-primary focus:ring-brand-primary"
                         />
                       </td>
-                      <td className="px-2 py-3 text-xs text-white/70 align-middle">{g.queueNumber}</td>
-                      <td className="px-2 py-3 align-middle">
+                      <td className="px-4 py-4 text-xs font-mono text-brand-primarySoft/50 align-middle">{g.queueNumber}</td>
+                      <td className="px-4 py-4 align-middle">
                         {g.photoUrl ? (
                           <img src={toApiUrl(g.photoUrl)} alt={g.name} className="h-10 w-10 rounded-full object-cover border border-white/20" />
                         ) : (
-                          <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center text-xs text-white/40 border border-white/10">
+                          <div className="h-10 w-10 rounded-full bg-white/5 flex items-center justify-center text-xs text-white/30 border border-white/10">
                             <Users size={16} />
                           </div>
                         )}
                       </td>
-                      <td className="px-2 py-3 font-mono text-xs text-white/80 align-middle">{g.guestId}</td>
-                      <td className="px-2 py-3 text-white font-medium align-middle">
-                        {g.name}
+                      <td className="px-4 py-4 font-mono text-xs text-brand-primarySoft/80 align-middle">{g.guestId}</td>
+                      <td className="px-4 py-4 text-white font-medium align-middle">
+                        <div className="group-hover:text-brand-primarySoft transition-colors">{g.name}</div>
                         {g.notes && (
                           <div className="text-xs text-brand-warning/80 mt-1 px-2 py-1 bg-brand-warning/10 rounded border border-brand-warning/20 max-w-xs truncate">
                             {g.notes}
                           </div>
                         )}
                       </td>
-                      <td className="px-2 py-3 text-white/70 text-xs align-middle">
+                      <td className="px-4 py-4 text-white/70 text-xs align-middle">
                         {g.email ? (
                           <span className="flex items-center gap-1">
                             <Mail size={12} className="text-brand-primary" />
@@ -777,7 +779,7 @@ export default function GuestsListPage() {
                           </span>
                         ) : '-'}
                       </td>
-                      <td className="px-2 py-3 align-middle">
+                      <td className="px-4 py-4 align-middle">
                         <div className="flex flex-wrap gap-1">
                           <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${cat.bg} ${cat.color} border ${cat.border}`}>
                             {cat.label}
@@ -789,15 +791,15 @@ export default function GuestsListPage() {
                           )}
                         </div>
                       </td>
-                      <td className="px-2 py-3 text-white align-middle">{g.tableLocation}</td>
-                      <td className="px-2 py-3 text-white/70 align-middle">{g.company || '-'}</td>
-                      <td className="px-2 py-3 text-white/70 align-middle">{g.division || '-'}</td>
-                      <td className="px-2 py-3 text-white/70 align-middle">{g.department || '-'}</td>
-                      <td className="px-2 py-3 text-white/70 text-xs align-middle">
+                      <td className="px-4 py-4 text-white/90 align-middle">{g.tableLocation}</td>
+                      <td className="px-4 py-4 text-white/60 align-middle font-mono text-xs">{g.company || '-'}</td>
+                      <td className="px-4 py-4 text-white/60 align-middle font-mono text-xs">{g.division || '-'}</td>
+                      <td className="px-4 py-4 text-white/60 align-middle font-mono text-xs">{g.department || '-'}</td>
+                      <td className="px-4 py-4 text-white/50 text-xs align-middle font-mono">
                         {g.checkedInAt ? new Date(g.checkedInAt).toLocaleString('id-ID', { hour12: false }) : '-'}
                       </td>
                       {eventCfg?.enableSouvenir && (
-                        <td className="px-2 py-3 align-middle text-center">
+                        <td className="px-4 py-4 align-middle text-center">
                           {g.souvenirTakes && g.souvenirTakes.length > 0 ? (
                             <div className="flex flex-col items-center gap-1">
                               <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-brand-accent/20 text-brand-accent border border-brand-accent/30">
@@ -818,7 +820,7 @@ export default function GuestsListPage() {
                           )}
                         </td>
                       )}
-                      <td className="px-2 py-3 align-middle text-center">
+                      <td className="px-4 py-4 align-middle text-center">
                         {g.prizeWins && g.prizeWins.length > 0 ? (
                           <div className="flex flex-col items-center gap-1">
                             {g.prizeWins.map((pw, idx) => (
@@ -839,13 +841,13 @@ export default function GuestsListPage() {
                           <span className="text-white/30 text-xs">-</span>
                         )}
                       </td>
-                      <td className="px-2 py-3 align-middle text-center">
-                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${g.checkedIn ? 'bg-brand-success/20 text-brand-success border border-brand-success/30' : 'bg-brand-warning/20 text-brand-warning border border-brand-warning/30'}`}>
-                          {g.checkedIn ? 'Checked-in' : 'Belum'}
+                      <td className="px-4 py-4 align-middle text-center">
+                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-mono uppercase tracking-widest ${g.checkedIn ? 'bg-brand-success/10 text-brand-success border border-brand-success/20' : 'bg-white/5 text-white/40 border border-white/10'}`}>
+                          {g.checkedIn ? 'CHECKED-IN' : 'BELUM'}
                         </span>
                       </td>
-                      <td className="px-2 py-3 text-right align-middle">
-                        <div className="flex items-center justify-end gap-1">
+                      <td className="px-4 py-4 text-right align-middle">
+                        <div className="flex items-center justify-end gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
                           <button
                             title="Tampilkan QR"
                             className="p-1.5 rounded-lg text-white/70 hover:bg-white/10 hover:text-white transition-colors"
@@ -893,7 +895,7 @@ export default function GuestsListPage() {
               </tbody>
             </table>
           </div>
-        </Card>
+        </div>
 
         <div className="flex flex-wrap items-center gap-3 text-sm">
           <Button

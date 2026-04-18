@@ -40,8 +40,18 @@ html, body {
 }
 
 body {
-  @apply bg-brand-secondary text-brand-surface font-sans antialiased;
-  background: linear-gradient(135deg, #1A1A2E 0%, #151525 50%, #10101C 100%);
+  @apply bg-brand-secondary text-brand-surface font-sans antialiased relative;
+  background: linear-gradient(135deg, #1A1A2E 0%, #151525 50%, #0F0F1A 100%);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.04;
 }
 
 /* Text Shadows */

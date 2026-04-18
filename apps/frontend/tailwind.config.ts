@@ -27,6 +27,7 @@ export default {
       fontFamily: {
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
         mono: ['var(--font-mono)', 'monospace'],
+        heading: ['var(--font-heading)', 'serif'],
       },
       borderRadius: {
         xl: '1rem',

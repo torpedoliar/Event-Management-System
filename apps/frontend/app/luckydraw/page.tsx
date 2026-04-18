@@ -190,13 +190,13 @@ export default function LuckyDrawPage() {
                 {/* Header / Prize Selector */}
                 <div className="space-y-4">
                     {eventCfg?.logoUrl && (
-                        <img src={toApiUrl(eventCfg.logoUrl)} className="h-16 mx-auto mb-4" alt="logo" />
+                        <img src={toApiUrl(eventCfg.logoUrl)} className="h-20 mx-auto mb-8 drop-shadow-2xl" alt="logo" />
                     )}
-                    <h1 className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-brand-primarySoft via-brand-primary to-brand-primarySoft drop-shadow-lg tracking-tight">
+                    <h1 className="text-5xl md:text-8xl font-heading font-black text-transparent bg-clip-text bg-gradient-to-b from-brand-primarySoft via-brand-primary to-brand-accent drop-shadow-[0_10px_30px_rgba(212,168,83,0.3)] tracking-[0.1em] uppercase">
                         LUCKY DRAW
                     </h1>
 
-                    <div className="flex justify-center gap-4">
+                    <div className="flex justify-center gap-6 mt-12 mb-16">
                         <select
                             value={selectedPrizeId}
                             onChange={(e) => {
@@ -204,10 +204,10 @@ export default function LuckyDrawPage() {
                                 setWinner(null);
                                 setDisplayCandidate(null);
                             }}
-                            className="bg-brand-surface/10 border border-brand-primary/30 text-brand-surface text-lg rounded-full px-6 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-md"
+                            className="bg-brand-secondary/40 border border-brand-primary/20 text-brand-primarySoft text-xl rounded-full px-8 py-4 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-xl transition-all hover:bg-brand-secondary/60 cursor-pointer font-mono tracking-widest uppercase shadow-[0_0_30px_rgba(0,0,0,0.5)]"
                         >
                             {prizes.map(p => (
-                                <option key={p.id} value={p.id} className="bg-brand-secondary text-brand-surface">
+                                <option key={p.id} value={p.id} className="bg-brand-secondary text-brand-surface font-sans">
                                     {p.name} ({p.winners.length}/{p.quantity})
                                 </option>
                             ))}
@@ -215,51 +215,51 @@ export default function LuckyDrawPage() {
                         
                         <button
                             onClick={() => setShowHistory(true)}
-                            className="bg-brand-surface/10 hover:bg-brand-surface/20 border border-brand-primary/30 text-brand-surface text-lg rounded-full px-6 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-md transition-colors flex items-center gap-2"
+                            className="bg-brand-secondary/40 hover:bg-brand-secondary/60 border border-brand-primary/20 text-brand-primarySoft text-xl rounded-full px-8 py-4 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-xl transition-all flex items-center gap-3 font-mono tracking-widest uppercase shadow-[0_0_30px_rgba(0,0,0,0.5)]"
                         >
-                            <History size={20} />
-                            Riwayat
+                            <History size={24} />
+                            RIWAYAT
                         </button>
                     </div>
                 </div>
 
                 {/* Main Slot Machine Area */}
-                <div className="relative group">
-                    <div className="absolute -inset-1 bg-gradient-to-r from-brand-primary to-brand-accent rounded-2xl blur opacity-60 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
-                    <div className="relative bg-brand-secondary ring-1 ring-brand-primary/20 rounded-2xl p-8 md:p-12 flex flex-col items-center justify-center min-h-[400px]">
+                <div className="relative group max-w-5xl mx-auto">
+                    <div className="absolute -inset-2 bg-gradient-to-r from-brand-primary/40 to-brand-accent/40 rounded-[2rem] blur-2xl opacity-60 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
+                    <div className="relative bg-brand-secondary/80 backdrop-blur-2xl border border-brand-primary/20 rounded-[2rem] p-12 md:p-20 flex flex-col items-center justify-center min-h-[500px] shadow-2xl">
 
                         {selectedPrize && (
-                            <div className="mb-8 text-center">
-                                <h2 className="text-2xl md:text-3xl font-bold text-brand-surface mb-2">{selectedPrize.name}</h2>
-                                {selectedPrize.description && <p className="text-brand-surface/60">{selectedPrize.description}</p>}
+                            <div className="mb-12 text-center">
+                                <h2 className="text-3xl md:text-4xl font-heading font-bold text-brand-primarySoft mb-3 tracking-widest uppercase">{selectedPrize.name}</h2>
+                                {selectedPrize.description && <p className="text-brand-surface/50 font-mono tracking-wider">{selectedPrize.description}</p>}
                             </div>
                         )}
 
                         {/* Display Area */}
-                        <div className="w-full max-w-md aspect-video bg-black/40 rounded-xl border-2 border-brand-primary/20 flex flex-col items-center justify-center p-6 relative overflow-hidden mb-8">
+                        <div className="w-full max-w-3xl aspect-[21/9] bg-black/60 rounded-3xl border border-brand-primary/30 flex flex-col items-center justify-center p-8 relative overflow-hidden mb-12 shadow-[inset_0_0_100px_rgba(0,0,0,0.8)]">
                             {displayCandidate ? (
-                                <div className="text-center animate-in zoom-in duration-300">
+                                <div className="text-center animate-in zoom-in duration-300 w-full">
                                     {displayCandidate.photoUrl ? (
                                         <img
                                             src={toApiUrl(displayCandidate.photoUrl)}
                                             alt="Winner"
-                                            className="w-32 h-32 rounded-full object-cover border-4 border-brand-accent mx-auto mb-4 shadow-xl"
+                                            className="w-40 h-40 rounded-full object-cover border-[6px] border-brand-primary mx-auto mb-8 shadow-[0_0_40px_rgba(212,168,83,0.4)]"
                                         />
                                     ) : (
-                                        <div className="w-32 h-32 rounded-full bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center text-4xl font-bold text-brand-secondary mx-auto mb-4 shadow-xl border-4 border-brand-primary/40">
+                                        <div className="w-40 h-40 rounded-full bg-gradient-to-br from-brand-secondary to-black flex items-center justify-center text-5xl font-mono font-bold text-brand-primarySoft mx-auto mb-8 shadow-[0_0_40px_rgba(212,168,83,0.4)] border-[6px] border-brand-primary">
                                             {displayCandidate.queueNumber}
                                         </div>
                                     )}
-                                    <h3 className="text-3xl md:text-4xl font-bold text-brand-surface mb-2">{displayCandidate.name}</h3>
-                                    <p className="text-xl text-brand-accent">
+                                    <h3 className="text-5xl md:text-7xl font-heading font-bold text-brand-surface mb-4 tracking-wide text-glow">{displayCandidate.name}</h3>
+                                    <p className="text-2xl font-mono text-brand-primary/80 tracking-widest uppercase">
                                         {displayCandidate.company || 'Tamu Undangan'}
-                                        {displayCandidate.division && <span className="opacity-70 ml-2">({displayCandidate.division})</span>}
+                                        {displayCandidate.division && <span className="opacity-50 ml-3">({displayCandidate.division})</span>}
                                     </p>
                                 </div>
                             ) : (
-                                <div className="text-center text-brand-surface/30">
-                                    <Sparkles size={48} className="mx-auto mb-4 opacity-50" />
-                                    <p className="text-lg">Siap untuk mengundi?</p>
+                                <div className="text-center text-brand-primary/20">
+                                    <Sparkles size={80} className="mx-auto mb-6 opacity-30 animate-pulse" />
+                                    <p className="text-2xl font-mono tracking-widest uppercase">Siap Mengundi</p>
                                 </div>
                             )}
                         </div>
@@ -269,12 +269,12 @@ export default function LuckyDrawPage() {
                             onClick={handleDraw}
                             disabled={spinning || isSoldOut || !selectedPrizeId}
                             className={`
-                relative px-12 py-4 rounded-full font-bold text-xl tracking-wider uppercase transition-all transform hover:scale-105 active:scale-95
+                relative px-16 py-6 rounded-full font-bold text-2xl font-mono tracking-[0.2em] uppercase transition-all duration-300 transform hover:scale-105 active:scale-95
                 ${spinning
-                                    ? 'bg-brand-border text-brand-textMuted cursor-not-allowed'
+                                    ? 'bg-brand-border/50 text-brand-textMuted cursor-not-allowed border border-brand-border'
                                     : isSoldOut
-                                        ? 'bg-brand-border text-brand-textMuted cursor-not-allowed'
-                                        : 'bg-gradient-to-r from-brand-primary to-brand-accent text-brand-secondary shadow-lg shadow-brand-primary/30 hover:shadow-brand-primary/50'
+                                        ? 'bg-brand-danger/20 text-brand-danger cursor-not-allowed border border-brand-danger/30'
+                                        : 'bg-gradient-to-r from-brand-primary to-brand-accent text-brand-secondary shadow-[0_0_50px_rgba(212,168,83,0.4)] hover:shadow-[0_0_80px_rgba(212,168,83,0.6)] border border-brand-primarySoft/50'
                                 }
               `}
                         >

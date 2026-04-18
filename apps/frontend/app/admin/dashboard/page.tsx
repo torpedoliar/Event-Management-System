@@ -85,188 +85,105 @@ export default function DashboardPage() {
 
   return (
     <RequireAuth>
-      <div className="min-h-screen p-4 md:p-8">
-        <div className="mx-auto max-w-7xl space-y-6">
-          {/* Header */}
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center shadow-lg">
-                <TrendingUp size={24} className="text-brand-secondary" />
+      <div className="min-h-screen overflow-hidden relative bg-brand-secondary">
+        <div className="flex flex-col lg:flex-row min-h-screen">
+          
+          {/* Left Canvas (The Majestic Data) */}
+          <div className="flex-1 p-8 lg:p-16 flex flex-col justify-between relative z-10 animate-in fade-in slide-in-from-left-8 duration-700">
+            {/* Header / Brand */}
+            <div>
+              <div className="flex items-center gap-4 mb-2">
+                <div className="w-12 h-12 rounded-full bg-brand-primary/20 flex items-center justify-center border border-brand-primary/30 shadow-[0_0_20px_rgba(212,168,83,0.2)]">
+                  <TrendingUp size={24} className="text-brand-primarySoft" />
+                </div>
+                <h1 className="text-2xl font-bold text-brand-surface tracking-[0.2em] uppercase font-heading">KOKPIT INTELIJEN</h1>
               </div>
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-brand-surface">Dashboard</h1>
-                <div className="flex items-center gap-2 mt-1">
-                  <Radio size={12} className={`${connected ? 'text-brand-success pulse-live' : 'text-brand-danger'}`} />
-                  <span className="text-sm text-brand-surface/60">{connected ? 'Realtime Connected' : 'Reconnecting...'}</span>
+              <div className="flex items-center gap-2">
+                <Radio size={14} className={`${connected ? 'text-brand-success animate-pulse' : 'text-brand-danger'}`} />
+                <span className="text-sm font-mono text-brand-surface/60 uppercase tracking-widest">{connected ? 'Sinkronisasi Aktif' : 'Terputus'}</span>
+              </div>
+            </div>
+
+            {/* Notifications */}
+            <div className="mt-8 space-y-4 max-w-xl">
+              {message && (
+                <div className="text-brand-success text-sm bg-brand-success/10 p-4 rounded-xl border border-brand-success/20 flex items-center gap-3 animate-in fade-in slide-in-from-top-4">
+                  <CheckCircle size={18} className="shrink-0" />
+                  {message}
+                  <button onClick={() => setMessage(null)} className="ml-auto hover:opacity-80"><X size={16} /></button>
+                </div>
+              )}
+              {error && (
+                <div className="text-brand-danger text-sm bg-brand-danger/10 p-4 rounded-xl border border-brand-danger/20 flex items-center gap-3 animate-in fade-in slide-in-from-top-4">
+                  <XCircle size={18} className="shrink-0" />
+                  {error}
+                </div>
+              )}
+            </div>
+
+            {/* Giant Metric - No Borders, Bleeding Edges */}
+            <div className="my-auto relative">
+              <div className="absolute -inset-20 bg-brand-primary/5 rounded-full blur-[100px] -z-10 animate-pulse" />
+              <div className="text-sm font-mono text-brand-primary uppercase tracking-[0.3em] mb-4">Total Kehadiran</div>
+              <div className="text-[6rem] lg:text-[10rem] leading-none font-heading font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-brand-surface to-brand-primarySoft drop-shadow-[0_10px_30px_rgba(212,168,83,0.2)] tracking-tight">
+                {statsLoading ? '-' : stats?.checkedIn || 0}
+              </div>
+              <div className="text-3xl lg:text-5xl font-heading text-brand-surface/30 mt-2 tracking-widest">
+                / {statsLoading ? '-' : stats?.total || 0} TERDAFTAR
+              </div>
+              
+              <div className="mt-12 flex flex-wrap gap-12">
+                <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 fill-mode-both">
+                  <div className="text-sm font-mono text-brand-warning uppercase tracking-widest mb-2 opacity-70">MENUNGGU</div>
+                  <div className="text-4xl font-bold text-white font-mono">{statsLoading ? '-' : stats?.notCheckedIn || 0}</div>
+                </div>
+                <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500 fill-mode-both">
+                  <div className="text-sm font-mono text-brand-success uppercase tracking-widest mb-2 opacity-70">PROGRESS</div>
+                  <div className="text-4xl font-bold text-white font-mono">{checkinPercent}%</div>
                 </div>
               </div>
             </div>
-            
-            {/* Quick Actions */}
-            <div className="flex flex-wrap items-center gap-2">
-              <a
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-accent to-brand-primary px-4 py-2 text-sm font-semibold text-brand-secondary shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
-                href="/admin/statistics"
-              >
-                <BarChart3 size={16} />
-                Statistik
-              </a>
-              <a
-                className="inline-flex items-center gap-2 rounded-xl bg-brand-surface/10 backdrop-blur-sm border border-brand-surface/20 px-4 py-2 text-sm font-medium text-brand-surface hover:bg-brand-surface/20 transition-all duration-200"
-                href="/admin/guests"
-              >
-                <Users size={16} />
-                Tamu
-              </a>
-              <a
-                className="inline-flex items-center gap-2 rounded-xl bg-brand-surface/10 backdrop-blur-sm border border-brand-surface/20 px-4 py-2 text-sm font-medium text-brand-surface hover:bg-brand-surface/20 transition-all duration-200"
-                href="/luckydraw"
-              >
-                <Dices size={16} />
-                Lucky Draw
-              </a>
-              <a
-                className="inline-flex items-center gap-2 rounded-xl bg-brand-surface/10 backdrop-blur-sm border border-brand-surface/20 px-4 py-2 text-sm font-medium text-brand-surface hover:bg-brand-surface/20 transition-all duration-200"
-                href="/souvenir"
-              >
-                <Package size={16} />
-                Souvenir
-              </a>
-              <a
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-primary to-brand-accent px-4 py-2 text-sm font-semibold text-brand-secondary shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
-                href="/checkin"
-                target="_blank"
-              >
-                <ExternalLink size={16} />
-                Kiosk
-              </a>
-              <a
-                className="inline-flex items-center gap-2 rounded-xl bg-brand-success/20 border border-brand-success/30 px-4 py-2 text-sm font-semibold text-brand-success shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
-                href="/show"
-                target="_blank"
-              >
-                <Monitor size={16} />
-                Display
-              </a>
-              <a
-                className="inline-flex items-center gap-2 rounded-xl bg-brand-warning/20 border border-brand-warning/30 px-4 py-2 text-sm font-semibold text-brand-warning shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
-                href="/show/my"
-                target="_blank"
-              >
-                <User size={16} />
-                My Display
-              </a>
-            </div>
-          </div>
 
-          {message && (
-            <div className="text-brand-success text-sm bg-brand-success/10 p-4 rounded-xl border border-brand-success/20 flex items-center gap-3 animate-fade-in">
-              <div className="w-8 h-8 rounded-lg bg-brand-success/20 flex items-center justify-center shrink-0">
-                <CheckCircle size={18} className="text-brand-success" />
-              </div>
-              {message}
-              <button onClick={() => setMessage(null)} className="ml-auto text-brand-success hover:opacity-80">
-                <X size={16} />
-              </button>
-            </div>
-          )}
-
-          {error && (
-            <div className="text-brand-danger text-sm bg-brand-danger/10 p-4 rounded-xl border border-brand-danger/20 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-brand-danger/20 flex items-center justify-center shrink-0">
-                <XCircle size={18} className="text-brand-danger" />
-              </div>
-              {error}
-            </div>
-          )}
-
-          {/* Stats Cards */}
-          {statsLoading ? (
-            <SkeletonStats />
-          ) : stats ? (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <StatsCard 
-                title="Total Tamu" 
-                value={stats.total} 
-                icon={<Users size={24} />} 
-                color="blue"
-                subtitle="Terdaftar"
-              />
-              <StatsCard 
-                title="Sudah Check-in" 
-                value={stats.checkedIn} 
-                icon={<CheckCircle size={24} />} 
-                color="emerald"
-                subtitle={`${checkinPercent}% dari total`}
-              />
-              <StatsCard 
-                title="Belum Check-in" 
-                value={stats.notCheckedIn} 
-                icon={<Clock size={24} />} 
-                color="amber"
-                subtitle="Menunggu"
-              />
-              <StatsCard 
-                title="Progress" 
-                value={`${checkinPercent}%`} 
-                icon={<TrendingUp size={24} />} 
-                color="purple"
-                subtitle="Kehadiran"
-                isPercent
-                percent={checkinPercent}
-              />
-            </div>
-          ) : null}
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Column 1: Stats & Event Details */}
-            <div className="space-y-6">
+            {/* Chart Area */}
+            <div className="w-full max-w-xl opacity-70 hover:opacity-100 transition-opacity duration-500">
               {stats && (
                 <Suspense fallback={<SkeletonCard />}>
                   <GuestStatsChart stats={stats} />
                 </Suspense>
               )}
+            </div>
+          </div>
 
-              {event && (
-                <Card variant="glass" className="w-full p-6">
-                  <div className="flex flex-col items-center text-center gap-4">
-                    {event.logoUrl ? (
-                      <img src={event.logoUrl} alt="Event Logo" className="h-24 w-24 object-contain bg-white/5 rounded-xl p-2" />
-                    ) : (
-                      <div className="h-24 w-24 flex items-center justify-center bg-white/5 rounded-xl text-white/20">
-                        <Gift size={40} />
-                      </div>
-                    )}
-                    <div className="space-y-1">
-                      <h2 className="text-xl font-bold text-white">{event.name}</h2>
-                      <div className="flex flex-col items-center gap-1 text-sm text-white/70">
-                        {event.date && (
-                          <div className="flex items-center gap-2">
-                            <Calendar size={14} className="text-brand-primary" />
-                            <span>{new Date(event.date).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                          </div>
-                        )}
-                        {event.location && (
-                          <div className="flex items-center gap-2">
-                            <MapPin size={14} className="text-brand-accent" />
-                            <span>{event.location}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              )}
+          {/* Right Sidebar (Magazine Style Form & Portal) */}
+          <div className="w-full lg:w-[450px] bg-black/40 backdrop-blur-3xl border-l border-brand-primary/20 p-8 flex flex-col gap-10 overflow-y-auto relative z-20 shadow-[-30px_0_60px_rgba(0,0,0,0.5)] animate-in fade-in slide-in-from-right-8 duration-700 delay-200 fill-mode-both">
+            
+            {/* Quick Actions Matrix */}
+            <div className="grid grid-cols-2 gap-3 pb-8 border-b border-white/10">
+              <a className="flex flex-col gap-2 rounded-xl bg-white/5 border border-white/10 p-4 hover:bg-brand-primary/20 hover:border-brand-primary/50 transition-all group" href="/admin/statistics">
+                <BarChart3 size={20} className="text-brand-primarySoft group-hover:text-brand-primary" />
+                <span className="text-xs font-mono uppercase tracking-widest text-white/70">Statistik</span>
+              </a>
+              <a className="flex flex-col gap-2 rounded-xl bg-white/5 border border-white/10 p-4 hover:bg-brand-primary/20 hover:border-brand-primary/50 transition-all group" href="/admin/guests">
+                <Users size={20} className="text-brand-primarySoft group-hover:text-brand-primary" />
+                <span className="text-xs font-mono uppercase tracking-widest text-white/70">Tamu</span>
+              </a>
+              <a className="flex flex-col gap-2 rounded-xl bg-white/5 border border-white/10 p-4 hover:bg-brand-primary/20 hover:border-brand-primary/50 transition-all group" href="/luckydraw">
+                <Dices size={20} className="text-brand-primarySoft group-hover:text-brand-primary" />
+                <span className="text-xs font-mono uppercase tracking-widest text-white/70">Lucky Draw</span>
+              </a>
+              <a className="flex flex-col gap-2 rounded-xl bg-white/5 border border-white/10 p-4 hover:bg-brand-primary/20 hover:border-brand-primary/50 transition-all group" href="/checkin" target="_blank">
+                <ExternalLink size={20} className="text-brand-primarySoft group-hover:text-brand-primary" />
+                <span className="text-xs font-mono uppercase tracking-widest text-white/70">Kiosk</span>
+              </a>
             </div>
 
-            {/* Column 2: Quick Add Guest */}
+            {/* Quick Add Guest Form */}
             <div className="space-y-6">
-              <Card variant="glass" className="w-full h-full">
-                <div className="mb-4 flex items-center gap-2 text-lg font-semibold text-white border-b border-white/10 pb-2">
-                  <UserPlus size={20} />
-                  Quick Add Guest
-                </div>
-                <form
+              <div className="flex items-center gap-3 text-lg font-bold text-white tracking-widest uppercase font-heading">
+                <UserPlus size={20} className="text-brand-primary" />
+                Quick Add
+              </div>
+              <form
                   onSubmit={async (e) => {
                     e.preventDefault();
                     setMessage(null);
@@ -304,130 +221,68 @@ export default function DashboardPage() {
                   className="flex flex-col gap-4"
                 >
                   <div>
-                    <Label className="mb-1" htmlFor="quick-guest-id">Guest ID</Label>
+                    <Label className="mb-2 text-xs font-mono uppercase tracking-widest opacity-60" htmlFor="quick-guest-id">Guest ID</Label>
                     <Input
                       id="quick-guest-id"
                       value={guestId}
                       onChange={(e) => setGuestId(e.target.value)}
                       required
-                      className="font-mono"
+                      className="font-mono bg-white/5 border-white/10"
                     />
                   </div>
                   <div>
-                    <Label className="mb-1" htmlFor="quick-name">Nama</Label>
+                    <Label className="mb-2 text-xs font-mono uppercase tracking-widest opacity-60" htmlFor="quick-name">Nama Lengkap</Label>
                     <Input
                       id="quick-name"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required
+                      className="bg-white/5 border-white/10"
                     />
                   </div>
                   <div>
-                    <Label className="mb-1" htmlFor="quick-table">Meja/Ruangan</Label>
+                    <Label className="mb-2 text-xs font-mono uppercase tracking-widest opacity-60" htmlFor="quick-table">Meja / Ruangan</Label>
                     <Input
                       id="quick-table"
                       value={tableLocation}
                       onChange={(e) => setTableLocation(e.target.value)}
                       required
+                      className="bg-white/5 border-white/10"
                     />
                   </div>
                   <div>
-                    <Label className="mb-1" htmlFor="quick-company">Perusahaan (opsional)</Label>
+                    <Label className="mb-2 text-xs font-mono uppercase tracking-widest opacity-60" htmlFor="quick-company">Perusahaan</Label>
                     <Input
                       id="quick-company"
                       value={company}
                       onChange={(e) => setCompany(e.target.value)}
+                      className="bg-white/5 border-white/10"
                     />
                   </div>
-                  <div>
-                    <Label className="mb-1">Foto (opsional)</Label>
-                    <div className="flex items-center gap-3">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        capture="environment"
-                        onChange={(e) => setPhoto(e.target.files?.[0] || null)}
-                        className="flex-1 min-w-0 text-sm text-white/70 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-brand-surface file:text-brand-text hover:file:bg-brand-surfaceMuted cursor-pointer"
-                      />
-                      <Button
-                        type="button"
-                        onClick={() => setWebcamOpen(true)}
-                        variant="secondary"
-                        size="sm"
-                        className="shrink-0 flex items-center gap-2"
-                      >
-                        <Camera size={16} />
-                        Webcam
-                      </Button>
-                    </div>
-                    {preview && (
-                      <div className="mt-3">
-                        <img src={preview} alt="preview" className="h-20 w-20 object-cover rounded-lg border border-white/20" />
-                      </div>
-                    )}
-                  </div>
                   <div className="pt-2">
-                    <Button type="submit" disabled={saving} size="md" className="w-full flex items-center justify-center gap-2">
+                    <Button type="submit" disabled={saving} size="md" className="w-full flex items-center justify-center gap-2 bg-brand-primary text-brand-secondary hover:bg-brand-primarySoft">
                       {saving ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
-                      {saving ? 'Menyimpan...' : 'Tambah Tamu'}
+                      {saving ? 'MENYIMPAN...' : 'TAMBAH TAMU'}
                     </Button>
                   </div>
                 </form>
-                {webcamOpen && (
-                  <Suspense fallback={null}>
-                    <WebcamCapture open={webcamOpen} onClose={() => setWebcamOpen(false)} onCapture={(file) => { setPhoto(file); }} aspect="square" />
-                  </Suspense>
-                )}
-              </Card>
             </div>
 
-            {/* Column 3: Portal Actions */}
-            <div className="space-y-6">
-              <Card variant="glass" className="w-full">
-                <div className="mb-4 flex items-center gap-2 text-lg font-semibold text-white border-b border-white/10 pb-2">
-                  <Activity size={20} />
-                  Portal Actions
-                </div>
-                {message && <div className="mb-4 text-sm text-brand-accent bg-brand-primary/10 p-3 rounded-lg border border-brand-primary/20">{message}</div>}
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <div className="text-sm font-medium text-white/90">Public Check-in (by Guest ID)</div>
-                    <div className="flex gap-2">
-                      <Input
-                        value={publicGuestId}
-                        onChange={(e) => setPublicGuestId(e.target.value)}
-                        placeholder="Guest ID"
-                        className="font-mono"
-                      />
-                      <Button
-                        size="sm"
-                        disabled={busyPublic || !publicGuestId}
-                        onClick={async () => {
-                          setError(null); setMessage(null); setBusyPublic(true);
-                          try {
-                            const res = await fetch(`${apiBase()}/public/guests/checkin`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ guestId: publicGuestId }) });
-                            if (!res.ok) {
-                              const errorText = await res.text();
-                              throw new Error(parseErrorMessage(errorText));
-                            }
-                            setMessage('Check-in publik berhasil.');
-                            setPublicGuestId('');
-                          } catch (e: any) { setError(e.message || 'Gagal check-in publik'); } finally { setBusyPublic(false); }
-                        }}
-                      >
-                        {busyPublic ? <Loader2 className="animate-spin" size={16} /> : <CheckCircle size={16} />}
-                        <span className="ml-2">Check-in</span>
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="text-sm font-medium text-white/90">Admin Check-in (by Guest ID)</div>
-                    <div className="flex gap-2">
+            {/* Admin Override Actions */}
+            <div className="space-y-6 pt-8 border-t border-white/10">
+              <div className="flex items-center gap-3 text-lg font-bold text-brand-danger tracking-widest uppercase font-heading">
+                <Activity size={20} />
+                Overrides
+              </div>
+              <div className="space-y-6">
+                <div>
+                  <div className="text-xs font-mono uppercase tracking-widest opacity-60 mb-2">Check-in Manual</div>
+                  <div className="flex gap-2">
                       <Input
                         value={adminGuestId}
                         onChange={(e) => setAdminGuestId(e.target.value)}
                         placeholder="Guest ID"
-                        className="font-mono"
+                        className="font-mono bg-white/5 border-white/10"
                       />
                       <Button
                         size="sm"
@@ -444,23 +299,23 @@ export default function DashboardPage() {
                             const g = arr && arr[0];
                             if (!g) throw new Error('Guest tidak ditemukan');
                             await apiFetch(`/guests/${g.id}/checkin`, { method: 'POST' });
-                            setMessage(`Check-in admin berhasil untuk ${g.name}`);
-                          } catch (e: any) { setError(e.message || 'Gagal check-in admin'); } finally { setBusyAdminCheck(false); }
+                            setMessage(`Check-in manual berhasil untuk ${g.name}`);
+                          } catch (e: any) { setError(e.message || 'Gagal check-in'); } finally { setBusyAdminCheck(false); }
                         }}
                       >
                         {busyAdminCheck ? <Loader2 className="animate-spin" size={16} /> : <CheckCircle size={16} />}
-                        <span className="ml-2">Check-in</span>
                       </Button>
-                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <div className="text-sm font-medium text-white/90">Admin Uncheck-in (by Guest ID)</div>
-                    <div className="flex gap-2">
+                </div>
+
+                <div>
+                  <div className="text-xs font-mono uppercase tracking-widest text-brand-danger opacity-80 mb-2">Batal Check-in</div>
+                  <div className="flex gap-2">
                       <Input
                         value={adminGuestId}
                         onChange={(e) => setAdminGuestId(e.target.value)}
                         placeholder="Guest ID"
-                        className="font-mono"
+                        className="font-mono bg-brand-danger/5 border-brand-danger/20"
                       />
                       <Button
                         size="sm"
@@ -476,34 +331,32 @@ export default function DashboardPage() {
                             }
                             const arr = await r.json(); const g = arr && arr[0];
                             if (!g) throw new Error('Guest tidak ditemukan');
-                            // Show modal for password and reason
                             setUncheckGuestInfo({ id: g.id, name: g.name });
                             setShowUncheckModal(true);
-                          } catch (e: any) { setError(e.message || 'Gagal mencari guest'); } finally { setBusyAdminUncheck(false); }
+                          } catch (e: any) { setError(e.message || 'Gagal mencari'); } finally { setBusyAdminUncheck(false); }
                         }}
                       >
                         {busyAdminUncheck ? <Loader2 className="animate-spin" size={16} /> : <XCircle size={16} />}
-                        <span className="ml-2">Uncheck-in</span>
                       </Button>
-                    </div>
                   </div>
                 </div>
-              </Card>
+              </div>
             </div>
+
           </div>
         </div>
 
         {/* Uncheckin Modal */}
         {showUncheckModal && uncheckGuestInfo && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => { setShowUncheckModal(false); setUncheckPassword(''); setUncheckReason(''); setUncheckError(null); setUncheckGuestInfo(null); }}>
-            <div className="w-full max-w-md rounded-xl bg-brand-secondary border border-brand-border p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-              <h3 className="mb-4 text-lg font-bold text-brand-surface flex items-center gap-2">
-                <XCircle size={20} className="text-brand-danger" />
-                Batalkan Check-in: {uncheckGuestInfo.name}
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm" onClick={() => { setShowUncheckModal(false); setUncheckPassword(''); setUncheckReason(''); setUncheckError(null); setUncheckGuestInfo(null); }}>
+            <div className="w-full max-w-md rounded-2xl bg-brand-secondary border border-brand-danger/30 p-8 shadow-[0_0_50px_rgba(239,68,68,0.2)]" onClick={(e) => e.stopPropagation()}>
+              <h3 className="mb-6 text-xl font-bold text-white flex items-center gap-3 font-heading tracking-widest uppercase">
+                <XCircle size={24} className="text-brand-danger" />
+                BATALKAN CHECK-IN
               </h3>
-              <div className="mb-4 p-3 rounded-lg bg-brand-warning/10 border border-brand-warning/20">
-                <p className="text-sm text-brand-warning">
-                  Tindakan ini memerlukan password admin dan alasan pembatalan.
+              <div className="mb-6 p-4 rounded-xl bg-brand-danger/10 border border-brand-danger/20">
+                <p className="text-sm text-brand-danger font-mono tracking-wide leading-relaxed">
+                  Tindakan ini memerlukan verifikasi admin. Membatalkan check-in akan mencabut hak undian tamu: <strong>{uncheckGuestInfo.name}</strong>.
                 </p>
               </div>
               {uncheckError && (
@@ -512,32 +365,34 @@ export default function DashboardPage() {
                   <p className="text-sm text-brand-danger">{uncheckError}</p>
                 </div>
               )}
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div>
-                  <label className="block text-sm text-white/70 mb-2">Password Admin</label>
+                  <label className="block text-xs font-mono uppercase tracking-widest text-white/70 mb-2">Password Admin</label>
                   <Input
                     type="password"
-                    placeholder="Masukkan password Anda"
+                    placeholder="***"
                     value={uncheckPassword}
                     onChange={(e) => { setUncheckPassword(e.target.value); setUncheckError(null); }}
+                    className="bg-white/5 border-white/10 text-center tracking-widest"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-white/70 mb-2">Alasan Pembatalan (minimal 5 karakter)</label>
+                  <label className="block text-xs font-mono uppercase tracking-widest text-white/70 mb-2">Alasan (min. 5 kar)</label>
                   <Input
-                    placeholder="Contoh: Tamu salah scan, koreksi data..."
+                    placeholder="Alasan pembatalan..."
                     value={uncheckReason}
                     onChange={(e) => setUncheckReason(e.target.value)}
+                    className="bg-white/5 border-white/10"
                   />
                 </div>
               </div>
-              <div className="flex gap-3 mt-6">
+              <div className="flex gap-4 mt-8">
                 <Button
                   variant="ghost"
                   onClick={() => { setShowUncheckModal(false); setUncheckPassword(''); setUncheckReason(''); setUncheckError(null); setUncheckGuestInfo(null); }}
                   className="flex-1"
                 >
-                  Batal
+                  BATAL
                 </Button>
                 <Button
                   variant="danger"
@@ -561,10 +416,10 @@ export default function DashboardPage() {
                       setUncheckError(errorMsg);
                     } finally { setBusyAdminUncheck(false); }
                   }}
-                  className="flex-1"
+                  className="flex-1 flex items-center justify-center gap-2 font-mono tracking-widest text-sm"
                 >
                   {busyAdminUncheck ? <Loader2 className="animate-spin" size={16} /> : <XCircle size={16} />}
-                  <span className="ml-2">Konfirmasi Uncheck-in</span>
+                  KONFIRMASI
                 </Button>
               </div>
             </div>

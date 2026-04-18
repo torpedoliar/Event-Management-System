@@ -75,9 +75,10 @@ export default function ThemeBackground() {
       {(!effectiveType || effectiveType === 'NONE') && (
         <>
           <div className="fixed inset-0 -z-10 bg-brand-secondary" />
-          <div className="fixed inset-0 -z-10 overflow-hidden opacity-40">
-            <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-brand-primary/10 rounded-full blur-[140px]" />
-            <div className="absolute top-[40%] -right-[10%] w-[50%] h-[50%] bg-brand-accent/10 rounded-full blur-[120px]" />
+          <div className="fixed inset-0 -z-10 overflow-hidden opacity-60">
+            <div className="absolute -top-[20%] -left-[10%] w-[70%] h-[70%] bg-brand-primary/15 rounded-full blur-[160px] animate-pulse" style={{ animationDuration: '8s' }} />
+            <div className="absolute top-[40%] -right-[10%] w-[60%] h-[60%] bg-brand-accent/15 rounded-full blur-[140px] animate-pulse" style={{ animationDuration: '10s' }} />
+            <div className="absolute bottom-[0%] left-[30%] w-[40%] h-[40%] bg-brand-info/10 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '12s' }} />
           </div>
         </>
       )}

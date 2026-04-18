@@ -1823,29 +1823,50 @@ export default function CheckinPage() {
           </div>
         )}
 
-        {/* Scanner Modal */}
+        {/* Scanner Modal - Cinematic HUD */}
         {showScanner && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-md">
-            <div className="w-full max-w-md rounded-xl bg-white p-6 text-center shadow-2xl">
-              <h3 className="mb-4 text-xl font-bold text-gray-900 flex items-center justify-center gap-2">
-                <QrCode size={24} />
-                Scan QR Code
-              </h3>
-              <Html5QrcodePlugin
-                fps={10}
-                qrbox={250}
-                disableFlip={false}
-                qrCodeSuccessCallback={onScanSuccess}
-                onScanFailure={(err: any) => {
-                  // Silently ignore scan failures (frame not containing QR)
-                }}
-              />
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 p-4 backdrop-blur-xl">
+            {/* Cinematic HUD Elements */}
+            <div className="absolute top-8 left-8 w-16 h-16 border-t-2 border-l-2 border-brand-primary opacity-50" />
+            <div className="absolute top-8 right-8 w-16 h-16 border-t-2 border-r-2 border-brand-primary opacity-50" />
+            <div className="absolute bottom-8 left-8 w-16 h-16 border-b-2 border-l-2 border-brand-primary opacity-50" />
+            <div className="absolute bottom-8 right-8 w-16 h-16 border-b-2 border-r-2 border-brand-primary opacity-50" />
+            
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg">
+              <div className="text-center mb-8">
+                <div className="text-brand-primary font-mono text-sm tracking-[0.3em] uppercase mb-2 animate-pulse">Optic Targeting System</div>
+                <h3 className="text-2xl font-bold text-white tracking-widest flex items-center justify-center gap-3 font-heading">
+                  <QrCode className="text-brand-accent" size={28} />
+                  SCAN QR CODE
+                </h3>
+              </div>
+
+              <div className="relative p-2 rounded-2xl bg-black/50 border border-brand-primary/20 shadow-[0_0_50px_rgba(212,168,83,0.15)] overflow-hidden">
+                 {/* Floating Brackets */}
+                 <div className="absolute top-0 left-0 w-12 h-12 border-t-4 border-l-4 border-brand-accent z-10" />
+                 <div className="absolute top-0 right-0 w-12 h-12 border-t-4 border-r-4 border-brand-accent z-10" />
+                 <div className="absolute bottom-0 left-0 w-12 h-12 border-b-4 border-l-4 border-brand-accent z-10" />
+                 <div className="absolute bottom-0 right-0 w-12 h-12 border-b-4 border-r-4 border-brand-accent z-10" />
+                 
+                 <div className="absolute top-1/2 left-0 w-full h-[2px] bg-brand-primary/50 z-10 shadow-[0_0_10px_rgba(212,168,83,1)] animate-pulse" />
+
+                 <Html5QrcodePlugin
+                    fps={10}
+                    qrbox={280}
+                    disableFlip={false}
+                    qrCodeSuccessCallback={onScanSuccess}
+                    onScanFailure={(err: any) => {
+                      // Silently ignore scan failures (frame not containing QR)
+                    }}
+                  />
+              </div>
+
               <button
-                className="mt-6 flex items-center justify-center gap-2 w-full rounded-lg bg-brand-danger px-4 py-3 text-white font-medium hover:opacity-90 transition-colors"
+                className="mt-10 mx-auto flex items-center justify-center gap-3 rounded-full bg-brand-danger/20 border border-brand-danger/50 px-8 py-3 text-brand-danger hover:bg-brand-danger hover:text-white transition-all font-mono tracking-widest text-sm"
                 onClick={() => setShowScanner(false)}
               >
-                <X size={20} />
-                Batal
+                <X size={18} />
+                ABORT
               </button>
             </div>
           </div>
