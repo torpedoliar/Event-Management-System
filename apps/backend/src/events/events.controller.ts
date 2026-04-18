@@ -148,6 +148,10 @@ export class EventsController {
   @Post('events/purge')
   async purge(@Body('resetBranding') resetBranding?: boolean) {
     const result = await this.events.purgeActiveGuests(!!resetBranding);
+    
+    // Broadcast bulk-delete to force all frontends to clear IndexedDB guest cache
+    emitEvent({ type: 'guest-update', data: { action: 'bulk-delete', count: result.success ? 9999 : 0 } });
+
     if (resetBranding) {
       const cfg = await this.events.getActive();
       emitEvent({ type: 'config', data: cfg });

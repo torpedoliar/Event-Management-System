@@ -1007,7 +1007,7 @@ export default function CheckinPage() {
       refreshHistory();
     };
 
-    // Handle guest updates (like bulk-delete)
+    // Handle guest updates (like bulk-delete or single delete)
     const onGuestUpdate = (data: any) => {
       if (data && data.action === 'bulk-delete') {
         indexedDBService.clearGuestCache().then(() => {
@@ -1015,6 +1015,13 @@ export default function CheckinPage() {
           console.log('[CheckinPage] Guest cache automatically cleared due to bulk-delete action from server.');
         }).catch(err => {
           console.error('[CheckinPage] Failed to clear guest cache on bulk-delete:', err);
+        });
+      } else if (data && data.action === 'delete' && data.id) {
+        indexedDBService.deleteCachedGuest(data.id).then(() => {
+          setCachedGuestCount(prev => Math.max(0, prev - 1));
+          console.log(`[CheckinPage] Deleted guest ${data.id} from local cache.`);
+        }).catch(err => {
+          console.error(`[CheckinPage] Failed to delete guest ${data.id} from cache:`, err);
         });
       }
       refreshHistory();

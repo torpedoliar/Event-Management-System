@@ -232,6 +232,11 @@ class IndexedDBService {
     await this.db!.clear('localGuests');
   }
 
+  async deleteCachedGuest(id: string): Promise<void> {
+    await this.init();
+    await this.db!.delete('localGuests', id);
+  }
+
   // ==================== SYNC LOG ====================
 
   async addSyncLogEntry(entry: {

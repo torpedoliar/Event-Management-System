@@ -732,7 +732,7 @@ export class GuestsController {
   @Delete('guests/:id')
   async remove(@Param('id') id: string) {
     const res = await this.guests.remove(id);
-    emitEvent({ type: 'guest-update', data: { action: 'delete' } });
+    emitEvent({ type: 'guest-update', data: { action: 'delete', id } });
     return res;
   }
 
