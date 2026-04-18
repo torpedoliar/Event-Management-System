@@ -200,7 +200,7 @@ export default function WebcamCapture({ open, onClose, onCapture, aspect = "squa
           <button 
             onClick={capture} 
             disabled={!isReady || !!error}
-            className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+            className="px-5 py-2.5 bg-brand-success hover:bg-brand-success/90 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
           >
             <Camera size={18} />
             Ambil Foto

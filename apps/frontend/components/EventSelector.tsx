@@ -98,7 +98,7 @@ export default function EventSelector() {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 hover:bg-white/15 transition-colors text-sm"
       >
-        <div className="w-2 h-2 rounded-full bg-emerald-400" />
+        <div className="w-2 h-2 rounded-full bg-brand-success" />
         <span className="text-white font-medium max-w-[150px] truncate">
           {activeEvent?.name || 'No Event'}
         </span>
@@ -122,7 +122,7 @@ export default function EventSelector() {
                     : 'hover:bg-white/10 border border-transparent'
                 }`}
               >
-                <div className={`w-2 h-2 rounded-full ${event.isActive ? 'bg-emerald-400' : 'bg-white/30'}`} />
+                <div className={`w-2 h-2 rounded-full ${event.isActive ? 'bg-brand-success' : 'bg-white/30'}`} />
                 <div className="flex-1 min-w-0">
                   <div className="text-white font-medium truncate">{event.name}</div>
                   {event.date && (

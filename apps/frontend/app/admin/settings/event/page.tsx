@@ -32,7 +32,7 @@ const COLOR_OPTIONS = [
   { value: 'text-rose-300', label: 'Rose', bg: 'bg-rose-500' },
   { value: 'text-cyan-300', label: 'Cyan', bg: 'bg-cyan-500' },
   { value: 'text-orange-300', label: 'Orange', bg: 'bg-orange-500' },
-  { value: 'text-pink-300', label: 'Pink', bg: 'bg-pink-500' },
+  { value: 'text-brand-accent', label: 'Accent', bg: 'bg-brand-accent' },
   { value: 'text-indigo-300', label: 'Indigo', bg: 'bg-indigo-500' },
 ];
 
@@ -293,7 +293,7 @@ export default function EventSettingsPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <Link
               href="/admin/prizes"
-              className="flex items-center justify-between p-4 rounded-xl bg-brand-warning/10 border border-amber-500/20 hover:bg-brand-warning/20 transition-colors group"
+              className="flex items-center justify-between p-4 rounded-xl bg-brand-warning/10 border border-brand-warning/20 hover:bg-brand-warning/20 transition-colors group"
             >
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-brand-warning/20">
@@ -309,7 +309,7 @@ export default function EventSettingsPage() {
 
             <Link
               href="/admin/souvenirs"
-              className="flex items-center justify-between p-4 rounded-xl bg-brand-accent/10 border border-purple-500/20 hover:bg-brand-accent/20 transition-colors group"
+              className="flex items-center justify-between p-4 rounded-xl bg-brand-accent/10 border border-brand-accent/20 hover:bg-brand-accent/20 transition-colors group"
             >
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-brand-accent/20">
@@ -576,7 +576,7 @@ export default function EventSettingsPage() {
                     <select
                       value={newCatColor}
                       onChange={(e) => setNewCatColor(e.target.value)}
-                      className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none"
+                      className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-sm text-white focus:border-brand-primary focus:outline-none"
                     >
                       {COLOR_OPTIONS.map((opt) => (
                         <option key={opt.value} value={opt.value} className="bg-brand-secondary">

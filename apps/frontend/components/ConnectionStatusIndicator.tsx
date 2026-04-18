@@ -162,7 +162,7 @@ export default function ConnectionStatusIndicator({ className = '', onShowQueue,
                     <p className="text-sm font-medium text-brand-info">
                       {cachedGuestCount} tamu ditarik cache lokal
                     </p>
-                    <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                    <p className="text-xs text-brand-info/80 mt-1">
                       Tersedia untuk pencarian offline
                     </p>
                   </div>

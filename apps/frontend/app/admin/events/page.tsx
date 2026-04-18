@@ -309,7 +309,7 @@ export default function EventsPage() {
       className={`
         group p-4 rounded-xl border transition-all
         ${event.isActive 
-          ? 'bg-brand-success/10 border-emerald-500/30' 
+          ? 'bg-brand-success/10 border-brand-success/30' 
           : 'bg-white/5 border-white/10 hover:bg-white/10'
         }
         ${draggedEvent?.id === event.id ? 'opacity-50 scale-95' : ''}
@@ -426,9 +426,9 @@ export default function EventsPage() {
       
       switch (column) {
         case 'upcoming':
-          return `${baseStyles} ${isOver ? 'border-blue-500/50 bg-brand-primary/5' : 'border-white/10 bg-white/5'}`;
+          return `${baseStyles} ${isOver ? 'border-brand-primary/50 bg-brand-primary/5' : 'border-white/10 bg-white/5'}`;
         case 'active':
-          return `${baseStyles} ${isOver ? 'border-emerald-500/50 bg-brand-success/5' : 'border-white/10 bg-white/5'}`;
+          return `${baseStyles} ${isOver ? 'border-brand-success/50 bg-brand-success/5' : 'border-white/10 bg-white/5'}`;
         case 'past':
           return `${baseStyles} ${isOver ? 'border-gray-500/50 bg-gray-500/5' : 'border-white/10 bg-white/5'}`;
         default:

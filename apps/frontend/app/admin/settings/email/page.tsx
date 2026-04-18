@@ -339,7 +339,7 @@ export default function EmailSettingsPage() {
             </div>
 
             {/* Info box */}
-            <div className="flex items-start gap-3 p-4 rounded-lg bg-brand-primary/10 border border-blue-500/20">
+            <div className="flex items-start gap-3 p-4 rounded-lg bg-brand-primary/10 border border-brand-primary/20">
               <Info size={20} className="text-brand-primary flex-shrink-0 mt-0.5" />
               <div className="text-sm text-white/70">
                 <p className="font-medium text-white mb-1">Tips untuk Gmail:</p>
@@ -397,7 +397,7 @@ export default function EmailSettingsPage() {
             Template Email (Opsional)
           </h3>
           <div className="space-y-4">
-            <div className="flex items-start gap-3 p-4 rounded-lg bg-brand-warning/10 border border-amber-500/20">
+            <div className="flex items-start gap-3 p-4 rounded-lg bg-brand-warning/10 border border-brand-warning/20">
               <Info size={20} className="text-brand-warning flex-shrink-0 mt-0.5" />
               <div className="text-sm text-white/70">
                 <p className="font-medium text-white mb-1">Placeholder yang tersedia:</p>

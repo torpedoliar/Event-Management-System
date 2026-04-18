@@ -70,9 +70,9 @@ export default function QueueManagementPanel({ isOpen, onClose }: QueueManagemen
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col">
+      <div className="bg-brand-secondary border border-brand-border rounded-xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+        <div className="px-6 py-4 border-b border-brand-border flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-brand-primary/10 rounded-lg flex items-center justify-center">
               <svg className="w-6 h-6 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -80,17 +80,17 @@ export default function QueueManagementPanel({ isOpen, onClose }: QueueManagemen
               </svg>
             </div>
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+              <h2 className="text-xl font-bold text-white">
                 Pending Check-ins
               </h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-white/60">
                 {pendingCount} pending, {failedCount} failed
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+            className="text-white/40 hover:text-white transition-colors"
           >
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -102,13 +102,13 @@ export default function QueueManagementPanel({ isOpen, onClose }: QueueManagemen
         <div className="flex-1 overflow-y-auto px-6 py-4">
           {pendingCheckins.length === 0 ? (
             <div className="text-center py-12">
-              <svg className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-16 h-16 text-white/20 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <p className="text-gray-500 dark:text-gray-400">
+              <p className="text-white/60">
                 Tidak ada check-in pending
               </p>
-              <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
+              <p className="text-sm text-white/40 mt-1">
                 Semua check-in sudah tersinkronisasi
               </p>
             </div>
@@ -128,7 +128,7 @@ export default function QueueManagementPanel({ isOpen, onClose }: QueueManagemen
                       <div className="flex items-center gap-2 mb-1">
                         {/* Status Icon */}
                         {checkin.status === 'pending' && (
-                          <svg className="w-5 h-5 text-yellow-600 dark:text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg className="w-5 h-5 text-brand-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                         )}
@@ -137,11 +137,11 @@ export default function QueueManagementPanel({ isOpen, onClose }: QueueManagemen
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                         )}
-                        <span className="font-semibold text-gray-900 dark:text-white truncate">
+                        <span className="font-semibold text-white truncate">
                           {checkin.guestIdentifier}
                         </span>
                       </div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400 space-y-1 ml-7">
+                      <div className="text-xs text-white/50 space-y-1 ml-7">
                         <p>
                           Time: {new Date(checkin.clientTimestamp).toLocaleString('id-ID')}
                         </p>
@@ -157,7 +157,7 @@ export default function QueueManagementPanel({ isOpen, onClose }: QueueManagemen
                     </div>
                     <button
                       onClick={() => handleDeleteItem(checkin.id)}
-                      className="text-gray-400 hover:text-brand-danger transition-colors"
+                      className="text-white/40 hover:text-brand-danger transition-colors"
                       title="Remove from queue"
                     >
                       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -173,7 +173,7 @@ export default function QueueManagementPanel({ isOpen, onClose }: QueueManagemen
 
         {/* Footer Actions */}
         {pendingCheckins.length > 0 && (
-          <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
+          <div className="px-6 py-4 border-t border-brand-border space-y-3">
             <div className="flex gap-2">
               <button
                 onClick={handleSyncNow}
@@ -201,7 +201,7 @@ export default function QueueManagementPanel({ isOpen, onClose }: QueueManagemen
                 <button
                   onClick={handleRetryFailed}
                   disabled={isLoading}
-                  className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 disabled:bg-gray-400 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+                  className="px-4 py-2 bg-brand-warning hover:bg-brand-warning/90 disabled:bg-gray-400 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
                 >
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />

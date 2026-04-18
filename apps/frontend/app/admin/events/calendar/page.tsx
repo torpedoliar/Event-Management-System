@@ -394,8 +394,8 @@ export default function EventCalendarPage() {
                         className={`
                           relative min-h-[80px] md:min-h-[100px] p-1 md:p-2 rounded-lg border transition-all text-left cursor-pointer group
                           ${day.isCurrentMonth ? 'bg-white/5' : 'bg-transparent'}
-                          ${day.isToday ? 'border-blue-500/50 ring-1 ring-blue-500/30' : 'border-white/10'}
-                          ${isSelected ? 'border-purple-500/50 ring-2 ring-purple-500/30 bg-brand-accent/10' : ''}
+                          ${day.isToday ? 'border-brand-primary/50 ring-1 ring-brand-primary/30' : 'border-white/10'}
+                          ${isSelected ? 'border-brand-accent/50 ring-2 ring-brand-accent/30 bg-brand-accent/10' : ''}
                           ${hasEvents ? 'hover:bg-white/10' : 'hover:bg-white/5'}
                         `}
                       >
@@ -415,7 +415,7 @@ export default function EventCalendarPage() {
                               className={`
                                 text-[10px] md:text-xs px-1 py-0.5 rounded truncate
                                 ${event.isActive 
-                                  ? 'bg-brand-success/30 text-brand-success border border-emerald-500/30' 
+                                  ? 'bg-brand-success/30 text-brand-success border border-brand-success/30' 
                                   : isEventPast(event.date)
                                     ? 'bg-gray-500/20 text-gray-400'
                                     : 'bg-brand-primary/20 text-brand-primarySoft'
@@ -453,7 +453,7 @@ export default function EventCalendarPage() {
               {/* Legend */}
               <div className="flex flex-wrap items-center gap-4 mt-4 pt-4 border-t border-white/10 text-xs">
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded bg-brand-success/30 border border-emerald-500/30" />
+                  <div className="w-3 h-3 rounded bg-brand-success/30 border border-brand-success/30" />
                   <span className="text-white/60">Event Aktif</span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -488,7 +488,7 @@ export default function EventCalendarPage() {
                           className={`
                             p-3 rounded-lg border transition-all
                             ${event.isActive 
-                              ? 'bg-brand-success/10 border-emerald-500/30' 
+                              ? 'bg-brand-success/10 border-brand-success/30' 
                               : 'bg-white/5 border-white/10 hover:bg-white/10'
                             }
                           `}
@@ -596,7 +596,7 @@ export default function EventCalendarPage() {
                         className={`
                           p-2 rounded-lg border text-sm
                           ${event.isActive 
-                            ? 'bg-brand-success/10 border-emerald-500/30 text-brand-success' 
+                            ? 'bg-brand-success/10 border-brand-success/30 text-brand-success' 
                             : 'bg-white/5 border-white/10 text-white/70'
                           }
                         `}

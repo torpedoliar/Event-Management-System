@@ -14,18 +14,18 @@ interface CompanyStatsChartProps {
     stats: CompanyStats[];
 }
 
-// Modern Palette for many items
+// Brand-aligned Warm Luxury Palette
 const COLORS = [
-    '#34d399', // Emerald-400
-    '#60a5fa', // Blue-400
-    '#f472b6', // Pink-400
-    '#fbbf24', // Amber-400
-    '#a78bfa', // Violet-400
-    '#2dd4bf', // Teal-400
-    '#fb7185', // Rose-400
-    '#c084fc', // Purple-400
-    '#818cf8', // Indigo-400
-    '#e879f9', // Fuchsia-400
+    '#D4A853', // Warm Gold (brand-primary)
+    '#C67D5A', // Rose Copper (brand-accent)
+    '#5B9A6F', // Sage Green (brand-success)
+    '#E8A539', // Amber (brand-warning)
+    '#5B7FA5', // Steel Blue (brand-info)
+    '#A67C52', // Bronze
+    '#8B6F4E', // Tawny
+    '#C0544E', // Muted Crimson (brand-danger)
+    '#7A9E7E', // Muted Sage
+    '#B8860B', // Dark Goldenrod
 ];
 
 export default function CompanyStatsChart({ stats }: CompanyStatsChartProps) {
@@ -81,7 +81,7 @@ export default function CompanyStatsChart({ stats }: CompanyStatsChartProps) {
                                                 <div className="mt-2 pt-1 border-t border-white/10">
                                                     <div className="w-full bg-white/10 rounded-full h-1.5">
                                                         <div
-                                                            className="bg-emerald-500 h-1.5 rounded-full transition-all duration-500"
+                                                            className="bg-brand-success h-1.5 rounded-full transition-all duration-500"
                                                             style={{ width: `${percentage}%` }}
                                                         />
                                                     </div>

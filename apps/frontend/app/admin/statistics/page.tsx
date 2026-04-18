@@ -152,7 +152,7 @@ export default function StatisticsPage() {
                                 <ArrowLeft size={20} />
                             </Link>
                             <div className="flex items-center gap-3">
-                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg">
+                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center shadow-lg">
                                     <BarChart3 size={24} className="text-white" />
                                 </div>
                                 <div>
@@ -260,7 +260,7 @@ export default function StatisticsPage() {
                             {souvenirStats && souvenirStats.totalSouvenirs > 0 && (
                                 <>
                                     <div className="flex items-center gap-3 mt-8 mb-4">
-                                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg">
+                                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center shadow-lg">
                                             <Gift size={20} className="text-white" />
                                         </div>
                                         <h2 className="text-xl font-bold text-white">Statistik Souvenir</h2>
@@ -305,7 +305,7 @@ export default function StatisticsPage() {
                                                     </div>
                                                     <div className="h-3 bg-white/10 rounded-full overflow-hidden">
                                                         <div 
-                                                            className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-500"
+                                                            className="h-full bg-gradient-to-r from-brand-primary to-brand-accent transition-all duration-500"
                                                             style={{ width: `${s.quantity > 0 ? (s.taken / s.quantity) * 100 : 0}%` }}
                                                         />
                                                     </div>

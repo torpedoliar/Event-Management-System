@@ -14,10 +14,10 @@ type GuestCategory = 'REGULAR' | 'VIP' | 'VVIP' | 'MEDIA' | 'SPONSOR' | 'SPEAKER
 
 const CATEGORY_OPTIONS: { value: GuestCategory; label: string; color: string }[] = [
   { value: 'REGULAR', label: 'Regular', color: 'text-gray-300' },
-  { value: 'VIP', label: 'VIP', color: 'text-amber-300' },
-  { value: 'VVIP', label: 'VVIP', color: 'text-purple-300' },
-  { value: 'MEDIA', label: 'Media', color: 'text-blue-300' },
-  { value: 'SPONSOR', label: 'Sponsor', color: 'text-emerald-300' },
+  { value: 'VIP', label: 'VIP', color: 'text-brand-warning' },
+  { value: 'VVIP', label: 'VVIP', color: 'text-brand-accent' },
+  { value: 'MEDIA', label: 'Media', color: 'text-brand-info' },
+  { value: 'SPONSOR', label: 'Sponsor', color: 'text-brand-success' },
   { value: 'SPEAKER', label: 'Speaker', color: 'text-rose-300' },
   { value: 'ORGANIZER', label: 'Organizer', color: 'text-cyan-300' },
 ];
@@ -197,7 +197,7 @@ export default function EditGuestPage() {
                   id="category"
                   value={guest.category || 'REGULAR'}
                   onChange={(e) => setGuest({ ...guest!, category: e.target.value as GuestCategory })}
-                  className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-white focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary"
                 >
                   {CATEGORY_OPTIONS.map((opt) => (
                     <option key={opt.value} value={opt.value} className="bg-brand-secondary text-brand-surface">

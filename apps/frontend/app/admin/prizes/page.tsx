@@ -203,7 +203,7 @@ export default function PrizesPage() {
                                                 {p.winners.length} / {p.quantity} Pemenang
                                             </span>
                                             {p.allowMultipleWins && (
-                                                <span className="px-2 py-0.5 rounded-full bg-brand-accent/20 text-brand-accent text-xs font-medium border border-purple-500/30">
+                                                <span className="px-2 py-0.5 rounded-full bg-brand-accent/20 text-brand-accent text-xs font-medium border border-brand-accent/30">
                                                     <RefreshCw size={10} className="inline mr-1" />
                                                     Bisa Menang Ulang
                                                 </span>
@@ -217,11 +217,11 @@ export default function PrizesPage() {
                                                 <div className="text-xs font-medium text-brand-textMuted mb-2 uppercase tracking-wider">Pemenang Terpilih</div>
                                                 <div className="flex flex-wrap gap-2">
                                                     {p.winners.map((w: any) => (
-                                                        <div key={w.id} className="flex items-center gap-2 bg-brand-success/10 border border-emerald-500/20 rounded-lg px-3 py-1.5">
+                                                        <div key={w.id} className="flex items-center gap-2 bg-brand-success/10 border border-brand-success/20 rounded-lg px-3 py-1.5">
                                                             <div className="w-6 h-6 rounded-full bg-brand-success/20 flex items-center justify-center text-xs font-bold text-brand-success">
                                                                 {w.queueNumber}
                                                             </div>
-                                                            <div className="text-sm text-emerald-100">
+                                                            <div className="text-sm text-brand-surface/80">
                                                                 {w.name}
                                                                 {w.division && <span className="opacity-70 text-xs ml-1">({w.division})</span>}
                                                             </div>
@@ -235,7 +235,7 @@ export default function PrizesPage() {
                                     <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                         <button
                                             onClick={() => deletePrize(p.id)}
-                                            className="p-2 rounded-lg text-brand-danger hover:bg-red-400/10 transition-colors"
+                                            className="p-2 rounded-lg text-brand-danger hover:bg-brand-danger/10 transition-colors"
                                             title="Hapus Hadiah"
                                         >
                                             <Trash2 size={18} />
@@ -243,7 +243,7 @@ export default function PrizesPage() {
                                         {p.winners.length > 0 && (
                                             <button
                                                 onClick={() => resetPrize(p.id)}
-                                                className="p-2 rounded-lg text-brand-warning hover:bg-amber-400/10 transition-colors"
+                                                className="p-2 rounded-lg text-brand-warning hover:bg-brand-warning/10 transition-colors"
                                                 title="Reset Pemenang"
                                             >
                                                 <Gift size={18} />

@@ -299,7 +299,7 @@ export default function UsersManagementPage() {
                               type="checkbox"
                               checked={formData.isActive}
                               onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                              className="w-5 h-5 rounded border-white/30 bg-white/10 text-blue-500"
+                              className="w-5 h-5 rounded border-white/30 bg-white/10 text-brand-primary"
                             />
                             <span className="text-white/80">Aktif</span>
                           </label>

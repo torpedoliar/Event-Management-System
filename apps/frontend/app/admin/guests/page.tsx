@@ -16,9 +16,9 @@ type RegistrationSource = 'MANUAL' | 'IMPORT' | 'WALKIN';
 const CATEGORY_CONFIG: Record<GuestCategory, { label: string; color: string; bg: string; border: string }> = {
   REGULAR: { label: 'Regular', color: 'text-gray-300', bg: 'bg-gray-500/20', border: 'border-gray-500/30' },
   VIP: { label: 'VIP', color: 'text-brand-warning', bg: 'bg-brand-warning/20', border: 'border-brand-warning/30' },
-  VVIP: { label: 'VVIP', color: 'text-brand-accent', bg: 'bg-brand-accent/20', border: 'border-purple-500/30' },
+  VVIP: { label: 'VVIP', color: 'text-brand-accent', bg: 'bg-brand-accent/20', border: 'border-brand-accent/30' },
   MEDIA: { label: 'Media', color: 'text-brand-primarySoft', bg: 'bg-brand-primary/20', border: 'border-brand-primary/30' },
-  SPONSOR: { label: 'Sponsor', color: 'text-brand-success', bg: 'bg-brand-success/20', border: 'border-emerald-500/30' },
+  SPONSOR: { label: 'Sponsor', color: 'text-brand-success', bg: 'bg-brand-success/20', border: 'border-brand-success/30' },
   SPEAKER: { label: 'Speaker', color: 'text-rose-300', bg: 'bg-rose-500/20', border: 'border-rose-500/30' },
   ORGANIZER: { label: 'Organizer', color: 'text-cyan-300', bg: 'bg-cyan-500/20', border: 'border-cyan-500/30' },
 };
@@ -716,7 +716,7 @@ export default function GuestsListPage() {
                       type="checkbox"
                       checked={!!(resp?.data && resp.data.length > 0 && selectedIds.size === resp.data.length)}
                       onChange={toggleSelectAll}
-                      className="rounded border-white/30 bg-white/10 text-blue-500 focus:ring-blue-500"
+                      className="rounded border-white/30 bg-white/10 text-brand-primary focus:ring-brand-primary"
                     />
                   </th>
                   <th className="px-2 py-3">No</th>
@@ -747,7 +747,7 @@ export default function GuestsListPage() {
                           type="checkbox"
                           checked={selectedIds.has(g.id)}
                           onChange={() => toggleSelect(g.id)}
-                          className="rounded border-white/30 bg-white/10 text-blue-500 focus:ring-blue-500"
+                          className="rounded border-white/30 bg-white/10 text-brand-primary focus:ring-brand-primary"
                         />
                       </td>
                       <td className="px-2 py-3 text-xs text-white/70 align-middle">{g.queueNumber}</td>
@@ -764,7 +764,7 @@ export default function GuestsListPage() {
                       <td className="px-2 py-3 text-white font-medium align-middle">
                         {g.name}
                         {g.notes && (
-                          <div className="text-xs text-brand-warning/80 mt-1 px-2 py-1 bg-brand-warning/10 rounded border border-amber-500/20 max-w-xs truncate">
+                          <div className="text-xs text-brand-warning/80 mt-1 px-2 py-1 bg-brand-warning/10 rounded border border-brand-warning/20 max-w-xs truncate">
                             {g.notes}
                           </div>
                         )}
@@ -800,7 +800,7 @@ export default function GuestsListPage() {
                         <td className="px-2 py-3 align-middle text-center">
                           {g.souvenirTakes && g.souvenirTakes.length > 0 ? (
                             <div className="flex flex-col items-center gap-1">
-                              <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-brand-accent/20 text-brand-accent border border-purple-500/30">
+                              <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-brand-accent/20 text-brand-accent border border-brand-accent/30">
                                 <Package size={12} />
                                 {g.souvenirTakes.length}
                               </span>
@@ -809,7 +809,7 @@ export default function GuestsListPage() {
                               </span>
                             </div>
                           ) : g.souvenirTaken ? (
-                            <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-brand-accent/20 text-brand-accent border border-purple-500/30">
+                            <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-brand-accent/20 text-brand-accent border border-brand-accent/30">
                               <Gift size={12} />
                               Ya
                             </span>
@@ -825,7 +825,7 @@ export default function GuestsListPage() {
                               <span
                                 key={idx}
                                 className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${pw.collection
-                                  ? 'bg-brand-success/20 text-brand-success border border-emerald-500/30'
+                                  ? 'bg-brand-success/20 text-brand-success border border-brand-success/30'
                                   : 'bg-brand-warning/20 text-brand-warning border border-brand-warning/30'
                                   }`}
                                 title={`${pw.prize.name} - ${pw.collection ? 'Sudah diambil' : 'Belum diambil'}`}
@@ -840,7 +840,7 @@ export default function GuestsListPage() {
                         )}
                       </td>
                       <td className="px-2 py-3 align-middle text-center">
-                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${g.checkedIn ? 'bg-brand-success/20 text-brand-success border border-emerald-500/30' : 'bg-brand-warning/20 text-brand-warning border border-brand-warning/30'}`}>
+                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${g.checkedIn ? 'bg-brand-success/20 text-brand-success border border-brand-success/30' : 'bg-brand-warning/20 text-brand-warning border border-brand-warning/30'}`}>
                           {g.checkedIn ? 'Checked-in' : 'Belum'}
                         </span>
                       </td>
@@ -863,7 +863,7 @@ export default function GuestsListPage() {
                           </button>
                           <a
                             title="Edit Tamu"
-                            className="p-1.5 rounded-lg text-brand-primary hover:bg-blue-400/10 hover:text-brand-primarySoft transition-colors"
+                            className="p-1.5 rounded-lg text-brand-primary hover:bg-brand-primary/10 hover:text-brand-primarySoft transition-colors"
                             href={`/admin/guests/${g.id}`}
                           >
                             <Edit size={18} />
@@ -879,7 +879,7 @@ export default function GuestsListPage() {
                           )}
                           <button
                             title="Hapus Tamu"
-                            className="p-1.5 rounded-lg text-brand-danger hover:bg-red-400/10 hover:text-brand-danger transition-colors disabled:opacity-50"
+                            className="p-1.5 rounded-lg text-brand-danger hover:bg-brand-danger/10 hover:text-brand-danger transition-colors disabled:opacity-50"
                             disabled={busyDeleteId === g.id}
                             onClick={() => removeGuest(g.id)}
                           >
@@ -1012,7 +1012,7 @@ export default function GuestsListPage() {
                 </p>
               </div>
 
-              <div className="mb-4 p-3 rounded-lg bg-brand-warning/10 border border-amber-500/20">
+              <div className="mb-4 p-3 rounded-lg bg-brand-warning/10 border border-brand-warning/20">
                 <p className="text-sm text-brand-warning flex items-start gap-2">
                   <AlertTriangle size={16} className="mt-0.5 flex-shrink-0" />
                   <span>
