@@ -539,8 +539,7 @@ export default function GuestsListPage() {
           </Button>
           <Button
             size="sm"
-            variant="ghost"
-            className="text-brand-primary hover:text-brand-primarySoft hover:bg-brand-primary/10"
+            variant="secondary"
             onClick={async () => {
               try {
                 setError(null);

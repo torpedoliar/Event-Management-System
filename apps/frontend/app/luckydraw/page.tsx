@@ -212,14 +212,6 @@ export default function LuckyDrawPage() {
                                 </option>
                             ))}
                         </select>
-                        
-                        <button
-                            onClick={() => setShowHistory(true)}
-                            className="bg-brand-secondary/40 hover:bg-brand-secondary/60 border border-brand-primary/20 text-brand-primarySoft text-xl rounded-full px-8 py-4 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-xl transition-all flex items-center gap-3 font-mono tracking-widest uppercase shadow-[0_0_30px_rgba(0,0,0,0.5)]"
-                        >
-                            <History size={24} />
-                            RIWAYAT
-                        </button>
                     </div>
                 </div>
 
@@ -236,25 +228,27 @@ export default function LuckyDrawPage() {
                         )}
 
                         {/* Display Area */}
-                        <div className="w-full max-w-3xl aspect-[21/9] bg-black/60 rounded-3xl border border-brand-primary/30 flex flex-col items-center justify-center p-8 relative overflow-hidden mb-12 shadow-[inset_0_0_100px_rgba(0,0,0,0.8)]">
+                        <div className="w-full max-w-3xl min-h-[400px] bg-black/60 rounded-3xl border border-brand-primary/30 flex flex-col items-center justify-center p-8 relative overflow-hidden mb-12 shadow-[inset_0_0_100px_rgba(0,0,0,0.8)]">
                             {displayCandidate ? (
-                                <div className="text-center animate-in zoom-in duration-300 w-full">
+                                <div className="text-center animate-in zoom-in duration-300 w-full flex flex-col justify-center items-center h-full">
                                     {displayCandidate.photoUrl ? (
                                         <img
                                             src={toApiUrl(displayCandidate.photoUrl)}
                                             alt="Winner"
-                                            className="w-40 h-40 rounded-full object-cover border-[6px] border-brand-primary mx-auto mb-8 shadow-[0_0_40px_rgba(212,168,83,0.4)]"
+                                            className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-[6px] border-brand-primary mx-auto mb-6 shadow-[0_0_40px_rgba(212,168,83,0.4)]"
                                         />
                                     ) : (
-                                        <div className="w-40 h-40 rounded-full bg-gradient-to-br from-brand-secondary to-black flex items-center justify-center text-5xl font-mono font-bold text-brand-primarySoft mx-auto mb-8 shadow-[0_0_40px_rgba(212,168,83,0.4)] border-[6px] border-brand-primary">
+                                        <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-brand-secondary to-black flex items-center justify-center text-4xl md:text-5xl font-mono font-bold text-brand-primarySoft mx-auto mb-6 shadow-[0_0_40px_rgba(212,168,83,0.4)] border-[6px] border-brand-primary">
                                             {displayCandidate.queueNumber}
                                         </div>
                                     )}
-                                    <h3 className="text-5xl md:text-7xl font-heading font-bold text-brand-surface mb-4 tracking-wide text-glow">{displayCandidate.name}</h3>
-                                    <p className="text-2xl font-mono text-brand-primary/80 tracking-widest uppercase">
-                                        {displayCandidate.company || 'Tamu Undangan'}
-                                        {displayCandidate.division && <span className="opacity-50 ml-3">({displayCandidate.division})</span>}
-                                    </p>
+                                    <h3 className="text-4xl md:text-6xl font-heading font-bold text-brand-surface mb-3 tracking-wide text-glow line-clamp-2 leading-tight">{displayCandidate.name}</h3>
+                                    <div className="bg-brand-primary/10 border border-brand-primary/20 px-6 py-2 rounded-full mt-2">
+                                        <p className="text-xl md:text-2xl font-mono text-brand-primary/90 tracking-widest uppercase">
+                                            {displayCandidate.company || 'Tamu Undangan'}
+                                            {displayCandidate.division && <span className="opacity-50 ml-3">({displayCandidate.division})</span>}
+                                        </p>
+                                    </div>
                                 </div>
                             ) : (
                                 <div className="text-center text-brand-primary/20">
@@ -290,6 +284,16 @@ export default function LuckyDrawPage() {
                         </button>
 
                     </div>
+                </div>
+                {/* Riwayat Button Component */}
+                <div className="mt-8 flex justify-center">
+                    <button
+                        onClick={() => setShowHistory(true)}
+                        className="bg-brand-secondary/40 hover:bg-brand-secondary/60 border border-brand-primary/20 text-brand-primarySoft text-xl rounded-full px-8 py-4 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-xl transition-all flex items-center gap-3 font-mono tracking-widest uppercase shadow-[0_0_30px_rgba(0,0,0,0.5)]"
+                    >
+                        <History size={24} />
+                        RIWAYAT
+                    </button>
                 </div>
 
                 {/* Winners List for this Prize */}

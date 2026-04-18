@@ -125,10 +125,10 @@ export default function DashboardPage() {
             <div className="my-auto relative">
               <div className="absolute -inset-20 bg-brand-primary/5 rounded-full blur-[100px] -z-10 animate-pulse" />
               <div className="text-sm font-mono text-brand-primary uppercase tracking-[0.3em] mb-4">Total Kehadiran</div>
-              <div className="text-[6rem] lg:text-[10rem] leading-none font-heading font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-brand-surface to-brand-primarySoft drop-shadow-[0_10px_30px_rgba(212,168,83,0.2)] tracking-tight">
+              <div className="text-[5rem] lg:text-[8rem] leading-none font-heading font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-brand-surface to-brand-primarySoft drop-shadow-[0_10px_30px_rgba(212,168,83,0.2)] tracking-tight">
                 {statsLoading ? '-' : stats?.checkedIn || 0}
               </div>
-              <div className="text-3xl lg:text-5xl font-heading text-brand-surface/30 mt-2 tracking-widest">
+              <div className="text-2xl lg:text-4xl font-heading text-brand-surface/30 mt-2 tracking-widest">
                 / {statsLoading ? '-' : stats?.total || 0} TERDAFTAR
               </div>
               
@@ -145,7 +145,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Chart Area */}
-            <div className="w-full max-w-xl opacity-70 hover:opacity-100 transition-opacity duration-500">
+            <div className="w-full max-w-xl opacity-70 hover:opacity-100 transition-opacity duration-500 mt-8">
               {stats && (
                 <Suspense fallback={<SkeletonCard />}>
                   <GuestStatsChart stats={stats} />
@@ -155,7 +155,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Right Sidebar (Magazine Style Form & Portal) */}
-          <div className="w-full lg:w-[450px] bg-black/40 backdrop-blur-3xl border-l border-brand-primary/20 p-8 flex flex-col gap-10 overflow-y-auto relative z-20 shadow-[-30px_0_60px_rgba(0,0,0,0.5)] animate-in fade-in slide-in-from-right-8 duration-700 delay-200 fill-mode-both">
+          <div className="w-full lg:w-[400px] xl:w-[450px] bg-black/40 backdrop-blur-3xl border-l border-brand-primary/20 p-6 lg:p-8 flex flex-col gap-8 overflow-y-auto relative z-20 shadow-[-30px_0_60px_rgba(0,0,0,0.5)] animate-in fade-in slide-in-from-right-8 duration-700 delay-200 fill-mode-both">
             
             {/* Quick Actions Matrix */}
             <div className="grid grid-cols-2 gap-3 pb-8 border-b border-white/10">
