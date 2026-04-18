@@ -8,5 +8,6 @@ import { EventsModule } from '../events/events.module';
     imports: [EventsModule],
     controllers: [SouvenirsController],
     providers: [SouvenirsService, PrismaService],
+    exports: [SouvenirsService]
 })
 export class SouvenirsModule { }

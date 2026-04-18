@@ -17,6 +17,18 @@ export interface PendingCheckin {
   updatedAt: string;
 }
 
+export interface PendingSouvenir {
+  id: string;
+  guestIdentifier: string;
+  souvenirId: string;
+  clientTimestamp: string;
+  status: 'pending' | 'syncing' | 'synced' | 'failed';
+  retryCount: number;
+  error?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface StationConfig {
   stationId: string;
   stationName: string;
@@ -34,10 +46,20 @@ export interface LocalGuest {
   lastCheckinAt?: string;
   photoUrl?: string;
   updatedAt: string;
+  souvenirTaken?: boolean;
+}
+
+export interface LocalSouvenirCache {
+  id: string;
+  name: string;
+  quantity: number;
+  takenCount: number;
+  remaining: number;
+  updatedAt: string;
 }
 
 const DB_NAME = 'guest-checkin-db';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 class IndexedDBService {
   private db: IDBPDatabase | null = null;
@@ -75,6 +97,20 @@ class IndexedDBService {
           if (!db.objectStoreNames.contains('syncLog')) {
             const syncStore = db.createObjectStore('syncLog', { keyPath: 'id' });
             syncStore.createIndex('timestamp', 'timestamp', { unique: false });
+          }
+
+          // Version 2 additions: Pending Souvenirs and Souvenir Cache
+          if (!db.objectStoreNames.contains('pendingSouvenirs')) {
+            const souvStore = db.createObjectStore('pendingSouvenirs', { keyPath: 'id' });
+            souvStore.createIndex('guestIdentifier', 'guestIdentifier', { unique: false });
+            souvStore.createIndex('souvenirId', 'souvenirId', { unique: false });
+            souvStore.createIndex('clientTimestamp', 'clientTimestamp', { unique: false });
+            souvStore.createIndex('status', 'status', { unique: false });
+            souvStore.createIndex('createdAt', 'createdAt', { unique: false });
+          }
+
+          if (!db.objectStoreNames.contains('souvenirCache')) {
+            db.createObjectStore('souvenirCache', { keyPath: 'id' });
           }
         }
       });
@@ -269,12 +305,117 @@ class IndexedDBService {
     return 0;
   }
 
+  // ==================== PENDING SOUVENIRS ====================
+
+  async addPendingSouvenir(take: Omit<PendingSouvenir, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
+    await this.init();
+    const id = crypto.randomUUID();
+    const now = new Date().toISOString();
+
+    await this.db!.add('pendingSouvenirs', {
+      ...take,
+      id,
+      createdAt: now,
+      updatedAt: now
+    });
+
+    return id;
+  }
+
+  async getPendingSouvenirs(): Promise<PendingSouvenir[]> {
+    await this.init();
+    const all = await this.db!.getAll('pendingSouvenirs');
+    return all
+      .filter(c => c.status === 'pending' || c.status === 'failed')
+      .sort((a, b) => new Date(a.clientTimestamp).getTime() - new Date(b.clientTimestamp).getTime());
+  }
+
+  async updatePendingSouvenir(id: string, updates: Partial<PendingSouvenir>): Promise<void> {
+    await this.init();
+    const existing = await this.db!.get('pendingSouvenirs', id);
+    if (!existing) return;
+
+    await this.db!.put('pendingSouvenirs', {
+      ...existing,
+      ...updates,
+      updatedAt: new Date().toISOString()
+    });
+  }
+
+  async deletePendingSouvenir(id: string): Promise<void> {
+    await this.init();
+    await this.db!.delete('pendingSouvenirs', id);
+  }
+
+  async clearSyncedSouvenirs(): Promise<void> {
+    await this.init();
+    const tx = this.db!.transaction('pendingSouvenirs', 'readwrite');
+    const store = tx.objectStore('pendingSouvenirs');
+    let cursor = await store.openCursor();
+
+    while (cursor) {
+      if (cursor.value.status === 'synced') {
+        cursor.delete();
+      }
+      cursor = await cursor.continue();
+    }
+    await tx.done;
+  }
+
+  async getPendingSouvenirCount(): Promise<number> {
+    await this.init();
+    const pending = await this.db!.countFromIndex('pendingSouvenirs', 'status', 'pending');
+    const failed = await this.db!.countFromIndex('pendingSouvenirs', 'status', 'failed');
+    return pending + failed;
+  }
+
+  // ==================== SOUVENIR CACHE ====================
+
+  async cacheSouvenir(souvenir: LocalSouvenirCache): Promise<void> {
+    await this.init();
+    await this.db!.put('souvenirCache', souvenir);
+  }
+
+  async cacheSouvenirsBulk(souvenirs: LocalSouvenirCache[]): Promise<void> {
+    await this.init();
+    const tx = this.db!.transaction('souvenirCache', 'readwrite');
+    const store = tx.objectStore('souvenirCache');
+    for (const souvenir of souvenirs) {
+      store.put(souvenir);
+    }
+    await tx.done;
+  }
+
+  async getAllCachedSouvenirs(): Promise<LocalSouvenirCache[]> {
+    await this.init();
+    return this.db!.getAll('souvenirCache');
+  }
+
+  async updateCachedSouvenir(id: string, updates: Partial<LocalSouvenirCache>): Promise<void> {
+    await this.init();
+    const existing = await this.db!.get('souvenirCache', id);
+    if (!existing) return;
+
+    await this.db!.put('souvenirCache', {
+      ...existing,
+      ...updates,
+      updatedAt: new Date().toISOString()
+    });
+  }
+
+  async clearSouvenirCache(): Promise<void> {
+    await this.init();
+    await this.db!.clear('souvenirCache');
+  }
+
   async clearAll(): Promise<void> {
     await this.init();
     await this.db!.clear('pendingCheckins');
     await this.db!.clear('localGuests');
     await this.db!.clear('stationConfig');
     await this.db!.clear('syncLog');
+    await this.db!.clear('pendingSouvenirs');
+    await this.db!.clear('souvenirCache');
   }
 }
 

@@ -406,4 +406,105 @@ export class SouvenirsService {
 
         return { guest, take };
     }
+
+    async syncBatchFromStation(
+        stationId: string,
+        lastSyncDate: Date | null,
+        pendingTakes: Array<{
+            guestIdentifier: string;
+            souvenirId: string;
+            clientTimestamp: string;
+        }>,
+        stationName?: string
+    ) {
+        const active = await this.events.getActive();
+        if (!active) return { successCount: 0, conflictCount: 0, processed: 0, results: [], serverTimestamp: new Date().toISOString() };
+
+        let successCount = 0;
+        let conflictCount = 0;
+        const results: any[] = [];
+        const serverTimestamp = new Date().toISOString();
+
+        // Process sequentially to prevent race conditions on quantity
+        for (const item of pendingTakes) {
+            try {
+                // Find guest
+                const guest = await this.prisma.guest.findFirst({
+                    where: {
+                        eventId: active.id,
+                        OR: [
+                            { guestId: item.guestIdentifier },
+                            { id: item.guestIdentifier }
+                        ]
+                    }
+                });
+
+                if (!guest) {
+                    conflictCount++;
+                    results.push({ clientTimestamp: item.clientTimestamp, success: false, conflict: true, reason: 'Guest not found' });
+                    continue;
+                }
+
+                // Check existing take (Idempotency)
+                const existing = await this.prisma.souvenirTake.findUnique({
+                    where: { guestId_souvenirId: { guestId: guest.id, souvenirId: item.souvenirId } }
+                });
+
+                if (existing) {
+                    successCount++;
+                    results.push({ clientTimestamp: item.clientTimestamp, success: true, conflict: false, reason: 'Already taken' });
+                    continue;
+                }
+
+                // Check stock
+                const souvenir = await this.prisma.souvenir.findUnique({
+                    where: { id: item.souvenirId },
+                    include: { _count: { select: { takes: true } } }
+                });
+
+                if (!souvenir) {
+                    conflictCount++;
+                    results.push({ clientTimestamp: item.clientTimestamp, success: false, conflict: true, reason: 'Souvenir not found' });
+                    continue;
+                }
+
+                if (souvenir._count.takes >= souvenir.quantity) {
+                    conflictCount++;
+                    results.push({ clientTimestamp: item.clientTimestamp, success: false, conflict: true, reason: 'Out of stock' });
+                    continue;
+                }
+
+                // Create take and update guest flag in a transaction
+                await this.prisma.$transaction([
+                    this.prisma.souvenirTake.create({
+                        data: {
+                            guestId: guest.id,
+                            souvenirId: item.souvenirId,
+                            takenByName: stationName || 'Offline Station'
+                        }
+                    }),
+                    this.prisma.guest.update({
+                        where: { id: guest.id },
+                        data: { souvenirTaken: true }
+                    })
+                ]);
+
+                successCount++;
+                results.push({ clientTimestamp: item.clientTimestamp, success: true });
+
+            } catch (error: any) {
+                conflictCount++;
+                results.push({ clientTimestamp: item.clientTimestamp, success: false, conflict: true, reason: error.message });
+            }
+        }
+
+        return {
+            success: true,
+            serverTimestamp,
+            processed: pendingTakes.length,
+            successCount,
+            conflictCount,
+            results
+        };
+    }
 }

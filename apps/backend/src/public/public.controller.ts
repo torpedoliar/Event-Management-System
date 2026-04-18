@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post, Query, Res, Headers, UnauthorizedException } from '@nestjs/common';
 import { SkipThrottle } from '@nestjs/throttler';
 import { GuestsService } from '../guests/guests.service';
+import { SouvenirsService } from '../souvenirs/souvenirs.service';
 import { Response } from 'express';
 import { onEvent, emitEvent } from '../common/sse';
 import { JwtService } from '@nestjs/jwt';
@@ -10,6 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 export class PublicController {
   constructor(
     private readonly guests: GuestsService,
+    private readonly souvenirs: SouvenirsService,
     private readonly jwtService: JwtService,
   ) { }
 
@@ -137,6 +139,48 @@ export class PublicController {
           serverTimestamp: result.serverTimestamp
         } 
       });
+    }
+
+    return result;
+  }
+
+  @Post('souvenirs/sync-batch')
+  async syncSouvenirBatch(
+    @Body('stationId') stationId: string,
+    @Body('lastSyncAt') lastSyncAt?: string,
+    @Body('pendingTakes') pendingTakes?: Array<{
+      guestIdentifier: string;
+      souvenirId: string;
+      clientTimestamp: string;
+    }>,
+    @Body('stationName') stationName?: string,
+  ) {
+    const lastSyncDate = lastSyncAt ? new Date(lastSyncAt) : null;
+    const takes = pendingTakes || [];
+
+    const result = await this.souvenirs.syncBatchFromStation(
+      stationId,
+      lastSyncDate,
+      takes,
+      stationName
+    );
+
+    // Emit distinct sync_complete event with counts
+    if (result.successCount > 0 || result.conflictCount > 0) {
+      emitEvent({ 
+        type: 'sync_complete', 
+        data: { 
+          stationId,
+          stationName,
+          processed: result.processed,
+          successCount: result.successCount,
+          conflictCount: result.conflictCount,
+          serverTimestamp: result.serverTimestamp,
+          type: 'souvenir'
+        } 
+      });
+      // Emit souvenir_given so UI refreshes inventory
+      emitEvent({ type: 'souvenir_given', data: {} });
     }
 
     return result;

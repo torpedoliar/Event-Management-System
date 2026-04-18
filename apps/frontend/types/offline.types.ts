@@ -22,6 +22,18 @@ export interface PendingCheckin {
   updatedAt: string;
 }
 
+export interface PendingSouvenir {
+  id: string;
+  guestIdentifier: string;
+  souvenirId: string;
+  clientTimestamp: string;
+  status: 'pending' | 'syncing' | 'synced' | 'failed';
+  retryCount: number;
+  error?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface SyncBatchRequest {
   stationId: string;
   stationName?: string;

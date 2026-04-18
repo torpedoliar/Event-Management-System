@@ -4,6 +4,12 @@ import { apiBase, toApiUrl, apiFetch, parseErrorMessage } from "../../lib/api";
 import { Html5Qrcode } from "html5-qrcode";
 import { Search, QrCode, Loader2, CheckCircle, Clock, Users, X, Gift, XCircle, Trophy, Package, ChevronDown, ChevronUp, UserPlus, Settings, Radio, UserCheck, AlertTriangle } from 'lucide-react';
 import { useSSE } from "../../lib/sse-context";
+import { indexedDBService, LocalGuest } from "../../lib/indexeddb";
+import { offlineSyncService } from "../../lib/offline-sync.service";
+import { connectionStatusService } from "../../lib/connection-status";
+import ConnectionStatusIndicator from "../../components/ConnectionStatusIndicator";
+import QueueManagementPanel from "../../components/QueueManagementPanel";
+import StationSetupModal from "../../components/StationSetupModal";
 
 type EventConfig = {
     id: string;
@@ -105,6 +111,13 @@ export default function SouvenirPage() {
     const [requireCheckinForSouvenir, setRequireCheckinForSouvenir] = useState(true);
     const [savingSettings, setSavingSettings] = useState(false);
     const [alreadyTakenInfo, setAlreadyTakenInfo] = useState<{ guest: Guest; takes: SouvenirTakeInfo[] } | null>(null);
+    
+    // Offline mode state
+    const [showStationSetup, setShowStationSetup] = useState(false);
+    const [showQueuePanel, setShowQueuePanel] = useState(false);
+    const [stationConfig, setStationConfig] = useState<any>(null);
+    const [pendingSouvCount, setPendingSouvCount] = useState(0);
+
     const inputRef = useRef<HTMLInputElement>(null);
     const searchAbortRef = useRef<AbortController | null>(null);
     const debouncedLoadRef = useRef<NodeJS.Timeout | null>(null);
@@ -117,6 +130,47 @@ export default function SouvenirPage() {
             loadSouvenirs();
             debouncedLoadRef.current = null;
         }, 2000);
+    }, []);
+
+    // Initialize offline mode on mount
+    useEffect(() => {
+        const initOfflineMode = async () => {
+            try {
+                // Load station config from IndexedDB
+                const config = await indexedDBService.getStationConfig();
+                if (config) {
+                    setStationConfig(config);
+                    // Initialize sync service
+                    await offlineSyncService.init(config.stationId, config.stationName, 30);
+                } else {
+                    // Show station setup on first visit if we're in offline-capable environment
+                    setShowStationSetup(true);
+                }
+            } catch (err) {
+                console.error('Failed to init offline mode:', err);
+            }
+        };
+
+        initOfflineMode();
+
+        // Listen to souvenir queue changes
+        const unsubQueue = offlineSyncService.addSouvenirQueueListener((count) => {
+            setPendingSouvCount(count);
+        });
+
+        // Listen to sync results to refresh data
+        const unsubSync = offlineSyncService.addSouvenirSyncListener((result) => {
+            if (result.successCount > 0) {
+                loadSouvenirs();
+            }
+        });
+
+        // Cleanup on unmount
+        return () => {
+            unsubQueue();
+            unsubSync();
+            offlineSyncService.destroy();
+        };
     }, []);
 
     useEffect(() => {
@@ -180,6 +234,15 @@ export default function SouvenirPage() {
     const loadSouvenirs = async () => {
         setLoadingSouvenirs(true);
         try {
+            if (connectionStatusService.getStatus() !== 'online') {
+                const cached = await indexedDBService.getAllCachedSouvenirs();
+                setSouvenirs(cached as any);
+                const available = cached.find((s) => s.remaining > 0);
+                if (available) setSelectedSouvenir(available.id);
+                setLoadingSouvenirs(false);
+                return;
+            }
+
             const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
             if (!token) return;
             const res = await fetch(`${apiBase()}/souvenirs`, {
@@ -188,12 +251,17 @@ export default function SouvenirPage() {
             if (res.ok) {
                 const data = await res.json();
                 setSouvenirs(data);
+                indexedDBService.cacheSouvenirsBulk(data).catch(() => {});
                 // Auto-select first available souvenir
                 const available = data.find((s: Souvenir) => s.remaining > 0);
                 if (available) setSelectedSouvenir(available.id);
             }
         } catch (e) {
             console.error('Failed to load souvenirs', e);
+            const cached = await indexedDBService.getAllCachedSouvenirs();
+            setSouvenirs(cached as any);
+            const available = cached.find((s) => s.remaining > 0);
+            if (available) setSelectedSouvenir(available.id);
         } finally {
             setLoadingSouvenirs(false);
         }
@@ -420,6 +488,38 @@ export default function SouvenirPage() {
         setProcessing(true);
         setProcessingId(g.id);
         try {
+            if (connectionStatusService.getStatus() !== 'online') {
+                // Offline claiming
+                await offlineSyncService.addPendingSouvenir(g.guestId, souvenirId);
+                
+                const newResults = results.map(r => r.id === g.id ? { ...r, souvenirTaken: true } : r);
+                setResults(newResults);
+                if (selected?.id === g.id) {
+                    setSelected({ ...selected, souvenirTaken: true });
+                }
+
+                // Update local cache
+                await indexedDBService.updateCachedGuest(g.id, { souvenirTaken: true });
+
+                // Optimistically update souvenir count
+                const newSouvenirs = souvenirs.map(s => s.id === souvenirId ? { ...s, remaining: s.remaining - 1, takenCount: s.takenCount + 1 } : s);
+                setSouvenirs(newSouvenirs);
+                indexedDBService.cacheSouvenirsBulk(newSouvenirs as any).catch(() => {});
+
+                setCheckedGuest({ ...g, souvenirTaken: true });
+                addToHistory({ ...g, souvenirTaken: true });
+
+                if (popupTimeoutRef.current) clearTimeout(popupTimeoutRef.current);
+                const ms = cfg?.checkinPopupTimeoutMs ?? 3000;
+                popupTimeoutRef.current = setTimeout(() => {
+                    setCheckedGuest(null);
+                    popupTimeoutRef.current = null;
+                }, ms);
+                
+                setShowSouvenirSelect(false);
+                return;
+            }
+
             const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
             if (!token) throw new Error('Login diperlukan');
 
@@ -548,6 +648,25 @@ export default function SouvenirPage() {
         setCheckedGuest(null);
         setAlreadyTakenInfo(null);
         try {
+            if (connectionStatusService.getStatus() !== 'online') {
+                const cachedGuest = await indexedDBService.getCachedGuestByGuestId(decodedText.trim());
+                if (cachedGuest) {
+                    const guest = cachedGuest as any;
+                    setResults([guest]);
+                    setSelected(guest);
+
+                    if (selectedSouvenir) {
+                        await giveSouvenir(guest, selectedSouvenir);
+                        setQ('');
+                        setTimeout(() => inputRef.current?.focus(), 100);
+                    }
+                } else {
+                    setError('QR Code tidak dikenali (Mode Offline)');
+                    setQ('');
+                }
+                return;
+            }
+
             // 1. Try search by ID/GuestID
             const params = new URLSearchParams();
             params.set('guestId', decodedText);
@@ -622,6 +741,9 @@ export default function SouvenirPage() {
                         <span className="mx-2">•</span>
                         <Radio size={12} className={`${connected ? 'text-brand-success animate-pulse' : 'text-brand-danger'}`} />
                         <span className="text-xs">{connected ? 'Live' : 'Offline'}</span>
+                        <div className="ml-4">
+                            <ConnectionStatusIndicator />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -709,6 +831,19 @@ export default function SouvenirPage() {
                             title="Pengaturan"
                         >
                             <Settings size={24} />
+                        </button>
+
+                        <button
+                            onClick={() => setShowQueuePanel(true)}
+                            className="relative flex items-center gap-2 rounded-lg bg-white/10 border border-white/20 px-4 py-3 text-white hover:bg-white/20 transition-all"
+                            title="Antrean Offline"
+                        >
+                            <Clock size={24} />
+                            {pendingSouvCount > 0 && (
+                                <span className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-brand-danger text-[10px] font-bold text-white shadow-lg animate-bounce">
+                                    {pendingSouvCount}
+                                </span>
+                            )}
                         </button>
                     </div>
                 </div>
@@ -836,7 +971,7 @@ export default function SouvenirPage() {
                                             )}
                                         </div>
                                         <div>
-                                            <div className="font-semibold text-white">
+                                            <div className="font-medium text-white">
                                                 {g.name} <span className="text-white/70 font-mono text-sm">({g.guestId})</span>
                                             </div>
                                             <div className="text-sm text-white/70">
@@ -1084,7 +1219,7 @@ export default function SouvenirPage() {
             {
                 checkedGuest && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                        <div className="w-full max-w-5xl overflow-hidden rounded-xl border border-brand-border bg-brand-secondary/90 text-brand-surface shadow-glass grid grid-cols-1 md:grid-cols-[320px_1fr] animate-in fade-in zoom-in duration-300">
+                        <div className="w-full max-w-4xl rounded-xl border border-brand-border bg-brand-secondary/90 text-brand-surface shadow-glass grid grid-cols-1 md:grid-cols-[320px_1fr] animate-in fade-in zoom-in duration-300">
                             <div className="bg-white/10 flex items-center justify-center min-h-[300px] md:min-h-full">
                                 {checkedGuest.photoUrl ? (
                                     <img src={toApiUrl(checkedGuest.photoUrl)} alt={checkedGuest.name} className="w-full h-full object-cover" />
@@ -1233,6 +1368,20 @@ export default function SouvenirPage() {
                     </div>
                 )
             }
+            {/* Modals & Panels */}
+            <StationSetupModal 
+                isOpen={showStationSetup} 
+                onComplete={(config) => {
+                    setStationConfig(config);
+                    setShowStationSetup(false);
+                }}
+                existingConfig={stationConfig}
+            />
+
+            <QueueManagementPanel 
+                isOpen={showQueuePanel} 
+                onClose={() => setShowQueuePanel(false)} 
+            />
         </div >
     );
 }
