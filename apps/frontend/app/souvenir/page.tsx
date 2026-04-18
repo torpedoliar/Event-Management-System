@@ -117,6 +117,7 @@ export default function SouvenirPage() {
     const [showQueuePanel, setShowQueuePanel] = useState(false);
     const [stationConfig, setStationConfig] = useState<any>(null);
     const [pendingSouvCount, setPendingSouvCount] = useState(0);
+    const [cachedGuestCount, setCachedGuestCount] = useState(0);
 
     const inputRef = useRef<HTMLInputElement>(null);
     const searchAbortRef = useRef<AbortController | null>(null);
@@ -152,6 +153,9 @@ export default function SouvenirPage() {
         };
 
         initOfflineMode();
+        
+        // Initial guest count
+        indexedDBService.getAllCachedGuests().then(guests => setCachedGuestCount(guests.length)).catch(() => {});
 
         // Listen to souvenir queue changes
         const unsubQueue = offlineSyncService.addSouvenirQueueListener((count) => {
@@ -205,10 +209,22 @@ export default function SouvenirPage() {
                 setCfg(data);
             }).catch(() => { });
             loadSouvenirs();
-            setResults([]);
-            setSelected(null);
             setQ('');
             setPrizeWins([]);
+        };
+
+        const onGuestUpdate = (e: MessageEvent) => {
+            try {
+                const data = JSON.parse(e.data);
+                if (data && data.action === 'bulk-delete') {
+                    indexedDBService.clearGuestCache().then(() => {
+                        setCachedGuestCount(0);
+                        console.log('[SouvenirPage] Guest cache automatically cleared due to bulk-delete action from server.');
+                    }).catch(err => {
+                        console.error('[SouvenirPage] Failed to clear guest cache on bulk-delete:', err);
+                    });
+                }
+            } catch (err) { }
         };
 
         addEventListener('souvenir_given', onSouvenirChange);
@@ -218,6 +234,7 @@ export default function SouvenirPage() {
         addEventListener('prize_collected', onSouvenirChange);
         addEventListener('prize_uncollected', onSouvenirChange);
         addEventListener('event_change', onEventChange);
+        addEventListener('guest-update', onGuestUpdate);
 
         return () => {
             removeEventListener('souvenir_given', onSouvenirChange);
@@ -227,6 +244,7 @@ export default function SouvenirPage() {
             removeEventListener('prize_collected', onSouvenirChange);
             removeEventListener('prize_uncollected', onSouvenirChange);
             removeEventListener('event_change', onEventChange);
+            removeEventListener('guest-update', onGuestUpdate);
             clearTimeout(timeout);
         };
     }, [addEventListener, removeEventListener]);
@@ -742,7 +760,7 @@ export default function SouvenirPage() {
                         <Radio size={12} className={`${connected ? 'text-brand-success animate-pulse' : 'text-brand-danger'}`} />
                         <span className="text-xs">{connected ? 'Live' : 'Offline'}</span>
                         <div className="ml-4">
-                            <ConnectionStatusIndicator />
+                            <ConnectionStatusIndicator onShowQueue={() => setShowQueuePanel(true)} cachedGuestCount={cachedGuestCount} />
                         </div>
                     </div>
                 </div>

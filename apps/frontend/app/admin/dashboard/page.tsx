@@ -44,6 +44,15 @@ export default function DashboardPage() {
   const [uncheckPassword, setUncheckPassword] = useState('');
   const [uncheckReason, setUncheckReason] = useState('');
   const [uncheckError, setUncheckError] = useState<string | null>(null);
+  
+  // Background logic (synced with system settings)
+  const pageBgType = event?.backgroundType ?? 'NONE';
+  const pageBgImage = event?.backgroundImageUrl;
+  const pageBgVideo = event?.backgroundVideoUrl;
+  const overlayStyle = useMemo(() => ({
+    backgroundColor: `rgba(0,0,0,${event?.overlayOpacity ?? 0.5})`,
+  }), [event?.overlayOpacity]);
+
   const { addEventListener, removeEventListener, connected } = useSSE();
 
   // Set error from statsError
@@ -85,8 +94,17 @@ export default function DashboardPage() {
 
   return (
     <RequireAuth>
-      <div className="min-h-screen overflow-hidden relative bg-brand-secondary">
-        <div className="flex flex-col lg:flex-row min-h-screen">
+      <div className="min-h-screen overflow-hidden relative bg-transparent">
+        {/* Dynamic Background Layer */}
+        {pageBgType === 'IMAGE' && pageBgImage && (
+          <div className="absolute inset-0 bg-center bg-cover transition-all duration-1000" style={{ backgroundImage: `url(${toApiUrl(pageBgImage)})` }} />
+        )}
+        {pageBgType === 'VIDEO' && pageBgVideo && (
+          <video className="absolute inset-0 w-full h-full object-cover transition-all duration-1000" src={toApiUrl(pageBgVideo)} muted loop autoPlay playsInline />
+        )}
+        <div className="absolute inset-0 transition-colors duration-1000" style={overlayStyle} />
+
+        <div className="flex flex-col lg:flex-row min-h-screen relative z-10">
           
           {/* Left Canvas (The Majestic Data) */}
           <div className="flex-1 p-8 lg:p-16 flex flex-col justify-between relative z-10 animate-in fade-in slide-in-from-left-8 duration-700">
@@ -180,7 +198,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Right Sidebar (Magazine Style Form & Portal) */}
-          <div className="w-full lg:w-[400px] xl:w-[450px] bg-black/40 backdrop-blur-3xl border-l border-brand-primary/20 p-6 lg:p-8 flex flex-col gap-8 overflow-y-auto relative z-20 shadow-[-30px_0_60px_rgba(0,0,0,0.5)] animate-in fade-in slide-in-from-right-8 duration-700 delay-200 fill-mode-both">
+          <div className="w-full lg:w-[400px] xl:w-[450px] bg-black/30 backdrop-blur-3xl border-l border-white/10 p-6 lg:p-8 flex flex-col gap-8 overflow-y-auto relative z-20 shadow-[-30px_0_60px_rgba(0,0,0,0.5)] animate-in fade-in slide-in-from-right-8 duration-700 delay-200 fill-mode-both">
             
             {/* Quick Actions Matrix */}
             <div className="grid grid-cols-2 gap-3 pb-8 border-b border-white/10">

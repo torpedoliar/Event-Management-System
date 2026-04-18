@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState, useRef } from "react";
 import { apiBase, toApiUrl, parseErrorMessage } from "../../lib/api";
 import { Html5Qrcode } from "html5-qrcode";
-import { Search, QrCode, Loader2, CheckCircle, Clock, Users, X, XCircle, UserPlus, Settings, Camera, UserCheck } from 'lucide-react';
+import { Search, QrCode, Loader2, CheckCircle, Clock, Users, X, XCircle, UserPlus, Settings, Camera, UserCheck, Trash2 } from 'lucide-react';
 import StationSetupModal from "../../components/StationSetupModal";
 import ConnectionStatusIndicator from "../../components/ConnectionStatusIndicator";
 import QueueManagementPanel from "../../components/QueueManagementPanel";
@@ -283,6 +283,18 @@ export default function CheckinPage() {
       setDownloadProgress(null);
     } finally {
       setDownloadingGuests(false);
+    }
+  };
+
+  const handleClearCache = async () => {
+    if (confirm('Apakah Anda yakin ingin menghapus semua cache tamu lokal di perangkat ini?')) {
+      try {
+        await indexedDBService.clearGuestCache();
+        setCachedGuestCount(0);
+        alert('Cache tamu berhasil dihapus.');
+      } catch (e: any) {
+        alert('Gagal menghapus cache: ' + e.message);
+      }
     }
   };
 
@@ -1002,28 +1014,34 @@ export default function CheckinPage() {
     };
 
     // Handle sync_complete event
-    const onSyncComplete = (data: any) => {
-      console.log(`Sync complete: ${data.successCount} success, ${data.conflictCount} conflicts from ${data.stationName}`);
+    const onSyncComplete = (e: MessageEvent) => {
+      try {
+        const data = JSON.parse(e.data);
+        console.log(`Sync complete: ${data.successCount} success, ${data.conflictCount} conflicts from ${data.stationName}`);
+      } catch (err) { }
       refreshHistory();
     };
 
     // Handle guest updates (like bulk-delete or single delete)
-    const onGuestUpdate = (data: any) => {
-      if (data && data.action === 'bulk-delete') {
-        indexedDBService.clearGuestCache().then(() => {
-          setCachedGuestCount(0);
-          console.log('[CheckinPage] Guest cache automatically cleared due to bulk-delete action from server.');
-        }).catch(err => {
-          console.error('[CheckinPage] Failed to clear guest cache on bulk-delete:', err);
-        });
-      } else if (data && data.action === 'delete' && data.id) {
-        indexedDBService.deleteCachedGuest(data.id).then(() => {
-          setCachedGuestCount(prev => Math.max(0, prev - 1));
-          console.log(`[CheckinPage] Deleted guest ${data.id} from local cache.`);
-        }).catch(err => {
-          console.error(`[CheckinPage] Failed to delete guest ${data.id} from cache:`, err);
-        });
-      }
+    const onGuestUpdate = (e: MessageEvent) => {
+      try {
+        const data = JSON.parse(e.data);
+        if (data && data.action === 'bulk-delete') {
+          indexedDBService.clearGuestCache().then(() => {
+            setCachedGuestCount(0);
+            console.log('[CheckinPage] Guest cache automatically cleared due to bulk-delete action from server.');
+          }).catch(err => {
+            console.error('[CheckinPage] Failed to clear guest cache on bulk-delete:', err);
+          });
+        } else if (data && data.action === 'delete' && data.id) {
+          indexedDBService.deleteCachedGuest(data.id).then(() => {
+            setCachedGuestCount(prev => Math.max(0, prev - 1));
+            console.log(`[CheckinPage] Deleted guest ${data.id} from local cache.`);
+          }).catch(err => {
+            console.error(`[CheckinPage] Failed to delete guest ${data.id} from cache:`, err);
+          });
+        }
+      } catch (err) { }
       refreshHistory();
     };
 
@@ -1456,7 +1474,7 @@ export default function CheckinPage() {
                   <button
                     onClick={handleDownloadGuests}
                     disabled={downloadingGuests}
-                    className={`w-full flex items-center justify-center gap-2 p-4 rounded-lg border border-white/20 bg-white/5 cursor-pointer transition-colors ${downloadingGuests ? 'opacity-50 pointer-events-none' : 'hover:bg-white/10'
+                    className={`w-full flex items-center justify-center gap-2 p-4 rounded-lg border border-white/20 bg-white/5 cursor-pointer transition-colors mb-2 ${downloadingGuests ? 'opacity-50 pointer-events-none' : 'hover:bg-white/10'
                       }`}
                   >
                     {downloadingGuests ? (
@@ -1474,6 +1492,18 @@ export default function CheckinPage() {
                       </>
                     )}
                   </button>
+
+                  <button
+                    onClick={handleClearCache}
+                    className="w-full flex items-center justify-center gap-2 p-4 rounded-lg border border-brand-danger/20 bg-brand-danger/5 cursor-pointer hover:bg-brand-danger/10 transition-colors"
+                  >
+                    <Trash2 size={20} className="text-brand-danger" />
+                    <div className="text-left">
+                      <div className="font-medium text-brand-danger">Clear Cache Tamu Lokal</div>
+                      <div className="text-xs text-brand-danger/60">Hapus semua data tamu yang tersimpan di perangkat ini</div>
+                    </div>
+                  </button>
+
                   {downloadProgress && !downloadingGuests && (
                     <div className="mt-2 text-xs text-brand-success text-center">{downloadProgress}</div>
                   )}

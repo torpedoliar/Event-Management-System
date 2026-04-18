@@ -1,9 +1,21 @@
 {
   "name": "Guest Registration & Check-in System",
-  "version": "1.4.0",
-  "versionCode": 140,
-  "releaseDate": "2026-04-15",
+  "version": "1.5.0",
+  "versionCode": 150,
+  "releaseDate": "2026-04-18",
   "changelog": {
+    "v1.5.0": {
+      "date": "2026-04-18",
+      "type": "feature",
+      "title": "Guest Purge Synchronization & Dynamic Dashboard Background",
+      "features": [
+        "Fixed SSE Guest Purge synchronization: automatic local cache invalidation on check-in and souvenir devices",
+        "Dynamic Dashboard Background: automatically syncs with event system settings (IMAGE/VIDEO)",
+        "Transparent Dashboard UI: enhanced glassmorphism and transparent root container",
+        "Manual Clear Cache: added manual cache clearing button in check-in settings",
+        "Souvenir cache awareness: souvenir page now listens for guest update events"
+      ]
+    },
     "v1.4.0": {
       "date": "2026-04-15",
       "type": "feature",
