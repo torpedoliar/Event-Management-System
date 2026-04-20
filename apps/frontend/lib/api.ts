@@ -65,12 +65,17 @@ export async function apiFetch<T>(path: string, options: RequestInit = {}): Prom
 
 export function toApiUrl(path?: string | null): string {
   const p = path ?? '';
+  if (!p) return '';
   if (p.startsWith('http://') || p.startsWith('https://')) return p;
+  if (p.startsWith('data:')) return p;
+  
   if (p.startsWith('/api/')) {
-    // apiBase() ends with '/api', so strip '/api' from the relative path
     return `${apiBase()}${p.substring(4)}`;
   }
-  return p;
+  
+  // For local paths like 'uploads/...' or '/uploads/...'
+  const cleanPath = p.startsWith('/') ? p : `/${p}`;
+  return `${apiBase()}${cleanPath}`;
 }
 
 // Helper function to parse API error messages into user-friendly messages

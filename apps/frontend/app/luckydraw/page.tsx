@@ -122,6 +122,7 @@ export default function LuckyDrawPage() {
         if (!soundEnabled || !audioRef.current) return;
         audioRef.current.currentTime = 0;
         audioRef.current.loop = loop;
+        audioRef.current.volume = 1.0;
         audioRef.current.play().catch(e => console.warn('Audio play failed', e));
     };
 
@@ -129,6 +130,25 @@ export default function LuckyDrawPage() {
         if (audioRef.current) {
             audioRef.current.pause();
             audioRef.current.currentTime = 0;
+        }
+    };
+
+    const toggleSound = () => {
+        const newState = !soundEnabled;
+        setSoundEnabled(newState);
+        // Pre-load sounds on interaction
+        if (newState) {
+            [audioRollRef, audioTensionRef, audioWinRef, audioGrandWinRef].forEach(ref => {
+                if (ref.current) {
+                    ref.current.load();
+                    ref.current.volume = 0;
+                    ref.current.play().then(() => {
+                        ref.current?.pause();
+                        if (ref.current) ref.current.currentTime = 0;
+                        if (ref.current) ref.current.volume = 1.0;
+                    }).catch(() => {});
+                }
+            });
         }
     };
 
@@ -601,7 +621,7 @@ export default function LuckyDrawPage() {
             {/* Sound Toggle Floating Button */}
             <div className="fixed top-6 right-6 z-[70] flex flex-col gap-2">
                 <button
-                    onClick={() => setSoundEnabled(!soundEnabled)}
+                    onClick={toggleSound}
                     className={`p-4 rounded-full backdrop-blur-xl border transition-all shadow-2xl ${
                         soundEnabled 
                         ? 'bg-brand-primary/20 border-brand-primary text-brand-primarySoft' 
@@ -612,6 +632,24 @@ export default function LuckyDrawPage() {
                     {soundEnabled ? <Volume2 size={24} /> : <VolumeX size={24} />}
                 </button>
             </div>
+
+            {/* Sound Initiation Overlay (for browser compliance) */}
+            {!soundEnabled && !loading && (
+                <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/40 backdrop-blur-md animate-in fade-in duration-700">
+                    <button 
+                        onClick={toggleSound}
+                        className="group relative bg-brand-secondary/80 border-2 border-brand-primary/50 p-12 rounded-[3rem] flex flex-col items-center gap-6 hover:border-brand-primary transition-all hover:scale-105 shadow-[0_0_100px_rgba(212,168,83,0.2)]"
+                    >
+                        <div className="w-24 h-24 rounded-full bg-brand-primary/20 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-secondary transition-all">
+                            <Volume2 size={48} />
+                        </div>
+                        <div className="text-center">
+                            <h3 className="text-2xl font-bold text-white mb-2 uppercase tracking-widest font-mono">Enable Audio Experience</h3>
+                            <p className="text-white/40 font-mono text-sm uppercase tracking-wider">Click anywhere to start with sound</p>
+                        </div>
+                    </button>
+                </div>
+            )}
 
             {/* Dynamic Background */}
             {eventCfg?.backgroundType === 'IMAGE' && eventCfg?.backgroundImageUrl && (
