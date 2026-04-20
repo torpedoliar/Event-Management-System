@@ -149,6 +149,9 @@ export default function LuckyDrawPage() {
     const [isGlitching, setIsGlitching] = useState(false);
     const [highlightedId, setHighlightedId] = useState<string | null>(null);
     const [tickerNames, setTickerNames] = useState<Guest[]>([]);
+    const [drawCount, setDrawCount] = useState<number>(1);
+    const [multiWinners, setMultiWinners] = useState<Guest[]>([]);
+    const [showMultiWinnerModal, setShowMultiWinnerModal] = useState(false);
 
     const PAGE_SIZE = 50;
 
@@ -514,8 +517,12 @@ export default function LuckyDrawPage() {
         }
 
         try {
-            // Call API to get winner
-            const result = await apiFetch<Guest>(`/prizes/${selectedPrizeId}/draw`, { method: 'POST' });
+            // Call API to get winner(s)
+            const results = await apiFetch<Guest[]>(`/prizes/${selectedPrizeId}/draw`, { 
+                method: 'POST',
+                body: JSON.stringify({ count: drama === DRAMA_CONFIGS.UTAMA ? 1 : drawCount })
+            });
+            const result = results[0]; // For single-winner animations
 
             // Suspense Wait
             await sleep(drama.spinDuration);
@@ -527,16 +534,23 @@ export default function LuckyDrawPage() {
                 clearInterval(interval);
                 stopSound(audioRollRef);
                 playSound(audioWinRef);
-                setDisplayCandidate(result);
-                setWinner(result);
-                setTickerSpeed(300);
-                await sleep(500);
-                setTickerSpeed(999999); // Pause for highlight
-                injectWinnerToCenter(result);
-                setHighlightedId(result.id);
+                
+                if (results.length > 1) {
+                    setMultiWinners(results);
+                    setShowMultiWinnerModal(true);
+                    setDisplayCandidate(result); // Show first one in main box
+                } else {
+                    setDisplayCandidate(result);
+                    setWinner(result);
+                    setTickerSpeed(300);
+                    await sleep(500);
+                    setTickerSpeed(999999); // Pause for highlight
+                    injectWinnerToCenter(result);
+                    setHighlightedId(result.id);
+                }
 
                 confetti({
-                    particleCount: drama.confettiCount,
+                    particleCount: drama.confettiCount * (results.length > 1 ? 2 : 1),
                     spread: 70,
                     origin: { y: 0.6 },
                     colors: ['#FFD700', '#FFA500', '#FF69B4', '#00FF00', '#00BFFF']
@@ -549,9 +563,10 @@ export default function LuckyDrawPage() {
                 }, 5000);
             }
 
-            // Immediately remove winner from local candidates if not allowMultipleWins
+            // Immediately remove winner(s) from local candidates if not allowMultipleWins
             if (!selectedPrize?.allowMultipleWins) {
-                setCandidates(prev => prev.filter(c => c.id !== result.id));
+                const winnerIds = new Set(results.map(r => r.id));
+                setCandidates(prev => prev.filter(c => !winnerIds.has(c.id)));
             }
 
             setSpinning(false);
@@ -678,71 +693,123 @@ export default function LuckyDrawPage() {
 
                             {/* Display Area */}
                             <div className="w-full min-h-[300px] bg-black/60 rounded-3xl border border-brand-primary/30 flex flex-col items-center justify-center p-6 relative overflow-hidden mb-8 shadow-[inset_0_0_100px_rgba(0,0,0,0.8)]">
-                                {tickerMood === 'tension' && <div className="scanline-overlay z-20" />}
-                                
-                                {displayCandidate ? (
-                                    <div className={`text-center animate-in zoom-in duration-300 w-full flex flex-col justify-center items-center h-full ${isGlitching ? 'animate-glitch-number' : ''}`}>
-                                        {displayCandidate.photoUrl ? (
-                                            <img
-                                                src={toApiUrl(displayCandidate.photoUrl)}
-                                                alt="Winner"
-                                                className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-[4px] border-brand-primary mx-auto mb-4 shadow-[0_0_40px_rgba(212,168,83,0.4)]"
-                                            />
-                                        ) : (
-                                            <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-brand-secondary to-black flex items-center justify-center text-3xl md:text-4xl font-mono font-bold text-brand-primarySoft mx-auto mb-4 shadow-[0_0_40px_rgba(212,168,83,0.4)] border-[4px] border-brand-primary">
-                                                {displayCandidate.queueNumber}
-                                            </div>
-                                        )}
-                                        <h3 className={`text-3xl md:text-5xl font-heading font-bold text-brand-surface mb-2 tracking-wide text-glow line-clamp-2 leading-tight ${isGlitching ? 'skew-x-12' : ''}`}>
-                                            {displayCandidate.name}
-                                        </h3>
-                                        <div className="bg-brand-primary/10 border border-brand-primary/20 px-4 py-1.5 rounded-full mt-2">
-                                            <p className="text-lg md:text-xl font-mono text-brand-primary/90 tracking-widest uppercase">
-                                                {displayCandidate.company || 'Tamu Undangan'}
-                                                {displayCandidate.division && <span className="opacity-50 ml-2">({displayCandidate.division})</span>}
-                                            </p>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="text-center text-brand-primary/20">
-                                        <Sparkles size={64} className="mx-auto mb-4 opacity-30 animate-pulse" />
-                                        <p className="text-xl font-mono tracking-widest uppercase">Siap Mengundi</p>
-                                    </div>
-                                )}
+...
                             </div>
 
-                            {/* Action Button */}
-                            {(() => {
-                                const drama = DRAMA_CONFIGS[selectedPrize?.category || 'HIBURAN'] || DRAMA_CONFIGS.HIBURAN;
-                                return (
-                                    <button
-                                        onClick={handleDraw}
-                                        disabled={spinning || isSoldOut || !selectedPrizeId}
-                                        className={`
-                                            relative px-12 py-5 rounded-full font-bold text-xl md:text-2xl font-mono tracking-[0.2em] uppercase transition-all duration-300 transform hover:scale-105 active:scale-95
-                                            ${spinning
-                                                ? 'bg-brand-border/50 text-brand-textMuted cursor-not-allowed border border-brand-border'
-                                                : isSoldOut
-                                                    ? 'bg-brand-danger/20 text-brand-danger cursor-not-allowed border border-brand-danger/30'
-                                                    : `bg-gradient-to-r from-brand-primary to-brand-accent text-brand-secondary shadow-[0_0_50px_rgba(212,168,83,0.4)] hover:shadow-[0_0_80px_rgba(212,168,83,0.6)] border border-brand-primarySoft/50 ${drama.buttonExtraClass}`
-                                            }
-                                        `}
-                                    >
-                                        {spinning ? (
-                                            <span className="flex items-center gap-2">
-                                                <span className="animate-spin">🎲</span>
-                                                {drama === DRAMA_CONFIGS.UTAMA ? 'MENGUNDI GRAND PRIZE...' : 'Mengundi...'}
-                                            </span>
-                                        ) : isSoldOut ? (
-                                            'Habis Terbagi'
-                                        ) : (
-                                            drama.buttonLabel
-                                        )}
-                                    </button>
-                                );
-                            })()}
+                            {/* Action Area */}
+                            <div className="flex flex-col items-center gap-6 w-full">
+                                {selectedPrize?.category === 'HIBURAN' && !spinning && !isSoldOut && (
+                                    <div className="flex items-center gap-4 bg-black/40 p-2 pl-6 rounded-full border border-white/10 backdrop-blur-xl">
+                                        <label className="text-sm font-mono text-white/60 uppercase tracking-widest">Draw Count:</label>
+                                        <div className="flex items-center gap-2">
+                                            {[1, 5, 10, 20].map(n => (
+                                                <button
+                                                    key={n}
+                                                    onClick={() => setDrawCount(n)}
+                                                    className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all ${drawCount === n ? 'bg-brand-primary text-brand-secondary' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
+                                                >
+                                                    {n}
+                                                </button>
+                                            ))}
+                                            <input 
+                                                type="number" 
+                                                min={1} 
+                                                max={100}
+                                                value={drawCount}
+                                                onChange={(e) => setDrawCount(Math.max(1, parseInt(e.target.value) || 1))}
+                                                className="w-16 h-10 bg-white/5 border border-white/10 rounded-full text-center text-white focus:outline-none focus:border-brand-primary"
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+
+                                {(() => {
+                                    const drama = DRAMA_CONFIGS[selectedPrize?.category || 'HIBURAN'] || DRAMA_CONFIGS.HIBURAN;
+                                    return (
+                                        <button
+                                            onClick={handleDraw}
+                                            disabled={spinning || isSoldOut || !selectedPrizeId}
+                                            className={`
+                                                relative px-12 py-5 rounded-full font-bold text-xl md:text-2xl font-mono tracking-[0.2em] uppercase transition-all duration-300 transform hover:scale-105 active:scale-95
+                                                ${spinning
+                                                    ? 'bg-brand-border/50 text-brand-textMuted cursor-not-allowed border border-brand-border'
+                                                    : isSoldOut
+                                                        ? 'bg-brand-danger/20 text-brand-danger cursor-not-allowed border border-brand-danger/30'
+                                                        : `bg-gradient-to-r from-brand-primary to-brand-accent text-brand-secondary shadow-[0_0_50px_rgba(212,168,83,0.4)] hover:shadow-[0_0_80px_rgba(212,168,83,0.6)] border border-brand-primarySoft/50 ${drama.buttonExtraClass}`
+                                                }
+                                            `}
+                                        >
+                                            {spinning ? (
+                                                <span className="flex items-center gap-2">
+                                                    <span className="animate-spin">🎲</span>
+                                                    {drama === DRAMA_CONFIGS.UTAMA ? 'MENGUNDI GRAND PRIZE...' : `MENGUNDI ${drawCount} PEMENANG...`}
+                                                </span>
+                                            ) : isSoldOut ? (
+                                                'Habis Terbagi'
+                                            ) : (
+                                                drawCount > 1 && selectedPrize?.category === 'HIBURAN' ? `UNDI ${drawCount} PEMENANG` : drama.buttonLabel
+                                            )}
+                                        </button>
+                                    );
+                                })()}
+                            </div>
                         </div>
                     </div>
+...
+            {/* Multi Winner Modal */}
+            {showMultiWinnerModal && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl animate-in fade-in duration-500">
+                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-brand-primary/20 rounded-full blur-[120px] animate-pulse" />
+                        <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] bg-brand-accent/20 rounded-full blur-[120px] animate-pulse" />
+                    </div>
+
+                    <div className="relative bg-brand-secondary/40 border border-brand-primary/30 rounded-[3rem] w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col shadow-[0_0_100px_rgba(212,168,83,0.2)] animate-in zoom-in duration-500">
+                        <div className="p-8 md:p-12 text-center border-b border-white/10">
+                            <h2 className="text-4xl md:text-6xl font-heading font-black text-transparent bg-clip-text bg-gradient-to-b from-brand-primarySoft via-brand-primary to-brand-accent drop-shadow-2xl tracking-tighter uppercase mb-2">
+                                CONGRATULATIONS!
+                            </h2>
+                            <p className="text-xl md:text-2xl text-white/60 font-mono tracking-[0.3em] uppercase">
+                                {multiWinners.length} PEMENANG {selectedPrize?.name}
+                            </p>
+                        </div>
+
+                        <div className="p-8 md:p-12 overflow-y-auto flex-1 custom-scrollbar">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {multiWinners.map((w, idx) => (
+                                    <div 
+                                        key={w.id} 
+                                        className="group bg-white/5 border border-white/10 rounded-3xl p-6 flex items-center gap-5 transition-all duration-500 hover:bg-white/10 hover:border-brand-primary/50 hover:scale-[1.02] animate-in slide-in-from-bottom duration-500"
+                                        style={{ animationDelay: `${idx * 100}ms` }}
+                                    >
+                                        <div className="w-16 h-16 rounded-2xl bg-brand-primary/20 flex items-center justify-center font-bold text-2xl text-brand-primary shadow-inner group-hover:bg-brand-primary group-hover:text-brand-secondary transition-colors duration-500">
+                                            {w.queueNumber}
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="font-bold text-xl text-white truncate group-hover:text-brand-primarySoft transition-colors">{w.name}</div>
+                                            <div className="text-sm text-white/40 truncate group-hover:text-white/60 transition-colors uppercase tracking-wider font-mono">
+                                                {w.company || '-'}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="p-8 md:p-12 text-center border-t border-white/10 bg-black/20">
+                            <button
+                                onClick={() => {
+                                    setShowMultiWinnerModal(false);
+                                    setMultiWinners([]);
+                                }}
+                                className="px-16 py-4 bg-brand-primary text-brand-secondary rounded-full font-bold text-xl font-mono tracking-widest uppercase hover:bg-brand-primarySoft transition-all hover:scale-105 shadow-[0_0_40px_rgba(212,168,83,0.3)]"
+                            >
+                                CLOSE & CONTINUE
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
                     {/* Winners List for this Prize */}
                     {selectedPrize && selectedPrize.winners.length > 0 && (

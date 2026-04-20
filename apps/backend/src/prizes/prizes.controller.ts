@@ -69,10 +69,10 @@ export class PrizesController {
 
     @UseGuards(JwtAuthGuard)
     @Post(':id/draw')
-    async draw(@Param('id') id: string) {
-        const winner = await this.prizes.drawWinner(id);
-        emitEvent({ type: 'prize_draw', data: { prizeId: id, winner } });
-        return winner;
+    async draw(@Param('id') id: string, @Body('count') count?: number) {
+        const winners = await this.prizes.drawWinners(id, count || 1);
+        emitEvent({ type: 'prize_draw', data: { prizeId: id, winners } });
+        return winners;
     }
 
     @UseGuards(JwtAuthGuard)

@@ -170,6 +170,13 @@ export class PrizesService {
     }
 
     async drawWinner(prizeId: string) {
+        const results = await this.drawWinners(prizeId, 1);
+        return results[0];
+    }
+
+    async drawWinners(prizeId: string, count: number) {
+        if (count < 1) throw new BadRequestException('Count must be at least 1');
+
         const prize = await this.prisma.prize.findUnique({
             where: { id: prizeId },
             include: {
@@ -178,9 +185,12 @@ export class PrizesService {
         });
         if (!prize) throw new BadRequestException('Prize not found');
 
-        if (prize.prizeWinners.length >= prize.quantity) {
+        const remaining = prize.quantity - prize.prizeWinners.length;
+        if (remaining <= 0) {
             throw new BadRequestException('Semua hadiah sudah diberikan');
         }
+
+        const actualCount = Math.min(count, remaining);
 
         const active = await this.events.getActive();
         if (!active) throw new BadRequestException('No active event');
@@ -219,18 +229,28 @@ export class PrizesService {
             );
         }
 
-        // Randomly select one
-        const winner = eligible[Math.floor(Math.random() * eligible.length)];
+        if (eligible.length < actualCount) {
+            // If requested more than available, draw all available
+            // (Handled by shuffle below)
+        }
 
-        // Create prize winner record
-        await this.prisma.prizeWinner.create({
-            data: {
-                guestId: winner.id,
-                prizeId: prize.id
-            }
-        });
+        // Shuffle and select multiple
+        const shuffled = [...eligible].sort(() => 0.5 - Math.random());
+        const selectedWinners = shuffled.slice(0, actualCount);
 
-        return winner;
+        // Create prize winner records in transaction
+        await this.prisma.$transaction(
+            selectedWinners.map(winner => 
+                this.prisma.prizeWinner.create({
+                    data: {
+                        guestId: winner.id,
+                        prizeId: prize.id
+                    }
+                })
+            )
+        );
+
+        return selectedWinners;
     }
 
     async resetWinners(prizeId: string) {
