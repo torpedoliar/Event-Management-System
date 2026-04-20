@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import { apiFetch, apiBase, toApiUrl } from '../../lib/api';
-import { Trophy, Sparkles, PartyPopper, History, X } from 'lucide-react';
+import { Trophy, Sparkles, PartyPopper, History, X, Users, Search, Award } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface Prize {
@@ -35,7 +35,41 @@ export default function LuckyDrawPage() {
     const [displayCandidate, setDisplayCandidate] = useState<Guest | null>(null);
     const [loading, setLoading] = useState(true);
     const [eventCfg, setEventCfg] = useState<any>(null);
+    const [showEligiblePanel, setShowEligiblePanel] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [activeTab, setActiveTab] = useState<'all' | 'eligible' | 'won'>('all');
     const { addEventListener, removeEventListener } = useSSE();
+
+    // Kumpulkan semua guest IDs yang sudah menang
+    const allWinnerIds = useMemo(() => {
+        const ids = new Set<string>();
+        prizes.forEach(p => p.winners.forEach((w: any) => ids.add(w.id)));
+        return ids;
+    }, [prizes]);
+
+    // Filter kandidat berdasar pencarian
+    const filteredCandidates = useMemo(() => {
+        let list = candidates;
+        if (searchQuery.trim()) {
+            const q = searchQuery.toLowerCase();
+            list = list.filter(g =>
+                g.name.toLowerCase().includes(q) ||
+                (g.company || '').toLowerCase().includes(q) ||
+                (g.division || '').toLowerCase().includes(q) ||
+                String(g.queueNumber).includes(q)
+            );
+        }
+        if (activeTab === 'eligible') {
+            list = list.filter(g => !allWinnerIds.has(g.id));
+        } else if (activeTab === 'won') {
+            list = list.filter(g => allWinnerIds.has(g.id));
+        }
+        return list;
+    }, [candidates, searchQuery, activeTab, allWinnerIds]);
+
+    // Hitung statistik
+    const eligibleCount = candidates.filter(g => !allWinnerIds.has(g.id)).length;
+    const wonCount = candidates.filter(g => allWinnerIds.has(g.id)).length;
 
     // Load prizes, candidates, and config
     const loadData = async () => {
@@ -286,7 +320,14 @@ export default function LuckyDrawPage() {
                     </div>
                 </div>
                 {/* Riwayat Button Component */}
-                <div className="mt-8 flex justify-center">
+                <div className="mt-8 flex justify-center gap-4 flex-wrap">
+                    <button
+                        onClick={() => setShowEligiblePanel(true)}
+                        className="bg-brand-secondary/40 hover:bg-brand-secondary/60 border border-brand-primary/20 text-brand-primarySoft text-xl rounded-full px-8 py-4 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-xl transition-all flex items-center gap-3 font-mono tracking-widest uppercase shadow-[0_0_30px_rgba(0,0,0,0.5)]"
+                    >
+                        <Users size={24} />
+                        PESERTA
+                    </button>
                     <button
                         onClick={() => setShowHistory(true)}
                         className="bg-brand-secondary/40 hover:bg-brand-secondary/60 border border-brand-primary/20 text-brand-primarySoft text-xl rounded-full px-8 py-4 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-xl transition-all flex items-center gap-3 font-mono tracking-widest uppercase shadow-[0_0_30px_rgba(0,0,0,0.5)]"
@@ -382,6 +423,118 @@ export default function LuckyDrawPage() {
                                     Belum ada pemenang yang diundi
                                 </div>
                             )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Eligible Guests Modal */}
+            {showEligiblePanel && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+                    <div className="bg-brand-secondary border border-brand-primary/20 rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl animate-in fade-in zoom-in duration-200">
+                        
+                        {/* Header */}
+                        <div className="p-6 border-b border-brand-border flex justify-between items-center bg-brand-surface/5">
+                            <h2 className="text-2xl font-bold text-brand-surface flex items-center gap-2">
+                                <Users className="text-brand-primary" />
+                                Daftar Peserta Undian
+                                <span className="text-sm font-mono text-brand-primary/70 ml-2">
+                                    ({eligibleCount} eligible)
+                                </span>
+                            </h2>
+                            <button onClick={() => setShowEligiblePanel(false)} className="p-2 hover:bg-brand-surface/10 rounded-full text-brand-surface/70 hover:text-brand-surface transition-colors">
+                                <X size={24} />
+                            </button>
+                        </div>
+
+                        {/* Search Bar */}
+                        <div className="p-4 border-b border-brand-border bg-brand-surface/5">
+                            <div className="relative">
+                                <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-surface/40" />
+                                <input
+                                    type="text"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    placeholder="Cari nama, perusahaan, atau nomor antrian..."
+                                    className="w-full bg-brand-secondary/60 border border-brand-border rounded-xl pl-12 pr-4 py-3 text-brand-surface placeholder:text-brand-surface/30 focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Filter Tabs */}
+                        <div className="px-6 pt-4 flex gap-2">
+                            <button
+                                onClick={() => setActiveTab('all')}
+                                className={`px-4 py-2 rounded-t-lg font-bold text-sm transition-colors ${activeTab === 'all' ? 'bg-brand-primary/20 text-brand-primary border-b-2 border-brand-primary' : 'text-brand-surface/60 hover:text-brand-surface hover:bg-brand-surface/10'}`}
+                            >
+                                Semua ({candidates.length})
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('eligible')}
+                                className={`px-4 py-2 rounded-t-lg font-bold text-sm transition-colors ${activeTab === 'eligible' ? 'bg-brand-primary/20 text-brand-primary border-b-2 border-brand-primary' : 'text-brand-surface/60 hover:text-brand-surface hover:bg-brand-surface/10'}`}
+                            >
+                                Eligible ({eligibleCount})
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('won')}
+                                className={`px-4 py-2 rounded-t-lg font-bold text-sm transition-colors ${activeTab === 'won' ? 'bg-brand-primary/20 text-brand-primary border-b-2 border-brand-primary' : 'text-brand-surface/60 hover:text-brand-surface hover:bg-brand-surface/10'}`}
+                            >
+                                Menang ({wonCount})
+                            </button>
+                        </div>
+
+                        {/* Guest List */}
+                        <div className="p-6 overflow-y-auto flex-1 bg-brand-secondary/30">
+                            <div className="space-y-3">
+                                {filteredCandidates.map(guest => {
+                                    const wonPrizes = prizes
+                                        .filter(p => p.winners.some((w: any) => w.id === guest.id))
+                                        .map(p => p.name);
+                                    const hasWon = wonPrizes.length > 0;
+
+                                    return (
+                                        <div key={guest.id} className={`flex items-center gap-4 p-3 rounded-xl border transition-colors ${
+                                            hasWon
+                                                ? 'bg-brand-primary/5 border-brand-primary/20'
+                                                : 'bg-brand-surface/5 border-brand-border hover:bg-brand-surface/10'
+                                        }`}>
+                                            <div className="w-10 h-10 rounded-full bg-brand-primary/15 flex items-center justify-center font-bold text-sm text-brand-primary flex-shrink-0">
+                                                {guest.queueNumber}
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <div className="font-bold text-brand-surface truncate">{guest.name}</div>
+                                                <div className="text-xs text-brand-surface/50 truncate">
+                                                    {guest.company || '-'}
+                                                    {guest.division && <span className="ml-1">({guest.division})</span>}
+                                                </div>
+                                            </div>
+                                            {hasWon ? (
+                                                <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-brand-primary/20 text-brand-primary text-xs font-mono whitespace-nowrap">
+                                                    <Award size={14} />
+                                                    <span className="truncate max-w-[150px]">{wonPrizes.join(', ')}</span>
+                                                </div>
+                                            ) : (
+                                                <div className="px-3 py-1 rounded-full bg-green-500/15 text-green-400 text-xs font-mono">
+                                                    ✓ Eligible
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                                {filteredCandidates.length === 0 && (
+                                    <div className="text-center py-12 text-brand-surface/40">
+                                        <Users className="mx-auto mb-3 opacity-50" size={32} />
+                                        Tidak ada peserta yang cocok dengan filter pencarian.
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Footer Stats */}
+                        <div className="p-4 border-t border-brand-border bg-brand-surface/5 flex justify-between text-sm text-brand-surface/60">
+                            <span>Total Hadir: {candidates.length}</span>
+                            <span>Eligible: {eligibleCount}</span>
+                            <span>Sudah Menang: {wonCount}</span>
                         </div>
                     </div>
                 </div>
