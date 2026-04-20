@@ -198,7 +198,7 @@ export default function LuckyDrawPage() {
 
         // Stage 3: Noticeable slowdown
         setTickerSpeed(400);
-        setScreenShake(true);
+        setScreenShake(true); 
         await sleep(1500);
 
         // Stage 4: High Suspense
@@ -213,9 +213,9 @@ export default function LuckyDrawPage() {
         // REVEAL with Screen Flash
         setTickerSpeed(999999);
         setIsGlitching(false);
-        clearInterval(drawInterval);  // ← STOP left-side HERE
+        clearInterval(drawInterval);
         setScreenFlash(true);
-        await sleep(200);
+        await sleep(300);
         setScreenFlash(false);
 
         setDarkReveal(true);
@@ -226,24 +226,55 @@ export default function LuckyDrawPage() {
         setWinner(winnerGuest);
         setHighlightedId(winnerGuest.id);
 
+        // --- EPIC CELEBRATION SEQUENCES ---
+        
+        // 1. Center Blast
         confetti({
-            particleCount: 500,
-            spread: 120,
-            startVelocity: 60,
+            particleCount: 800,
+            spread: 160,
+            startVelocity: 70,
             origin: { y: 0.5, x: 0.5 },
-            colors: ['#FFD700', '#FFA500', '#FFFFFF', '#1E3A8A']
+            colors: ['#FFD700', '#FFA500', '#FFFFFF', '#FF4500', '#1E3A8A'],
+            ticks: 400
         });
 
+        // 2. Left & Right Side Cannons
+        const end = Date.now() + (3 * 1000);
+        const colors = ['#FFD700', '#FFFFFF'];
+
+        (function frame() {
+            confetti({
+                particleCount: 5,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0, y: 0.6 },
+                colors: colors
+            });
+            confetti({
+                particleCount: 5,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1, y: 0.6 },
+                colors: colors
+            });
+
+            if (Date.now() < end) {
+                requestAnimationFrame(frame);
+            }
+        }());
+
+        // 3. Gold Dust Rain
         setTimeout(() => {
             confetti({
-                particleCount: 200,
+                particleCount: 300,
                 spread: 360,
-                origin: { y: 0.3, x: 0.5 },
-                colors: ['#FFD700', '#FFFFFF']
+                startVelocity: 30,
+                origin: { y: 0.2, x: 0.5 },
+                colors: ['#FFD700', '#FFFFFF', '#F0E68C']
             });
-        }, 500);
+        }, 1000);
 
-        await sleep(4000);
+        await sleep(5000);
         setDarkReveal(false);
         setTickerMood('normal');
         setTickerSpeed(800);
@@ -451,6 +482,9 @@ export default function LuckyDrawPage() {
 
         // Notify ticker to speed up
         setTickerSpeed(drama.tickerSpeedMin);
+        if (drama !== DRAMA_CONFIGS.UTAMA) {
+            setScreenShake(true); // Start shaking for normal prizes
+        }
 
         try {
             // Call API to get winner
@@ -462,6 +496,7 @@ export default function LuckyDrawPage() {
             if (drama === DRAMA_CONFIGS.UTAMA) {
                 await executeGrandPrizeSlowdown(result, interval);
             } else {
+                setScreenShake(false); // Stop shaking
                 clearInterval(interval);
                 setDisplayCandidate(result);
                 setWinner(result);
