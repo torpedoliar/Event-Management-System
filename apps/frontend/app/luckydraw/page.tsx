@@ -114,7 +114,7 @@ export default function LuckyDrawPage() {
     };
 
     // Debounce pencarian — fetch ulang 300ms setelah user berhenti mengetik
-    const searchTimeoutRef = useRef<NodeJS.Timeout>();
+    const searchTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
     useEffect(() => {
         if (!showEligiblePanel) return;
