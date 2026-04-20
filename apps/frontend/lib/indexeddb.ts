@@ -4,6 +4,7 @@
  */
 
 import { openDB, IDBPDatabase } from 'idb';
+import { generateUUID } from './utils';
 
 export interface PendingCheckin {
   id: string;
@@ -123,7 +124,7 @@ class IndexedDBService {
 
   async addPendingCheckin(checkin: Omit<PendingCheckin, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
     await this.init();
-    const id = crypto.randomUUID();
+    const id = generateUUID();
     const now = new Date().toISOString();
 
     await this.db!.add('pendingCheckins', {
@@ -279,7 +280,7 @@ class IndexedDBService {
     details: any;
   }): Promise<void> {
     await this.init();
-    const id = crypto.randomUUID();
+    const id = generateUUID();
     await this.db!.add('syncLog', {
       id,
       timestamp: new Date().toISOString(),
@@ -309,7 +310,7 @@ class IndexedDBService {
 
   async addPendingSouvenir(take: Omit<PendingSouvenir, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
     await this.init();
-    const id = crypto.randomUUID();
+    const id = generateUUID();
     const now = new Date().toISOString();
 
     await this.db!.add('pendingSouvenirs', {
