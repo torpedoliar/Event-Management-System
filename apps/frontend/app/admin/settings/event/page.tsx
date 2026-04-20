@@ -54,6 +54,10 @@ interface EventConfig {
   allowDuplicateGuestId: boolean;
   allowMultipleCheckinPerCounter?: boolean;
   customCategories?: CustomCategory[];
+  rollSoundUrl?: string | null;
+  tensionSoundUrl?: string | null;
+  winSoundUrl?: string | null;
+  grandWinSoundUrl?: string | null;
 }
 
 export default function EventSettingsPage() {
@@ -63,6 +67,7 @@ export default function EventSettingsPage() {
   const [saving, setSaving] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [uploadingBg, setUploadingBg] = useState(false);
+  const [uploadingSound, setUploadingSound] = useState<string | null>(null);
   const [purging, setPurging] = useState(false);
   const [broadcastPreview, setBroadcastPreview] = useState(false);
   const previewTimer = useRef<any>(null);
@@ -246,6 +251,61 @@ export default function EventSettingsPage() {
       setError(parseErrorMessage(e.message) || 'Gagal upload');
     } finally {
       if (kind === 'logo') setUploadingLogo(false); else setUploadingBg(false);
+    }
+  };
+
+  const uploadSound = async (type: string, file: File) => {
+    const fd = new FormData();
+    fd.append('file', file);
+    try {
+      setUploadingSound(type);
+      const res = await fetch(`${apiBase()}/events/upload/sound/${type}`, {
+        method: 'POST',
+        headers: tokenHeader(),
+        body: fd,
+      });
+      if (!res.ok) {
+        const errorText = await res.text();
+        return setError(parseErrorMessage(errorText));
+      }
+      const updated = await res.json();
+      setCfg(updated);
+      setMessage(`Suara ${type} terunggah.`);
+    } catch (e: any) {
+      setError(parseErrorMessage(e.message) || 'Gagal upload suara');
+    } finally {
+      setUploadingSound(null);
+    }
+  };
+
+  const resetSound = async (type: string) => {
+    if (!cfg) return;
+    setError(null);
+    setMessage(null);
+    try {
+      const updateData: any = {};
+      switch(type) {
+        case 'roll': updateData.rollSoundUrl = null; break;
+        case 'tension': updateData.tensionSoundUrl = null; break;
+        case 'win': updateData.winSoundUrl = null; break;
+        case 'grandwin': updateData.grandWinSoundUrl = null; break;
+      }
+
+      const res = await fetch(`${apiBase()}/events/active`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', ...(tokenHeader() || {}) },
+        body: JSON.stringify(updateData)
+      });
+      if (!res.ok) {
+        const errorText = await res.text();
+        setError(parseErrorMessage(errorText));
+      } else {
+        const updated = await res.json();
+        setCfg(updated);
+        setMessage(`Suara ${type} direset ke default.`);
+      }
+    } catch (e: any) {
+      setError(e.message || 'Gagal reset suara');
     }
   };
 
@@ -706,6 +766,90 @@ export default function EventSettingsPage() {
               </div>
             </div>
 
+            {/* Lucky Draw Sounds Management */}
+            <div className="space-y-4 rounded-xl bg-white/5 p-6 border border-white/10">
+              <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                <Music size={20} />
+                Lucky Draw Sounds
+              </h3>
+              
+              <div className="text-sm text-white/60 mb-4">
+                Kustomisasi suara saat proses pengundian. Gunakan file .mp3 atau .wav (Maks 10MB).
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[
+                  { id: 'roll', label: 'Rolling Sound', url: cfg.rollSoundUrl, default: '/sounds/roll.mp3' },
+                  { id: 'tension', label: 'Tension Sound', url: cfg.tensionSoundUrl, default: '/sounds/tension.mp3' },
+                  { id: 'win', label: 'Win Sound', url: cfg.winSoundUrl, default: '/sounds/win.mp3' },
+                  { id: 'grandwin', label: 'Grand Win Sound', url: cfg.grandWinSoundUrl, default: '/sounds/grand-win.mp3' },
+                ].map((sound) => (
+                  <div key={sound.id} className="p-4 rounded-lg bg-black/20 border border-white/5 space-y-3">
+                    <div className="flex justify-between items-center">
+                      <Label className="text-white/80">{sound.label}</Label>
+                      {sound.url ? (
+                        <span className="text-[10px] bg-brand-primary/20 text-brand-primarySoft px-2 py-0.5 rounded-full font-mono">Custom</span>
+                      ) : (
+                        <span className="text-[10px] bg-white/10 text-white/40 px-2 py-0.5 rounded-full font-mono">Default</span>
+                      )}
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => {
+                          const audio = new Audio(toApiUrl(sound.url || sound.default));
+                          audio.play().catch(e => console.warn('Preview failed', e));
+                        }}
+                        className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-colors"
+                        title="Preview"
+                      >
+                        <Volume2 size={16} />
+                      </button>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-[10px] text-white/30 truncate font-mono">
+                          {sound.url ? sound.url.split('/').pop() : sound.default.split('/').pop()}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <input
+                        id={`sound-${sound.id}`}
+                        type="file"
+                        accept="audio/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const f = e.target.files?.[0];
+                          if (f) uploadSound(sound.id, f);
+                        }}
+                      />
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        disabled={uploadingSound !== null}
+                        onClick={() => document.getElementById(`sound-${sound.id}`)?.click()}
+                        className="flex-1 text-xs h-8"
+                      >
+                        {uploadingSound === sound.id ? <Loader2 className="animate-spin" size={14} /> : <Upload size={14} />}
+                        <span>{uploadingSound === sound.id ? '...' : 'Upload'}</span>
+                      </Button>
+                      {sound.url && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => resetSound(sound.id)}
+                          className="text-white/40 hover:text-brand-danger h-8 px-2"
+                          title="Reset to Default"
+                        >
+                          <RotateCcw size={14} />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             <div className="pt-6 border-t border-white/10 flex flex-col gap-6">
               <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-lg bg-white/5 border border-white/10">
                 <label className="flex items-center gap-3 cursor-pointer group">
@@ -791,5 +935,5 @@ export default function EventSettingsPage() {
   );
 }
 
-import { Type, Calendar, Clock, MapPin, Settings2, Image as ImageIcon, Monitor, Upload, Loader2, EyeOff, Save, Trash2, AlertTriangle, Gift, Dices, Package, UserCog, Trophy, ChevronRight, Camera, Users, UserCheck, Tag, X, Plus, Mail } from 'lucide-react';
+import { Type, Calendar, Clock, MapPin, Settings2, Image as ImageIcon, Monitor, Upload, Loader2, EyeOff, Save, Trash2, AlertTriangle, Gift, Dices, Package, UserCog, Trophy, ChevronRight, Camera, Users, UserCheck, Tag, X, Plus, Mail, Music, RotateCcw, Volume2 } from 'lucide-react';
 import Link from 'next/link';

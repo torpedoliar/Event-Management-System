@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { apiFetch, apiBase, toApiUrl } from '../../lib/api';
-import { Trophy, Sparkles, PartyPopper, History, X, Users, Search, Award, Hash } from 'lucide-react';
+import { Trophy, Sparkles, PartyPopper, History, X, Users, Search, Award, Hash, Volume2, VolumeX } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface Prize {
@@ -111,6 +111,27 @@ export default function LuckyDrawPage() {
     const [activeTab, setActiveTab] = useState<'all' | 'eligible' | 'won'>('all');
     const { addEventListener, removeEventListener } = useSSE();
 
+    // Audio States & Refs
+    const [soundEnabled, setSoundEnabled] = useState(false);
+    const audioRollRef = useRef<HTMLAudioElement | null>(null);
+    const audioTensionRef = useRef<HTMLAudioElement | null>(null);
+    const audioWinRef = useRef<HTMLAudioElement | null>(null);
+    const audioGrandWinRef = useRef<HTMLAudioElement | null>(null);
+
+    const playSound = (audioRef: React.RefObject<HTMLAudioElement | null>, loop = false) => {
+        if (!soundEnabled || !audioRef.current) return;
+        audioRef.current.currentTime = 0;
+        audioRef.current.loop = loop;
+        audioRef.current.play().catch(e => console.warn('Audio play failed', e));
+    };
+
+    const stopSound = (audioRef: React.RefObject<HTMLAudioElement | null>) => {
+        if (audioRef.current) {
+            audioRef.current.pause();
+            audioRef.current.currentTime = 0;
+        }
+    };
+
     // NEW: Dedicated state untuk panel peserta (server-driven)
     const [searchGuestId, setSearchGuestId] = useState('');
     const [eligibleData, setEligibleData] = useState<EligibleGuest[]>([]);
@@ -194,6 +215,8 @@ export default function LuckyDrawPage() {
         setTickerSpeed(150);
         setTickerMood('tension');
         setIsGlitching(true);
+        stopSound(audioRollRef);
+        playSound(audioTensionRef, true);
         await sleep(2000);
 
         // Stage 3: Noticeable slowdown
@@ -214,6 +237,8 @@ export default function LuckyDrawPage() {
         setTickerSpeed(999999);
         setIsGlitching(false);
         clearInterval(drawInterval);
+        stopSound(audioTensionRef);
+        playSound(audioGrandWinRef);
         setScreenFlash(true);
         await sleep(300);
         setScreenFlash(false);
@@ -459,6 +484,8 @@ export default function LuckyDrawPage() {
             setTickerMood('tension');
         }
 
+        playSound(audioRollRef, true);
+
         // Start animation loop
         let counter = 0;
         const interval = setInterval(() => {
@@ -498,6 +525,8 @@ export default function LuckyDrawPage() {
             } else {
                 setScreenShake(false); // Stop shaking
                 clearInterval(interval);
+                stopSound(audioRollRef);
+                playSound(audioWinRef);
                 setDisplayCandidate(result);
                 setWinner(result);
                 setTickerSpeed(300);
@@ -530,6 +559,8 @@ export default function LuckyDrawPage() {
             loadData(); // Refresh prize list to update counts
         } catch (e: any) {
             clearInterval(interval);
+            stopSound(audioRollRef);
+            stopSound(audioTensionRef);
             setSpinning(false);
             spinningRef.current = false;
             setTickerSpeed(800);
@@ -546,6 +577,27 @@ export default function LuckyDrawPage() {
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
+            {/* Audio Elements */}
+            <audio ref={audioRollRef} src={toApiUrl(eventCfg?.rollSoundUrl || "/sounds/roll.mp3")} preload="auto" />
+            <audio ref={audioTensionRef} src={toApiUrl(eventCfg?.tensionSoundUrl || "/sounds/tension.mp3")} preload="auto" />
+            <audio ref={audioWinRef} src={toApiUrl(eventCfg?.winSoundUrl || "/sounds/win.mp3")} preload="auto" />
+            <audio ref={audioGrandWinRef} src={toApiUrl(eventCfg?.grandWinSoundUrl || "/sounds/grand-win.mp3")} preload="auto" />
+
+            {/* Sound Toggle Floating Button */}
+            <div className="fixed top-6 right-6 z-[70] flex flex-col gap-2">
+                <button
+                    onClick={() => setSoundEnabled(!soundEnabled)}
+                    className={`p-4 rounded-full backdrop-blur-xl border transition-all shadow-2xl ${
+                        soundEnabled 
+                        ? 'bg-brand-primary/20 border-brand-primary text-brand-primarySoft' 
+                        : 'bg-black/40 border-white/10 text-white/40'
+                    }`}
+                    title={soundEnabled ? 'Matikan Suara' : 'Aktifkan Suara'}
+                >
+                    {soundEnabled ? <Volume2 size={24} /> : <VolumeX size={24} />}
+                </button>
+            </div>
+
             {/* Dynamic Background */}
             {eventCfg?.backgroundType === 'IMAGE' && eventCfg?.backgroundImageUrl && (
                 <div className="absolute inset-0 bg-center bg-cover" style={{ backgroundImage: `url(${toApiUrl(eventCfg.backgroundImageUrl)})` }} />

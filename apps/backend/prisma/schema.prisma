@@ -51,6 +51,12 @@ model Event {
   offlineSyncInterval     Int                @default(30)    // Seconds between sync attempts
   offlineQueueLimit       Int                @default(500)   // Max pending check-ins before warning
   
+  // Lucky Draw Sounds
+  rollSoundUrl            String?
+  tensionSoundUrl         String?
+  winSoundUrl             String?
+  grandWinSoundUrl        String?
+  
   createdAt             DateTime             @default(now())
   updatedAt             DateTime             @updatedAt
   guests                Guest[]

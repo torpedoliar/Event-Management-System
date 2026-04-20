@@ -58,3 +58,17 @@ export const backgroundsStorage = () =>
     ) => cb(null, uniqueName(file.originalname)),
   });
 
+export const soundsStorage = () =>
+  diskStorage({
+    destination: (
+      _req: Request,
+      _file: Express.Multer.File,
+      cb: (error: Error | null, destination: string) => void,
+    ) => cb(null, ensureDir('uploads/branding/sounds')),
+    filename: (
+      _req: Request,
+      file: Express.Multer.File,
+      cb: (error: Error | null, filename: string) => void,
+    ) => cb(null, uniqueName(file.originalname)),
+  });
+

@@ -3,7 +3,7 @@ import { SkipThrottle } from '@nestjs/throttler';
 import { EventsService } from './events.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { logosStorage, backgroundsStorage } from '../common/storage';
+import { logosStorage, backgroundsStorage, soundsStorage } from '../common/storage';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { CreateEventDto } from './dto/create-event.dto';
 import { Response } from 'express';
@@ -176,5 +176,32 @@ export class EventsController {
   clearPreview() {
     emitEvent({ type: 'preview', data: null });
     return { ok: true };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('file', {
+    storage: soundsStorage(),
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  }))
+  @Post('events/upload/sound/:type')
+  async uploadSound(@Param('type') type: string, @UploadedFile() file: Express.Multer.File) {
+    if (!file) {
+      throw new BadRequestException('No sound file provided');
+    }
+    
+    const url = `/api/uploads/branding/sounds/${file.filename}`;
+    let updateData: any = {};
+    
+    switch(type) {
+      case 'roll': updateData.rollSoundUrl = url; break;
+      case 'tension': updateData.tensionSoundUrl = url; break;
+      case 'win': updateData.winSoundUrl = url; break;
+      case 'grandwin': updateData.grandWinSoundUrl = url; break;
+      default: throw new BadRequestException('Invalid sound type');
+    }
+
+    const updated = await this.events.setActiveConfig(updateData);
+    emitEvent({ type: 'config', data: updated });
+    return updated;
   }
 }

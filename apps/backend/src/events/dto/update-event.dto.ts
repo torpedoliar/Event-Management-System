@@ -95,4 +95,24 @@ export class UpdateEventDto {
   @IsOptional()
   @IsArray()
   customCategories?: CustomCategory[];
+
+  @IsOptional()
+  @ValidateIf((o) => o.rollSoundUrl !== null)
+  @IsString()
+  rollSoundUrl?: string | null;
+
+  @IsOptional()
+  @ValidateIf((o) => o.tensionSoundUrl !== null)
+  @IsString()
+  tensionSoundUrl?: string | null;
+
+  @IsOptional()
+  @ValidateIf((o) => o.winSoundUrl !== null)
+  @IsString()
+  winSoundUrl?: string | null;
+
+  @IsOptional()
+  @ValidateIf((o) => o.grandWinSoundUrl !== null)
+  @IsString()
+  grandWinSoundUrl?: string | null;
 }
