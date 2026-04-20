@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { PrizesService } from './prizes.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { emitEvent } from '../common/sse';
@@ -6,6 +6,24 @@ import { emitEvent } from '../common/sse';
 @Controller('prizes')
 export class PrizesController {
     constructor(private readonly prizes: PrizesService) { }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('eligible-guests')
+    async getEligibleGuests(
+        @Query('page') page?: string,
+        @Query('pageSize') pageSize?: string,
+        @Query('q') q?: string,
+        @Query('guestId') guestId?: string,
+        @Query('tab') tab?: string,
+    ) {
+        return this.prizes.getEligibleGuests({
+            page: parseInt(page || '1'),
+            pageSize: parseInt(pageSize || '50'),
+            q: q?.trim(),
+            guestId: guestId?.trim(),
+            tab: tab as 'all' | 'eligible' | 'won' || 'all',
+        });
+    }
 
     @UseGuards(JwtAuthGuard)
     @Get()

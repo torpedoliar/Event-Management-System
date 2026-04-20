@@ -30,6 +30,107 @@ export class PrizesService {
         }));
     }
 
+    async getEligibleGuests(params: {
+        page: number;
+        pageSize: number;
+        q?: string;
+        guestId?: string;
+        tab?: 'all' | 'eligible' | 'won';
+    }) {
+        const active = await this.events.getActive();
+        if (!active) return { data: [], total: 0, eligible: 0, won: 0, page: 1, pageSize: 50, totalPages: 1, totalCheckedIn: 0 };
+
+        const { page, pageSize, q, guestId, tab } = params;
+
+        // Base filter: tamu hadir di event aktif
+        const baseWhere: any = {
+            eventId: active.id,
+            checkedIn: true,
+        };
+
+        // Search filters (OR condition)
+        const searchConditions: any[] = [];
+        if (q) {
+            searchConditions.push(
+                { name: { contains: q, mode: 'insensitive' } },
+                { company: { contains: q, mode: 'insensitive' } },
+                { division: { contains: q, mode: 'insensitive' } },
+            );
+            // Check jika q adalah angka → cari queueNumber
+            if (!isNaN(Number(q))) {
+                searchConditions.push({ queueNumber: parseInt(q) });
+            }
+        }
+        if (guestId) {
+            searchConditions.push(
+                { guestId: { contains: guestId, mode: 'insensitive' } },
+            );
+        }
+        if (searchConditions.length > 0) {
+            baseWhere.OR = searchConditions;
+        }
+
+        // Tab filter: eligible = belum menang, won = sudah menang
+        if (tab === 'eligible') {
+            baseWhere.prizeWins = { none: {} };
+        } else if (tab === 'won') {
+            baseWhere.prizeWins = { some: {} };
+        }
+
+        // Parallel queries: data + total + stats
+        const [data, total, eligibleCount, wonCount] = await this.prisma.$transaction([
+            this.prisma.guest.findMany({
+                where: baseWhere,
+                orderBy: [{ queueNumber: 'asc' }],
+                skip: (page - 1) * pageSize,
+                take: pageSize,
+                select: {
+                    id: true,
+                    guestId: true,
+                    name: true,
+                    queueNumber: true,
+                    company: true,
+                    division: true,
+                    photoUrl: true,
+                    prizeWins: {
+                        select: {
+                            prize: { select: { name: true, category: true } },
+                            wonAt: true,
+                        }
+                    }
+                }
+            }),
+            this.prisma.guest.count({ where: baseWhere }),
+            // Stats tanpa filter tab untuk footer (selalu tampilkan total eligible/won)
+            this.prisma.guest.count({
+                where: { eventId: active.id, checkedIn: true, prizeWins: { none: {} } }
+            }),
+            this.prisma.guest.count({
+                where: { eventId: active.id, checkedIn: true, prizeWins: { some: {} } }
+            }),
+        ]);
+
+        return {
+            data: data.map(g => ({
+                id: g.id,
+                guestId: g.guestId,
+                name: g.name,
+                queueNumber: g.queueNumber,
+                company: g.company,
+                division: g.division,
+                photoUrl: g.photoUrl,
+                wonPrizes: g.prizeWins.map(pw => pw.prize.name),
+            })),
+            total,
+            eligible: eligibleCount,
+            won: wonCount,
+            totalCheckedIn: eligibleCount + wonCount,
+            page,
+            pageSize,
+            totalPages: Math.ceil(total / pageSize) || 1,
+        };
+    }
+
     async create(data: {
         name: string;
         quantity: number;

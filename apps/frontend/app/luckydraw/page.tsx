@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { apiFetch, apiBase, toApiUrl } from '../../lib/api';
-import { Trophy, Sparkles, PartyPopper, History, X, Users, Search, Award } from 'lucide-react';
+import { Trophy, Sparkles, PartyPopper, History, X, Users, Search, Award, Hash } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface Prize {
@@ -15,11 +15,35 @@ interface Prize {
 
 interface Guest {
     id: string;
+    guestId?: string;      // ← TAMBAHAN: Guest ID untuk pencarian
     name: string;
     company?: string;
     division?: string;
     photoUrl?: string;
     queueNumber: number;
+}
+
+// Interface baru untuk panel eligible
+interface EligibleGuest {
+    id: string;
+    guestId: string;
+    name: string;
+    queueNumber: number;
+    company?: string;
+    division?: string;
+    photoUrl?: string;
+    wonPrizes: string[];   // Nama hadiah yang sudah dimenangkan
+}
+
+interface EligibleGuestsResponse {
+    data: EligibleGuest[];
+    total: number;
+    eligible: number;
+    won: number;
+    totalCheckedIn: number;
+    page: number;
+    pageSize: number;
+    totalPages: number;
 }
 
 import { useSSE } from '../../lib/sse-context';
@@ -40,43 +64,105 @@ export default function LuckyDrawPage() {
     const [activeTab, setActiveTab] = useState<'all' | 'eligible' | 'won'>('all');
     const { addEventListener, removeEventListener } = useSSE();
 
-    // Kumpulkan semua guest IDs yang sudah menang
-    const allWinnerIds = useMemo(() => {
-        const ids = new Set<string>();
-        prizes.forEach(p => p.winners.forEach((w: any) => ids.add(w.id)));
-        return ids;
-    }, [prizes]);
+    // NEW: Dedicated state untuk panel peserta (server-driven)
+    const [searchGuestId, setSearchGuestId] = useState('');
+    const [eligibleData, setEligibleData] = useState<EligibleGuest[]>([]);
+    const [eligibleMeta, setEligibleMeta] = useState({ total: 0, eligible: 0, won: 0, totalCheckedIn: 0, page: 1, totalPages: 1 });
+    const [eligibleLoading, setEligibleLoading] = useState(false);
+    const [loadingMore, setLoadingMore] = useState(false);
+    const listEndRef = useRef<HTMLDivElement>(null);
 
-    // Filter kandidat berdasar pencarian
-    const filteredCandidates = useMemo(() => {
-        let list = candidates;
-        if (searchQuery.trim()) {
-            const q = searchQuery.toLowerCase();
-            list = list.filter(g =>
-                g.name.toLowerCase().includes(q) ||
-                (g.company || '').toLowerCase().includes(q) ||
-                (g.division || '').toLowerCase().includes(q) ||
-                String(g.queueNumber).includes(q)
-            );
-        }
-        if (activeTab === 'eligible') {
-            list = list.filter(g => !allWinnerIds.has(g.id));
-        } else if (activeTab === 'won') {
-            list = list.filter(g => allWinnerIds.has(g.id));
-        }
-        return list;
-    }, [candidates, searchQuery, activeTab, allWinnerIds]);
+    const PAGE_SIZE = 50;
 
-    // Hitung statistik
-    const eligibleCount = candidates.filter(g => !allWinnerIds.has(g.id)).length;
-    const wonCount = candidates.filter(g => allWinnerIds.has(g.id)).length;
+    const fetchEligibleGuests = async (page = 1, append = false) => {
+        if (page === 1) setEligibleLoading(true);
+        else setLoadingMore(true);
+
+        try {
+            const params = new URLSearchParams();
+            params.set('page', String(page));
+            params.set('pageSize', String(PAGE_SIZE));
+            params.set('tab', activeTab);
+            if (searchQuery.trim()) params.set('q', searchQuery.trim());
+            if (searchGuestId.trim()) params.set('guestId', searchGuestId.trim());
+
+            const res = await apiFetch<EligibleGuestsResponse>(`/prizes/eligible-guests?${params.toString()}`);
+
+            if (append) {
+                setEligibleData(prev => {
+                    const existingIds = new Set(prev.map(item => item.id));
+                    const newItems = res.data.filter((item: any) => !existingIds.has(item.id));
+                    return [...prev, ...newItems];
+                });
+            } else {
+                setEligibleData(res.data);
+            }
+            setEligibleMeta({
+                total: res.total,
+                eligible: res.eligible,
+                won: res.won,
+                totalCheckedIn: res.totalCheckedIn,
+                page: res.page,
+                totalPages: res.totalPages,
+            });
+        } catch (e) {
+            console.error('Failed to load eligible guests:', e);
+        } finally {
+            setEligibleLoading(false);
+            setLoadingMore(false);
+        }
+    };
+
+    // Debounce pencarian — fetch ulang 300ms setelah user berhenti mengetik
+    const searchTimeoutRef = useRef<NodeJS.Timeout>();
+
+    useEffect(() => {
+        if (!showEligiblePanel) return;
+
+        clearTimeout(searchTimeoutRef.current);
+        searchTimeoutRef.current = setTimeout(() => {
+            fetchEligibleGuests(1, false); // Reset ke page 1
+        }, 300);
+
+        return () => clearTimeout(searchTimeoutRef.current);
+    }, [searchQuery, searchGuestId, activeTab, showEligiblePanel]);
+
+    // Auto load more saat scroll ke bawah (Intersection Observer)
+    useEffect(() => {
+        if (!showEligiblePanel || !listEndRef.current) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && !loadingMore && eligibleMeta.page < eligibleMeta.totalPages) {
+                    fetchEligibleGuests(eligibleMeta.page + 1, true);
+                }
+            },
+            { threshold: 0.1 }
+        );
+
+        observer.observe(listEndRef.current);
+        return () => observer.disconnect();
+    }, [showEligiblePanel, loadingMore, eligibleMeta.page, eligibleMeta.totalPages]);
+
+    // Auto-refresh saat panel dibuka
+    useEffect(() => {
+        if (showEligiblePanel) {
+            fetchEligibleGuests(1, false);
+        } else {
+            // Reset state saat panel ditutup
+            setSearchQuery('');
+            setSearchGuestId('');
+            setActiveTab('all');
+            setEligibleData([]);
+        }
+    }, [showEligiblePanel]);
 
     // Load prizes, candidates, and config
     const loadData = async () => {
         try {
             const [prizesData, guestsData, configData] = await Promise.all([
                 apiFetch<Prize[]>('/prizes'),
-                apiFetch<{ data: Guest[] }>('/guests?checkedIn=true&pageSize=1000'),
+                apiFetch<{ data: Guest[] }>('/guests?checkedIn=true&pageSize=10000'),
                 apiFetch<any>('/config/event')
             ]);
             setPrizes(prizesData);
@@ -439,7 +525,7 @@ export default function LuckyDrawPage() {
                                 <Users className="text-brand-primary" />
                                 Daftar Peserta Undian
                                 <span className="text-sm font-mono text-brand-primary/70 ml-2">
-                                    ({eligibleCount} eligible)
+                                    ({eligibleMeta.eligible} eligible)
                                 </span>
                             </h2>
                             <button onClick={() => setShowEligiblePanel(false)} className="p-2 hover:bg-brand-surface/10 rounded-full text-brand-surface/70 hover:text-brand-surface transition-colors">
@@ -447,8 +533,9 @@ export default function LuckyDrawPage() {
                             </button>
                         </div>
 
-                        {/* Search Bar */}
-                        <div className="p-4 border-b border-brand-border bg-brand-surface/5">
+                        {/* Search Area */}
+                        <div className="p-4 border-b border-brand-border bg-brand-surface/5 space-y-3">
+                            {/* Pencarian Umum (nama, perusahaan, divisi) */}
                             <div className="relative">
                                 <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-surface/40" />
                                 <input
@@ -459,6 +546,17 @@ export default function LuckyDrawPage() {
                                     className="w-full bg-brand-secondary/60 border border-brand-border rounded-xl pl-12 pr-4 py-3 text-brand-surface placeholder:text-brand-surface/30 focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
                                 />
                             </div>
+                            {/* Pencarian by Guest ID */}
+                            <div className="relative">
+                                <Hash size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-surface/40" />
+                                <input
+                                    type="text"
+                                    value={searchGuestId}
+                                    onChange={(e) => setSearchGuestId(e.target.value)}
+                                    placeholder="Cari Guest ID (contoh: G001, INV-0042)..."
+                                    className="w-full bg-brand-secondary/60 border border-brand-border rounded-xl pl-12 pr-4 py-3 text-brand-surface placeholder:text-brand-surface/30 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 font-mono"
+                                />
+                            </div>
                         </div>
 
                         {/* Filter Tabs */}
@@ -467,64 +565,101 @@ export default function LuckyDrawPage() {
                                 onClick={() => setActiveTab('all')}
                                 className={`px-4 py-2 rounded-t-lg font-bold text-sm transition-colors ${activeTab === 'all' ? 'bg-brand-primary/20 text-brand-primary border-b-2 border-brand-primary' : 'text-brand-surface/60 hover:text-brand-surface hover:bg-brand-surface/10'}`}
                             >
-                                Semua ({candidates.length})
+                                Semua ({eligibleMeta.totalCheckedIn})
                             </button>
                             <button
                                 onClick={() => setActiveTab('eligible')}
                                 className={`px-4 py-2 rounded-t-lg font-bold text-sm transition-colors ${activeTab === 'eligible' ? 'bg-brand-primary/20 text-brand-primary border-b-2 border-brand-primary' : 'text-brand-surface/60 hover:text-brand-surface hover:bg-brand-surface/10'}`}
                             >
-                                Eligible ({eligibleCount})
+                                Eligible ({eligibleMeta.eligible})
                             </button>
                             <button
                                 onClick={() => setActiveTab('won')}
                                 className={`px-4 py-2 rounded-t-lg font-bold text-sm transition-colors ${activeTab === 'won' ? 'bg-brand-primary/20 text-brand-primary border-b-2 border-brand-primary' : 'text-brand-surface/60 hover:text-brand-surface hover:bg-brand-surface/10'}`}
                             >
-                                Menang ({wonCount})
+                                Menang ({eligibleMeta.won})
                             </button>
                         </div>
 
                         {/* Guest List */}
-                        <div className="p-6 overflow-y-auto flex-1 bg-brand-secondary/30">
+                        <div className="p-6 overflow-y-auto flex-1 bg-brand-secondary/30 relative">
+                            {eligibleLoading ? (
+                                <div className="absolute inset-0 flex items-center justify-center bg-brand-secondary/50 backdrop-blur-sm z-10">
+                                    <div className="w-8 h-8 border-4 border-brand-primary/30 border-t-brand-primary rounded-full animate-spin" />
+                                </div>
+                            ) : null}
                             <div className="space-y-3">
-                                {filteredCandidates.map(guest => {
-                                    const wonPrizes = prizes
-                                        .filter(p => p.winners.some((w: any) => w.id === guest.id))
-                                        .map(p => p.name);
-                                    const hasWon = wonPrizes.length > 0;
-
-                                    return (
-                                        <div key={guest.id} className={`flex items-center gap-4 p-3 rounded-xl border transition-colors ${
-                                            hasWon
-                                                ? 'bg-brand-primary/5 border-brand-primary/20'
-                                                : 'bg-brand-surface/5 border-brand-border hover:bg-brand-surface/10'
-                                        }`}>
-                                            <div className="w-10 h-10 rounded-full bg-brand-primary/15 flex items-center justify-center font-bold text-sm text-brand-primary flex-shrink-0">
-                                                {guest.queueNumber}
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                <div className="font-bold text-brand-surface truncate">{guest.name}</div>
-                                                <div className="text-xs text-brand-surface/50 truncate">
-                                                    {guest.company || '-'}
-                                                    {guest.division && <span className="ml-1">({guest.division})</span>}
-                                                </div>
-                                            </div>
-                                            {hasWon ? (
-                                                <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-brand-primary/20 text-brand-primary text-xs font-mono whitespace-nowrap">
-                                                    <Award size={14} />
-                                                    <span className="truncate max-w-[150px]">{wonPrizes.join(', ')}</span>
-                                                </div>
-                                            ) : (
-                                                <div className="px-3 py-1 rounded-full bg-green-500/15 text-green-400 text-xs font-mono">
-                                                    ✓ Eligible
-                                                </div>
-                                            )}
+                                {eligibleData.map(guest => (
+                                    <div key={guest.id} className={`flex items-center gap-4 p-3 rounded-xl border transition-colors ${
+                                        guest.wonPrizes.length > 0
+                                            ? 'bg-brand-primary/5 border-brand-primary/20'
+                                            : 'bg-brand-surface/5 border-brand-border hover:bg-brand-surface/10'
+                                    }`}>
+                                        {/* Queue Number */}
+                                        <div className="w-10 h-10 rounded-full bg-brand-primary/15 flex items-center justify-center font-bold text-sm text-brand-primary flex-shrink-0">
+                                            {guest.queueNumber}
                                         </div>
-                                    );
-                                })}
-                                {filteredCandidates.length === 0 && (
+
+                                        {/* Info */}
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-2">
+                                                <span className="font-bold text-brand-surface truncate">{guest.name}</span>
+                                                {guest.guestId && (
+                                                    <span className="text-xs font-mono text-brand-surface/30 bg-brand-surface/5 px-2 py-0.5 rounded flex-shrink-0">
+                                                        {guest.guestId}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <div className="text-xs text-brand-surface/50 truncate">
+                                                {guest.company || '-'}
+                                                {guest.division && <span className="ml-1">({guest.division})</span>}
+                                            </div>
+                                        </div>
+
+                                        {/* Status Badge */}
+                                        {guest.wonPrizes.length > 0 ? (
+                                            <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-brand-primary/20 text-brand-primary text-xs font-mono whitespace-nowrap">
+                                                <Award size={14} />
+                                                <span className="truncate max-w-[150px]">{guest.wonPrizes.join(', ')}</span>
+                                            </div>
+                                        ) : (
+                                            <div className="px-3 py-1 rounded-full bg-green-500/15 text-green-400 text-xs font-mono">
+                                                ✓ Eligible
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                                {!eligibleLoading && eligibleData.length === 0 && (
                                     <div className="text-center py-12 text-brand-surface/40">
                                         <Users className="mx-auto mb-3 opacity-50" size={32} />
                                         Tidak ada peserta yang cocok dengan filter pencarian.
+                                    </div>
+                                )}
+                                
+                                {/* Pagination indicator + Load More trigger */}
+                                {eligibleMeta.page < eligibleMeta.totalPages && (
+                                    <div ref={listEndRef} className="flex justify-center py-4">
+                                        {loadingMore ? (
+                                            <div className="flex items-center gap-2 text-brand-surface/40 text-sm">
+                                                <div className="w-4 h-4 border-2 border-brand-primary/30 border-t-brand-primary rounded-full animate-spin" />
+                                                Memuat lagi...
+                                            </div>
+                                        ) : (
+                                            <button
+                                                onClick={() => fetchEligibleGuests(eligibleMeta.page + 1, true)}
+                                                className="px-6 py-2 bg-brand-surface/10 hover:bg-brand-surface/20 rounded-full text-sm text-brand-surface/60 transition-colors"
+                                            >
+                                                Muat {Math.min(PAGE_SIZE, eligibleMeta.total - eligibleData.length)} tamu lagi
+                                                ({eligibleData.length}/{eligibleMeta.total})
+                                            </button>
+                                        )}
+                                    </div>
+                                )}
+
+                                {/* Info jumlah yang ditampilkan */}
+                                {eligibleData.length > 0 && (
+                                    <div className="text-center text-xs text-brand-surface/30 pt-2">
+                                        Menampilkan {eligibleData.length} dari {eligibleMeta.total} tamu
                                     </div>
                                 )}
                             </div>
@@ -532,9 +667,9 @@ export default function LuckyDrawPage() {
 
                         {/* Footer Stats */}
                         <div className="p-4 border-t border-brand-border bg-brand-surface/5 flex justify-between text-sm text-brand-surface/60">
-                            <span>Total Hadir: {candidates.length}</span>
-                            <span>Eligible: {eligibleCount}</span>
-                            <span>Sudah Menang: {wonCount}</span>
+                            <span>Total Hadir: {eligibleMeta.totalCheckedIn}</span>
+                            <span>Eligible: {eligibleMeta.eligible}</span>
+                            <span>Sudah Menang: {eligibleMeta.won}</span>
                         </div>
                     </div>
                 </div>
