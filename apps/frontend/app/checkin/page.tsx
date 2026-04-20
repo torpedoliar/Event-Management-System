@@ -108,13 +108,27 @@ export default function CheckinPage() {
       const body = useInternalId ? { id: g.id } : { guestId: g.guestId };
       const res = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify(body) });
       if (res.status === 409) {
+        const existing = await res.json();
         appendLog(activeQuery, 'DUPLICATE', 'Sudah Check-In sebelumnya.');
+        setCheckedGuest(existing);
+        setSelected(existing);
+        setIsDuplicateCheckIn(true);
         refreshHistory();
+        startPopupTimeout();
         return;
       }
       if (!res.ok) throw new Error('Gagal Check-In Server');
+      const updated = await res.json();
       appendLog(activeQuery, 'SUCCESS', 'Check-In Server Berhasil');
+      setCheckedGuest(updated);
+      setSelected(updated);
+      setIsDuplicateCheckIn(false);
       refreshHistory();
+      startPopupTimeout();
+      // Auto capture photo if enabled
+      if (enablePhotoCapture && updated) {
+        autoCapturephoto(updated);
+      }
     } catch (e: any) {
       appendLog(activeQuery, 'ERROR', e.message || 'Error Check-In Server');
     }
@@ -129,8 +143,17 @@ export default function CheckinPage() {
         body: JSON.stringify({ guestId: query, name: query, autoCheckin: true })
       });
       if (!res.ok) throw new Error('Gagal buat & check-in');
+      const newGuest = await res.json();
       appendLog(activeQuery, 'SUCCESS', 'Dibuat & Check-In');
+      setCheckedGuest(newGuest);
+      setSelected(newGuest);
+      setIsDuplicateCheckIn(false);
       refreshHistory();
+      startPopupTimeout();
+      // Auto capture photo if enabled
+      if (enablePhotoCapture && newGuest) {
+        autoCapturephoto(newGuest);
+      }
     } catch (e: any) {
       appendLog(activeQuery, 'ERROR', e.message || 'Error auto-create');
     }

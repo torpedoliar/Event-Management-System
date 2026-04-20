@@ -124,6 +124,7 @@ export default function LuckyDrawPage() {
     const [screenFlash, setScreenFlash] = useState(false);
     const [darkReveal, setDarkReveal] = useState(false);
     const [screenShake, setScreenShake] = useState(false);
+    const [isGlitching, setIsGlitching] = useState(false);
     const [highlightedId, setHighlightedId] = useState<string | null>(null);
     const [tickerNames, setTickerNames] = useState<Guest[]>([]);
 
@@ -142,24 +143,37 @@ export default function LuckyDrawPage() {
         });
     };
 
-    // Ticker logic
+    // Ticker logic - High performance random sampler
     useEffect(() => {
         if (candidates.length === 0 || tickerSpeed > 10000) return;
 
         const interval = setInterval(() => {
             setTickerNames(prev => {
                 const newArr = [...prev];
+                
+                // Initialization: Fill with 7 random unique-ish candidates
                 if (newArr.length < 7) {
+                    const currentIds = new Set(newArr.map(n => n.id));
                     while (newArr.length < 7) {
-                         const rand = candidates[Math.floor(Math.random() * candidates.length)];
-                         if (rand) newArr.push(rand);
+                         const available = candidates.filter(c => !currentIds.has(c.id));
+                         const pool = available.length > 0 ? available : candidates;
+                         const rand = pool[Math.floor(Math.random() * pool.length)];
+                         if (rand) {
+                             newArr.push(rand);
+                             currentIds.add(rand.id);
+                         } else break;
                     }
                     return newArr;
                 }
                 
+                // Rolling: Shift one and add a new one that isn't already in the current view
                 newArr.shift();
-                const rand = candidates[Math.floor(Math.random() * candidates.length)];
+                const currentIds = new Set(newArr.map(n => n.id));
+                const available = candidates.filter(c => !currentIds.has(c.id));
+                const pool = available.length > 0 ? available : candidates;
+                const rand = pool[Math.floor(Math.random() * pool.length)];
                 if (rand) newArr.push(rand);
+                
                 return newArr;
             });
         }, tickerSpeed);
@@ -170,31 +184,33 @@ export default function LuckyDrawPage() {
     const executeGrandPrizeSlowdown = async (winnerGuest: Guest) => {
         const drama = DRAMA_CONFIGS.UTAMA;
 
-        // Stage 1
-        setTickerSpeed(100);
-        await sleep(1500);
+        // Stage 1: Intense start
+        setTickerSpeed(80);
+        await sleep(2000);
 
-        // Stage 2
-        setTickerSpeed(200);
+        // Stage 2: Begin Tension
+        setTickerSpeed(150);
         setTickerMood('tension');
-        await sleep(1500);
+        setIsGlitching(true);
+        await sleep(2000);
 
-        // Stage 3
+        // Stage 3: Noticeable slowdown
         setTickerSpeed(400);
-        await sleep(1000);
-
-        // Stage 4
-        setTickerSpeed(800);
         setScreenShake(true);
         await sleep(1500);
 
-        // Stage 5
-        setTickerSpeed(2000);
+        // Stage 4: High Suspense
+        setTickerSpeed(800);
+        await sleep(1500);
+
+        // Stage 5: Final crawl
+        setTickerSpeed(1500);
         setScreenShake(false);
         await sleep(2000);
 
-        // REVEAL
+        // REVEAL with Screen Flash
         setTickerSpeed(999999);
+        setIsGlitching(false);
         setScreenFlash(true);
         await sleep(200);
         setScreenFlash(false);
@@ -203,26 +219,27 @@ export default function LuckyDrawPage() {
         await sleep(500);
 
         injectWinnerToCenter(winnerGuest);
+        setDisplayCandidate(winnerGuest);
         setHighlightedId(winnerGuest.id);
 
         confetti({
-            particleCount: 300,
+            particleCount: 500,
             spread: 120,
-            startVelocity: 45,
-            origin: { y: 0.5, x: 0.7 },
-            colors: ['#FFD700', '#FFA500', '#FF69B4', '#FF0000', '#FFFFFF']
+            startVelocity: 60,
+            origin: { y: 0.5, x: 0.5 },
+            colors: ['#FFD700', '#FFA500', '#FFFFFF', '#1E3A8A']
         });
 
         setTimeout(() => {
             confetti({
                 particleCount: 200,
-                spread: 160,
-                origin: { y: 0.3, x: 0.3 },
-                colors: ['#FFD700', '#FFA500']
+                spread: 360,
+                origin: { y: 0.3, x: 0.5 },
+                colors: ['#FFD700', '#FFFFFF']
             });
         }, 500);
 
-        await sleep(3000);
+        await sleep(4000);
         setDarkReveal(false);
         setTickerMood('normal');
         setTickerSpeed(800);
@@ -383,6 +400,9 @@ export default function LuckyDrawPage() {
         spinningRef.current = true;
         setWinner(null);
         setHighlightedId(null);
+        if (drama === DRAMA_CONFIGS.UTAMA) {
+            setTickerMood('tension');
+        }
 
         // Start animation loop
         let counter = 0;
@@ -407,47 +427,51 @@ export default function LuckyDrawPage() {
 
         // Notify ticker to speed up
         setTickerSpeed(drama.tickerSpeedMin);
-        if (drama.enableScanlines) setTickerMood('tension');
 
         try {
             // Call API to get winner
             const result = await apiFetch<Guest>(`/prizes/${selectedPrizeId}/draw`, { method: 'POST' });
 
-            // Continue animation for a bit longer to build suspense
-            setTimeout(async () => {
-                clearInterval(interval);
+            // Suspense Wait
+            await sleep(drama.spinDuration);
+
+            clearInterval(interval);
+
+            if (drama === DRAMA_CONFIGS.UTAMA) {
+                await executeGrandPrizeSlowdown(result);
+            } else {
                 setDisplayCandidate(result);
                 setWinner(result);
+                setTickerSpeed(300);
+                await sleep(500);
+                setTickerSpeed(999999); // Pause for highlight
+                injectWinnerToCenter(result);
+                setHighlightedId(result.id);
 
-                if (drama === DRAMA_CONFIGS.UTAMA) {
-                    await executeGrandPrizeSlowdown(result);
-                } else {
-                    setTickerSpeed(300);
-                    await sleep(500);
+                confetti({
+                    particleCount: drama.confettiCount,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#FFD700', '#FFA500', '#FF69B4', '#00FF00', '#00BFFF']
+                });
+
+                // Resume ticker after 5 seconds
+                setTimeout(() => {
                     setTickerSpeed(800);
-                    setTickerSpeed(999999); // Stop ticker conceptually
-                    injectWinnerToCenter(result);
-                    setHighlightedId(result.id);
+                    setTickerMood('normal');
+                }, 5000);
+            }
 
-                    confetti({
-                        particleCount: drama.confettiCount,
-                        spread: 70,
-                        origin: { y: 0.6 },
-                        colors: ['#FFD700', '#FFA500', '#FF69B4', '#00FF00', '#00BFFF']
-                    });
-                }
-
-                setSpinning(false);
-                spinningRef.current = false;
-                loadData(); // Refresh prize list to update counts
-            }, drama.spinDuration);
-
+            setSpinning(false);
+            spinningRef.current = false;
+            loadData(); // Refresh prize list to update counts
         } catch (e: any) {
             clearInterval(interval);
             setSpinning(false);
             spinningRef.current = false;
             setTickerSpeed(800);
             setTickerMood('normal');
+            setIsGlitching(false);
             alert(e.message || 'Gagal mengundi pemenang');
         }
     };
@@ -539,8 +563,10 @@ export default function LuckyDrawPage() {
 
                             {/* Display Area */}
                             <div className="w-full min-h-[300px] bg-black/60 rounded-3xl border border-brand-primary/30 flex flex-col items-center justify-center p-6 relative overflow-hidden mb-8 shadow-[inset_0_0_100px_rgba(0,0,0,0.8)]">
+                                {tickerMood === 'tension' && <div className="scanline-overlay z-20" />}
+                                
                                 {displayCandidate ? (
-                                    <div className="text-center animate-in zoom-in duration-300 w-full flex flex-col justify-center items-center h-full">
+                                    <div className={`text-center animate-in zoom-in duration-300 w-full flex flex-col justify-center items-center h-full ${isGlitching ? 'animate-glitch-number' : ''}`}>
                                         {displayCandidate.photoUrl ? (
                                             <img
                                                 src={toApiUrl(displayCandidate.photoUrl)}
@@ -552,7 +578,9 @@ export default function LuckyDrawPage() {
                                                 {displayCandidate.queueNumber}
                                             </div>
                                         )}
-                                        <h3 className="text-3xl md:text-4xl font-heading font-bold text-brand-surface mb-2 tracking-wide text-glow line-clamp-2 leading-tight">{displayCandidate.name}</h3>
+                                        <h3 className={`text-3xl md:text-5xl font-heading font-bold text-brand-surface mb-2 tracking-wide text-glow line-clamp-2 leading-tight ${isGlitching ? 'skew-x-12' : ''}`}>
+                                            {displayCandidate.name}
+                                        </h3>
                                         <div className="bg-brand-primary/10 border border-brand-primary/20 px-4 py-1.5 rounded-full mt-2">
                                             <p className="text-lg md:text-xl font-mono text-brand-primary/90 tracking-widest uppercase">
                                                 {displayCandidate.company || 'Tamu Undangan'}
@@ -653,6 +681,8 @@ export default function LuckyDrawPage() {
 
                             {tickerNames.map((g, idx) => {
                                 const isHighlighted = highlightedId === g.id;
+                                // Use a composite key to handle same ID appearing in different positions/times if duplication filter somehow allows it
+                                // But id+index is better for stable animations in high-speed rolling
                                 return (
                                     <div 
                                         key={`${g.id}-${idx}`}
