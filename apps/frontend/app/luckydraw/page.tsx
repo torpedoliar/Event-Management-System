@@ -11,6 +11,7 @@ interface Prize {
     category?: string;
     quantity: number;
     winners: any[];
+    allowMultipleWins?: boolean;
 }
 
 interface Guest {
@@ -133,13 +134,13 @@ export default function LuckyDrawPage() {
     // Helper for Grand Prize injection
     const injectWinnerToCenter = (winnerGuest: Guest) => {
         setTickerNames(prev => {
-            const arr = [...prev];
-            if (arr.length >= 4) {
-                arr[3] = winnerGuest;
-            } else {
-                arr.push(winnerGuest);
-            }
-            return arr;
+            // Remove existing entries of this winner to prevent duplicates
+            const arr = prev.filter(g => g.id !== winnerGuest.id);
+            // Insert winner at center position (index 3)
+            const centerIdx = Math.min(3, arr.length);
+            arr.splice(centerIdx, 0, winnerGuest);
+            // Keep max 7 entries
+            return arr.slice(0, 7);
         });
     };
 
@@ -151,10 +152,11 @@ export default function LuckyDrawPage() {
             setTickerNames(prev => {
                 const newArr = [...prev];
                 
-                // Initialization: Fill with 7 random unique-ish candidates
-                if (newArr.length < 7) {
+                // Initialization: Fill with unique candidates
+                const maxSlots = Math.min(7, candidates.length);
+                if (newArr.length < maxSlots) {
                     const currentIds = new Set(newArr.map(n => n.id));
-                    while (newArr.length < 7) {
+                    while (newArr.length < maxSlots) {
                          const available = candidates.filter(c => !currentIds.has(c.id));
                          const pool = available.length > 0 ? available : candidates;
                          const rand = pool[Math.floor(Math.random() * pool.length)];
@@ -181,7 +183,7 @@ export default function LuckyDrawPage() {
         return () => clearInterval(interval);
     }, [candidates, tickerSpeed]);
 
-    const executeGrandPrizeSlowdown = async (winnerGuest: Guest) => {
+    const executeGrandPrizeSlowdown = async (winnerGuest: Guest, drawInterval: NodeJS.Timeout) => {
         const drama = DRAMA_CONFIGS.UTAMA;
 
         // Stage 1: Intense start
@@ -211,6 +213,7 @@ export default function LuckyDrawPage() {
         // REVEAL with Screen Flash
         setTickerSpeed(999999);
         setIsGlitching(false);
+        clearInterval(drawInterval);  // ← STOP left-side HERE
         setScreenFlash(true);
         await sleep(200);
         setScreenFlash(false);
@@ -220,6 +223,7 @@ export default function LuckyDrawPage() {
 
         injectWinnerToCenter(winnerGuest);
         setDisplayCandidate(winnerGuest);
+        setWinner(winnerGuest);
         setHighlightedId(winnerGuest.id);
 
         confetti({
@@ -328,6 +332,20 @@ export default function LuckyDrawPage() {
         }
     }, [showEligiblePanel]);
 
+    // Compute set of winner IDs that should be excluded from ticker
+    const getExcludedWinnerIds = (prizesData: Prize[]): Set<string> => {
+        const excluded = new Set<string>();
+        for (const prize of prizesData) {
+            if (!prize.allowMultipleWins) {
+                // Pemenang hadiah non-multiwin → exclude dari semua undian
+                for (const w of prize.winners) {
+                    excluded.add(w.id);
+                }
+            }
+        }
+        return excluded;
+    };
+
     // Load prizes, candidates, and config
     const loadData = async () => {
         try {
@@ -337,7 +355,13 @@ export default function LuckyDrawPage() {
                 apiFetch<any>('/config/event')
             ]);
             setPrizes(prizesData);
-            setCandidates(guestsData.data || []);
+
+            // Filter out winners dari hadiah yang tidak allowMultipleWins
+            const excluded = getExcludedWinnerIds(prizesData);
+            const eligibleCandidates = (guestsData.data || []).filter(
+                g => !excluded.has(g.id)
+            );
+            setCandidates(eligibleCandidates);
             setEventCfg(configData);
 
             if (prizesData.length > 0 && !selectedPrizeId) {
@@ -435,11 +459,10 @@ export default function LuckyDrawPage() {
             // Suspense Wait
             await sleep(drama.spinDuration);
 
-            clearInterval(interval);
-
             if (drama === DRAMA_CONFIGS.UTAMA) {
-                await executeGrandPrizeSlowdown(result);
+                await executeGrandPrizeSlowdown(result, interval);
             } else {
+                clearInterval(interval);
                 setDisplayCandidate(result);
                 setWinner(result);
                 setTickerSpeed(300);
@@ -460,6 +483,11 @@ export default function LuckyDrawPage() {
                     setTickerSpeed(800);
                     setTickerMood('normal');
                 }, 5000);
+            }
+
+            // Immediately remove winner from local candidates if not allowMultipleWins
+            if (!selectedPrize?.allowMultipleWins) {
+                setCandidates(prev => prev.filter(c => c.id !== result.id));
             }
 
             setSpinning(false);
