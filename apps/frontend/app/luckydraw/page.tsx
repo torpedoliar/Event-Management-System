@@ -693,7 +693,28 @@ export default function LuckyDrawPage() {
 
                             {/* Display Area */}
                             <div className="w-full min-h-[300px] bg-black/60 rounded-3xl border border-brand-primary/30 flex flex-col items-center justify-center p-6 relative overflow-hidden mb-8 shadow-[inset_0_0_100px_rgba(0,0,0,0.8)]">
-...
+                                {displayCandidate ? (
+                                    <div className={`text-center space-y-6 transition-all duration-300 ${winner ? 'scale-110' : ''}`}>
+                                        {/* Foto or Queue Number Placeholder */}
+                                        <div className="w-32 h-32 md:w-40 md:h-40 bg-brand-primary/20 rounded-full mx-auto flex items-center justify-center border-4 border-brand-primary/40 shadow-[0_0_50px_rgba(212,168,83,0.2)]">
+                                            <span className="text-4xl md:text-6xl font-black text-brand-primary">{displayCandidate.queueNumber}</span>
+                                        </div>
+                                        
+                                        <div className="space-y-2">
+                                            <div className={`text-3xl md:text-5xl font-black text-white uppercase tracking-tighter transition-all duration-500 ${isGlitching ? 'animate-pulse' : ''}`}>
+                                                {displayCandidate.name}
+                                            </div>
+                                            <div className="text-xl md:text-2xl text-brand-primarySoft font-mono tracking-widest uppercase">
+                                                {displayCandidate.company || '-'}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="text-brand-surface/20 flex flex-col items-center gap-4">
+                                        <Trophy size={80} className="animate-pulse" />
+                                        <p className="font-mono tracking-[0.3em] uppercase text-center text-sm">Pilih hadiah & tekan tombol untuk mengundi</p>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Action Area */}
@@ -754,10 +775,9 @@ export default function LuckyDrawPage() {
                                 })()}
                             </div>
                         </div>
-                    </div>
-...
-            {/* Multi Winner Modal */}
-            {showMultiWinnerModal && (
+                        </div>
+
+                        {/* Multi Winner Modal */}            {showMultiWinnerModal && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl animate-in fade-in duration-500">
                     <div className="absolute inset-0 overflow-hidden pointer-events-none">
                         <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-brand-primary/20 rounded-full blur-[120px] animate-pulse" />
