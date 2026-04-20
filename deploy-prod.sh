@@ -118,8 +118,6 @@ fi
 echo ""
 echo -e "${YELLOW}[2/11] Deploying Nginx Proxy Manager...${NC}"
 
-echo -e "${YELLOW}[2/11] Deploying Nginx Proxy Manager...${NC}"
-
 $DOCKER_COMPOSE_CMD -f docker-compose.npm.yml up -d
 echo "  - NPM container started/verified"
 

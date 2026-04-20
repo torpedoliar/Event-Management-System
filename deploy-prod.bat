@@ -81,6 +81,33 @@ for /f "usebackq tokens=1,* delims==" %%a in (".env.production") do (
     )
 )
 
+REM Validate environment variables
+set "ENV_VALID=1"
+if "!DB_PASSWORD!"=="" set "ENV_VALID=0"
+if "!DB_PASSWORD!"=="CHANGE_THIS_STRONG_PASSWORD" set "ENV_VALID=0"
+if "!JWT_SECRET!"=="" set "ENV_VALID=0"
+if "!JWT_SECRET!"=="CHANGE_THIS_TO_RANDOM_64_CHARACTER_STRING_FOR_SECURITY" set "ENV_VALID=0"
+if "!ADMIN_PASSWORD!"=="" set "ENV_VALID=0"
+if "!ADMIN_PASSWORD!"=="CHANGE_THIS_ADMIN_PASSWORD" set "ENV_VALID=0"
+
+if "!ENV_VALID!"=="0" (
+    echo.
+    echo ================================================================
+    echo  [WARNING] File .env.production perlu dikonfigurasi!
+    echo ================================================================
+    echo  Nilai saat ini:
+    echo    - DB_PASSWORD    : !DB_PASSWORD!
+    echo    - JWT_SECRET     : !JWT_SECRET:~0,20!...
+    echo    - ADMIN_PASSWORD : !ADMIN_PASSWORD!
+    echo.
+    set /p "CONFIRM=  Lanjutkan deploy dengan nilai ini? (y/n): "
+    if /i not "!CONFIRM!"=="y" (
+        echo  Edit file: %ROOT_DIR%.env.production
+        pause
+        exit /b 1
+    )
+)
+
 REM Get local IP
 set "LOCAL_IP=localhost"
 for /f "tokens=2 delims=:" %%i in ('ipconfig ^| findstr /C:"IPv4"') do (

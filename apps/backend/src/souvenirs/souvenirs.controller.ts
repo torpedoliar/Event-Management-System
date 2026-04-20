@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards, Request } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 import { SouvenirsService } from './souvenirs.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { emitEvent } from '../common/sse';
@@ -56,6 +57,7 @@ export class SouvenirsController {
     }
 
     // Give souvenir to guest
+    @SkipThrottle({ default: true, short: true, medium: true, long: true })
     @UseGuards(JwtAuthGuard)
     @Post('give')
     async giveSouvenir(@Body() body: { guestId: string; souvenirId: string }, @Request() req: any) {
@@ -67,6 +69,7 @@ export class SouvenirsController {
     }
 
     // Create guest and give souvenir in one operation
+    @SkipThrottle({ default: true, short: true, medium: true, long: true })
     @UseGuards(JwtAuthGuard)
     @Post('give-create')
     async createAndGiveSouvenir(@Body() body: { guestIdOrName: string; souvenirId: string }, @Request() req: any) {

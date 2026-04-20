@@ -119,6 +119,129 @@ export default function SouvenirPage() {
     const [pendingSouvCount, setPendingSouvCount] = useState(0);
     const [cachedGuestCount, setCachedGuestCount] = useState(0);
 
+    type ScanLogItem = {
+        id: string;
+        guestIdOrName: string;
+        status: 'SUCCESS' | 'DUPLICATE' | 'NOT_FOUND' | 'ERROR';
+        message: string;
+        timestamp: Date;
+    };
+    const rapidQueueRef = useRef<string[]>([]);
+    const isProcessingQueueRef = useRef<boolean>(false);
+    const [rapidLogs, setRapidLogs] = useState<ScanLogItem[]>([]);
+
+    const appendLog = (query: string, status: ScanLogItem['status'], message: string) => {
+        setRapidLogs(prev => {
+            const newLog: ScanLogItem = { id: Math.random().toString(), guestIdOrName: query, status, message, timestamp: new Date() };
+            const logs = [newLog, ...prev];
+            if (logs.length > 20) logs.length = 20;
+            return logs;
+        });
+    };
+
+    const processRapidQueue = async () => {
+        if (isProcessingQueueRef.current) return;
+        isProcessingQueueRef.current = true;
+        try {
+            while (rapidQueueRef.current.length > 0) {
+                const activeQuery = rapidQueueRef.current.shift();
+                if (!activeQuery) continue;
+                
+                if (!selectedSouvenir) {
+                    appendLog(activeQuery, 'ERROR', 'Souvenir belum dipilih!');
+                    continue;
+                }
+
+                const params = new URLSearchParams();
+                params.set('guestId', activeQuery);
+                params.set('name', activeQuery);
+                if (/[\d\-]/.test(activeQuery) || /^[A-Z0-9_\-]+$/.test(activeQuery)) params.set('exact', 'true');
+
+                const isCurrentlyOffline = connectionStatusService.getStatus() !== 'online';
+                
+                try {
+                    if (isCurrentlyOffline && stationConfig) throw new Error('OfflineMode');
+
+                    const controller = new AbortController();
+                    const res = await fetch(`${apiBase()}/public/guests/search?${params.toString()}`, { signal: controller.signal });
+                    if (!res.ok) throw new Error(parseErrorMessage(await res.text()));
+                    
+                    const data = await res.json();
+                    
+                    if (data.length === 1) {
+                        const guest = data[0];
+                        const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+                        const prizeRes = await fetch(`${apiBase()}/souvenirs/prizes/guest/${guest.id}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                        const prizeData = prizeRes.ok ? await prizeRes.json() : null;
+                        const hasUncollectedPrizes = prizeData && prizeData.some((pw: any) => !pw.collection);
+
+                        if (!hasUncollectedPrizes) {
+                            const giveRes = await fetch(`${apiBase()}/souvenirs/give`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                                body: JSON.stringify({ guestId: guest.id, souvenirId: selectedSouvenir })
+                            });
+
+                            if (!giveRes.ok) {
+                                const err = await giveRes.json();
+                                if (err.alreadyTaken) appendLog(activeQuery, 'DUPLICATE', 'Sudah mengambil souvenir.');
+                                else throw new Error(err.message || 'Gagal server');
+                            } else {
+                                appendLog(activeQuery, 'SUCCESS', 'Souvenir Server Sukses');
+                            }
+                        } else {
+                            appendLog(activeQuery, 'ERROR', 'Tamu memiliki hadiah belum diambil.');
+                        }
+                    } else if (data.length === 0) {
+                        if (autoCreateGuest) {
+                             const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+                             const cRes = await fetch(`${apiBase()}/souvenirs/give-create`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                                body: JSON.stringify({ guestIdOrName: activeQuery, souvenirId: selectedSouvenir })
+                            });
+                            if (!cRes.ok) throw new Error('Gagal buat & beri souvenir');
+                            appendLog(activeQuery, 'SUCCESS', 'Buat & Souvenir Tuntas');
+                        } else {
+                            appendLog(activeQuery, 'NOT_FOUND', 'Tamu tidak ditemukan.');
+                        }
+                    } else {
+                        appendLog(activeQuery, 'ERROR', `Ditemukan ${data.length}. Butuh manual klik.`);
+                    }
+                } catch (e: any) {
+                    let matchedGuests: any[] = [];
+                    const exactMatch = await indexedDBService.getCachedGuestByGuestId(activeQuery);
+                    if (exactMatch) {
+                        matchedGuests = [exactMatch];
+                    } else {
+                        const cachedGuests = await indexedDBService.getAllCachedGuests();
+                        for (const g of cachedGuests) {
+                            if (g.guestId.toLowerCase() === activeQuery.toLowerCase() || g.name.toLowerCase() === activeQuery.toLowerCase()) {
+                                matchedGuests.push(g);
+                            }
+                        }
+                    }
+                    if (matchedGuests.length === 1) {
+                        const matchedGuest = matchedGuests[0];
+                        if (matchedGuest.souvenirTaken) {
+                            appendLog(activeQuery, 'DUPLICATE', 'Sudah ambil offline.');
+                        } else {
+                            await offlineSyncService.addPendingSouvenir(matchedGuest.guestId, selectedSouvenir);
+                            await indexedDBService.updateCachedGuest(matchedGuest.id, { souvenirTaken: true });
+                            appendLog(activeQuery, 'SUCCESS', 'Souvenir Offline Sukses');
+                        }
+                    } else {
+                        appendLog(activeQuery, 'NOT_FOUND', 'Offline ID tidak logis.');
+                    }
+                }
+                await new Promise(res => setTimeout(res, 50));
+            }
+        } finally {
+            isProcessingQueueRef.current = false;
+            debouncedLoadSouvenirs();
+        }
+    };
+
     const inputRef = useRef<HTMLInputElement>(null);
     const searchAbortRef = useRef<AbortController | null>(null);
     const debouncedLoadRef = useRef<NodeJS.Timeout | null>(null);
@@ -819,12 +942,45 @@ export default function SouvenirPage() {
                         ref={inputRef}
                         value={q}
                         onChange={(e) => setQ(e.target.value)}
-                        onKeyDown={(e) => { if (e.key === 'Enter' && !searching && !processing && !creatingGuest) { e.preventDefault(); doSearch(); } }}
+                        onKeyDown={(e) => { 
+                            if (e.key === 'Enter') { 
+                                e.preventDefault(); 
+                                if (!q.trim()) return;
+                                rapidQueueRef.current.push(q.trim());
+                                setQ(''); 
+                                processRapidQueue(); 
+                            } 
+                        }}
                         placeholder="Masukkan Guest ID atau Nama..."
-                        className="w-full rounded-lg border border-white/30 bg-white/10 px-3 py-3 text-white placeholder:text-white/60 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-brand-primary/70"
-                        disabled={searching || processing || creatingGuest}
+                        className="w-full rounded-lg border border-white/30 bg-white/10 px-3 py-3 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-brand-primary/70"
                         autoFocus
                     />
+
+                    {rapidLogs.length > 0 && (
+                        <div className="relative z-10 mt-4 flex flex-col items-center">
+                            <div className="w-full glass-card-dark p-4 md:p-6 text-sm text-white/80 overflow-y-auto max-h-48 border border-white/10 rounded-xl">
+                                <h3 className="text-white font-semibold mb-3">Rapid Scan Logs</h3>
+                                <ul className="space-y-2">
+                                    {rapidLogs.map((log) => (
+                                        <li key={log.id} className="flex justify-between items-center bg-white/5 px-3 py-2 rounded-lg">
+                                            <div className="flex gap-3">
+                                                <span className="opacity-60">{log.timestamp.toLocaleTimeString()}</span>
+                                                <strong className="text-white">{log.guestIdOrName}</strong>
+                                            </div>
+                                            <span className={`font-medium ${
+                                                log.status === 'SUCCESS' ? 'text-brand-success' :
+                                                log.status === 'DUPLICATE' ? 'text-orange-400' :
+                                                'text-brand-danger'
+                                            }`}>
+                                                {log.message}
+                                            </span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                    )}
+
                     {error && (
                         <div className="text-brand-danger mt-2 flex items-center justify-between">
                             <span>{error}</span>
