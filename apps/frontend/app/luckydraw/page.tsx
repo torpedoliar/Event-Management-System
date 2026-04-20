@@ -172,8 +172,18 @@ export default function LuckyDrawPage() {
     const [drawCount, setDrawCount] = useState<number>(1);
     const [multiWinners, setMultiWinners] = useState<Guest[]>([]);
     const [showMultiWinnerModal, setShowMultiWinnerModal] = useState(false);
+    const [isRevealing, setIsRevealing] = useState(false);
+    const [totalExpectedWinners, setTotalExpectedWinners] = useState(0);
 
     const PAGE_SIZE = 50;
+
+    // Hitung interval reveal berdasarkan jumlah pemenang
+    const calculateRevealInterval = (count: number): number => {
+        if (count <= 5) return 800;    // 5 winners × 800ms = 4s
+        if (count <= 10) return 500;   // 10 winners × 500ms = 5s
+        if (count <= 20) return 350;   // 20 winners × 350ms = 7s
+        return 250;                    // 50+ winners × 250ms = ~12.5s
+    };
 
     // Helper for Grand Prize injection
     const injectWinnerToCenter = (winnerGuest: Guest) => {
@@ -556,9 +566,29 @@ export default function LuckyDrawPage() {
                 playSound(audioWinRef);
                 
                 if (results.length > 1) {
-                    setMultiWinners(results);
+                    // Sequential reveal: buka modal kosong, lalu reveal satu-per-satu
+                    const revealInterval = calculateRevealInterval(results.length);
+                    setTotalExpectedWinners(results.length);
+                    setMultiWinners([]);               // Start empty
                     setShowMultiWinnerModal(true);
-                    setDisplayCandidate(result); // Show first one in main box
+                    setIsRevealing(true);
+                    
+                    // Reveal satu per satu
+                    for (let i = 0; i < results.length; i++) {
+                        await sleep(revealInterval);
+                        setMultiWinners(prev => [...prev, results[i]]);
+                        setDisplayCandidate(results[i]);
+                        
+                        // Mini confetti setiap pemenang
+                        confetti({
+                            particleCount: 30,
+                            spread: 50,
+                            origin: { y: 0.6 },
+                            colors: ['#FFD700', '#FFA500', '#FF69B4']
+                        });
+                    }
+                    
+                    setIsRevealing(false);
                 } else {
                     setDisplayCandidate(result);
                     setWinner(result);
@@ -828,7 +858,10 @@ export default function LuckyDrawPage() {
                                 CONGRATULATIONS!
                             </h2>
                             <p className="text-xl md:text-2xl text-white/60 font-mono tracking-[0.3em] uppercase">
-                                {multiWinners.length} PEMENANG {selectedPrize?.name}
+                                {isRevealing
+                                    ? `${multiWinners.length} / ${totalExpectedWinners} PEMENANG ${selectedPrize?.name}`
+                                    : `${multiWinners.length} PEMENANG ${selectedPrize?.name}`
+                                }
                             </p>
                         </div>
 
@@ -838,7 +871,6 @@ export default function LuckyDrawPage() {
                                     <div 
                                         key={w.id} 
                                         className="group bg-white/5 border border-white/10 rounded-3xl p-6 flex items-center gap-5 transition-all duration-500 hover:bg-white/10 hover:border-brand-primary/50 hover:scale-[1.02] animate-in slide-in-from-bottom duration-500"
-                                        style={{ animationDelay: `${idx * 100}ms` }}
                                     >
                                         <div className="w-16 h-16 rounded-2xl bg-brand-primary/20 flex items-center justify-center font-bold text-2xl text-brand-primary shadow-inner group-hover:bg-brand-primary group-hover:text-brand-secondary transition-colors duration-500">
                                             {w.queueNumber}
@@ -859,10 +891,16 @@ export default function LuckyDrawPage() {
                                 onClick={() => {
                                     setShowMultiWinnerModal(false);
                                     setMultiWinners([]);
+                                    setTotalExpectedWinners(0);
                                 }}
-                                className="px-16 py-4 bg-brand-primary text-brand-secondary rounded-full font-bold text-xl font-mono tracking-widest uppercase hover:bg-brand-primarySoft transition-all hover:scale-105 shadow-[0_0_40px_rgba(212,168,83,0.3)]"
+                                disabled={isRevealing}
+                                className={`px-16 py-4 rounded-full font-bold text-xl font-mono tracking-widest uppercase transition-all shadow-[0_0_40px_rgba(212,168,83,0.3)] ${
+                                    isRevealing 
+                                    ? 'bg-brand-primary/20 text-brand-primary/40 cursor-not-allowed' 
+                                    : 'bg-brand-primary text-brand-secondary hover:bg-brand-primarySoft hover:scale-105'
+                                }`}
                             >
-                                CLOSE & CONTINUE
+                                {isRevealing ? `MENGUNGKAP PEMENANG... (${multiWinners.length}/${totalExpectedWinners})` : 'CLOSE & CONTINUE'}
                             </button>
                         </div>
                     </div>
