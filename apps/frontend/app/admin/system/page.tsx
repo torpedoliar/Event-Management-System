@@ -15,9 +15,11 @@ import {
   AlertTriangle,
   Download,
   Search,
-  Filter
+  Filter,
+  Trash2
 } from 'lucide-react';
 import { apiFetch } from '../../../lib/api';
+import { indexedDBService } from '../../../lib/indexeddb';
 import { SkeletonStats, SkeletonTable } from '../../../components/ui/Skeleton';
 import { ErrorBoundary } from '../../../components/ErrorBoundary';
 
@@ -109,6 +111,7 @@ function SystemPage() {
   const [auditStats, setAuditStats] = useState<AuditStats | null>(null);
   const [auditPage, setAuditPage] = useState(1);
   const [auditTotal, setAuditTotal] = useState(0);
+  const [isClearingCache, setIsClearingCache] = useState(false);
 
   useEffect(() => {
     loadHealthData();
@@ -129,6 +132,29 @@ function SystemPage() {
       loadLogContent();
     }
   }, [selectedLogFile, logLevel, logSearch]);
+
+  async function handleClearLocalCache() {
+    if (!confirm('Apakah Anda yakin ingin menghapus seluruh cache lokal? Ini akan menghapus data offline yang belum tersinkronisasi, pengaturan station, dan data tamu yang tersimpan di browser ini.')) {
+      return;
+    }
+
+    try {
+      setIsClearingCache(true);
+      
+      // Clear IndexedDB
+      await indexedDBService.clearAll();
+      
+      // Clear LocalStorage
+      localStorage.clear();
+
+      alert('Cache lokal berhasil dihapus. Halaman akan dimuat ulang.');
+      window.location.reload();
+    } catch (error: any) {
+      alert('Gagal menghapus cache: ' + error.message);
+    } finally {
+      setIsClearingCache(false);
+    }
+  }
 
   async function loadHealthData() {
     try {
@@ -234,17 +260,28 @@ function SystemPage() {
             <h1 className="text-2xl font-bold text-white">System Monitor</h1>
             <p className="text-white/60">Health, logs, dan audit trail sistem</p>
           </div>
-          <button
-            onClick={() => {
-              if (tab === 'health') loadHealthData();
-              else if (tab === 'logs') loadLogContent();
-              else loadAuditLogs();
-            }}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
-          >
-            <RefreshCw className="w-4 h-4" />
-            Refresh
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={handleClearLocalCache}
+              disabled={isClearingCache}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-danger/20 hover:bg-brand-danger/30 text-brand-danger border border-brand-danger/30 transition-colors disabled:opacity-50"
+              title="Hapus IndexedDB & LocalStorage"
+            >
+              <Trash2 className="w-4 h-4" />
+              {isClearingCache ? 'Clearing...' : 'Clear Local Cache'}
+            </button>
+            <button
+              onClick={() => {
+                if (tab === 'health') loadHealthData();
+                else if (tab === 'logs') loadLogContent();
+                else loadAuditLogs();
+              }}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Refresh
+            </button>
+          </div>
         </div>
 
         {/* Tabs */}
