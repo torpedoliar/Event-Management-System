@@ -2023,10 +2023,7 @@ export default function CheckinPage() {
               </div>
             </div>
 
-            {/* Popup-specific background override rendering */}
-            {(() => {
-              const mode = bgMode === 'CONFIG' ? cfg?.backgroundType : bgMode;
-              return (
+
           </div>
         )}
 
