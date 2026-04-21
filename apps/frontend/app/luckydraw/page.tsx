@@ -645,6 +645,22 @@ export default function LuckyDrawPage() {
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
+            {/* Mode Selector Dropdown */}
+            <div className="fixed top-24 left-6 z-[70]">
+                <select
+                    onChange={(e) => {
+                        if (e.target.value === 'slot') {
+                            window.location.href = '/luckydraw/display';
+                        }
+                    }}
+                    value="classic"
+                    className="bg-brand-secondary/80 border border-brand-primary/50 text-brand-primarySoft text-sm rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary backdrop-blur-xl transition-all shadow-lg font-mono tracking-wider cursor-pointer"
+                >
+                    <option value="classic">🎲 Classic Mode</option>
+                    <option value="slot">🎰 Slot Machine Mode</option>
+                </select>
+            </div>
+
             {/* Audio Elements */}
             <audio ref={audioRollRef} src={toApiUrl(eventCfg?.rollSoundUrl || "/sounds/roll.mp3")} preload="auto" />
             <audio ref={audioTensionRef} src={toApiUrl(eventCfg?.tensionSoundUrl || "/sounds/tension.mp3")} preload="auto" />
@@ -738,6 +754,7 @@ export default function LuckyDrawPage() {
                                     setWinner(null);
                                     setDisplayCandidate(null);
                                     setHighlightedId(null);
+                                    setDrawCount(1);
                                 }}
                                 className="bg-brand-secondary/40 border border-brand-primary/20 text-brand-primarySoft text-lg md:text-xl rounded-full px-6 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-xl transition-all hover:bg-brand-secondary/60 cursor-pointer font-mono tracking-widest uppercase shadow-[0_0_30px_rgba(0,0,0,0.5)]"
                             >
@@ -1018,15 +1035,6 @@ export default function LuckyDrawPage() {
                     >
                         <History size={24} />
                         RIWAYAT PEMENANG
-                    </button>
-
-                    {/* Live Display Button */}
-                    <button
-                        onClick={() => window.open('/luckydraw/display', '_blank')}
-                        className="bg-gradient-to-r from-brand-primary/20 to-brand-accent/20 hover:from-brand-primary/30 hover:to-brand-accent/30 border border-brand-primary/30 text-brand-primarySoft text-lg rounded-2xl px-6 py-5 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-xl transition-all flex items-center justify-center gap-3 font-mono tracking-widest uppercase shadow-xl"
-                    >
-                        <Monitor size={24} />
-                        LIVE DISPLAY
                     </button>
                 </div>
             </div>

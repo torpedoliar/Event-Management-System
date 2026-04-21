@@ -474,7 +474,7 @@ export default function LiveDisplayPage() {
     };
 
     const getCharSize = () => {
-        const count = slotRows.length || drawCount;
+        const count = slotRows.length || (isUtama ? 1 : drawCount);
         if (count === 1) return 80;
         if (count <= 3) return 60;
         if (count <= 5) return 50;
@@ -484,7 +484,7 @@ export default function LiveDisplayPage() {
     };
 
     const getTextSizeClass = () => {
-        const count = slotRows.length || drawCount;
+        const count = slotRows.length || (isUtama ? 1 : drawCount);
         if (count === 1) return 'text-6xl';
         if (count <= 3) return 'text-5xl';
         if (count <= 5) return 'text-4xl';
@@ -494,7 +494,7 @@ export default function LiveDisplayPage() {
     };
     
     const getGridClass = () => {
-        const count = slotRows.length || drawCount;
+        const count = slotRows.length || (isUtama ? 1 : drawCount);
         if (count <= 5) return 'grid-cols-1';
         if (count <= 20) return 'grid-cols-2';
         return 'grid-cols-3';
@@ -508,6 +508,22 @@ export default function LiveDisplayPage() {
 
     return (
         <div className={`min-h-screen flex flex-col p-8 relative overflow-hidden bg-black ${screenShake ? 'animate-screen-shake' : ''}`}>
+            {/* Mode Selector Dropdown */}
+            <div className="fixed top-6 left-6 z-[70]">
+                <select
+                    onChange={(e) => {
+                        if (e.target.value === 'classic') {
+                            window.location.href = '/luckydraw';
+                        }
+                    }}
+                    value="slot"
+                    className="bg-brand-secondary/80 border border-brand-primary/50 text-brand-primarySoft text-sm rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary backdrop-blur-xl transition-all shadow-lg font-mono tracking-wider cursor-pointer"
+                >
+                    <option value="classic">🎲 Classic Mode</option>
+                    <option value="slot">🎰 Slot Machine Mode</option>
+                </select>
+            </div>
+
             <audio ref={audioRollRef} src={toApiUrl(eventCfg?.rollSoundUrl || "/sounds/roll.mp3")} preload="auto" />
             <audio ref={audioTensionRef} src={toApiUrl(eventCfg?.tensionSoundUrl || "/sounds/tension.mp3")} preload="auto" />
             <audio ref={audioWinRef} src={toApiUrl(eventCfg?.winSoundUrl || "/sounds/win.mp3")} preload="auto" />
@@ -564,6 +580,7 @@ export default function LiveDisplayPage() {
                                 setRevealedWinners([]);
                                 setSlotRows([]);
                                 setGrandWinner(null);
+                                setDrawCount(1);
                             }}
                             className="w-full bg-brand-secondary/80 border border-brand-primary/30 text-brand-primarySoft text-xl rounded-full px-6 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 font-mono tracking-widest uppercase text-center"
                         >
@@ -599,7 +616,7 @@ export default function LiveDisplayPage() {
                     </div>
 
                     <div className={`grid ${getGridClass()} gap-x-12 gap-y-8 justify-items-center py-6 px-4`}>
-                        {(slotRows.length > 0 ? slotRows : Array(drawCount).fill({ winnerChars: Array(10).fill('0') })).map((row, rowIdx) => (
+                        {(slotRows.length > 0 ? slotRows : Array(isUtama ? 1 : drawCount).fill({ winnerChars: Array(10).fill('0') })).map((row, rowIdx) => (
                             <div key={rowIdx} className="flex flex-col items-center gap-4">
                                 <div className="flex items-center bg-black/60 rounded-xl p-2 border border-white/5 shadow-inner">
                                     {row.winnerChars.map((char: string, colIdx: number) => (
