@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { apiFetch, apiBase, toApiUrl } from '../../lib/api';
-import { Trophy, Sparkles, PartyPopper, History, X, Users, Search, Award, Hash, Volume2, VolumeX } from 'lucide-react';
+import { Trophy, Sparkles, PartyPopper, History, X, Users, Search, Award, Hash, Volume2, VolumeX, Monitor } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface Prize {
@@ -1018,6 +1018,15 @@ export default function LuckyDrawPage() {
                     >
                         <History size={24} />
                         RIWAYAT PEMENANG
+                    </button>
+
+                    {/* Live Display Button */}
+                    <button
+                        onClick={() => window.open('/luckydraw/display', '_blank')}
+                        className="bg-gradient-to-r from-brand-primary/20 to-brand-accent/20 hover:from-brand-primary/30 hover:to-brand-accent/30 border border-brand-primary/30 text-brand-primarySoft text-lg rounded-2xl px-6 py-5 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-xl transition-all flex items-center justify-center gap-3 font-mono tracking-widest uppercase shadow-xl"
+                    >
+                        <Monitor size={24} />
+                        LIVE DISPLAY
                     </button>
                 </div>
             </div>
