@@ -1028,24 +1028,14 @@ export default function LuckyDrawPage() {
                         </button>
                     </div>
 
-                    {/* History & Live Display Button Panel */}
-                    <div className="flex flex-col gap-4">
-                        <button
-                            onClick={() => setShowHistory(true)}
-                            className="bg-brand-secondary/60 hover:bg-brand-secondary/80 border border-brand-primary/30 text-brand-primarySoft text-lg rounded-2xl px-6 py-5 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-xl transition-all flex items-center justify-center gap-3 font-mono tracking-widest uppercase shadow-xl"
-                        >
-                            <History size={24} />
-                            RIWAYAT PEMENANG
-                        </button>
-
-                        <button
-                            onClick={() => window.open('/luckydraw/display', '_blank')}
-                            className="bg-gradient-to-r from-brand-primary/20 to-brand-accent/20 hover:from-brand-primary/30 hover:to-brand-accent/30 border border-brand-primary/30 text-brand-primarySoft text-lg rounded-2xl px-6 py-5 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-xl transition-all flex items-center justify-center gap-3 font-mono tracking-widest uppercase shadow-xl"
-                        >
-                            <Monitor size={24} />
-                            LIVE DISPLAY
-                        </button>
-                    </div>
+                    {/* History Button Panel */}
+                    <button
+                        onClick={() => setShowHistory(true)}
+                        className="bg-brand-secondary/60 hover:bg-brand-secondary/80 border border-brand-primary/30 text-brand-primarySoft text-lg rounded-2xl px-6 py-5 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-xl transition-all flex items-center justify-center gap-3 font-mono tracking-widest uppercase shadow-xl"
+                    >
+                        <History size={24} />
+                        RIWAYAT PEMENANG
+                    </button>
                 </div>
             </div>
 
