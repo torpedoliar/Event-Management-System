@@ -791,91 +791,106 @@ export class GuestsService {
       dbStationId = station.id;
     }
 
-    // Process all check-ins in parallel using pre-loaded guests
-    const results = await Promise.all(
-      pendingCheckins.map(async (item) => {
-        const guest = guestMap.get(item.guestIdentifier);
-        
-        if (!guest) {
-          return {
-            clientTimestamp: item.clientTimestamp,
-            success: false,
-            conflict: false,
-            reason: 'Guest not found'
-          };
-        }
-
-        const allowMultiple = guest.event?.allowMultipleCheckin ?? false;
-        const maxCheckins = guest.event?.maxCheckinCount ?? 1;
-        const existingCheckins = guest.checkins || [];
-        const isDuplicate = !allowMultiple && existingCheckins.length > 0;
-        const maxReached = existingCheckins.length >= maxCheckins;
-        const clientTime = new Date(item.clientTimestamp);
-
-        // Idempotency check: prevent duplicate checkin insertion due to network flapping
-        const alreadySynced = existingCheckins.some(
-          (c: any) => c.clientTimestamp && new Date(c.clientTimestamp).getTime() === clientTime.getTime() && c.stationId === dbStationId
-        );
-
-        if (alreadySynced) {
-          const matchedCheckin = existingCheckins.find((c: any) => c.clientTimestamp && new Date(c.clientTimestamp).getTime() === clientTime.getTime() && c.stationId === dbStationId);
-          return {
-            clientTimestamp: item.clientTimestamp,
-            success: true, // Mark success so frontend clears its queue
-            checkinId: matchedCheckin?.id,
-            conflict: false,
-            reason: 'already_synced'
-          };
-        }
-
-        try {
-          const checkin = await this.prisma.guestCheckin.create({
-            data: {
-              guestId: guest.id,
-              stationId: dbStationId,
-              counterName: stationName || null,
-              checkinAt: clientTime,
-              isOffline: true,
-              clientTimestamp: clientTime,
-              syncedAt: now,
-              isDuplicate: isDuplicate || maxReached,
-            }
-          });
-
-          // Update guest only if not duplicate
-          if (!isDuplicate && !maxReached) {
-            const guestUpdateData: Prisma.GuestUpdateInput = {
-              checkedIn: true,
-              checkedInAt: guest.checkedInAt || clientTime,
-              checkinCount: { increment: 1 },
+    // Process check-ins in chunks to prevent Prisma connection pool exhaustion
+    // Untuk 20 Station yang memborbardir secara bersamaan: CHUNK_SIZE = 25 adalah titik aman absolut.
+    // 20 station x 25 = 500 concurrent queries (masih dapat terakomodasi pool tanpa timeout).
+    const CHUNK_SIZE = 25;
+    const results: any[] = [];
+    
+    for (let i = 0; i < pendingCheckins.length; i += CHUNK_SIZE) {
+      const chunk = pendingCheckins.slice(i, i + CHUNK_SIZE);
+      const chunkResults = await Promise.all(
+        chunk.map(async (item) => {
+          const guest = guestMap.get(item.guestIdentifier);
+          
+          if (!guest) {
+            return {
+              clientTimestamp: item.clientTimestamp,
+              success: false,
+              conflict: false,
+              reason: 'Guest not found'
             };
-            if (item.photo) {
-              guestUpdateData.photoUrl = item.photo;
-            }
-
-            await this.prisma.guest.update({
-              where: { id: guest.id },
-              data: guestUpdateData
-            });
           }
 
-          return {
-            clientTimestamp: item.clientTimestamp,
-            success: !checkin.isDuplicate,
-            checkinId: checkin.id,
-            conflict: checkin.isDuplicate,
-            reason: checkin.isDuplicate ? (maxReached ? 'max_checkins_reached' : 'already_checked_in') : undefined
-          };
-        } catch (error: any) {
-          return {
-            clientTimestamp: item.clientTimestamp,
-            success: false,
-            conflict: false,
-            reason: error.message || 'Unknown error'
-          };
-        }
-      })
-    );
+          const allowMultiple = guest.event?.allowMultipleCheckin ?? false;
+          const maxCheckins = guest.event?.maxCheckinCount ?? 1;
+          const existingCheckins = guest.checkins || [];
+          const isDuplicate = !allowMultiple && existingCheckins.length > 0;
+          const maxReached = existingCheckins.length >= maxCheckins;
+          const clientTime = new Date(item.clientTimestamp);
+
+          // Idempotency check: prevent duplicate checkin insertion due to network flapping
+          const alreadySynced = existingCheckins.some(
+            (c: any) => c.clientTimestamp && new Date(c.clientTimestamp).getTime() === clientTime.getTime() && c.stationId === dbStationId
+          );
+
+          if (alreadySynced) {
+            const matchedCheckin = existingCheckins.find((c: any) => c.clientTimestamp && new Date(c.clientTimestamp).getTime() === clientTime.getTime() && c.stationId === dbStationId);
+            return {
+              clientTimestamp: item.clientTimestamp,
+              success: true, // Mark success so frontend clears its queue
+              checkinId: matchedCheckin?.id,
+              conflict: false,
+              reason: 'already_synced'
+            };
+          }
+
+          try {
+            const checkin = await this.prisma.guestCheckin.create({
+              data: {
+                guestId: guest.id,
+                stationId: dbStationId,
+                counterName: stationName || null,
+                checkinAt: clientTime,
+                isOffline: true,
+                clientTimestamp: clientTime,
+                syncedAt: now,
+                isDuplicate: isDuplicate || maxReached,
+              }
+            });
+
+            // Update guest only if not duplicate
+            if (!isDuplicate && !maxReached) {
+              const guestUpdateData: Prisma.GuestUpdateInput = {
+                checkedIn: true,
+                checkedInAt: guest.checkedInAt || clientTime,
+                checkinCount: { increment: 1 },
+              };
+              if (item.photo) {
+                guestUpdateData.photoUrl = item.photo;
+              }
+
+              await this.prisma.guest.update({
+                where: { id: guest.id },
+                data: guestUpdateData
+              });
+            }
+
+            return {
+              clientTimestamp: item.clientTimestamp,
+              success: !checkin.isDuplicate,
+              checkinId: checkin.id,
+              conflict: checkin.isDuplicate,
+              reason: checkin.isDuplicate ? (maxReached ? 'max_checkins_reached' : 'already_checked_in') : undefined
+            };
+          } catch (error: any) {
+            return {
+              clientTimestamp: item.clientTimestamp,
+              success: false,
+              conflict: false,
+              reason: error.message || 'Unknown error'
+            };
+          }
+        })
+      );
+      results.push(...chunkResults);
+      
+      // Memberi nafas (jeda 5 milidetik) pada CPU dan Prisma Pool agar station lain dapat giliran
+      // Ini sangat krusial untuk mencegah crash saat 20 station saling rebutan resource database.
+      if (i + CHUNK_SIZE < pendingCheckins.length) {
+        await new Promise(resolve => setTimeout(resolve, 5));
+      }
+    }
 
     // OPTIMIZATION: Fetch remote updates
     const remoteCheckins = lastSyncAt

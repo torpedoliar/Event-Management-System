@@ -270,19 +270,22 @@ export default function LuckyDrawPage() {
         setTickerSpeed(999999);
         setIsGlitching(false);
         clearInterval(drawInterval);
+        
+        // Immediately inject winner so there's no delayed jump
+        injectWinnerToCenter(winnerGuest);
+        setDisplayCandidate(winnerGuest);
+        setWinner(winnerGuest);
+        setHighlightedId(winnerGuest.id);
+
         stopSound(audioTensionRef);
         playSound(audioGrandWinRef);
+        
         setScreenFlash(true);
         await sleep(300);
         setScreenFlash(false);
 
         setDarkReveal(true);
         await sleep(500);
-
-        injectWinnerToCenter(winnerGuest);
-        setDisplayCandidate(winnerGuest);
-        setWinner(winnerGuest);
-        setHighlightedId(winnerGuest.id);
 
         // --- EPIC CELEBRATION SEQUENCES ---
         
