@@ -316,7 +316,7 @@ export default function LiveDisplayPage() {
         for (let col = 9; col >= 0; col--) {
             setGlobalLockedCount(10 - col); 
             
-            confetti({ particleCount: 10 * rows.length, spread: 40, origin: { x: 0.12 + ((10 - col) * 0.08), y: 0.5 } });
+            confetti({ particleCount: 10 * rows.length, spread: 40, origin: { x: 0.20 + (col * 0.08), y: 0.5 } });
             
             await sleep(lockDelay);
         }
@@ -509,7 +509,7 @@ export default function LiveDisplayPage() {
     return (
         <div className={`min-h-screen flex flex-col p-8 relative overflow-hidden bg-black ${screenShake ? 'animate-screen-shake' : ''}`}>
             {/* Mode Selector Dropdown */}
-            <div className="fixed top-6 left-6 z-[70]">
+            <div className="fixed top-24 left-6 z-[70]">
                 <select
                     onChange={(e) => {
                         if (e.target.value === 'classic') {
