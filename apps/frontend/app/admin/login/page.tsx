@@ -63,23 +63,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden">
-      {/* Dynamic Background */}
-      {bgType === 'IMAGE' && bgImage && (
-        <div className="absolute inset-0 bg-center bg-cover" style={{ backgroundImage: `url(${toApiUrl(bgImage)})` }} />
-      )}
-      {bgType === 'VIDEO' && bgVideo && (
-        <video className="absolute inset-0 w-full h-full object-cover" src={toApiUrl(bgVideo)} muted loop autoPlay playsInline />
-      )}
 
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-brand-secondary/90 via-[#1e1a30]/60 to-brand-secondary/90" style={{ opacity: overlayOpacity + 0.3 }} />
-
-      {/* Decorative Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-[30%] -left-[10%] w-[50%] h-[50%] bg-brand-primary/15 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute top-[50%] -right-[10%] w-[40%] h-[40%] bg-brand-accent/15 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute -bottom-[20%] left-[30%] w-[35%] h-[35%] bg-brand-primarySoft/10 rounded-full blur-[80px] animate-pulse" style={{ animationDelay: '2s' }} />
-      </div>
 
       <div className="w-full max-w-md relative z-10">
         {/* Logo/Brand Header */}

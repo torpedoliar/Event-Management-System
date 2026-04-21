@@ -2027,20 +2027,6 @@ export default function CheckinPage() {
             {(() => {
               const mode = bgMode === 'CONFIG' ? cfg?.backgroundType : bgMode;
               return (
-                <>
-                  {mode === 'IMAGE' && cfg?.backgroundImageUrl && (
-                    <div className="absolute inset-0 -z-10 bg-center bg-cover blur-sm" style={{ backgroundImage: `url(${toApiUrl(cfg.backgroundImageUrl)})` }} />
-                  )}
-                  {mode === 'VIDEO' && cfg?.backgroundVideoUrl && (
-                    // eslint-disable-next-line jsx-a11y/media-has-caption
-                    <video className="absolute inset-0 -z-10 w-full h-full object-cover blur-sm" src={toApiUrl(cfg.backgroundVideoUrl)} muted loop autoPlay playsInline />
-                  )}
-                  {mode === 'NONE' && (
-                    <div className="absolute inset-0 -z-10 bg-black" style={{ opacity: 0.2 }} />
-                  )}
-                </>
-              );
-            })()}
           </div>
         )}
 

@@ -36,10 +36,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <QueryProvider>
             <SSEProvider>
               <ThemeBackground />
-              <Suspense fallback={<div className="h-14 w-full bg-brand-secondary/80" />}>
-                <TopNav />
-              </Suspense>
-              {children}
+              <div className="relative z-10 flex flex-col min-h-screen">
+                <Suspense fallback={<div className="h-14 w-full bg-brand-secondary/80" />}>
+                  <TopNav />
+                </Suspense>
+                {children}
+              </div>
             </SSEProvider>
           </QueryProvider>
         </ErrorBoundary>
