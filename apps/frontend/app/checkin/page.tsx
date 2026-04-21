@@ -1397,15 +1397,6 @@ export default function CheckinPage() {
   return (
     <RequireAuth>
       <div className="relative min-h-screen w-full overflow-hidden">
-        {/* Background */}
-        {pageBgType === 'IMAGE' && pageBgImage && (
-          <div className="absolute inset-0 bg-center bg-cover" style={{ backgroundImage: `url(${toApiUrl(pageBgImage)})` }} />
-        )}
-        {pageBgType === 'VIDEO' && pageBgVideo && (
-          <video className="absolute inset-0 w-full h-full object-cover" src={toApiUrl(pageBgVideo)} muted loop autoPlay playsInline />
-        )}
-        <div className="absolute inset-0" style={overlayStyle} />
-
         {/* Header brand */}
         <div className="relative z-30 p-4 md:p-6 pb-8 md:pb-12">
           <div className="flex items-center justify-between max-w-5xl mx-auto">

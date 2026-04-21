@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState } from 'react';
 import { apiBase, toApiUrl } from '../lib/api';
-import { usePathname } from 'next/navigation';
 
 type EventConfig = {
   backgroundType: 'NONE' | 'IMAGE' | 'VIDEO';
@@ -16,15 +15,9 @@ import { useSSE } from '../lib/sse-context';
 export default function ThemeBackground() {
   const [cfg, setCfg] = useState<EventConfig | null>(null);
   const [override, setOverride] = useState<Partial<EventConfig> | null>(null);
-  const pathname = usePathname();
   const { addEventListener, removeEventListener } = useSSE();
 
-  // Exclude pages that manage their own background
-  const excluded = pathname?.startsWith('/show') || pathname?.startsWith('/checkin');
-
   useEffect(() => {
-    if (excluded) return;
-
     (async () => {
       try {
         const r = await fetch(`${apiBase()}/config/event`);
@@ -46,18 +39,17 @@ export default function ThemeBackground() {
       removeEventListener('config', onConfig);
       removeEventListener('preview', onPreview);
     };
-  }, [excluded]);
+  }, [addEventListener, removeEventListener]);
 
   // Live preview override (e.g., from settings page)
   useEffect(() => {
-    if (excluded) return;
     const handler = (e: Event) => {
       const ev = e as CustomEvent<Partial<EventConfig> | null>;
       setOverride(ev.detail || null);
     };
     window.addEventListener('theme:preview', handler as any);
     return () => window.removeEventListener('theme:preview', handler as any);
-  }, [excluded]);
+  }, []);
 
   const overlayOpacity = override?.overlayOpacity ?? cfg?.overlayOpacity ?? 0;
   const effectiveType = (override?.backgroundType as EventConfig['backgroundType'] | undefined) ?? cfg?.backgroundType;
@@ -66,8 +58,6 @@ export default function ThemeBackground() {
   const overlayStyle = useMemo(() => ({
     backgroundColor: `rgba(0,0,0,${overlayOpacity})`
   }), [overlayOpacity]);
-
-  if (excluded) return null;
 
   return (
     <div aria-hidden className="pointer-events-none">

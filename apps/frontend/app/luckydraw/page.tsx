@@ -700,29 +700,6 @@ export default function LuckyDrawPage() {
                 </div>
             )}
 
-            {/* Dynamic Background */}
-            {eventCfg?.backgroundType === 'IMAGE' && eventCfg?.backgroundImageUrl && (
-                <div className="absolute inset-0 bg-center bg-cover" style={{ backgroundImage: `url(${toApiUrl(eventCfg.backgroundImageUrl)})` }} />
-            )}
-            {eventCfg?.backgroundType === 'VIDEO' && eventCfg?.backgroundVideoUrl && (
-                <video className="absolute inset-0 w-full h-full object-cover" src={toApiUrl(eventCfg.backgroundVideoUrl)} muted loop autoPlay playsInline />
-            )}
-            {/* Overlay */}
-            <div className="absolute inset-0 bg-black" style={{ opacity: eventCfg?.overlayOpacity ?? 0.5 }} />
-
-            {/* Default Gradient Fallback if no background */}
-            {(!eventCfg?.backgroundType || eventCfg?.backgroundType === 'NONE') && (
-                <div className="absolute inset-0 bg-gradient-to-br from-brand-secondary via-[#1e1a30] to-brand-secondary" />
-            )}
-
-            {/* Background Effects (only if no custom background) */}
-            {(!eventCfg?.backgroundType || eventCfg?.backgroundType === 'NONE') && (
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] bg-brand-primary/15 rounded-full blur-[120px]" />
-                    <div className="absolute top-[40%] -right-[10%] w-[40%] h-[40%] bg-brand-accent/15 rounded-full blur-[100px]" />
-                </div>
-            )}
-
             {/* Screen Flash Overlay */}
             {screenFlash && (
                 <div className="fixed inset-0 z-[60] bg-white pointer-events-none animate-[screen-flash_0.3s_ease-out]" />

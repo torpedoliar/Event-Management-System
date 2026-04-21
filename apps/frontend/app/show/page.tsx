@@ -125,15 +125,6 @@ export default function ShowPage() {
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
-      {/* Background */}
-      {effectiveType === 'IMAGE' && effectiveImage && (
-        <div className="absolute inset-0 bg-center bg-cover transition-all duration-1000" style={{ backgroundImage: `url(${toApiUrl(effectiveImage)})` }} />
-      )}
-      {effectiveType === 'VIDEO' && effectiveVideo && (
-        <video className="absolute inset-0 w-full h-full object-cover" src={toApiUrl(effectiveVideo)} muted loop autoPlay playsInline />
-      )}
-      <div className="absolute inset-0 transition-all duration-500" style={overlayStyle} />
-
       {/* Header brand */}
       <div className="relative z-10 p-6 md:p-8">
         <div className="flex items-center justify-between">

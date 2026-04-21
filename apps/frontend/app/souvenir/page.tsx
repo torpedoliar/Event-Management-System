@@ -877,15 +877,6 @@ export default function SouvenirPage() {
 
     return (
         <div className="relative min-h-screen w-full overflow-hidden">
-            {/* Background */}
-            {pageBgType === 'IMAGE' && pageBgImage && (
-                <div className="absolute inset-0 bg-center bg-cover" style={{ backgroundImage: `url(${toApiUrl(pageBgImage)})` }} />
-            )}
-            {pageBgType === 'VIDEO' && pageBgVideo && (
-                <video className="absolute inset-0 w-full h-full object-cover" src={toApiUrl(pageBgVideo)} muted loop autoPlay playsInline />
-            )}
-            <div className="absolute inset-0" style={overlayStyle} />
-
             {/* Header brand */}
             <div className="relative z-10 p-6 flex items-center gap-4">
                 {cfg?.logoUrl && <img src={toApiUrl(cfg.logoUrl)} className="h-12 w-auto" alt="logo" />}

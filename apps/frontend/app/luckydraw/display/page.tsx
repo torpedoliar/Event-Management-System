@@ -541,18 +541,6 @@ export default function LiveDisplayPage() {
                 </div>
             )}
 
-            {eventCfg?.backgroundType === 'IMAGE' && eventCfg?.backgroundImageUrl && (
-                <div className="absolute inset-0 bg-center bg-cover" style={{ backgroundImage: `url(${toApiUrl(eventCfg.backgroundImageUrl)})` }} />
-            )}
-            {eventCfg?.backgroundType === 'VIDEO' && eventCfg?.backgroundVideoUrl && (
-                <video className="absolute inset-0 w-full h-full object-cover" src={toApiUrl(eventCfg.backgroundVideoUrl)} muted loop autoPlay playsInline />
-            )}
-            <div className="absolute inset-0 bg-black" style={{ opacity: eventCfg?.overlayOpacity ?? 0.8 }} />
-
-            {!eventCfg?.backgroundType || eventCfg?.backgroundType === 'NONE' ? (
-                <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a2e] to-[#0f0f1a]" />
-            ) : null}
-
             {screenFlash && <div className="fixed inset-0 z-[60] bg-white pointer-events-none animate-[screen-flash_0.3s_ease-out]" />}
             {darkReveal && <div className="dark-reveal pointer-events-none" />}
 

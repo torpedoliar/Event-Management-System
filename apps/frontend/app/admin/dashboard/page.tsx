@@ -95,15 +95,6 @@ export default function DashboardPage() {
   return (
     <RequireAuth>
       <div className="min-h-screen overflow-hidden relative bg-transparent">
-        {/* Dynamic Background Layer */}
-        {pageBgType === 'IMAGE' && pageBgImage && (
-          <div className="absolute inset-0 bg-center bg-cover transition-all duration-1000" style={{ backgroundImage: `url(${toApiUrl(pageBgImage)})` }} />
-        )}
-        {pageBgType === 'VIDEO' && pageBgVideo && (
-          <video className="absolute inset-0 w-full h-full object-cover transition-all duration-1000" src={toApiUrl(pageBgVideo)} muted loop autoPlay playsInline />
-        )}
-        <div className="absolute inset-0 transition-colors duration-1000" style={overlayStyle} />
-
         <div className="flex flex-col lg:flex-row min-h-screen relative z-10">
           
           {/* Left Canvas (The Majestic Data) */}
