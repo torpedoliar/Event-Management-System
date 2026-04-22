@@ -209,6 +209,22 @@ export default function CheckinPage() {
              // Check for duplicate check-in offline
              if (matchedGuest.checkedIn && !cfg?.allowMultipleCheckinPerCounter) {
                appendLog(activeQuery, 'DUPLICATE', 'Tamu sudah Check-In Offline sebelumnya.');
+               // Show popup for duplicate too
+               const dupGuest: Guest = {
+                 id: matchedGuest.id,
+                 guestId: matchedGuest.guestId,
+                 name: matchedGuest.name,
+                 queueNumber: 0,
+                 tableLocation: '',
+                 checkedIn: matchedGuest.checkedIn,
+                 checkedInAt: matchedGuest.lastCheckinAt,
+                 checkinCount: matchedGuest.checkinCount,
+                 photoUrl: matchedGuest.photoUrl,
+               };
+               setCheckedGuest(dupGuest);
+               setSelected(dupGuest);
+               setIsDuplicateCheckIn(true);
+               startPopupTimeout();
                continue;
              }
 
@@ -217,7 +233,24 @@ export default function CheckinPage() {
                 checkedIn: true, checkinCount: (matchedGuest.checkinCount || 0) + 1, lastCheckinAt: new Date().toISOString()
              });
              appendLog(activeQuery, 'SUCCESS', 'Check-In Offline Berhasil');
+             
+             // Show popup for successful offline check-in
+             const offlineGuest: Guest = {
+               id: matchedGuest.id,
+               guestId: matchedGuest.guestId,
+               name: matchedGuest.name,
+               queueNumber: 0,
+               tableLocation: '',
+               checkedIn: true,
+               checkedInAt: new Date().toISOString(),
+               checkinCount: (matchedGuest.checkinCount || 0) + 1,
+               photoUrl: matchedGuest.photoUrl,
+             };
+             setCheckedGuest(offlineGuest);
+             setSelected(offlineGuest);
+             setIsDuplicateCheckIn(false);
              refreshHistory();
+             startPopupTimeout();
           } else {
              appendLog(activeQuery, 'NOT_FOUND', 'Offline ID tidak dikenali atau multiple.');
           }

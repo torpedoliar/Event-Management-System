@@ -360,11 +360,17 @@ body::after {
       inset: 0;
       background: radial-gradient(
           circle at 50% 50%,
-          transparent 250px,
-          rgba(0, 0, 0, 0.9) 450px
+          transparent 35vmin,
+          rgba(0, 0, 0, 0.85) 65vmin
       );
       z-index: 45;
       transition: opacity 0.5s ease;
+      animation: dark-reveal-in 0.6s ease-out;
+  }
+
+  @keyframes dark-reveal-in {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
   }
 
   /* ── Lucky Draw Ticker Animations ── */

@@ -25,7 +25,6 @@ export default function CarouselDrawPage() {
     const [loading, setLoading] = useState(true);
     const [eventCfg, setEventCfg] = useState<any>(null);
     const [spinning, setSpinning] = useState(false);
-    const spinningRef = useRef(false);
     
     const [drawCount, setDrawCount] = useState(1);
     const [winners, setWinners] = useState<Guest[]>([]);
@@ -41,6 +40,7 @@ export default function CarouselDrawPage() {
     const audioGrandWinRef = useRef<HTMLAudioElement | null>(null);
     
     const stoppedWheelsRef = useRef(0);
+    const totalWheelsRef = useRef(0);
 
     const { addEventListener, removeEventListener } = useSSE();
 
@@ -121,7 +121,7 @@ export default function CarouselDrawPage() {
         const onPrizeDraw = (e: MessageEvent) => {
             const data = JSON.parse(e.data);
             if (data.prizeId === selectedPrizeId) {
-                if (!spinningRef.current) {
+                if (!spinning) {
                     loadData();
                 }
             }
@@ -161,14 +161,25 @@ export default function CarouselDrawPage() {
         const isUtama = prize.category === 'UTAMA';
         const actualDrawCount = isUtama ? 1 : drawCount;
         
-        setSpinning(true);
-        spinningRef.current = true;
+        // Reset state
         setWinners([]);
         stoppedWheelsRef.current = 0;
+        totalWheelsRef.current = actualDrawCount;
+        setScreenShake(false);
+        setScreenFlash(false);
+        setDarkReveal(false);
+        
+        // Start spinning FIRST — this triggers the wheel animation immediately
+        setSpinning(true);
         
         playSound(audioRollRef, true);
         
+        if (isUtama) {
+            setScreenShake(true);
+        }
+        
         try {
+            // Call API to determine winner(s) — wheels are already spinning visually
             const results = await apiFetch<Guest[]>(`/prizes/${selectedPrizeId}/draw`, { 
                 method: 'POST',
                 body: JSON.stringify({ count: actualDrawCount })
@@ -178,26 +189,18 @@ export default function CarouselDrawPage() {
                 throw new Error("Tidak ada peserta yang terpilih");
             }
             
-            // Initialize winners (starts spinning visually)
+            // Wait a bit for visual spin drama, then set winners
+            // (the LuckyDraw3DWheel will detect the winner and start decelerating)
+            await sleep(isUtama ? 3000 : 2000);
+            
+            // Set winners — this triggers deceleration in each wheel
             setWinners(results);
             
             if (isUtama) {
-                setScreenShake(true);
-                // The slowdown will be handled inside LuckyDraw3DWheel via spinning=false 
-                // but we need to wait a bit before setting it to false
-                await sleep(3000); // 3s full spin
-                setSpinning(false);
-                spinningRef.current = false;
-                
                 playSound(audioTensionRef, true);
-                
-                // Wheel will take over fake-stop and snapping.
-            } else {
-                await sleep(3000);
-                setSpinning(false);
-                spinningRef.current = false;
             }
             
+            // Remove winners from local candidates if not allowMultipleWins
             if (!prize.allowMultipleWins) {
                 const winnerIds = new Set(results.map(r => r.id));
                 setCandidates(prev => prev.filter(c => !winnerIds.has(c.id)));
@@ -207,13 +210,14 @@ export default function CarouselDrawPage() {
             stopSound(audioRollRef);
             stopSound(audioTensionRef);
             setSpinning(false);
-            spinningRef.current = false;
+            setScreenShake(false);
             alert(e.message || 'Gagal mengundi pemenang');
         }
     };
     
     const handleWheelStop = (index: number, totalWheels: number, isGrandPrize: boolean) => {
         stoppedWheelsRef.current += 1;
+        const allStopped = stoppedWheelsRef.current >= totalWheelsRef.current;
         
         if (isGrandPrize) {
             setScreenShake(false);
@@ -253,6 +257,7 @@ export default function CarouselDrawPage() {
                 setDarkReveal(false);
             }, 5000);
             
+            setSpinning(false);
             loadData();
         } else {
             playSound(audioWinRef);
@@ -263,7 +268,7 @@ export default function CarouselDrawPage() {
                 colors: ['#FFD700', '#FFA500', '#FF69B4']
             });
             
-            if (stoppedWheelsRef.current === totalWheels) {
+            if (allStopped) {
                 stopSound(audioRollRef);
                 confetti({
                     particleCount: 200,
@@ -271,6 +276,7 @@ export default function CarouselDrawPage() {
                     origin: { y: 0.6 },
                     colors: ['#FFD700', '#FFA500', '#FF69B4', '#00FF00', '#00BFFF']
                 });
+                setSpinning(false);
                 loadData();
             }
         }
@@ -290,7 +296,10 @@ export default function CarouselDrawPage() {
 
     if (loading) return <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>;
 
-    const displayWheels = winners.length > 0 ? winners : Array(isUtama ? 1 : drawCount).fill(null);
+    // Display wheels: if we have winners, show one wheel per winner.
+    // If no winners yet, show placeholder wheels based on draw count.
+    const wheelCount = winners.length > 0 ? winners.length : (isUtama ? 1 : drawCount);
+    const displayWheels = Array.from({ length: wheelCount }, (_, idx) => winners[idx] || null);
 
     return (
         <div className={`min-h-screen flex flex-col p-8 relative overflow-hidden ${screenShake ? 'animate-screen-shake' : ''}`}>
@@ -351,7 +360,8 @@ export default function CarouselDrawPage() {
                                 setWinners([]);
                                 setDrawCount(1);
                             }}
-                            className="w-full bg-brand-secondary/80 border border-brand-primary/30 text-brand-primarySoft text-xl rounded-full px-6 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 font-mono tracking-widest uppercase text-center"
+                            disabled={spinning}
+                            className="w-full bg-brand-secondary/80 border border-brand-primary/30 text-brand-primarySoft text-xl rounded-full px-6 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 font-mono tracking-widest uppercase text-center disabled:opacity-50"
                         >
                             {prizes.map(p => (
                                 <option key={p.id} value={p.id} className="bg-brand-secondary text-brand-surface font-sans">
@@ -369,7 +379,8 @@ export default function CarouselDrawPage() {
                                     <button
                                         key={n}
                                         onClick={() => setDrawCount(n)}
-                                        className={`w-10 h-10 rounded-full font-bold transition-all ${drawCount === n ? 'bg-brand-primary text-black' : 'bg-white/10 text-white hover:bg-white/20'}`}
+                                        disabled={spinning}
+                                        className={`w-10 h-10 rounded-full font-bold transition-all ${drawCount === n ? 'bg-brand-primary text-black' : 'bg-white/10 text-white hover:bg-white/20'} disabled:opacity-50`}
                                     >
                                         {n}
                                     </button>
@@ -399,10 +410,10 @@ export default function CarouselDrawPage() {
                                 <LuckyDraw3DWheel
                                     candidates={candidates}
                                     winner={winner}
-                                    spinning={spinning || spinningRef.current}
-                                    isGrandPrize={isUtama}
-                                    stopDelay={isUtama ? 0 : idx * 1000} // staggered stop
-                                    onStop={() => handleWheelStop(idx, displayWheels.length, isUtama)}
+                                    spinning={spinning}
+                                    isGrandPrize={!!isUtama}
+                                    stopDelay={isUtama ? 0 : idx * 1000}
+                                    onStop={() => handleWheelStop(idx, displayWheels.length, !!isUtama)}
                                 />
                             </div>
                         ))}
@@ -412,10 +423,10 @@ export default function CarouselDrawPage() {
                 <div className="mt-8 flex justify-center w-full relative z-[60]">
                     <button
                         onClick={handleSpin}
-                        disabled={spinning || spinningRef.current || isSoldOut || !selectedPrizeId}
+                        disabled={spinning || isSoldOut || !selectedPrizeId}
                         className={`
                             relative px-16 py-6 rounded-full font-black text-2xl md:text-3xl font-mono tracking-[0.3em] uppercase transition-all duration-300 transform hover:scale-105 active:scale-95
-                            ${(spinning || spinningRef.current)
+                            ${spinning
                                 ? 'bg-brand-border/50 text-white/50 cursor-not-allowed border border-white/20'
                                 : isSoldOut
                                     ? 'bg-red-500/20 text-red-500 cursor-not-allowed border border-red-500/30'
@@ -425,7 +436,7 @@ export default function CarouselDrawPage() {
                             }
                         `}
                     >
-                        {(spinning || spinningRef.current) ? 'SPINNING...' : isSoldOut ? 'HABIS' : isUtama ? '◆ GRAND PRIZE ◆' : '◆ PUTAR UNDIAN ◆'}
+                        {spinning ? 'SPINNING...' : isSoldOut ? 'HABIS' : isUtama ? '◆ GRAND PRIZE ◆' : '◆ PUTAR UNDIAN ◆'}
                     </button>
                 </div>
             </div>

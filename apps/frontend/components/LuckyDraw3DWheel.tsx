@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 
 export interface Guest {
     id: string;
@@ -20,6 +20,8 @@ export interface LuckyDraw3DWheelProps {
   onStop: () => void;
 }
 
+type WheelPhase = 'idle' | 'spinning' | 'decelerating' | 'fake-stop' | 'snapping' | 'stopped';
+
 export default function LuckyDraw3DWheel({
   candidates,
   winner,
@@ -33,186 +35,235 @@ export default function LuckyDraw3DWheel({
   // Fixed 40-slot cylinder
   const N = 40;
   const H = 110; // 80px card + 30px gap
-  const theta = 360 / N;
+  const theta = 360 / N; // 9 degrees per slot
   const radius = Math.round((H / 2) / Math.tan(Math.PI / N));
   
   const [wheelItems, setWheelItems] = useState<Guest[]>([]);
-  const winnerTargetIndex = 35;
   
-  const initializedRef = useRef(false);
+  // The winner should land in the center of the visible area.
+  // The "center" of the viewport corresponds to rotateX(0), so we target
+  // index 0 (the first slot) and calculate rotation to bring it to center.
+  // Actually, let's use a fixed target index and compute the angle to place it at the top.
+  const WINNER_INDEX = 20; // Place winner roughly halfway around
+
   const onStopRef = useRef(onStop);
+  const onStopCalledRef = useRef(false);
 
   useEffect(() => {
     onStopRef.current = onStop;
   }, [onStop]);
   
-  // Initialize wheel once
-  useEffect(() => {
-    if (candidates.length === 0 || initializedRef.current) return;
-    initializedRef.current = true;
+  // Build initial wheel items from candidates
+  const buildWheelItems = useCallback((candidateList: Guest[], winnerGuest?: Guest | null): Guest[] => {
+    if (candidateList.length === 0) return [];
     
-    const newItems: Guest[] = [];
+    const items: Guest[] = [];
     for (let i = 0; i < N; i++) {
-        newItems.push(candidates[Math.floor(Math.random() * candidates.length)]);
+      items.push(candidateList[Math.floor(Math.random() * candidateList.length)]);
     }
-    setWheelItems(newItems);
-  }, [candidates]);
-
-  // Reshuffle on spin
-  useEffect(() => {
-      if (spinning && candidates.length > 0) {
-          const newItems: Guest[] = [];
-          for (let i = 0; i < N; i++) {
-              newItems.push(candidates[Math.floor(Math.random() * candidates.length)]);
-          }
-          setWheelItems(newItems);
+    
+    // If winner is known, place at target index
+    if (winnerGuest) {
+      items[WINNER_INDEX] = winnerGuest;
+      // Also ensure neighbors are different from winner for visual clarity
+      const nonWinnerCandidates = candidateList.filter(c => c.id !== winnerGuest.id);
+      if (nonWinnerCandidates.length > 0) {
+        if (WINNER_INDEX > 0) items[WINNER_INDEX - 1] = nonWinnerCandidates[Math.floor(Math.random() * nonWinnerCandidates.length)];
+        if (WINNER_INDEX < N - 1) items[WINNER_INDEX + 1] = nonWinnerCandidates[Math.floor(Math.random() * nonWinnerCandidates.length)];
       }
-  }, [spinning]);
-  
-  // Silent swap when winner arrives
-  useEffect(() => {
-      if (winner && wheelItems.length === N) {
-          setWheelItems(prev => {
-              const next = [...prev];
-              next[winnerTargetIndex] = winner;
-              
-              if (candidates.length > 1) {
-                  let fake = candidates[Math.floor(Math.random() * candidates.length)];
-                  while (fake.id === winner.id) {
-                      fake = candidates[Math.floor(Math.random() * candidates.length)];
-                  }
-                  next[winnerTargetIndex - 1] = fake;
-              }
-              
-              return next;
-          });
-      }
-  }, [winner, candidates, wheelItems.length]);
+    }
+    
+    return items;
+  }, [N, WINNER_INDEX]);
 
+  // Initialize wheel items when candidates first load
+  useEffect(() => {
+    if (candidates.length > 0 && wheelItems.length === 0) {
+      setWheelItems(buildWheelItems(candidates));
+    }
+  }, [candidates, wheelItems.length, buildWheelItems]);
+
+  // Animation state refs
   const currentAngleRef = useRef(0);
   const velocityRef = useRef(0);
   const rafRef = useRef<number>(0);
-  
-  const phaseRef = useRef<'idle' | 'spinning' | 'spinning-delay' | 'decelerating' | 'fake-stop' | 'stopped'>('idle');
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const phaseRef = useRef<WheelPhase>('idle');
+  const stopDelayTimerRef = useRef<NodeJS.Timeout | null>(null);
   const targetAngleRef = useRef(0);
-  
+  const winnerInsertedRef = useRef(false);
+
+  // When spinning starts — rebuild wheel, start animation
   useEffect(() => {
-    if (spinning) {
+    if (spinning && candidates.length > 0) {
+      // Reset state for new spin
+      onStopCalledRef.current = false;
+      winnerInsertedRef.current = false;
+      
+      // Reset CSS transition  
       if (containerRef.current) {
-         containerRef.current.style.transition = 'none';
+        containerRef.current.style.transition = 'none';
       }
+      
+      // Build fresh wheel items (winner not known yet during spin)
+      setWheelItems(buildWheelItems(candidates));
+      
       phaseRef.current = 'spinning';
-      velocityRef.current = 15;
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      velocityRef.current = 12 + Math.random() * 4; // Slight randomness in speed
+      
+      // Clear any pending timers
+      if (stopDelayTimerRef.current) {
+        clearTimeout(stopDelayTimerRef.current);
+        stopDelayTimerRef.current = null;
+      }
       
       let lastTime = performance.now();
       
       const animate = (time: number) => {
-        const dt = time - lastTime;
+        const dt = Math.min(time - lastTime, 50); // Cap to avoid jumps
         lastTime = time;
-        const frameDt = Math.min(dt, 32) / 16.66;
+        const frameFactor = dt / 16.67; // Normalize to 60fps
         
-        if (phaseRef.current === 'spinning' || phaseRef.current === 'spinning-delay') {
-           currentAngleRef.current -= velocityRef.current * frameDt;
-        } else if (phaseRef.current === 'decelerating') {
-           const current = currentAngleRef.current;
-           const target = targetAngleRef.current;
-           const dist = current - target;
-           
-           if (dist > 0) {
-              velocityRef.current = Math.max(0.15, dist * 0.02);
-              currentAngleRef.current -= velocityRef.current * frameDt;
-              if (dist < 0.5) {
-                 currentAngleRef.current = target;
-                 phaseRef.current = 'stopped';
-                 onStopRef.current();
-              }
-           } else {
-              currentAngleRef.current = target;
-              phaseRef.current = 'stopped';
+        const phase = phaseRef.current;
+        
+        if (phase === 'spinning') {
+          // Free spin — constant high speed
+          currentAngleRef.current -= velocityRef.current * frameFactor;
+          
+        } else if (phase === 'decelerating') {
+          // Smooth deceleration toward target
+          const target = targetAngleRef.current;
+          const remaining = currentAngleRef.current - target;
+          
+          if (remaining > 0.3) {
+            // Exponential easing
+            const speed = Math.max(0.1, remaining * 0.025);
+            currentAngleRef.current -= speed * frameFactor;
+          } else {
+            // Snap to exact target
+            currentAngleRef.current = target;
+            phaseRef.current = 'stopped';
+            if (!onStopCalledRef.current) {
+              onStopCalledRef.current = true;
               onStopRef.current();
-           }
-        } else if (phaseRef.current === 'fake-stop') {
-           const current = currentAngleRef.current;
-           const target = targetAngleRef.current;
-           const dist = current - target;
-           
-           if (dist > 0) {
-              velocityRef.current = Math.max(0.15, dist * 0.02);
-              currentAngleRef.current -= velocityRef.current * frameDt;
-              if (dist < 0.2) {
-                 currentAngleRef.current = target;
-                 phaseRef.current = 'idle'; 
-                 
-                 setTimeout(() => {
-                     if (containerRef.current) {
-                        containerRef.current.style.transition = 'transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)';
-                        const realTarget = target - theta;
-                        currentAngleRef.current = realTarget;
-                        containerRef.current.style.transform = `translateZ(${-radius}px) rotateX(${realTarget}deg)`;
-                     }
-                     setTimeout(() => {
-                        phaseRef.current = 'stopped';
-                        onStopRef.current();
-                     }, 1200);
-                 }, 1500); 
+            }
+          }
+          
+        } else if (phase === 'fake-stop') {
+          // Grand Prize: decelerate to one slot before winner, then pause + snap
+          const target = targetAngleRef.current;
+          const remaining = currentAngleRef.current - target;
+          
+          if (remaining > 0.3) {
+            const speed = Math.max(0.1, remaining * 0.02);
+            currentAngleRef.current -= speed * frameFactor;
+          } else {
+            // Reached the fake stop position
+            currentAngleRef.current = target;
+            phaseRef.current = 'snapping';
+            
+            // Dramatic pause, then CSS snap to real winner
+            setTimeout(() => {
+              if (containerRef.current) {
+                containerRef.current.style.transition = 'transform 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                const realTarget = target - theta; // One more slot to the actual winner
+                currentAngleRef.current = realTarget;
+                containerRef.current.style.transform = `translateZ(${-radius}px) rotateX(${realTarget}deg)`;
               }
-           } else {
-              currentAngleRef.current = target;
-              phaseRef.current = 'idle';
+              
+              // After CSS transition completes
               setTimeout(() => {
-                 if (containerRef.current) {
-                    containerRef.current.style.transition = 'transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)';
-                    const realTarget = target - theta;
-                    currentAngleRef.current = realTarget;
-                    containerRef.current.style.transform = `translateZ(${-radius}px) rotateX(${realTarget}deg)`;
-                 }
-                 setTimeout(() => {
-                    phaseRef.current = 'stopped';
-                    onStopRef.current();
-                 }, 1200);
-             }, 1500);
-           }
+                phaseRef.current = 'stopped';
+                if (!onStopCalledRef.current) {
+                  onStopCalledRef.current = true;
+                  onStopRef.current();
+                }
+              }, 1600);
+            }, 1500);
+          }
         }
         
-        if (containerRef.current && phaseRef.current !== 'idle' && phaseRef.current !== 'stopped') {
-           containerRef.current.style.transform = `translateZ(${-radius}px) rotateX(${currentAngleRef.current}deg)`;
+        // Update DOM
+        if (containerRef.current && phase !== 'snapping' && phase !== 'stopped' && phase !== 'idle') {
+          containerRef.current.style.transform = `translateZ(${-radius}px) rotateX(${currentAngleRef.current}deg)`;
         }
         
-        if (phaseRef.current !== 'stopped' && phaseRef.current !== 'idle') {
-           rafRef.current = requestAnimationFrame(animate);
+        // Continue loop unless stopped/snapping/idle
+        if (phase !== 'stopped' && phase !== 'idle' && phase !== 'snapping') {
+          rafRef.current = requestAnimationFrame(animate);
         }
       };
       
       rafRef.current = requestAnimationFrame(animate);
-      
-    } else {
-      if (phaseRef.current === 'spinning') {
-        phaseRef.current = 'spinning-delay';
-        timeoutRef.current = setTimeout(() => {
-           const current = currentAngleRef.current;
-           const fullRotations = Math.floor(Math.abs(current) / 360) + 2; 
-           const baseWinnerAngle = -(winnerTargetIndex * theta);
-           
-           if (isGrandPrize) {
-              const fakeBaseAngle = -((winnerTargetIndex - 1) * theta);
-              targetAngleRef.current = fakeBaseAngle - (fullRotations * 360);
-              phaseRef.current = 'fake-stop';
-           } else {
-              targetAngleRef.current = baseWinnerAngle - (fullRotations * 360);
-              phaseRef.current = 'decelerating';
-           }
-           
-        }, stopDelay);
-      }
     }
     
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [spinning, stopDelay, theta, isGrandPrize, radius]);
+    // Only trigger on `spinning` changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [spinning]);
+
+  // When winner data arrives — insert into wheel and trigger deceleration
+  useEffect(() => {
+    if (!winner || winnerInsertedRef.current) return;
+    if (phaseRef.current !== 'spinning') return; // Only insert if still spinning
+    
+    winnerInsertedRef.current = true;
+    
+    // Insert winner at target index in the wheel
+    setWheelItems(prev => {
+      const next = [...prev];
+      next[WINNER_INDEX] = winner;
+      
+      // Ensure neighbors are distinct from winner
+      const nonWinnerCandidates = candidates.filter(c => c.id !== winner.id);
+      if (nonWinnerCandidates.length > 0) {
+        if (WINNER_INDEX > 0) next[WINNER_INDEX - 1] = nonWinnerCandidates[Math.floor(Math.random() * nonWinnerCandidates.length)];
+        if (WINNER_INDEX < N - 1) next[WINNER_INDEX + 1] = nonWinnerCandidates[Math.floor(Math.random() * nonWinnerCandidates.length)];
+      }
+      return next;
+    });
+    
+    // Schedule deceleration after stopDelay
+    stopDelayTimerRef.current = setTimeout(() => {
+      const current = currentAngleRef.current;
+      
+      // Calculate target angle: winner at WINNER_INDEX needs to be at rotateX(0) center
+      // Each slot is `theta` degrees apart. Index 0 = 0deg, Index i = i * theta deg.
+      // The current angle is negative (rotating downward). 
+      // Target: currentAngle = -(WINNER_INDEX * theta) - (fullRotations * 360)
+      const winnerAngle = WINNER_INDEX * theta;
+      const fullRotations = Math.floor(Math.abs(current) / 360) + 3; // At least 3 more full rotations
+      const baseTarget = -(winnerAngle + fullRotations * 360);
+      
+      // Ensure target is below current (we're decrementing)
+      targetAngleRef.current = baseTarget < current ? baseTarget : baseTarget - 360;
+      
+      if (isGrandPrize) {
+        // Fake stop: target one slot BEFORE the winner
+        targetAngleRef.current += theta; // One slot above winner
+        phaseRef.current = 'fake-stop';
+      } else {
+        phaseRef.current = 'decelerating';
+      }
+    }, stopDelay);
+    
+    return () => {
+      if (stopDelayTimerRef.current) {
+        clearTimeout(stopDelayTimerRef.current);
+      }
+    };
+  }, [winner, candidates, stopDelay, isGrandPrize, theta, radius, WINNER_INDEX, N]);
+
+  // When spinning goes from true to false WITHOUT a winner (edge case / safety),
+  // just stop gracefully
+  useEffect(() => {
+    if (!spinning && phaseRef.current === 'spinning' && !winner) {
+      // Force stop — no winner determined, stop immediately  
+      phaseRef.current = 'stopped';
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    }
+  }, [spinning, winner]);
   
   if (wheelItems.length === 0) return null;
   
@@ -238,9 +289,9 @@ export default function LuckyDraw3DWheel({
                maskImage: 'linear-gradient(to bottom, transparent 2%, black 15%, black 85%, transparent 98%)'
            }}
          >
-           {/* Highlight Bar — full width, minimal shadow */}
-           <div className={`absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[84px] border-y-[2px] z-20 transition-all duration-500 ${isGrandPrize 
-             ? 'border-yellow-400/80 bg-yellow-400/10 shadow-[0_0_20px_rgba(255,215,0,0.25)]' 
+           {/* Highlight Bar — center selection indicator */}
+           <div className={`absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[90px] border-y-[3px] z-20 transition-all duration-500 ${isGrandPrize 
+             ? 'border-yellow-400/80 bg-yellow-400/10 shadow-[0_0_30px_rgba(255,215,0,0.3)]' 
              : 'border-brand-primary/50 bg-brand-primary/5 shadow-[0_0_15px_rgba(212,168,83,0.15)]'}`} />
            
            {/* Pointer arrows */}
@@ -254,13 +305,13 @@ export default function LuckyDraw3DWheel({
            {/* 3D Cylinder */}
            <div 
              ref={containerRef}
-             className="relative w-[80%] h-[80px] wheel-container"
+             className="relative w-[80%] h-[80px]"
              style={{ transformStyle: 'preserve-3d', transform: `translateZ(${-radius}px)` }}
            >
              {wheelItems.map((item, i) => (
                 <div
                    key={`${item.id}-${i}`}
-                   className={`absolute left-0 top-0 w-full h-[80px] wheel-item flex items-center justify-center rounded-xl overflow-hidden transition-colors duration-300 ${isGrandPrize 
+                   className={`absolute left-0 top-0 w-full h-[80px] flex items-center justify-center rounded-xl overflow-hidden transition-colors duration-300 ${isGrandPrize 
                      ? 'bg-gradient-to-r from-black/80 via-black/60 to-black/80 border border-yellow-500/40' 
                      : 'bg-gradient-to-r from-black/70 via-black/50 to-black/70 border border-white/10'}`}
                    style={{
