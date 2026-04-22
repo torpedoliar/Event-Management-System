@@ -263,7 +263,6 @@ export default function LuckyDrawPage() {
 
         // Stage 5: Final crawl
         setTickerSpeed(1500);
-        setScreenShake(false);
         await sleep(2000);
 
         // REVEAL with Screen Flash
@@ -280,6 +279,7 @@ export default function LuckyDrawPage() {
         stopSound(audioTensionRef);
         playSound(audioGrandWinRef);
         
+        setScreenShake(false);
         setScreenFlash(true);
         await sleep(300);
         setScreenFlash(false);

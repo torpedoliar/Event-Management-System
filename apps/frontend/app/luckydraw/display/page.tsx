@@ -374,8 +374,6 @@ export default function LiveDisplayPage() {
             }
         }
         
-        setScreenShake(false);
-        
         setScreenFlash(true);
         setTimeout(() => setScreenFlash(false), 400);
         
@@ -383,6 +381,7 @@ export default function LiveDisplayPage() {
         stopSound(audioTensionRef);
         playSound(audioGrandWinRef);
         
+        setScreenShake(false);
         setGrandWinner(winnerGuest);
         setRevealedWinners([winnerGuest]);
         
