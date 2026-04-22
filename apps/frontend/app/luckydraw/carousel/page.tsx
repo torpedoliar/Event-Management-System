@@ -130,9 +130,11 @@ export default function CarouselDrawPage() {
     const getGridClass = () => {
         const c = winners.length || (isUtama ? 1 : drawCount);
         if (c === 1) return 'grid-cols-1';
-        if (c <= 4) return 'grid-cols-1 md:grid-cols-2';
-        if (c <= 9) return 'grid-cols-1 md:grid-cols-3';
-        return 'grid-cols-2 md:grid-cols-4';
+        if (c <= 2) return 'grid-cols-1 md:grid-cols-2';
+        if (c <= 4) return 'grid-cols-2 md:grid-cols-2';
+        if (c <= 6) return 'grid-cols-2 md:grid-cols-3';
+        if (c <= 10) return 'grid-cols-2 md:grid-cols-4 lg:grid-cols-5';
+        return 'grid-cols-3 md:grid-cols-5 lg:grid-cols-6';
     };
 
     const selectedPrize = prizes.find(p => p.id === selectedPrizeId);
@@ -146,30 +148,23 @@ export default function CarouselDrawPage() {
     const displayWheels = Array.from({ length: wheelCount }, (_, idx) => winners[idx] || null);
 
     return (
-        <div className={`min-h-screen flex flex-col relative overflow-hidden ${screenShake ? 'animate-screen-shake' : ''}`}>
-            {/* ═══ GOLD CURTAIN SIDE EFFECTS ═══ */}
-            <div className="fixed inset-y-0 left-0 w-24 md:w-40 pointer-events-none z-[5]"
-              style={{ background: 'linear-gradient(90deg, rgba(139,105,20,0.15) 0%, rgba(212,168,83,0.05) 40%, transparent 100%)' }} />
-            <div className="fixed inset-y-0 right-0 w-24 md:w-40 pointer-events-none z-[5]"
-              style={{ background: 'linear-gradient(270deg, rgba(139,105,20,0.15) 0%, rgba(212,168,83,0.05) 40%, transparent 100%)' }} />
-
-            {/* ═══ ORNATE PAGE BORDER ═══ */}
-            <div className="fixed inset-3 md:inset-5 pointer-events-none z-[4] rounded-2xl"
-              style={{
-                border: '2px solid rgba(212,168,83,0.2)',
-                boxShadow: 'inset 0 0 80px rgba(0,0,0,0.3)',
-              }}
-            >
-              <div className="absolute inset-2 rounded-xl" style={{ border: '1px solid rgba(212,168,83,0.1)' }} />
-              {/* Corner flares */}
-              {['top-0 left-0', 'top-0 right-0', 'bottom-0 left-0', 'bottom-0 right-0'].map((pos, i) => (
-                <div key={i} className={`absolute ${pos} w-8 h-8`}>
-                  <div className="w-full h-full" style={{
-                    background: 'radial-gradient(circle, rgba(212,168,83,0.4) 0%, transparent 70%)',
-                  }} />
-                </div>
-              ))}
+        <div className={`min-h-[100dvh] flex flex-col relative overflow-hidden bg-[#0A0A12] ${screenShake ? 'animate-screen-shake' : ''}`}>
+            {/* ═══ CYBER-GOLD BACKGROUND ═══ */}
+            <div className="fixed inset-0 pointer-events-none z-0">
+                <div className="absolute inset-0 opacity-20"
+                     style={{
+                       backgroundImage: 'linear-gradient(rgba(212,168,83,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(212,168,83,0.1) 1px, transparent 1px)',
+                       backgroundSize: '40px 40px',
+                       transform: 'perspective(1000px) rotateX(60deg) translateY(-100px) scale(3)'
+                     }}
+                />
+                <div className="absolute top-0 left-0 right-0 h-[50vh] bg-gradient-to-b from-[#15120a] to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 h-[50vh] bg-gradient-to-t from-[#15120a] to-transparent" />
             </div>
+
+            {/* Spotlights (From Image 3) */}
+            <div className="fixed -bottom-20 -left-20 w-[40vw] h-[100vh] bg-gradient-to-tr from-[rgba(212,168,83,0.15)] via-transparent to-transparent rotate-45 transform origin-bottom-left blur-2xl pointer-events-none z-0" />
+            <div className="fixed -bottom-20 -right-20 w-[40vw] h-[100vh] bg-gradient-to-tl from-[rgba(212,168,83,0.15)] via-transparent to-transparent -rotate-45 transform origin-bottom-right blur-2xl pointer-events-none z-0" />
 
             {/* Mode Selector */}
             <div className="fixed top-24 left-6 z-[70]">
@@ -200,59 +195,76 @@ export default function CarouselDrawPage() {
             {darkReveal && <div className="dark-reveal pointer-events-none z-[50]" />}
 
             {/* ═══ MAIN CONTENT ═══ */}
-            <div className="relative z-10 flex-1 flex flex-col items-center justify-center w-full px-4 md:px-8 py-6 gap-6">
+            <div className="relative z-10 flex-1 flex flex-col items-center w-full px-4 md:px-8 py-8 gap-4 overflow-y-auto custom-scrollbar">
 
-                {/* ─── Top Bar: Logo + Prize Info + Sound ─── */}
-                <div className="w-full max-w-5xl flex items-center justify-between gap-4">
-                    {/* Prize Info Panel */}
-                    <div className="flex items-center gap-4 px-5 py-3 rounded-xl"
-                      style={{ background: 'linear-gradient(135deg, rgba(15,15,30,0.9) 0%, rgba(25,25,45,0.9) 100%)', border: '1px solid rgba(212,168,83,0.3)', boxShadow: '0 4px 20px rgba(0,0,0,0.4)' }}>
-                        <Trophy size={22} style={{ color: '#D4A853' }} />
-                        <div>
+                {/* ─── Top Header Title ─── */}
+                <div className="text-center mt-2 mb-2 relative">
+                    <div className="absolute inset-0 bg-brand-primary/20 blur-2xl rounded-full" />
+                    <div className="relative inline-block border-[3px] border-brand-primary rounded-xl px-12 py-3 bg-[#11111a]/80 shadow-[0_0_30px_rgba(212,168,83,0.3)] backdrop-blur-sm">
+                        <h1 className="text-3xl md:text-5xl font-black text-white tracking-widest font-mono drop-shadow-[0_0_10px_rgba(212,168,83,0.8)]"
+                            style={{ textShadow: '0 0 10px rgba(212,168,83,0.8), 0 0 20px rgba(212,168,83,0.4)' }}>
+                            GOLDEN CELEBRATION LUCKY DRAW
+                        </h1>
+                    </div>
+                </div>
+
+                {/* ─── Stats Panel & Controls ─── */}
+                <div className="w-full max-w-4xl flex flex-col items-center gap-4">
+                    <div className="flex flex-wrap items-center justify-center gap-4 px-6 py-4 rounded-2xl w-full max-w-2xl border-2 border-brand-primary/50 bg-[#1A1A2E]/80 backdrop-blur-md shadow-[0_0_20px_rgba(212,168,83,0.2)]">
+                        <div className="flex-1 flex flex-col items-center min-w-[140px] px-4 border-r border-brand-primary/30">
+                            <span className="text-xs font-mono tracking-widest text-brand-primarySoft/80 mb-1">ATTENDEES</span>
+                            <span className="text-3xl font-black text-brand-primary drop-shadow-[0_0_8px_rgba(212,168,83,0.8)]">{candidates.length}</span>
+                        </div>
+                        
+                        <div className="flex-1 flex flex-col items-center min-w-[200px] px-4 border-r border-brand-primary/30">
+                            <span className="text-xs font-mono tracking-widest text-brand-primarySoft/80 mb-1">PRIZE</span>
                             <select value={selectedPrizeId} onChange={(e) => { setSelectedPrizeId(e.target.value); setWinners([]); setDrawCount(1); }} disabled={spinning}
-                                className="bg-transparent text-lg font-bold uppercase tracking-widest font-mono focus:outline-none disabled:opacity-50 cursor-pointer pr-6"
-                                style={{ color: '#D4A853', maxWidth: '300px' }}>
+                                className="bg-transparent text-xl font-bold uppercase tracking-widest font-mono focus:outline-none disabled:opacity-50 cursor-pointer text-white text-center w-full appearance-none">
                                 {prizes.map(p => (
                                     <option key={p.id} value={p.id} className="bg-brand-secondary text-brand-surface font-sans">
-                                        {p.category === 'UTAMA' ? '🏆' : '🎁'} {p.name} ({p.winners.length}/{p.quantity})
+                                        {p.name}
                                     </option>
                                 ))}
                             </select>
-                            <div className="flex gap-6 mt-1 text-xs font-mono tracking-widest">
-                                <span style={{ color: 'rgba(245,236,215,0.6)' }}>HADIR: {candidates.length}</span>
-                                <span style={{ color: '#D4A853' }}>MENANG: {totalWon}</span>
-                            </div>
+                        </div>
+
+                        <div className="flex-1 flex flex-col items-center min-w-[140px] px-4">
+                            <span className="text-xs font-mono tracking-widest text-brand-primarySoft/80 mb-1">WINNERS</span>
+                            <span className="text-3xl font-black text-brand-primary drop-shadow-[0_0_8px_rgba(212,168,83,0.8)]">{totalWon}</span>
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 mt-2">
                         {!isUtama && (
-                            <div className="flex items-center gap-2 px-4 py-2 rounded-xl" style={{ background: 'rgba(15,15,30,0.8)', border: '1px solid rgba(212,168,83,0.2)' }}>
-                                <span className="text-xs font-mono tracking-widest" style={{ color: 'rgba(245,236,215,0.5)' }}>×</span>
+                            <div className="flex items-center gap-2 px-4 py-2 rounded-xl border border-brand-primary/30 bg-[#1A1A2E]/60 backdrop-blur-sm shadow-[0_0_15px_rgba(212,168,83,0.1)]">
+                                <span className="text-xs font-mono tracking-widest text-brand-primarySoft/60 mr-2">DRAW COUNT</span>
                                 {[1, 5, 10].map(n => (
                                     <button key={n} onClick={() => setDrawCount(n)} disabled={spinning}
-                                        className="w-8 h-8 rounded-lg text-sm font-bold transition-all disabled:opacity-50"
-                                        style={{ background: drawCount === n ? 'linear-gradient(180deg, #D4A853, #8B6914)' : 'rgba(255,255,255,0.05)', color: drawCount === n ? '#0F0F1A' : 'rgba(245,236,215,0.6)', border: drawCount === n ? 'none' : '1px solid rgba(212,168,83,0.15)' }}>
+                                        className="w-10 h-10 rounded-lg text-base font-bold transition-all disabled:opacity-50"
+                                        style={{ 
+                                            background: drawCount === n ? 'linear-gradient(180deg, #D4A853, #8B6914)' : 'rgba(255,255,255,0.05)', 
+                                            color: drawCount === n ? '#0F0F1A' : 'rgba(245,236,215,0.6)', 
+                                            border: drawCount === n ? 'none' : '1px solid rgba(212,168,83,0.2)',
+                                            boxShadow: drawCount === n ? '0 0 10px rgba(212,168,83,0.5)' : 'none'
+                                        }}>
                                         {n}
                                     </button>
                                 ))}
                             </div>
                         )}
-                        <button onClick={toggleSound} className="p-3 rounded-xl transition-all hover:scale-105"
-                          style={{ background: 'rgba(15,15,30,0.8)', border: '1px solid rgba(212,168,83,0.2)' }}>
-                            {soundEnabled ? <Volume2 size={20} style={{ color: '#D4A853' }} /> : <VolumeX size={20} style={{ color: 'rgba(245,236,215,0.4)' }} />}
+                        <button onClick={toggleSound} className="p-3 rounded-xl transition-all hover:scale-105 border border-brand-primary/30 bg-[#1A1A2E]/60 backdrop-blur-sm hover:border-brand-primary/60">
+                            {soundEnabled ? <Volume2 size={24} style={{ color: '#D4A853' }} /> : <VolumeX size={24} style={{ color: 'rgba(245,236,215,0.4)' }} />}
                         </button>
-                        <button onClick={() => setShowHistory(true)} className="p-3 rounded-xl transition-all hover:scale-105 flex items-center gap-2 group"
-                          style={{ background: 'rgba(15,15,30,0.8)', border: '1px solid rgba(212,168,83,0.2)' }}>
-                            <History size={20} style={{ color: '#D4A853' }} />
-                            <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 text-xs font-mono font-bold uppercase tracking-widest whitespace-nowrap hidden md:block" style={{ color: '#D4A853' }}>Riwayat</span>
+                        <button onClick={() => setShowHistory(true)} className="p-3 rounded-xl transition-all hover:scale-105 flex items-center gap-2 group border border-brand-primary/30 bg-[#1A1A2E]/60 backdrop-blur-sm hover:border-brand-primary/60">
+                            <History size={24} style={{ color: '#D4A853' }} />
+                            <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 text-sm font-mono font-bold uppercase tracking-widest whitespace-nowrap hidden md:block" style={{ color: '#D4A853' }}>Riwayat</span>
                         </button>
                     </div>
                 </div>
 
                 {/* ─── Wheels Area ─── */}
-                <div className={`w-full max-w-[1400px] flex-1 flex items-center justify-center transition-all duration-1000 ${isUtama ? 'scale-[1.02]' : ''}`}>
-                    <div className={`grid ${getGridClass()} gap-x-10 gap-y-14 justify-items-center w-full py-4 px-4`}>
+                <div className={`w-full max-w-[1600px] flex-1 flex items-center justify-center transition-all duration-1000 my-6 ${isUtama ? 'scale-[1.05]' : ''}`}>
+                    <div className={`grid ${getGridClass()} gap-x-6 gap-y-12 justify-items-center w-full px-4`}>
                         {displayWheels.map((winner, idx) => (
                             <div key={idx} className="w-full flex flex-col items-center">
                                 <LuckyDraw3DWheel
@@ -260,7 +272,7 @@ export default function CarouselDrawPage() {
                                     winner={winner}
                                     spinning={spinning}
                                     isGrandPrize={!!isUtama}
-                                    stopDelay={isUtama ? 0 : idx * 1000}
+                                    stopDelay={isUtama ? 0 : idx * 600}
                                     onStop={() => handleWheelStop(idx, displayWheels.length, !!isUtama)}
                                 />
                             </div>
@@ -268,38 +280,38 @@ export default function CarouselDrawPage() {
                     </div>
                 </div>
 
-                {/* ─── LUXURY BUTTON ─── */}
-                <div className="mt-4 mb-6 flex justify-center w-full relative z-[60]">
+                {/* ─── LUXURY SPIN BUTTON ─── */}
+                <div className="mt-auto mb-10 flex justify-center w-full relative z-[60]">
                     <button onClick={handleSpin} disabled={spinning || isSoldOut || !selectedPrizeId}
-                        className="relative group transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:hover:scale-100"
-                        style={{ minWidth: '280px' }}>
-                        {/* Button glow */}
-                        {!spinning && !isSoldOut && (
-                          <div className="absolute -inset-2 rounded-full opacity-50 blur-xl transition-opacity group-hover:opacity-80"
-                            style={{ background: isUtama ? 'radial-gradient(ellipse, rgba(220,38,38,0.4), transparent 70%)' : 'radial-gradient(ellipse, rgba(212,168,83,0.3), transparent 70%)' }} />
-                        )}
-                        {/* Button body */}
-                        <div className="relative px-14 md:px-20 py-5 md:py-6 rounded-full overflow-hidden"
+                        className="relative group transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:hover:scale-100 rounded-full flex items-center justify-center"
+                        style={{ width: '160px', height: '160px' }}>
+                        
+                        {/* Outer Glow Ring */}
+                        <div className="absolute inset-0 rounded-full opacity-60 border-[2px] border-brand-primary"
+                             style={{ 
+                                boxShadow: '0 0 30px rgba(212,168,83,0.5)',
+                                animation: spinning ? 'pulse 1s infinite' : 'spin 8s linear infinite'
+                             }} />
+                        
+                        {/* Inner Ring dashed */}
+                        <div className="absolute inset-2 rounded-full border-[2px] border-brand-primary border-dashed opacity-40"
+                             style={{ animation: spinning ? 'spin 1s linear infinite' : 'spin 12s linear infinite reverse' }} />
+
+                        {/* Button Core */}
+                        <div className="absolute inset-4 rounded-full overflow-hidden flex items-center justify-center"
                           style={{
                             background: spinning
-                              ? 'linear-gradient(180deg, #333 0%, #222 50%, #333 100%)'
+                              ? 'linear-gradient(180deg, #111 0%, #000 50%, #111 100%)'
                               : isSoldOut
                                 ? 'linear-gradient(180deg, #7f1d1d 0%, #450a0a 50%, #7f1d1d 100%)'
-                                : isUtama
-                                  ? 'linear-gradient(180deg, #B91C1C 0%, #7F1D1D 30%, #991B1B 50%, #7F1D1D 70%, #B91C1C 100%)'
-                                  : 'linear-gradient(180deg, #D4A853 0%, #8B6914 30%, #C9A84C 50%, #8B6914 70%, #D4A853 100%)',
-                            border: spinning ? '2px solid rgba(255,255,255,0.1)' : isSoldOut ? '2px solid rgba(220,38,38,0.3)' : '2px solid rgba(255,255,255,0.2)',
-                            boxShadow: spinning ? 'none' : isUtama ? '0 8px 30px rgba(220,38,38,0.4), inset 0 1px 0 rgba(255,255,255,0.3)' : '0 8px 30px rgba(212,168,83,0.3), inset 0 1px 0 rgba(255,255,255,0.3)',
+                                : 'linear-gradient(180deg, #D4A853 0%, #8B6914 50%, #B8860B 100%)',
+                            boxShadow: spinning ? 'inset 0 0 20px rgba(0,0,0,0.8)' : 'inset 0 0 20px rgba(255,255,255,0.2), 0 0 20px rgba(212,168,83,0.6)',
                           }}>
-                          {/* Glass shine */}
-                          <div className="absolute inset-x-0 top-0 h-1/2 rounded-t-full"
-                            style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 100%)' }} />
-                          <span className="relative z-10 font-black text-xl md:text-3xl tracking-[0.25em] uppercase font-mono"
-                            style={{
-                              color: spinning ? 'rgba(255,255,255,0.3)' : isSoldOut ? 'rgba(255,100,100,0.6)' : '#FFFFFF',
-                              textShadow: spinning ? 'none' : '0 2px 4px rgba(0,0,0,0.5)',
-                            }}>
-                            {spinning ? 'SPINNING...' : isSoldOut ? 'HABIS' : isUtama ? 'GRAND PRIZE' : 'PUTAR UNDIAN'}
+                          {/* Top shine for glass effect */}
+                          <div className="absolute top-0 left-0 right-0 h-[40%] bg-white/20 rounded-t-full" />
+                          
+                          <span className="relative z-10 font-black text-3xl tracking-widest text-white drop-shadow-md">
+                            {spinning ? '...' : isSoldOut ? 'HABIS' : 'SPIN'}
                           </span>
                         </div>
                     </button>
