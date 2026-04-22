@@ -186,7 +186,6 @@ export default function CarouselDrawPage() {
                 // The slowdown will be handled inside LuckyDraw3DWheel via spinning=false 
                 // but we need to wait a bit before setting it to false
                 await sleep(3000); // 3s full spin
-                setScreenShake(false);
                 setSpinning(false);
                 spinningRef.current = false;
                 
@@ -217,6 +216,7 @@ export default function CarouselDrawPage() {
         stoppedWheelsRef.current += 1;
         
         if (isGrandPrize) {
+            setScreenShake(false);
             stopSound(audioRollRef);
             stopSound(audioTensionRef);
             playSound(audioGrandWinRef);

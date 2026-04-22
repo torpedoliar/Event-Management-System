@@ -226,12 +226,14 @@ export default function LuckyDraw3DWheel({
         className={`relative w-full max-w-xl mx-auto h-[360px] flex items-center justify-center transition-all duration-1000 ${isGrandPrize ? 'scale-110 drop-shadow-[0_0_50px_rgba(255,215,0,0.4)]' : ''}`} 
         style={{ 
             perspective: '1200px',
-            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%)',
-            maskImage: 'linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%)'
+            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+            maskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)'
         }}
      >
+       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_70%,rgba(0,0,0,0.8)_100%)] pointer-events-none z-10" />
+       
        {/* Elegant Highlight Bar */}
-       <div className={`absolute left-[-2%] right-[-2%] top-1/2 -translate-y-1/2 h-[86px] border-y-[2px] z-0 transition-all duration-500 rounded-2xl ${isGrandPrize ? 'border-yellow-400 bg-yellow-400/10 shadow-[inset_0_0_40px_rgba(255,215,0,0.3)]' : 'border-brand-primary/60 bg-brand-primary/5 shadow-[inset_0_0_30px_rgba(212,168,83,0.2)]'}`} />
+       <div className={`absolute left-[-15%] right-[-15%] top-1/2 -translate-y-1/2 h-[90px] border-y-[2px] z-0 transition-all duration-500 rounded-2xl ${isGrandPrize ? 'border-yellow-400 bg-yellow-400/15 shadow-[inset_0_0_40px_rgba(255,215,0,0.3)]' : 'border-brand-primary/60 bg-brand-primary/5 shadow-[inset_0_0_30px_rgba(212,168,83,0.2)]'}`} />
        
        <div className={`absolute left-0 md:left-4 top-1/2 -translate-y-1/2 font-black z-20 text-2xl md:text-3xl tracking-tighter transition-all duration-300 ${isGrandPrize ? 'text-yellow-400 drop-shadow-[0_0_15px_rgba(255,215,0,1)] scale-110' : 'text-brand-primary drop-shadow-[0_0_8px_rgba(212,168,83,0.8)]'}`}>
          &gt;&gt;
