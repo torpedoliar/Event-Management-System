@@ -25,23 +25,18 @@ export default function CarouselDrawPage() {
     const [loading, setLoading] = useState(true);
     const [eventCfg, setEventCfg] = useState<any>(null);
     const [spinning, setSpinning] = useState(false);
-    
     const [drawCount, setDrawCount] = useState(1);
     const [winners, setWinners] = useState<Guest[]>([]);
-    
     const [screenFlash, setScreenFlash] = useState(false);
     const [darkReveal, setDarkReveal] = useState(false);
     const [screenShake, setScreenShake] = useState(false);
-
     const [soundEnabled, setSoundEnabled] = useState(false);
     const audioRollRef = useRef<HTMLAudioElement | null>(null);
     const audioTensionRef = useRef<HTMLAudioElement | null>(null);
     const audioWinRef = useRef<HTMLAudioElement | null>(null);
     const audioGrandWinRef = useRef<HTMLAudioElement | null>(null);
-    
     const stoppedWheelsRef = useRef(0);
     const totalWheelsRef = useRef(0);
-
     const { addEventListener, removeEventListener } = useSSE();
 
     const playSound = (audioRef: React.RefObject<HTMLAudioElement | null>, loop = false) => {
@@ -49,273 +44,138 @@ export default function CarouselDrawPage() {
         audioRef.current.currentTime = 0;
         audioRef.current.loop = loop;
         audioRef.current.volume = 1.0;
-        audioRef.current.play().catch(e => console.warn('Audio play failed', e));
+        audioRef.current.play().catch(() => {});
     };
-
     const stopSound = (audioRef: React.RefObject<HTMLAudioElement | null>) => {
-        if (audioRef.current) {
-            audioRef.current.pause();
-            audioRef.current.currentTime = 0;
-        }
+        if (audioRef.current) { audioRef.current.pause(); audioRef.current.currentTime = 0; }
     };
-
     const toggleSound = () => {
-        const newState = !soundEnabled;
-        setSoundEnabled(newState);
-        if (newState) {
+        const ns = !soundEnabled;
+        setSoundEnabled(ns);
+        if (ns) {
             [audioRollRef, audioTensionRef, audioWinRef, audioGrandWinRef].forEach(ref => {
-                if (ref.current) {
-                    ref.current.load();
-                    ref.current.volume = 0;
-                    ref.current.play().then(() => {
-                        ref.current?.pause();
-                        if (ref.current) ref.current.currentTime = 0;
-                        if (ref.current) ref.current.volume = 1.0;
-                    }).catch(() => {});
-                }
+                if (ref.current) { ref.current.load(); ref.current.volume = 0; ref.current.play().then(() => { ref.current?.pause(); if (ref.current) { ref.current.currentTime = 0; ref.current.volume = 1.0; } }).catch(() => {}); }
             });
         }
     };
-
-    const getExcludedWinnerIds = (prizesData: Prize[]): Set<string> => {
-        const excluded = new Set<string>();
-        for (const prize of prizesData) {
-            if (!prize.allowMultipleWins) {
-                for (const w of prize.winners) {
-                    excluded.add(w.id);
-                }
-            }
-        }
-        return excluded;
+    const getExcludedWinnerIds = (pd: Prize[]): Set<string> => {
+        const ex = new Set<string>();
+        for (const p of pd) { if (!p.allowMultipleWins) { for (const w of p.winners) ex.add(w.id); } }
+        return ex;
     };
-
     const loadData = async () => {
         try {
-            const [prizesData, guestsData, configData] = await Promise.all([
-                apiFetch<Prize[]>('/prizes'),
-                apiFetch<{ data: Guest[] }>('/guests?checkedIn=true&pageSize=10000'),
-                apiFetch<any>('/config/event')
-            ]);
-            setPrizes(prizesData);
-
-            const excluded = getExcludedWinnerIds(prizesData);
-            const eligibleCandidates = (guestsData.data || []).filter(
-                g => !excluded.has(g.id)
-            );
-            setCandidates(eligibleCandidates);
-            setEventCfg(configData);
-
-            if (prizesData.length > 0 && !selectedPrizeId) {
-                setSelectedPrizeId(prizesData[0].id);
-            }
-        } catch (e) {
-            console.error(e);
-        } finally {
-            setLoading(false);
-        }
+            const [pd, gd, cd] = await Promise.all([apiFetch<Prize[]>('/prizes'), apiFetch<{ data: Guest[] }>('/guests?checkedIn=true&pageSize=10000'), apiFetch<any>('/config/event')]);
+            setPrizes(pd);
+            const ex = getExcludedWinnerIds(pd);
+            setCandidates((gd.data || []).filter(g => !ex.has(g.id)));
+            setEventCfg(cd);
+            if (pd.length > 0 && !selectedPrizeId) setSelectedPrizeId(pd[0].id);
+        } catch (e) { console.error(e); } finally { setLoading(false); }
     };
 
     useEffect(() => {
         loadData();
-
-        const onPrizeDraw = (e: MessageEvent) => {
-            const data = JSON.parse(e.data);
-            if (data.prizeId === selectedPrizeId) {
-                if (!spinning) {
-                    loadData();
-                }
-            }
-        };
-        const onConfig = (e: MessageEvent) => {
-            try {
-                const data = JSON.parse(e.data);
-                setEventCfg((prev: any) => ({ ...prev, ...data }));
-            } catch (err) {
-                console.error('SSE Parse Error', err);
-            }
-        };
-
-        const onEventChange = () => {
-            setLoading(true);
-            setSelectedPrizeId('');
-            loadData();
-        };
-
-        addEventListener('prize_draw', onPrizeDraw);
-        addEventListener('config', onConfig);
-        addEventListener('event_change', onEventChange);
-
-        return () => {
-            removeEventListener('prize_draw', onPrizeDraw);
-            removeEventListener('config', onConfig);
-            removeEventListener('event_change', onEventChange);
-        };
+        const onPD = (e: MessageEvent) => { const d = JSON.parse(e.data); if (d.prizeId === selectedPrizeId && !spinning) loadData(); };
+        const onCfg = (e: MessageEvent) => { try { setEventCfg((p: any) => ({ ...p, ...JSON.parse(e.data) })); } catch {} };
+        const onEC = () => { setLoading(true); setSelectedPrizeId(''); loadData(); };
+        addEventListener('prize_draw', onPD); addEventListener('config', onCfg); addEventListener('event_change', onEC);
+        return () => { removeEventListener('prize_draw', onPD); removeEventListener('config', onCfg); removeEventListener('event_change', onEC); };
     }, [selectedPrizeId, addEventListener, removeEventListener]);
 
     const handleSpin = async () => {
         if (spinning || !selectedPrizeId) return;
-        
         const prize = prizes.find(p => p.id === selectedPrizeId);
         if (!prize) return;
-        
-        const isUtama = prize.category === 'UTAMA';
-        const actualDrawCount = isUtama ? 1 : drawCount;
-        
-        // Reset state
-        setWinners([]);
-        stoppedWheelsRef.current = 0;
-        totalWheelsRef.current = actualDrawCount;
-        setScreenShake(false);
-        setScreenFlash(false);
-        setDarkReveal(false);
-        
-        // Start spinning FIRST — this triggers the wheel animation immediately
+        const isU = prize.category === 'UTAMA';
+        const ac = isU ? 1 : drawCount;
+        setWinners([]); stoppedWheelsRef.current = 0; totalWheelsRef.current = ac;
+        setScreenShake(false); setScreenFlash(false); setDarkReveal(false);
         setSpinning(true);
-        
         playSound(audioRollRef, true);
-        
-        if (isUtama) {
-            setScreenShake(true);
-        }
-        
+        if (isU) setScreenShake(true);
         try {
-            // Call API to determine winner(s) — wheels are already spinning visually
-            const results = await apiFetch<Guest[]>(`/prizes/${selectedPrizeId}/draw`, { 
-                method: 'POST',
-                body: JSON.stringify({ count: actualDrawCount })
-            });
-            
-            if (!results || results.length === 0) {
-                throw new Error("Tidak ada peserta yang terpilih");
-            }
-            
-            // Wait a bit for visual spin drama, then set winners
-            // (the LuckyDraw3DWheel will detect the winner and start decelerating)
-            await sleep(isUtama ? 3000 : 2000);
-            
-            // Set winners — this triggers deceleration in each wheel
+            const results = await apiFetch<Guest[]>(`/prizes/${selectedPrizeId}/draw`, { method: 'POST', body: JSON.stringify({ count: ac }) });
+            if (!results || results.length === 0) throw new Error("Tidak ada peserta yang terpilih");
+            await sleep(isU ? 3000 : 2000);
             setWinners(results);
-            
-            if (isUtama) {
-                playSound(audioTensionRef, true);
-            }
-            
-            // Remove winners from local candidates if not allowMultipleWins
-            if (!prize.allowMultipleWins) {
-                const winnerIds = new Set(results.map(r => r.id));
-                setCandidates(prev => prev.filter(c => !winnerIds.has(c.id)));
-            }
-            
+            if (isU) playSound(audioTensionRef, true);
+            if (!prize.allowMultipleWins) { const wids = new Set(results.map(r => r.id)); setCandidates(prev => prev.filter(c => !wids.has(c.id))); }
         } catch (e: any) {
-            stopSound(audioRollRef);
-            stopSound(audioTensionRef);
-            setSpinning(false);
-            setScreenShake(false);
+            stopSound(audioRollRef); stopSound(audioTensionRef); setSpinning(false); setScreenShake(false);
             alert(e.message || 'Gagal mengundi pemenang');
         }
     };
-    
-    const handleWheelStop = (index: number, totalWheels: number, isGrandPrize: boolean) => {
+
+    const handleWheelStop = (index: number, totalWheels: number, isGP: boolean) => {
         stoppedWheelsRef.current += 1;
         const allStopped = stoppedWheelsRef.current >= totalWheelsRef.current;
-        
-        if (isGrandPrize) {
-            setScreenShake(false);
-            stopSound(audioRollRef);
-            stopSound(audioTensionRef);
-            playSound(audioGrandWinRef);
-            
-            setScreenFlash(true);
-            setTimeout(() => setScreenFlash(false), 400);
-            setDarkReveal(true);
-            
-            confetti({
-                particleCount: 800,
-                spread: 160,
-                startVelocity: 70,
-                origin: { y: 0.5, x: 0.5 },
-                colors: ['#FFD700', '#FFA500', '#FFFFFF', '#FF4500', '#1E3A8A'],
-                ticks: 400
-            });
-
-            const end = Date.now() + (3 * 1000);
-            const colors = ['#FFD700', '#FFFFFF'];
-            (function frame() {
-                confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0, y: 0.6 }, colors: colors });
-                confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1, y: 0.6 }, colors: colors });
-                if (Date.now() < end) requestAnimationFrame(frame);
-            }());
-
-            setTimeout(() => {
-                confetti({
-                    particleCount: 300,
-                    spread: 360,
-                    startVelocity: 30,
-                    origin: { y: 0.2, x: 0.5 },
-                    colors: ['#FFD700', '#FFFFFF', '#F0E68C']
-                });
-                setDarkReveal(false);
-            }, 5000);
-            
-            setSpinning(false);
-            loadData();
+        if (isGP) {
+            setScreenShake(false); stopSound(audioRollRef); stopSound(audioTensionRef); playSound(audioGrandWinRef);
+            setScreenFlash(true); setTimeout(() => setScreenFlash(false), 400); setDarkReveal(true);
+            confetti({ particleCount: 800, spread: 160, startVelocity: 70, origin: { y: 0.5, x: 0.5 }, colors: ['#FFD700', '#FFA500', '#FFFFFF', '#FF4500', '#1E3A8A'], ticks: 400 });
+            const end = Date.now() + 3000; const cols = ['#FFD700', '#FFFFFF'];
+            (function frame() { confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0, y: 0.6 }, colors: cols }); confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1, y: 0.6 }, colors: cols }); if (Date.now() < end) requestAnimationFrame(frame); }());
+            setTimeout(() => { confetti({ particleCount: 300, spread: 360, startVelocity: 30, origin: { y: 0.2, x: 0.5 }, colors: ['#FFD700', '#FFFFFF', '#F0E68C'] }); setDarkReveal(false); }, 5000);
+            setSpinning(false); loadData();
         } else {
             playSound(audioWinRef);
-            confetti({
-                particleCount: 50,
-                spread: 60,
-                origin: { y: 0.6 },
-                colors: ['#FFD700', '#FFA500', '#FF69B4']
-            });
-            
-            if (allStopped) {
-                stopSound(audioRollRef);
-                confetti({
-                    particleCount: 200,
-                    spread: 120,
-                    origin: { y: 0.6 },
-                    colors: ['#FFD700', '#FFA500', '#FF69B4', '#00FF00', '#00BFFF']
-                });
-                setSpinning(false);
-                loadData();
-            }
+            confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 }, colors: ['#FFD700', '#FFA500', '#FF69B4'] });
+            if (allStopped) { stopSound(audioRollRef); confetti({ particleCount: 200, spread: 120, origin: { y: 0.6 }, colors: ['#FFD700', '#FFA500', '#FF69B4', '#00FF00', '#00BFFF'] }); setSpinning(false); loadData(); }
         }
     };
 
     const getGridClass = () => {
-        const count = winners.length || (isUtama ? 1 : drawCount);
-        if (count === 1) return 'grid-cols-1';
-        if (count <= 4) return 'grid-cols-1 md:grid-cols-2';
-        if (count <= 9) return 'grid-cols-1 md:grid-cols-3';
+        const c = winners.length || (isUtama ? 1 : drawCount);
+        if (c === 1) return 'grid-cols-1';
+        if (c <= 4) return 'grid-cols-1 md:grid-cols-2';
+        if (c <= 9) return 'grid-cols-1 md:grid-cols-3';
         return 'grid-cols-2 md:grid-cols-4';
     };
 
     const selectedPrize = prizes.find(p => p.id === selectedPrizeId);
     const isSoldOut = selectedPrize ? selectedPrize.winners.length >= selectedPrize.quantity : false;
     const isUtama = selectedPrize?.category === 'UTAMA';
+    const totalWon = prizes.reduce((a, p) => a + p.winners.length, 0);
 
-    if (loading) return <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>;
+    if (loading) return <div className="min-h-screen flex items-center justify-center text-white"><div className="animate-spin w-8 h-8 border-2 border-brand-primary border-t-transparent rounded-full" /></div>;
 
-    // Display wheels: if we have winners, show one wheel per winner.
-    // If no winners yet, show placeholder wheels based on draw count.
     const wheelCount = winners.length > 0 ? winners.length : (isUtama ? 1 : drawCount);
     const displayWheels = Array.from({ length: wheelCount }, (_, idx) => winners[idx] || null);
 
     return (
-        <div className={`min-h-screen flex flex-col p-8 relative overflow-hidden ${screenShake ? 'animate-screen-shake' : ''}`}>
-            {/* Mode Selector Dropdown */}
+        <div className={`min-h-screen flex flex-col relative overflow-hidden ${screenShake ? 'animate-screen-shake' : ''}`}>
+            {/* ═══ GOLD CURTAIN SIDE EFFECTS ═══ */}
+            <div className="fixed inset-y-0 left-0 w-24 md:w-40 pointer-events-none z-[5]"
+              style={{ background: 'linear-gradient(90deg, rgba(139,105,20,0.15) 0%, rgba(212,168,83,0.05) 40%, transparent 100%)' }} />
+            <div className="fixed inset-y-0 right-0 w-24 md:w-40 pointer-events-none z-[5]"
+              style={{ background: 'linear-gradient(270deg, rgba(139,105,20,0.15) 0%, rgba(212,168,83,0.05) 40%, transparent 100%)' }} />
+
+            {/* ═══ ORNATE PAGE BORDER ═══ */}
+            <div className="fixed inset-3 md:inset-5 pointer-events-none z-[4] rounded-2xl"
+              style={{
+                border: '2px solid rgba(212,168,83,0.2)',
+                boxShadow: 'inset 0 0 80px rgba(0,0,0,0.3)',
+              }}
+            >
+              <div className="absolute inset-2 rounded-xl" style={{ border: '1px solid rgba(212,168,83,0.1)' }} />
+              {/* Corner flares */}
+              {['top-0 left-0', 'top-0 right-0', 'bottom-0 left-0', 'bottom-0 right-0'].map((pos, i) => (
+                <div key={i} className={`absolute ${pos} w-8 h-8`}>
+                  <div className="w-full h-full" style={{
+                    background: 'radial-gradient(circle, rgba(212,168,83,0.4) 0%, transparent 70%)',
+                  }} />
+                </div>
+              ))}
+            </div>
+
+            {/* Mode Selector */}
             <div className="fixed top-24 left-6 z-[70]">
-                <select
-                    onChange={(e) => {
-                        if (e.target.value === 'classic') window.location.href = '/luckydraw';
-                        else if (e.target.value === 'slot') window.location.href = '/luckydraw/display';
-                    }}
-                    value="carousel"
-                    className="bg-brand-secondary/80 border border-brand-primary/50 text-brand-primarySoft text-sm rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary backdrop-blur-xl transition-all shadow-lg font-mono tracking-wider cursor-pointer"
-                >
+                <select onChange={(e) => { if (e.target.value === 'classic') window.location.href = '/luckydraw'; else if (e.target.value === 'slot') window.location.href = '/luckydraw/display'; }} value="carousel"
+                    className="bg-black/60 border border-brand-primary/40 text-brand-primarySoft text-sm rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary backdrop-blur-xl shadow-lg font-mono tracking-wider cursor-pointer">
                     <option value="classic">🎲 Classic Mode</option>
-                    <option value="slot">🎰 Slot Machine Mode</option>
-                    <option value="carousel">🎡 3D Carousel Mode</option>
+                    <option value="slot">🎰 Slot Machine</option>
+                    <option value="carousel">🎡 3D Carousel</option>
                 </select>
             </div>
 
@@ -325,13 +185,11 @@ export default function CarouselDrawPage() {
             <audio ref={audioGrandWinRef} src={toApiUrl(eventCfg?.grandWinSoundUrl || "/sounds/grand-win.mp3")} preload="auto" />
 
             {!soundEnabled && !loading && (
-                <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/80 backdrop-blur-md">
-                    <button 
-                        onClick={toggleSound}
-                        className="group relative bg-brand-secondary border border-brand-primary/50 p-12 rounded-[2rem] flex flex-col items-center gap-6 hover:border-brand-primary transition-all hover:scale-105"
-                    >
-                        <Volume2 size={48} className="text-brand-primary" />
-                        <h3 className="text-2xl font-bold text-white uppercase tracking-widest font-mono">Enable Audio</h3>
+                <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/85 backdrop-blur-md">
+                    <button onClick={toggleSound} className="group relative p-14 rounded-[2rem] flex flex-col items-center gap-6 transition-all hover:scale-105"
+                      style={{ background: 'linear-gradient(180deg, rgba(30,30,50,0.95) 0%, rgba(15,15,30,0.98) 100%)', border: '2px solid rgba(212,168,83,0.4)', boxShadow: '0 0 40px rgba(212,168,83,0.15)' }}>
+                        <Volume2 size={56} style={{ color: '#D4A853' }} />
+                        <h3 className="text-2xl font-bold uppercase tracking-[0.3em] font-mono" style={{ color: '#D4A853' }}>Enable Audio</h3>
                     </button>
                 </div>
             )}
@@ -339,72 +197,55 @@ export default function CarouselDrawPage() {
             {screenFlash && <div className="fixed inset-0 z-[60] bg-white pointer-events-none animate-[screen-flash_0.3s_ease-out]" />}
             {darkReveal && <div className="dark-reveal pointer-events-none z-[50]" />}
 
-            <div className="relative z-10 flex justify-between items-start mb-8 mt-12 md:mt-0">
-                <div className="flex items-center gap-4">
-                    {eventCfg?.logoUrl && <img src={toApiUrl(eventCfg.logoUrl)} className="h-16 drop-shadow-xl" alt="logo" />}
-                </div>
-                
-                <button onClick={toggleSound} className="p-4 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-white transition-all">
-                    {soundEnabled ? <Volume2 size={24} /> : <VolumeX size={24} />}
-                </button>
-            </div>
+            {/* ═══ MAIN CONTENT ═══ */}
+            <div className="relative z-10 flex-1 flex flex-col items-center justify-center w-full px-4 md:px-8 py-6 gap-6">
 
-            <div className="relative z-[55] flex-1 flex flex-col items-center justify-center w-full max-w-[95vw] mx-auto gap-8">
-                
-                <div className="flex flex-col md:flex-row items-center justify-center gap-6 w-full max-w-4xl mx-auto bg-black/40 backdrop-blur-xl p-6 rounded-3xl border border-white/10">
-                    <div className="flex-1 w-full">
-                        <select
-                            value={selectedPrizeId}
-                            onChange={(e) => {
-                                setSelectedPrizeId(e.target.value);
-                                setWinners([]);
-                                setDrawCount(1);
-                            }}
-                            disabled={spinning}
-                            className="w-full bg-brand-secondary/80 border border-brand-primary/30 text-brand-primarySoft text-xl rounded-full px-6 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 font-mono tracking-widest uppercase text-center disabled:opacity-50"
-                        >
-                            {prizes.map(p => (
-                                <option key={p.id} value={p.id} className="bg-brand-secondary text-brand-surface font-sans">
-                                    {p.category === 'UTAMA' ? '🏆' : '🎁'} {p.name} ({p.winners.length}/{p.quantity})
-                                </option>
-                            ))}
-                        </select>
+                {/* ─── Top Bar: Logo + Prize Info + Sound ─── */}
+                <div className="w-full max-w-5xl flex items-center justify-between gap-4">
+                    {/* Prize Info Panel */}
+                    <div className="flex items-center gap-4 px-5 py-3 rounded-xl"
+                      style={{ background: 'linear-gradient(135deg, rgba(15,15,30,0.9) 0%, rgba(25,25,45,0.9) 100%)', border: '1px solid rgba(212,168,83,0.3)', boxShadow: '0 4px 20px rgba(0,0,0,0.4)' }}>
+                        <Trophy size={22} style={{ color: '#D4A853' }} />
+                        <div>
+                            <select value={selectedPrizeId} onChange={(e) => { setSelectedPrizeId(e.target.value); setWinners([]); setDrawCount(1); }} disabled={spinning}
+                                className="bg-transparent text-lg font-bold uppercase tracking-widest font-mono focus:outline-none disabled:opacity-50 cursor-pointer pr-6"
+                                style={{ color: '#D4A853', maxWidth: '300px' }}>
+                                {prizes.map(p => (
+                                    <option key={p.id} value={p.id} className="bg-brand-secondary text-brand-surface font-sans">
+                                        {p.category === 'UTAMA' ? '🏆' : '🎁'} {p.name} ({p.winners.length}/{p.quantity})
+                                    </option>
+                                ))}
+                            </select>
+                            <div className="flex gap-6 mt-1 text-xs font-mono tracking-widest">
+                                <span style={{ color: 'rgba(245,236,215,0.6)' }}>HADIR: {candidates.length}</span>
+                                <span style={{ color: '#D4A853' }}>MENANG: {totalWon}</span>
+                            </div>
+                        </div>
                     </div>
 
-                    {!isUtama && (
-                        <div className="flex items-center gap-4 bg-black/50 px-6 py-3 rounded-full border border-white/10">
-                            <span className="text-white/60 font-mono text-sm tracking-widest">DRAW COUNT:</span>
-                            <div className="flex gap-2">
+                    <div className="flex items-center gap-3">
+                        {!isUtama && (
+                            <div className="flex items-center gap-2 px-4 py-2 rounded-xl" style={{ background: 'rgba(15,15,30,0.8)', border: '1px solid rgba(212,168,83,0.2)' }}>
+                                <span className="text-xs font-mono tracking-widest" style={{ color: 'rgba(245,236,215,0.5)' }}>×</span>
                                 {[1, 5, 10].map(n => (
-                                    <button
-                                        key={n}
-                                        onClick={() => setDrawCount(n)}
-                                        disabled={spinning}
-                                        className={`w-10 h-10 rounded-full font-bold transition-all ${drawCount === n ? 'bg-brand-primary text-black' : 'bg-white/10 text-white hover:bg-white/20'} disabled:opacity-50`}
-                                    >
+                                    <button key={n} onClick={() => setDrawCount(n)} disabled={spinning}
+                                        className="w-8 h-8 rounded-lg text-sm font-bold transition-all disabled:opacity-50"
+                                        style={{ background: drawCount === n ? 'linear-gradient(180deg, #D4A853, #8B6914)' : 'rgba(255,255,255,0.05)', color: drawCount === n ? '#0F0F1A' : 'rgba(245,236,215,0.6)', border: drawCount === n ? 'none' : '1px solid rgba(212,168,83,0.15)' }}>
                                         {n}
                                     </button>
                                 ))}
                             </div>
-                        </div>
-                    )}
-                </div>
-
-                <div className="w-full max-w-4xl mx-auto bg-brand-secondary/80 backdrop-blur-md border border-brand-primary/20 p-4 md:p-5 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-                    <div className="flex justify-between text-brand-surface/80 mb-3 font-mono text-xs md:text-sm tracking-widest font-bold">
-                        <span>HADIR: {candidates.length}</span>
-                        <span className="text-brand-primarySoft">MENANG: {prizes.reduce((acc, p) => acc + p.winners.length, 0)}</span>
-                    </div>
-                    <div className="w-full h-2 md:h-2.5 bg-black/60 rounded-full overflow-hidden shadow-inner border border-white/5">
-                        <div 
-                            className="h-full bg-gradient-to-r from-brand-primary to-brand-accent shadow-[0_0_15px_rgba(212,168,83,0.8)] transition-all duration-1000" 
-                            style={{ width: `${Math.max(0, 100 - (prizes.reduce((acc, p) => acc + p.winners.length, 0) / (candidates.length || 1) * 100))}%` }} 
-                        />
+                        )}
+                        <button onClick={toggleSound} className="p-3 rounded-xl transition-all hover:scale-105"
+                          style={{ background: 'rgba(15,15,30,0.8)', border: '1px solid rgba(212,168,83,0.2)' }}>
+                            {soundEnabled ? <Volume2 size={20} style={{ color: '#D4A853' }} /> : <VolumeX size={20} style={{ color: 'rgba(245,236,215,0.4)' }} />}
+                        </button>
                     </div>
                 </div>
 
-                <div className={`w-full max-w-[1400px] transition-all duration-1000 ${isUtama ? 'border-red-500/50 shadow-[0_0_100px_rgba(255,0,0,0.1)] rounded-3xl p-8' : ''}`}>
-                    <div className={`grid ${getGridClass()} gap-x-8 gap-y-12 justify-items-center py-6 px-4`}>
+                {/* ─── Wheels Area ─── */}
+                <div className={`w-full max-w-[1400px] flex-1 flex items-center justify-center transition-all duration-1000 ${isUtama ? 'scale-[1.02]' : ''}`}>
+                    <div className={`grid ${getGridClass()} gap-x-10 gap-y-14 justify-items-center w-full py-4 px-4`}>
                         {displayWheels.map((winner, idx) => (
                             <div key={idx} className="w-full flex flex-col items-center">
                                 <LuckyDraw3DWheel
@@ -420,23 +261,40 @@ export default function CarouselDrawPage() {
                     </div>
                 </div>
 
-                <div className="mt-8 flex justify-center w-full relative z-[60]">
-                    <button
-                        onClick={handleSpin}
-                        disabled={spinning || isSoldOut || !selectedPrizeId}
-                        className={`
-                            relative px-16 py-6 rounded-full font-black text-2xl md:text-3xl font-mono tracking-[0.3em] uppercase transition-all duration-300 transform hover:scale-105 active:scale-95
-                            ${spinning
-                                ? 'bg-brand-border/50 text-white/50 cursor-not-allowed border border-white/20'
-                                : isSoldOut
-                                    ? 'bg-red-500/20 text-red-500 cursor-not-allowed border border-red-500/30'
-                                    : isUtama 
-                                        ? 'bg-gradient-to-r from-red-600 to-red-800 text-white shadow-[0_0_50px_rgba(255,0,0,0.5)] hover:shadow-[0_0_80px_rgba(255,0,0,0.8)] border border-red-400/50 animate-grand-pulse'
-                                        : 'bg-gradient-to-r from-brand-primary to-brand-accent text-brand-secondary shadow-[0_0_50px_rgba(212,168,83,0.4)] hover:shadow-[0_0_80px_rgba(212,168,83,0.6)] border border-brand-primarySoft/50'
-                            }
-                        `}
-                    >
-                        {spinning ? 'SPINNING...' : isSoldOut ? 'HABIS' : isUtama ? '◆ GRAND PRIZE ◆' : '◆ PUTAR UNDIAN ◆'}
+                {/* ─── LUXURY BUTTON ─── */}
+                <div className="mt-4 mb-6 flex justify-center w-full relative z-[60]">
+                    <button onClick={handleSpin} disabled={spinning || isSoldOut || !selectedPrizeId}
+                        className="relative group transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:hover:scale-100"
+                        style={{ minWidth: '280px' }}>
+                        {/* Button glow */}
+                        {!spinning && !isSoldOut && (
+                          <div className="absolute -inset-2 rounded-full opacity-50 blur-xl transition-opacity group-hover:opacity-80"
+                            style={{ background: isUtama ? 'radial-gradient(ellipse, rgba(220,38,38,0.4), transparent 70%)' : 'radial-gradient(ellipse, rgba(212,168,83,0.3), transparent 70%)' }} />
+                        )}
+                        {/* Button body */}
+                        <div className="relative px-14 md:px-20 py-5 md:py-6 rounded-full overflow-hidden"
+                          style={{
+                            background: spinning
+                              ? 'linear-gradient(180deg, #333 0%, #222 50%, #333 100%)'
+                              : isSoldOut
+                                ? 'linear-gradient(180deg, #7f1d1d 0%, #450a0a 50%, #7f1d1d 100%)'
+                                : isUtama
+                                  ? 'linear-gradient(180deg, #B91C1C 0%, #7F1D1D 30%, #991B1B 50%, #7F1D1D 70%, #B91C1C 100%)'
+                                  : 'linear-gradient(180deg, #D4A853 0%, #8B6914 30%, #C9A84C 50%, #8B6914 70%, #D4A853 100%)',
+                            border: spinning ? '2px solid rgba(255,255,255,0.1)' : isSoldOut ? '2px solid rgba(220,38,38,0.3)' : '2px solid rgba(255,255,255,0.2)',
+                            boxShadow: spinning ? 'none' : isUtama ? '0 8px 30px rgba(220,38,38,0.4), inset 0 1px 0 rgba(255,255,255,0.3)' : '0 8px 30px rgba(212,168,83,0.3), inset 0 1px 0 rgba(255,255,255,0.3)',
+                          }}>
+                          {/* Glass shine */}
+                          <div className="absolute inset-x-0 top-0 h-1/2 rounded-t-full"
+                            style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 100%)' }} />
+                          <span className="relative z-10 font-black text-xl md:text-3xl tracking-[0.25em] uppercase font-mono"
+                            style={{
+                              color: spinning ? 'rgba(255,255,255,0.3)' : isSoldOut ? 'rgba(255,100,100,0.6)' : '#FFFFFF',
+                              textShadow: spinning ? 'none' : '0 2px 4px rgba(0,0,0,0.5)',
+                            }}>
+                            {spinning ? 'SPINNING...' : isSoldOut ? 'HABIS' : isUtama ? 'GRAND PRIZE' : 'PUTAR UNDIAN'}
+                          </span>
+                        </div>
                     </button>
                 </div>
             </div>

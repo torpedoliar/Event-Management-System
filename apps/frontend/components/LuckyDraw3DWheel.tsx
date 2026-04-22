@@ -20,7 +20,7 @@ export interface LuckyDraw3DWheelProps {
   onStop: () => void;
 }
 
-type WheelPhase = 'idle' | 'spinning' | 'decelerating' | 'fake-stop' | 'snapping' | 'stopped';
+type WheelPhase = 'idle' | 'spinning' | 'decelerating' | 'fake-stop' | 'wobbling' | 'snapping' | 'stopped';
 
 export default function LuckyDraw3DWheel({
   candidates,
@@ -32,58 +32,43 @@ export default function LuckyDraw3DWheel({
 }: LuckyDraw3DWheelProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   
-  // Fixed 40-slot cylinder
   const N = 40;
-  const H = 110; // 80px card + 30px gap
-  const theta = 360 / N; // 9 degrees per slot
+  const H = 110;
+  const theta = 360 / N;
   const radius = Math.round((H / 2) / Math.tan(Math.PI / N));
   
   const [wheelItems, setWheelItems] = useState<Guest[]>([]);
-  
-  // The winner should land in the center of the visible area.
-  // The "center" of the viewport corresponds to rotateX(0), so we target
-  // index 0 (the first slot) and calculate rotation to bring it to center.
-  // Actually, let's use a fixed target index and compute the angle to place it at the top.
-  const WINNER_INDEX = 20; // Place winner roughly halfway around
+  const WINNER_INDEX = 20;
 
   const onStopRef = useRef(onStop);
   const onStopCalledRef = useRef(false);
 
-  useEffect(() => {
-    onStopRef.current = onStop;
-  }, [onStop]);
+  useEffect(() => { onStopRef.current = onStop; }, [onStop]);
   
-  // Build initial wheel items from candidates
   const buildWheelItems = useCallback((candidateList: Guest[], winnerGuest?: Guest | null): Guest[] => {
     if (candidateList.length === 0) return [];
-    
     const items: Guest[] = [];
     for (let i = 0; i < N; i++) {
       items.push(candidateList[Math.floor(Math.random() * candidateList.length)]);
     }
-    
-    // If winner is known, place at target index
     if (winnerGuest) {
       items[WINNER_INDEX] = winnerGuest;
-      // Also ensure neighbors are different from winner for visual clarity
       const nonWinnerCandidates = candidateList.filter(c => c.id !== winnerGuest.id);
       if (nonWinnerCandidates.length > 0) {
         if (WINNER_INDEX > 0) items[WINNER_INDEX - 1] = nonWinnerCandidates[Math.floor(Math.random() * nonWinnerCandidates.length)];
         if (WINNER_INDEX < N - 1) items[WINNER_INDEX + 1] = nonWinnerCandidates[Math.floor(Math.random() * nonWinnerCandidates.length)];
       }
     }
-    
     return items;
   }, [N, WINNER_INDEX]);
 
-  // Initialize wheel items when candidates first load
   useEffect(() => {
     if (candidates.length > 0 && wheelItems.length === 0) {
       setWheelItems(buildWheelItems(candidates));
     }
   }, [candidates, wheelItems.length, buildWheelItems]);
 
-  // Animation state refs
+  // ─── Animation state refs ───
   const currentAngleRef = useRef(0);
   const velocityRef = useRef(0);
   const rafRef = useRef<number>(0);
@@ -91,245 +76,358 @@ export default function LuckyDraw3DWheel({
   const stopDelayTimerRef = useRef<NodeJS.Timeout | null>(null);
   const targetAngleRef = useRef(0);
   const winnerInsertedRef = useRef(false);
+  const wobbleStartTimeRef = useRef(0);
+  const wobbleCenterRef = useRef(0);
+  const wobbleDirectionRef = useRef(1);
+  const wobbleFinalTargetRef = useRef(0);
 
-  // When spinning starts — rebuild wheel, start animation
+  // ─── Spinning animation ───
   useEffect(() => {
     if (spinning && candidates.length > 0) {
-      // Reset state for new spin
       onStopCalledRef.current = false;
       winnerInsertedRef.current = false;
-      
-      // Reset CSS transition  
-      if (containerRef.current) {
-        containerRef.current.style.transition = 'none';
-      }
-      
-      // Build fresh wheel items (winner not known yet during spin)
+      if (containerRef.current) containerRef.current.style.transition = 'none';
       setWheelItems(buildWheelItems(candidates));
-      
       phaseRef.current = 'spinning';
-      velocityRef.current = 12 + Math.random() * 4; // Slight randomness in speed
-      
-      // Clear any pending timers
-      if (stopDelayTimerRef.current) {
-        clearTimeout(stopDelayTimerRef.current);
-        stopDelayTimerRef.current = null;
-      }
+      velocityRef.current = 12 + Math.random() * 4;
+      if (stopDelayTimerRef.current) { clearTimeout(stopDelayTimerRef.current); stopDelayTimerRef.current = null; }
       
       let lastTime = performance.now();
-      
       const animate = (time: number) => {
-        const dt = Math.min(time - lastTime, 50); // Cap to avoid jumps
+        const dt = Math.min(time - lastTime, 50);
         lastTime = time;
-        const frameFactor = dt / 16.67; // Normalize to 60fps
-        
+        const frameFactor = dt / 16.67;
         const phase = phaseRef.current;
         
         if (phase === 'spinning') {
-          // Free spin — constant high speed
           currentAngleRef.current -= velocityRef.current * frameFactor;
-          
         } else if (phase === 'decelerating') {
-          // Smooth deceleration toward target
           const target = targetAngleRef.current;
           const remaining = currentAngleRef.current - target;
-          
           if (remaining > 0.3) {
-            // Exponential easing
-            const speed = Math.max(0.1, remaining * 0.025);
-            currentAngleRef.current -= speed * frameFactor;
+            currentAngleRef.current -= Math.max(0.1, remaining * 0.025) * frameFactor;
           } else {
-            // Snap to exact target
             currentAngleRef.current = target;
             phaseRef.current = 'stopped';
-            if (!onStopCalledRef.current) {
-              onStopCalledRef.current = true;
-              onStopRef.current();
-            }
+            if (!onStopCalledRef.current) { onStopCalledRef.current = true; onStopRef.current(); }
           }
-          
         } else if (phase === 'fake-stop') {
-          // Grand Prize: decelerate to one slot before winner, then pause + snap
           const target = targetAngleRef.current;
           const remaining = currentAngleRef.current - target;
-          
           if (remaining > 0.3) {
-            const speed = Math.max(0.1, remaining * 0.02);
-            currentAngleRef.current -= speed * frameFactor;
+            currentAngleRef.current -= Math.max(0.1, remaining * 0.02) * frameFactor;
           } else {
-            // Reached the fake stop position
             currentAngleRef.current = target;
+            wobbleCenterRef.current = target;
+            wobbleStartTimeRef.current = performance.now();
+            wobbleDirectionRef.current = Math.random() > 0.5 ? -1 : 1;
+            wobbleFinalTargetRef.current = target - theta / 2;
+            phaseRef.current = 'wobbling';
+          }
+        } else if (phase === 'wobbling') {
+          const elapsed = (time - wobbleStartTimeRef.current) / 1000;
+          const center = wobbleCenterRef.current;
+          const halfSlot = theta / 2;
+          const totalDuration = 3.5;
+          if (elapsed < totalDuration) {
+            const progress = elapsed / totalDuration;
+            const ampEnvelope = Math.sin(progress * Math.PI) * (1 - progress * 0.3);
+            const amplitude = halfSlot * 0.85 * ampEnvelope;
+            const freq = 0.8 + (2.8 - 0.8) * Math.sin(progress * Math.PI);
+            const phaseAngle = elapsed * freq * Math.PI * 2;
+            let bias = 0;
+            if (progress > 0.7) {
+              const bp = (progress - 0.7) / 0.3;
+              bias = wobbleDirectionRef.current * halfSlot * 0.4 * bp * bp;
+            }
+            const jitter = (Math.random() - 0.5) * 0.3 * (1 - progress);
+            currentAngleRef.current = center + Math.sin(phaseAngle) * amplitude * wobbleDirectionRef.current + bias + jitter;
+          } else {
             phaseRef.current = 'snapping';
-            
-            // Dramatic pause, then CSS snap to real winner
+            if (containerRef.current) {
+              containerRef.current.style.transition = 'transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)';
+              const finalTarget = wobbleFinalTargetRef.current;
+              currentAngleRef.current = finalTarget;
+              containerRef.current.style.transform = `translateZ(${-radius}px) rotateX(${finalTarget}deg)`;
+            }
             setTimeout(() => {
-              if (containerRef.current) {
-                containerRef.current.style.transition = 'transform 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
-                const realTarget = target - theta; // One more slot to the actual winner
-                currentAngleRef.current = realTarget;
-                containerRef.current.style.transform = `translateZ(${-radius}px) rotateX(${realTarget}deg)`;
-              }
-              
-              // After CSS transition completes
-              setTimeout(() => {
-                phaseRef.current = 'stopped';
-                if (!onStopCalledRef.current) {
-                  onStopCalledRef.current = true;
-                  onStopRef.current();
-                }
-              }, 1600);
-            }, 1500);
+              phaseRef.current = 'stopped';
+              if (!onStopCalledRef.current) { onStopCalledRef.current = true; onStopRef.current(); }
+            }, 1400);
           }
         }
         
-        // Update DOM
         if (containerRef.current && phase !== 'snapping' && phase !== 'stopped' && phase !== 'idle') {
           containerRef.current.style.transform = `translateZ(${-radius}px) rotateX(${currentAngleRef.current}deg)`;
         }
-        
-        // Continue loop unless stopped/snapping/idle
         if (phase !== 'stopped' && phase !== 'idle' && phase !== 'snapping') {
           rafRef.current = requestAnimationFrame(animate);
         }
       };
-      
       rafRef.current = requestAnimationFrame(animate);
     }
-    
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-    // Only trigger on `spinning` changes
+    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [spinning]);
 
-  // When winner data arrives — insert into wheel and trigger deceleration
+  // ─── Winner insertion ───
   useEffect(() => {
     if (!winner || winnerInsertedRef.current) return;
-    if (phaseRef.current !== 'spinning') return; // Only insert if still spinning
-    
+    if (phaseRef.current !== 'spinning') return;
     winnerInsertedRef.current = true;
-    
-    // Insert winner at target index in the wheel
     setWheelItems(prev => {
       const next = [...prev];
       next[WINNER_INDEX] = winner;
-      
-      // Ensure neighbors are distinct from winner
-      const nonWinnerCandidates = candidates.filter(c => c.id !== winner.id);
-      if (nonWinnerCandidates.length > 0) {
-        if (WINNER_INDEX > 0) next[WINNER_INDEX - 1] = nonWinnerCandidates[Math.floor(Math.random() * nonWinnerCandidates.length)];
-        if (WINNER_INDEX < N - 1) next[WINNER_INDEX + 1] = nonWinnerCandidates[Math.floor(Math.random() * nonWinnerCandidates.length)];
+      const nonWinner = candidates.filter(c => c.id !== winner.id);
+      if (nonWinner.length > 0) {
+        if (WINNER_INDEX > 0) next[WINNER_INDEX - 1] = nonWinner[Math.floor(Math.random() * nonWinner.length)];
+        if (WINNER_INDEX < N - 1) next[WINNER_INDEX + 1] = nonWinner[Math.floor(Math.random() * nonWinner.length)];
       }
       return next;
     });
-    
-    // Schedule deceleration after stopDelay
     stopDelayTimerRef.current = setTimeout(() => {
       const current = currentAngleRef.current;
-      
-      // Calculate target angle: winner at WINNER_INDEX needs to be at rotateX(0) center
-      // Each slot is `theta` degrees apart. Index 0 = 0deg, Index i = i * theta deg.
-      // The current angle is negative (rotating downward). 
-      // Target: currentAngle = -(WINNER_INDEX * theta) - (fullRotations * 360)
       const winnerAngle = WINNER_INDEX * theta;
-      const fullRotations = Math.floor(Math.abs(current) / 360) + 3; // At least 3 more full rotations
+      const fullRotations = Math.floor(Math.abs(current) / 360) + 3;
       const baseTarget = -(winnerAngle + fullRotations * 360);
-      
-      // Ensure target is below current (we're decrementing)
-      targetAngleRef.current = baseTarget < current ? baseTarget : baseTarget - 360;
-      
+      const safeTarget = baseTarget < current ? baseTarget : baseTarget - 360;
       if (isGrandPrize) {
-        // Fake stop: target one slot BEFORE the winner
-        targetAngleRef.current += theta; // One slot above winner
+        targetAngleRef.current = safeTarget + theta / 2;
         phaseRef.current = 'fake-stop';
       } else {
+        targetAngleRef.current = safeTarget;
         phaseRef.current = 'decelerating';
       }
     }, stopDelay);
-    
-    return () => {
-      if (stopDelayTimerRef.current) {
-        clearTimeout(stopDelayTimerRef.current);
-      }
-    };
+    return () => { if (stopDelayTimerRef.current) clearTimeout(stopDelayTimerRef.current); };
   }, [winner, candidates, stopDelay, isGrandPrize, theta, radius, WINNER_INDEX, N]);
 
-  // When spinning goes from true to false WITHOUT a winner (edge case / safety),
-  // just stop gracefully
   useEffect(() => {
     if (!spinning && phaseRef.current === 'spinning' && !winner) {
-      // Force stop — no winner determined, stop immediately  
       phaseRef.current = 'stopped';
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     }
   }, [spinning, winner]);
   
   if (wheelItems.length === 0) return null;
+
+  // Generate decorative light dots for the ornate frame
+  const topDots = Array.from({ length: 9 }, (_, i) => i);
+  const bottomDots = Array.from({ length: 9 }, (_, i) => i);
+  const leftDots = Array.from({ length: 5 }, (_, i) => i);
+  const rightDots = Array.from({ length: 5 }, (_, i) => i);
   
   return (
-     <div className="relative w-full max-w-xl mx-auto">
-       {/* Decorative Frame */}
-       <div className={`relative rounded-2xl p-[2px] transition-all duration-700 ${isGrandPrize 
-         ? 'bg-gradient-to-b from-yellow-400 via-yellow-600 to-yellow-400 shadow-[0_0_60px_rgba(255,215,0,0.35)]' 
-         : 'bg-gradient-to-b from-brand-primary/60 via-brand-primary/20 to-brand-primary/60'}`}>
-         
-         {/* Corner ornaments */}
-         <div className={`absolute -top-1.5 -left-1.5 w-4 h-4 rounded-full z-30 ${isGrandPrize ? 'bg-yellow-400 shadow-[0_0_12px_rgba(255,215,0,0.8)]' : 'bg-brand-primary shadow-[0_0_8px_rgba(212,168,83,0.6)]'}`} />
-         <div className={`absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full z-30 ${isGrandPrize ? 'bg-yellow-400 shadow-[0_0_12px_rgba(255,215,0,0.8)]' : 'bg-brand-primary shadow-[0_0_8px_rgba(212,168,83,0.6)]'}`} />
-         <div className={`absolute -bottom-1.5 -left-1.5 w-4 h-4 rounded-full z-30 ${isGrandPrize ? 'bg-yellow-400 shadow-[0_0_12px_rgba(255,215,0,0.8)]' : 'bg-brand-primary shadow-[0_0_8px_rgba(212,168,83,0.6)]'}`} />
-         <div className={`absolute -bottom-1.5 -right-1.5 w-4 h-4 rounded-full z-30 ${isGrandPrize ? 'bg-yellow-400 shadow-[0_0_12px_rgba(255,215,0,0.8)]' : 'bg-brand-primary shadow-[0_0_8px_rgba(212,168,83,0.6)]'}`} />
+     <div className="relative w-full max-w-2xl mx-auto">
+       {/* ═══ LUXURY ORNATE FRAME ═══ */}
+       <div className="relative">
+         {/* Outer glow */}
+         <div className="absolute -inset-4 rounded-[2rem] opacity-60 blur-2xl"
+           style={{ background: 'radial-gradient(ellipse at center, rgba(212,168,83,0.3) 0%, transparent 70%)' }}
+         />
 
-         {/* Inner container */}
-         <div 
-           className={`relative h-[320px] flex items-center justify-center overflow-hidden rounded-2xl bg-black/80 transition-all duration-1000 ${isGrandPrize ? 'scale-[1.02]' : ''}`} 
-           style={{ 
-               perspective: '1200px',
-               WebkitMaskImage: 'linear-gradient(to bottom, transparent 2%, black 15%, black 85%, transparent 98%)',
-               maskImage: 'linear-gradient(to bottom, transparent 2%, black 15%, black 85%, transparent 98%)'
+         {/* Double-border ornate frame */}
+         <div className="relative rounded-2xl"
+           style={{
+             background: 'linear-gradient(180deg, #C9A84C 0%, #8B6914 15%, #D4A853 30%, #8B6914 50%, #D4A853 70%, #8B6914 85%, #C9A84C 100%)',
+             padding: '4px',
+             boxShadow: '0 0 40px rgba(212,168,83,0.25), inset 0 1px 0 rgba(255,255,255,0.3)',
            }}
          >
-           {/* Highlight Bar — center selection indicator */}
-           <div className={`absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[90px] border-y-[3px] z-20 transition-all duration-500 ${isGrandPrize 
-             ? 'border-yellow-400/80 bg-yellow-400/10 shadow-[0_0_30px_rgba(255,215,0,0.3)]' 
-             : 'border-brand-primary/50 bg-brand-primary/5 shadow-[0_0_15px_rgba(212,168,83,0.15)]'}`} />
-           
-           {/* Pointer arrows */}
-           <div className={`absolute left-3 top-1/2 -translate-y-1/2 font-black z-30 text-2xl md:text-3xl tracking-tighter transition-all duration-300 ${isGrandPrize ? 'text-yellow-400 drop-shadow-[0_0_10px_rgba(255,215,0,0.9)] animate-pulse' : 'text-brand-primary drop-shadow-[0_0_6px_rgba(212,168,83,0.7)]'}`}>
-             &gt;&gt;
-           </div>
-           <div className={`absolute right-3 top-1/2 -translate-y-1/2 font-black z-30 text-2xl md:text-3xl tracking-tighter transition-all duration-300 ${isGrandPrize ? 'text-yellow-400 drop-shadow-[0_0_10px_rgba(255,215,0,0.9)] animate-pulse' : 'text-brand-primary drop-shadow-[0_0_6px_rgba(212,168,83,0.7)]'}`}>
-             &lt;&lt;
-           </div>
-
-           {/* 3D Cylinder */}
-           <div 
-             ref={containerRef}
-             className="relative w-[80%] h-[80px]"
-             style={{ transformStyle: 'preserve-3d', transform: `translateZ(${-radius}px)` }}
+           {/* Inner gold border */}
+           <div className="rounded-[14px]"
+             style={{
+               background: 'linear-gradient(180deg, #1A1A2E 0%, #0F0F1A 100%)',
+               padding: '3px',
+             }}
            >
-             {wheelItems.map((item, i) => (
-                <div
-                   key={`${item.id}-${i}`}
-                   className={`absolute left-0 top-0 w-full h-[80px] flex items-center justify-center rounded-xl overflow-hidden transition-colors duration-300 ${isGrandPrize 
-                     ? 'bg-gradient-to-r from-black/80 via-black/60 to-black/80 border border-yellow-500/40' 
-                     : 'bg-gradient-to-r from-black/70 via-black/50 to-black/70 border border-white/10'}`}
+             <div className="rounded-xl overflow-hidden"
+               style={{
+                 background: 'linear-gradient(180deg, #C9A84C 0%, #A07D28 50%, #C9A84C 100%)',
+                 padding: '3px',
+               }}
+             >
+               {/* ─── Light Bulb Dots — Top ─── */}
+               <div className="absolute top-0 left-1/2 -translate-x-1/2 flex gap-[calc(100%/12)] z-40 -translate-y-[2px]">
+                 {topDots.map(i => (
+                   <div key={`t${i}`} className="w-2 h-2 rounded-full"
+                     style={{
+                       background: spinning
+                         ? `radial-gradient(circle, #FFF9C4 0%, #FFD700 60%, #B8860B 100%)`
+                         : `radial-gradient(circle, #D4A853 0%, #8B6914 100%)`,
+                       boxShadow: spinning ? '0 0 6px 2px rgba(255,215,0,0.6)' : '0 0 3px rgba(212,168,83,0.3)',
+                       animation: spinning ? `bulb-flicker 0.8s ease-in-out ${i * 0.1}s infinite alternate` : 'none',
+                     }}
+                   />
+                 ))}
+               </div>
+
+               {/* ─── Light Bulb Dots — Bottom ─── */}
+               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex gap-[calc(100%/12)] z-40 translate-y-[2px]">
+                 {bottomDots.map(i => (
+                   <div key={`b${i}`} className="w-2 h-2 rounded-full"
+                     style={{
+                       background: spinning
+                         ? `radial-gradient(circle, #FFF9C4 0%, #FFD700 60%, #B8860B 100%)`
+                         : `radial-gradient(circle, #D4A853 0%, #8B6914 100%)`,
+                       boxShadow: spinning ? '0 0 6px 2px rgba(255,215,0,0.6)' : '0 0 3px rgba(212,168,83,0.3)',
+                       animation: spinning ? `bulb-flicker 0.8s ease-in-out ${i * 0.1 + 0.05}s infinite alternate` : 'none',
+                     }}
+                   />
+                 ))}
+               </div>
+
+               {/* ─── Light Bulb Dots — Left ─── */}
+               <div className="absolute left-0 top-1/2 -translate-y-1/2 flex flex-col gap-6 z-40 -translate-x-[2px]">
+                 {leftDots.map(i => (
+                   <div key={`l${i}`} className="w-2 h-2 rounded-full"
+                     style={{
+                       background: spinning
+                         ? `radial-gradient(circle, #FFF9C4 0%, #FFD700 60%, #B8860B 100%)`
+                         : `radial-gradient(circle, #D4A853 0%, #8B6914 100%)`,
+                       boxShadow: spinning ? '0 0 6px 2px rgba(255,215,0,0.6)' : '0 0 3px rgba(212,168,83,0.3)',
+                       animation: spinning ? `bulb-flicker 0.7s ease-in-out ${i * 0.15}s infinite alternate` : 'none',
+                     }}
+                   />
+                 ))}
+               </div>
+
+               {/* ─── Light Bulb Dots — Right ─── */}
+               <div className="absolute right-0 top-1/2 -translate-y-1/2 flex flex-col gap-6 z-40 translate-x-[2px]">
+                 {rightDots.map(i => (
+                   <div key={`r${i}`} className="w-2 h-2 rounded-full"
+                     style={{
+                       background: spinning
+                         ? `radial-gradient(circle, #FFF9C4 0%, #FFD700 60%, #B8860B 100%)`
+                         : `radial-gradient(circle, #D4A853 0%, #8B6914 100%)`,
+                       boxShadow: spinning ? '0 0 6px 2px rgba(255,215,0,0.6)' : '0 0 3px rgba(212,168,83,0.3)',
+                       animation: spinning ? `bulb-flicker 0.7s ease-in-out ${i * 0.15 + 0.05}s infinite alternate` : 'none',
+                     }}
+                   />
+                 ))}
+               </div>
+
+               {/* ─── Corner Ornaments ─── */}
+               {['-top-2 -left-2', '-top-2 -right-2', '-bottom-2 -left-2', '-bottom-2 -right-2'].map((pos, idx) => (
+                 <div key={idx} className={`absolute ${pos} w-5 h-5 z-40`}>
+                   <div className="w-full h-full rounded-full"
+                     style={{
+                       background: 'radial-gradient(circle at 30% 30%, #FFE082, #D4A853, #8B6914)',
+                       boxShadow: '0 0 10px rgba(212,168,83,0.5), inset 0 1px 2px rgba(255,255,255,0.4)',
+                       border: '1px solid rgba(139,105,20,0.6)',
+                     }}
+                   />
+                 </div>
+               ))}
+
+               {/* ─── Side Lever/Handle — Left ─── */}
+               <div className="absolute -left-8 top-1/2 -translate-y-1/2 z-30 hidden md:flex flex-col items-center gap-1">
+                 <div className="w-3 h-3 rounded-full"
+                   style={{ background: 'radial-gradient(circle at 30% 30%, #FFE082, #C9A84C)', boxShadow: '0 2px 6px rgba(0,0,0,0.5)' }}
+                 />
+                 <div className="w-2 h-16 rounded-full"
+                   style={{ background: 'linear-gradient(90deg, #8B6914, #D4A853, #8B6914)', boxShadow: '2px 0 8px rgba(0,0,0,0.3)' }}
+                 />
+                 <div className="w-4 h-4 rounded-full"
+                   style={{ background: 'radial-gradient(circle at 30% 30%, #FFE082, #C9A84C)', boxShadow: '0 2px 6px rgba(0,0,0,0.5)' }}
+                 />
+               </div>
+
+               {/* ─── Side Lever/Handle — Right ─── */}
+               <div className="absolute -right-8 top-1/2 -translate-y-1/2 z-30 hidden md:flex flex-col items-center gap-1">
+                 <div className="w-3 h-3 rounded-full"
+                   style={{ background: 'radial-gradient(circle at 30% 30%, #FFE082, #C9A84C)', boxShadow: '0 2px 6px rgba(0,0,0,0.5)' }}
+                 />
+                 <div className="w-2 h-16 rounded-full"
+                   style={{ background: 'linear-gradient(90deg, #8B6914, #D4A853, #8B6914)', boxShadow: '-2px 0 8px rgba(0,0,0,0.3)' }}
+                 />
+                 <div className="w-4 h-4 rounded-full"
+                   style={{ background: 'radial-gradient(circle at 30% 30%, #FFE082, #C9A84C)', boxShadow: '0 2px 6px rgba(0,0,0,0.5)' }}
+                 />
+               </div>
+
+               {/* ═══ INNER WHEEL VIEWPORT ═══ */}
+               <div 
+                 className="relative h-[320px] flex items-center justify-center overflow-hidden rounded-lg"
+                 style={{ 
+                   perspective: '1200px',
+                   background: 'linear-gradient(180deg, rgba(15,15,26,0.95) 0%, rgba(26,26,46,0.98) 50%, rgba(15,15,26,0.95) 100%)',
+                   WebkitMaskImage: 'linear-gradient(to bottom, transparent 1%, black 12%, black 88%, transparent 99%)',
+                   maskImage: 'linear-gradient(to bottom, transparent 1%, black 12%, black 88%, transparent 99%)',
+                   boxShadow: 'inset 0 0 60px rgba(0,0,0,0.8), inset 0 0 20px rgba(212,168,83,0.05)',
+                 }}
+               >
+                 {/* ─── Highlight Bar ─── */}
+                 <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[88px] z-20"
                    style={{
-                      transform: `rotateX(${i * theta}deg) translateZ(${radius}px)`,
-                      backfaceVisibility: 'hidden'
+                     borderTop: '2px solid rgba(212,168,83,0.7)',
+                     borderBottom: '2px solid rgba(212,168,83,0.7)',
+                     background: 'linear-gradient(90deg, rgba(212,168,83,0.08) 0%, rgba(212,168,83,0.15) 50%, rgba(212,168,83,0.08) 100%)',
+                     boxShadow: '0 0 25px rgba(212,168,83,0.15), inset 0 0 25px rgba(212,168,83,0.05)',
                    }}
-                >
-                   <div className="flex items-center justify-between w-full px-5 relative z-10">
-                      <span className={`font-black text-3xl md:text-4xl tracking-wider ${isGrandPrize ? 'text-yellow-400 drop-shadow-[0_2px_8px_rgba(255,215,0,0.5)]' : 'text-brand-primary drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]'}`}>{item.queueNumber}</span>
-                      <div className="flex flex-col items-end flex-1 ml-5 min-w-0">
-                         <span className={`font-bold text-lg md:text-xl truncate w-full text-right ${isGrandPrize ? 'text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]' : 'text-brand-primarySoft'}`}>{item.name}</span>
-                         <span className="text-xs md:text-sm text-white/40 font-mono truncate w-full text-right mt-0.5">{item.guestId || item.company || '-'}</span>
+                 />
+                 
+                 {/* ─── Pointer Chevrons ─── */}
+                 <div className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-30 flex items-center">
+                   <span className="text-2xl md:text-3xl font-black tracking-tighter"
+                     style={{ color: '#D4A853', textShadow: '0 0 10px rgba(212,168,83,0.8), 0 0 20px rgba(212,168,83,0.4)', filter: spinning ? 'brightness(1.3)' : 'none' }}
+                   >&gt;&gt;</span>
+                 </div>
+                 <div className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-30 flex items-center">
+                   <span className="text-2xl md:text-3xl font-black tracking-tighter"
+                     style={{ color: '#D4A853', textShadow: '0 0 10px rgba(212,168,83,0.8), 0 0 20px rgba(212,168,83,0.4)', filter: spinning ? 'brightness(1.3)' : 'none' }}
+                   >&lt;&lt;</span>
+                 </div>
+
+                 {/* ─── 3D Cylinder ─── */}
+                 <div 
+                   ref={containerRef}
+                   className="relative w-[75%] h-[80px]"
+                   style={{ transformStyle: 'preserve-3d', transform: `translateZ(${-radius}px)` }}
+                 >
+                   {wheelItems.map((item, i) => (
+                      <div
+                         key={`${item.id}-${i}`}
+                         className="absolute left-0 top-0 w-full h-[80px] flex items-center justify-center rounded-lg overflow-hidden"
+                         style={{
+                            transform: `rotateX(${i * theta}deg) translateZ(${radius}px)`,
+                            backfaceVisibility: 'hidden',
+                            background: 'linear-gradient(180deg, rgba(40,35,25,0.9) 0%, rgba(30,28,20,0.95) 50%, rgba(40,35,25,0.9) 100%)',
+                            borderTop: '1px solid rgba(212,168,83,0.25)',
+                            borderBottom: '1px solid rgba(139,105,20,0.3)',
+                         }}
+                      >
+                         <div className="flex items-center w-full px-4 md:px-6 relative z-10 gap-4">
+                            <span className="font-black text-3xl md:text-4xl tracking-wider flex-shrink-0"
+                              style={{ color: '#D4A853', textShadow: '0 2px 8px rgba(212,168,83,0.4)' }}
+                            >{item.queueNumber}</span>
+                            <div className="flex flex-col flex-1 min-w-0 text-center">
+                               <span className="font-bold text-base md:text-lg truncate"
+                                 style={{ color: '#F5ECD7', textShadow: '0 1px 3px rgba(0,0,0,0.6)' }}
+                               >{item.name}</span>
+                               <span className="text-xs md:text-sm font-mono truncate mt-0.5"
+                                 style={{ color: 'rgba(212,168,83,0.5)' }}
+                               >{item.guestId || item.company || '-'}</span>
+                            </div>
+                         </div>
                       </div>
-                   </div>
-                </div>
-             ))}
+                   ))}
+                 </div>
+               </div>
+             </div>
            </div>
          </div>
+
+         {/* ─── Sparkle Effects ─── */}
+         {spinning && (
+           <>
+             <div className="absolute -top-3 left-1/4 w-1.5 h-1.5 rounded-full bg-yellow-300 z-50" style={{ animation: 'sparkle-float 1.5s ease-in-out infinite', animationDelay: '0s' }} />
+             <div className="absolute -top-2 right-1/3 w-1 h-1 rounded-full bg-yellow-200 z-50" style={{ animation: 'sparkle-float 1.8s ease-in-out infinite', animationDelay: '0.3s' }} />
+             <div className="absolute top-1/4 -right-3 w-1.5 h-1.5 rounded-full bg-yellow-300 z-50" style={{ animation: 'sparkle-float 1.3s ease-in-out infinite', animationDelay: '0.6s' }} />
+             <div className="absolute bottom-1/4 -left-2 w-1 h-1 rounded-full bg-yellow-200 z-50" style={{ animation: 'sparkle-float 1.6s ease-in-out infinite', animationDelay: '0.9s' }} />
+             <div className="absolute -bottom-2 left-1/2 w-1.5 h-1.5 rounded-full bg-yellow-300 z-50" style={{ animation: 'sparkle-float 1.4s ease-in-out infinite', animationDelay: '0.2s' }} />
+           </>
+         )}
        </div>
      </div>
   );
