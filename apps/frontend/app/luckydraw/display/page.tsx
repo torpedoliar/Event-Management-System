@@ -1,9 +1,10 @@
 "use client";
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { apiFetch, toApiUrl } from '../../../lib/api';
-import { Trophy, Volume2, VolumeX, Monitor } from 'lucide-react';
+import { Trophy, Volume2, VolumeX, Monitor, History } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useSSE } from '../../../lib/sse-context';
+import WinnerHistoryModal from '../../../components/WinnerHistoryModal';
 
 const SLOT_CHARSET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -171,6 +172,7 @@ export default function LiveDisplayPage() {
     const spinningRef = useRef(false);
     
     const [drawCount, setDrawCount] = useState(1);
+    const [showHistory, setShowHistory] = useState(false);
     const [slotRows, setSlotRows] = useState<SlotRow[]>([]);
     const [globalLockedCount, setGlobalLockedCount] = useState(0);
     const [revealedWinners, setRevealedWinners] = useState<Guest[]>([]);
@@ -552,9 +554,15 @@ export default function LiveDisplayPage() {
 
                 </div>
                 
-                <button onClick={toggleSound} className="p-4 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-white transition-all">
-                    {soundEnabled ? <Volume2 size={24} /> : <VolumeX size={24} />}
-                </button>
+                <div className="flex items-center gap-3">
+                    <button onClick={() => setShowHistory(true)} className="p-4 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-brand-primarySoft transition-all flex items-center gap-2 group">
+                        <History size={24} />
+                        <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 font-mono text-sm uppercase tracking-widest whitespace-nowrap">Riwayat</span>
+                    </button>
+                    <button onClick={toggleSound} className="p-4 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-white transition-all">
+                        {soundEnabled ? <Volume2 size={24} /> : <VolumeX size={24} />}
+                    </button>
+                </div>
             </div>
 
             <div className="relative z-10 flex-1 flex flex-col items-center justify-center w-full max-w-[95vw] mx-auto gap-8">
@@ -700,6 +708,12 @@ export default function LiveDisplayPage() {
                     </div>
                 )}
             </div>
+
+            <WinnerHistoryModal 
+                isOpen={showHistory} 
+                onClose={() => setShowHistory(false)} 
+                prizes={prizes} 
+            />
         </div>
     );
 }

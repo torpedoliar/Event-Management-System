@@ -3,6 +3,7 @@ import { useEffect, useState, useRef, useMemo } from 'react';
 import { apiFetch, apiBase, toApiUrl } from '../../lib/api';
 import { Trophy, Sparkles, PartyPopper, History, X, Users, Search, Award, Hash, Volume2, VolumeX, Monitor } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import WinnerHistoryModal from '../../components/WinnerHistoryModal';
 
 interface Prize {
     id: string;
@@ -1019,69 +1020,11 @@ export default function LuckyDrawPage() {
                 </div>
             </div>
 
-            {/* History Modal */}
-            {showHistory && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-                    <div className="bg-brand-secondary border border-brand-primary/20 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl animate-in fade-in zoom-in duration-200">
-                        <div className="p-6 border-b border-brand-border flex justify-between items-center bg-brand-surface/5">
-                            <h2 className="text-2xl font-bold text-brand-surface flex items-center gap-2">
-                                <Trophy className="text-brand-primary" />
-                                Riwayat Pemenang Undian
-                            </h2>
-                            <button
-                                onClick={() => setShowHistory(false)}
-                                className="p-2 hover:bg-brand-surface/10 rounded-full text-brand-surface/70 hover:text-brand-surface transition-colors"
-                            >
-                                <X size={24} />
-                            </button>
-                        </div>
-                        <div className="p-6 overflow-y-auto flex-1 space-y-8">
-                            {['UTAMA', 'HIBURAN'].map(category => {
-                                const categoryPrizes = prizes.filter(p => (p.category || 'HIBURAN') === category);
-                                if (categoryPrizes.length === 0 || !categoryPrizes.some(p => p.winners.length > 0)) return null;
-
-                                return (
-                                    <div key={category}>
-                                        <h3 className="text-xl font-bold text-brand-primary mb-4 border-b border-brand-border pb-2">
-                                            Kategori {category}
-                                        </h3>
-                                        <div className="space-y-6">
-                                            {categoryPrizes.filter(p => p.winners.length > 0).map(prize => (
-                                                <div key={prize.id} className="bg-brand-surface/5 rounded-xl p-4 border border-brand-border">
-                                                    <h4 className="font-bold text-brand-surface mb-4 flex items-center gap-2">
-                                                        <PartyPopper size={18} className="text-brand-accent" />
-                                                        {prize.name}
-                                                    </h4>
-                                                    <div className="flex flex-wrap gap-3">
-                                                        {prize.winners.map((w: any) => (
-                                                            <div key={w.id} className="bg-brand-secondary/80 rounded-lg p-3 flex items-center gap-3 min-w-[200px] border border-brand-border">
-                                                                <div className="w-8 h-8 rounded-full bg-brand-primary/15 flex items-center justify-center font-bold text-sm text-brand-primary">
-                                                                    {w.queueNumber}
-                                                                </div>
-                                                                <div>
-                                                                    <div className="font-bold text-sm text-brand-surface">{w.name}</div>
-                                                                    <div className="text-xs text-brand-surface/50">{w.company || '-'}</div>
-                                                                </div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                            
-                            {!prizes.some(p => p.winners.length > 0) && (
-                                <div className="text-center py-12 text-brand-surface/40">
-                                    <Sparkles className="mx-auto mb-3 opacity-50" size={32} />
-                                    Belum ada pemenang yang diundi
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            )}
+            <WinnerHistoryModal 
+                isOpen={showHistory} 
+                onClose={() => setShowHistory(false)} 
+                prizes={prizes} 
+            />
 
             {/* Eligible Guests Modal */}
             {showEligiblePanel && (

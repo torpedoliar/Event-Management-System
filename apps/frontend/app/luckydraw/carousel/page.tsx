@@ -1,10 +1,11 @@
 "use client";
 import React, { useEffect, useState, useRef } from 'react';
 import { apiFetch, toApiUrl } from '../../../lib/api';
-import { Trophy, Volume2, VolumeX } from 'lucide-react';
+import { Trophy, Volume2, VolumeX, History } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useSSE } from '../../../lib/sse-context';
 import LuckyDraw3DWheel, { Guest } from '../../../components/LuckyDraw3DWheel';
+import WinnerHistoryModal from '../../../components/WinnerHistoryModal';
 
 interface Prize {
     id: string;
@@ -25,6 +26,7 @@ export default function CarouselDrawPage() {
     const [loading, setLoading] = useState(true);
     const [eventCfg, setEventCfg] = useState<any>(null);
     const [spinning, setSpinning] = useState(false);
+    const [showHistory, setShowHistory] = useState(false);
     const [drawCount, setDrawCount] = useState(1);
     const [winners, setWinners] = useState<Guest[]>([]);
     const [screenFlash, setScreenFlash] = useState(false);
@@ -240,6 +242,11 @@ export default function CarouselDrawPage() {
                           style={{ background: 'rgba(15,15,30,0.8)', border: '1px solid rgba(212,168,83,0.2)' }}>
                             {soundEnabled ? <Volume2 size={20} style={{ color: '#D4A853' }} /> : <VolumeX size={20} style={{ color: 'rgba(245,236,215,0.4)' }} />}
                         </button>
+                        <button onClick={() => setShowHistory(true)} className="p-3 rounded-xl transition-all hover:scale-105 flex items-center gap-2 group"
+                          style={{ background: 'rgba(15,15,30,0.8)', border: '1px solid rgba(212,168,83,0.2)' }}>
+                            <History size={20} style={{ color: '#D4A853' }} />
+                            <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 text-xs font-mono font-bold uppercase tracking-widest whitespace-nowrap hidden md:block" style={{ color: '#D4A853' }}>Riwayat</span>
+                        </button>
                     </div>
                 </div>
 
@@ -298,6 +305,12 @@ export default function CarouselDrawPage() {
                     </button>
                 </div>
             </div>
+
+            <WinnerHistoryModal 
+                isOpen={showHistory} 
+                onClose={() => setShowHistory(false)} 
+                prizes={prizes} 
+            />
         </div>
     );
 }
