@@ -31,7 +31,7 @@ export default function LuckyDraw3DWheel({
   
   // Create a fixed wheel of 40 items.
   const N = 40;
-  const H = 100; // Geometry height per item (80px visible + 20px gap)
+  const H = 110; // Geometry height per item (80px visible + 30px gap for more breathing room)
   const theta = 360 / N;
   const radius = Math.round((H / 2) / Math.tan(Math.PI / N));
   
@@ -39,17 +39,36 @@ export default function LuckyDraw3DWheel({
   const [wheelItems, setWheelItems] = useState<Guest[]>([]);
   const winnerTargetIndex = 35; // We always land exactly at index 35
   
+  const initializedRef = useRef(false);
+  const onStopRef = useRef(onStop);
+
+  // Keep onStop ref updated without triggering re-renders
   useEffect(() => {
-    if (candidates.length === 0) return;
+    onStopRef.current = onStop;
+  }, [onStop]);
+  
+  // Initialize wheel once
+  useEffect(() => {
+    if (candidates.length === 0 || initializedRef.current) return;
+    initializedRef.current = true;
     
-    // Generate 40 random items for the resting/spinning state
     const newItems: Guest[] = [];
     for (let i = 0; i < N; i++) {
         newItems.push(candidates[Math.floor(Math.random() * candidates.length)]);
     }
-    
     setWheelItems(newItems);
   }, [candidates]);
+
+  // Reshuffle wheel when spinning starts to keep it fresh
+  useEffect(() => {
+      if (spinning && candidates.length > 0) {
+          const newItems: Guest[] = [];
+          for (let i = 0; i < N; i++) {
+              newItems.push(candidates[Math.floor(Math.random() * candidates.length)]);
+          }
+          setWheelItems(newItems);
+      }
+  }, [spinning]);
   
   // Silent swap when winner arrives
   useEffect(() => {
@@ -109,12 +128,12 @@ export default function LuckyDraw3DWheel({
               if (dist < 0.5) {
                  currentAngleRef.current = target;
                  phaseRef.current = 'stopped';
-                 onStop();
+                 onStopRef.current();
               }
            } else {
               currentAngleRef.current = target;
               phaseRef.current = 'stopped';
-              onStop();
+              onStopRef.current();
            }
         } else if (phaseRef.current === 'fake-stop') {
            const current = currentAngleRef.current;
@@ -138,7 +157,7 @@ export default function LuckyDraw3DWheel({
                      }
                      setTimeout(() => {
                         phaseRef.current = 'stopped';
-                        onStop();
+                        onStopRef.current();
                      }, 1200);
                  }, 1500); 
               }
@@ -154,7 +173,7 @@ export default function LuckyDraw3DWheel({
                  }
                  setTimeout(() => {
                     phaseRef.current = 'stopped';
-                    onStop();
+                    onStopRef.current();
                  }, 1200);
              }, 1500);
            }
@@ -192,49 +211,56 @@ export default function LuckyDraw3DWheel({
       }
     }
     
+    // We intentionally omit `onStop` and `candidates` from the dependency array 
+    // because `onStopRef` and `initializedRef` handle them safely without restarting the effect.
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [spinning, stopDelay, theta, isGrandPrize, onStop, radius]);
+  }, [spinning, stopDelay, theta, isGrandPrize, radius]); // ONLY DEPEND ON CRITICAL PARAMS
   
   if (wheelItems.length === 0) return null;
   
   return (
-     <div className={`relative w-full max-w-lg mx-auto h-[320px] flex items-center justify-center overflow-hidden transition-all duration-1000 ${isGrandPrize ? 'scale-110 drop-shadow-[0_0_50px_rgba(255,215,0,0.3)]' : ''}`} style={{ perspective: '1200px' }}>
-       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,rgba(0,0,0,0.9)_100%)] pointer-events-none z-10" />
-       <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black pointer-events-none z-10" />
+     <div 
+        className={`relative w-full max-w-xl mx-auto h-[360px] flex items-center justify-center transition-all duration-1000 ${isGrandPrize ? 'scale-110 drop-shadow-[0_0_50px_rgba(255,215,0,0.4)]' : ''}`} 
+        style={{ 
+            perspective: '1200px',
+            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%)',
+            maskImage: 'linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%)'
+        }}
+     >
+       {/* Elegant Highlight Bar */}
+       <div className={`absolute left-[-2%] right-[-2%] top-1/2 -translate-y-1/2 h-[86px] border-y-[2px] z-0 transition-all duration-500 rounded-2xl ${isGrandPrize ? 'border-yellow-400 bg-yellow-400/10 shadow-[inset_0_0_40px_rgba(255,215,0,0.3)]' : 'border-brand-primary/60 bg-brand-primary/5 shadow-[inset_0_0_30px_rgba(212,168,83,0.2)]'}`} />
        
-       <div className={`absolute left-[-10%] right-[-10%] top-1/2 -translate-y-1/2 h-[84px] border-y-[3px] z-0 transition-all duration-500 ${isGrandPrize ? 'border-yellow-400 bg-gradient-to-r from-transparent via-yellow-400/20 to-transparent shadow-[inset_0_0_40px_rgba(255,215,0,0.5)]' : 'border-brand-primary/60 bg-gradient-to-r from-transparent via-brand-primary/15 to-transparent shadow-[inset_0_0_30px_rgba(212,168,83,0.4)]'}`} />
-       
-       <div className={`absolute left-2 md:left-6 top-1/2 -translate-y-1/2 font-black z-20 text-2xl md:text-3xl tracking-tighter ${isGrandPrize ? 'text-yellow-400 drop-shadow-[0_0_10px_rgba(255,215,0,1)]' : 'text-brand-primary drop-shadow-[0_0_5px_rgba(212,168,83,0.8)]'}`}>
+       <div className={`absolute left-0 md:left-4 top-1/2 -translate-y-1/2 font-black z-20 text-2xl md:text-3xl tracking-tighter transition-all duration-300 ${isGrandPrize ? 'text-yellow-400 drop-shadow-[0_0_15px_rgba(255,215,0,1)] scale-110' : 'text-brand-primary drop-shadow-[0_0_8px_rgba(212,168,83,0.8)]'}`}>
          &gt;&gt;
        </div>
-       <div className={`absolute right-2 md:right-6 top-1/2 -translate-y-1/2 font-black z-20 text-2xl md:text-3xl tracking-tighter ${isGrandPrize ? 'text-yellow-400 drop-shadow-[0_0_10px_rgba(255,215,0,1)]' : 'text-brand-primary drop-shadow-[0_0_5px_rgba(212,168,83,0.8)]'}`}>
+       <div className={`absolute right-0 md:right-4 top-1/2 -translate-y-1/2 font-black z-20 text-2xl md:text-3xl tracking-tighter transition-all duration-300 ${isGrandPrize ? 'text-yellow-400 drop-shadow-[0_0_15px_rgba(255,215,0,1)] scale-110' : 'text-brand-primary drop-shadow-[0_0_8px_rgba(212,168,83,0.8)]'}`}>
          &lt;&lt;
        </div>
 
        <div 
          ref={containerRef}
-         className="relative w-[75%] h-[80px] wheel-container"
+         className="relative w-[85%] h-[80px] wheel-container"
          style={{ transformStyle: 'preserve-3d', transform: `translateZ(${-radius}px)` }}
        >
          {wheelItems.map((item, i) => (
             <div
                key={`${item.id}-${i}`}
-               className={`absolute left-0 top-0 w-full h-[80px] wheel-item flex items-center justify-center backdrop-blur-md text-white rounded-xl overflow-hidden transition-all duration-300 ${isGrandPrize ? 'bg-black/60 border-2 border-yellow-500/50 shadow-[inset_0_0_30px_rgba(255,215,0,0.15)]' : 'bg-black/40 border border-brand-primary/50 shadow-[inset_0_0_20px_rgba(0,0,0,0.8)]'}`}
+               className={`absolute left-0 top-0 w-full h-[80px] wheel-item flex items-center justify-center backdrop-blur-md rounded-xl overflow-hidden transition-all duration-300 ${isGrandPrize ? 'bg-black/70 border border-yellow-500/70 shadow-[inset_0_0_20px_rgba(255,215,0,0.4)]' : 'bg-black/50 border border-white/10 shadow-[inset_0_0_15px_rgba(255,255,255,0.05)]'}`}
                style={{
                   transform: `rotateX(${i * theta}deg) translateZ(${radius}px)`,
                   backfaceVisibility: 'hidden'
                }}
             >
-               {isGrandPrize && <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/10 via-transparent to-yellow-500/10" />}
+               {isGrandPrize && <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/20 via-transparent to-yellow-500/20" />}
 
-               <div className="flex items-center justify-between w-full px-4 relative z-10">
-                  <span className={`font-black text-3xl ${isGrandPrize ? 'text-yellow-400 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]' : 'text-brand-primary'}`}>{item.queueNumber}</span>
-                  <div className="flex flex-col items-end flex-1 ml-4 min-w-0">
-                     <span className="font-bold text-lg md:text-xl truncate w-full text-right drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">{item.name}</span>
-                     <span className="text-xs md:text-sm text-white/60 font-mono truncate w-full text-right bg-black/40 px-2 py-0.5 rounded mt-1">{item.guestId || item.company || '-'}</span>
+               <div className="flex items-center justify-between w-full px-6 relative z-10">
+                  <span className={`font-black text-3xl md:text-4xl tracking-wider drop-shadow-lg ${isGrandPrize ? 'text-yellow-400' : 'text-white'}`}>{item.queueNumber}</span>
+                  <div className="flex flex-col items-end flex-1 ml-6 min-w-0">
+                     <span className={`font-bold text-lg md:text-xl truncate w-full text-right drop-shadow-md ${isGrandPrize ? 'text-white' : 'text-brand-primarySoft'}`}>{item.name}</span>
+                     <span className="text-xs md:text-sm text-white/50 font-mono truncate w-full text-right mt-1">{item.guestId || item.company || '-'}</span>
                   </div>
                </div>
             </div>

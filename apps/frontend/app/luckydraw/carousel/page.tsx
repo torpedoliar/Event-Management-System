@@ -217,6 +217,7 @@ export default function CarouselDrawPage() {
         stoppedWheelsRef.current += 1;
         
         if (isGrandPrize) {
+            stopSound(audioRollRef);
             stopSound(audioTensionRef);
             playSound(audioGrandWinRef);
             
