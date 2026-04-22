@@ -33,7 +33,7 @@ export default function LuckyDraw3DWheel({
   const containerRef = useRef<HTMLDivElement>(null);
   
   const N = 40;
-  const H = 100; // slightly smaller height for items to fit nicely
+  const H = 100;
   const theta = 360 / N;
   const radius = Math.round((H / 2) / Math.tan(Math.PI / N));
   
@@ -114,7 +114,6 @@ export default function LuckyDraw3DWheel({
           const target = targetAngleRef.current;
           const remaining = currentAngleRef.current - target;
           if (remaining > 0.3) {
-            // Slower deceleration for a relaxed dramatic stop
             currentAngleRef.current -= Math.max(0.05, remaining * 0.015) * frameFactor;
           } else {
             currentAngleRef.current = target;
@@ -124,20 +123,17 @@ export default function LuckyDraw3DWheel({
           }
         } else if (phase === 'wobbling') {
           const elapsed = (time - wobbleStartTimeRef.current) / 1000;
-          const totalDuration = 5.0; // 5 seconds of suspense
+          const totalDuration = 5.0;
           
           if (elapsed < totalDuration) {
-             // Very slow, subtle rocking back and forth between the two names
-             // The tension makes it feel like momentum is exhausted
-             const amplitude = (theta / 2) * 0.35; // Move up to 35% of the half-slot
-             // Slow frequency that winds down over time
+             const amplitude = (theta / 2) * 0.35;
              const freq = 1.2 * (1 - elapsed / totalDuration); 
              const offset = Math.sin(elapsed * freq * Math.PI * 2) * amplitude;
              currentAngleRef.current = wobbleCenterRef.current + offset;
           } else {
             phaseRef.current = 'snapping';
             if (containerRef.current) {
-              containerRef.current.style.transition = 'transform 1.5s cubic-bezier(0.25, 1, 0.5, 1)'; // smooth, relaxed snap
+              containerRef.current.style.transition = 'transform 1.5s cubic-bezier(0.25, 1, 0.5, 1)';
               currentAngleRef.current = wobbleFinalTargetRef.current;
               containerRef.current.style.transform = `translateZ(${-radius}px) rotateX(${wobbleFinalTargetRef.current}deg)`;
             }
@@ -184,21 +180,13 @@ export default function LuckyDraw3DWheel({
       const safeTarget = baseTarget < current ? baseTarget : baseTarget - 360;
       
       if (isGrandPrize) {
-        // Randomly decide if the winner will be the top name or bottom name during the showdown
         const winnerIsTop = Math.random() > 0.5;
-        
         if (winnerIsTop) {
-          // Midpoint between winner and neighbor below
-          // Winner is at index 20 (WINNER_INDEX). Neighbor below is 21.
-          // To put the line between them, target safeTarget - theta/2
           targetAngleRef.current = safeTarget - theta / 2;
         } else {
-          // Midpoint between winner and neighbor above
-          // Neighbor above is 19.
-          // To put the line between them, target safeTarget + theta/2
           targetAngleRef.current = safeTarget + theta / 2;
         }
-        wobbleFinalTargetRef.current = safeTarget; // It will always snap back to winner
+        wobbleFinalTargetRef.current = safeTarget;
         phaseRef.current = 'fake-stop';
       } else {
         targetAngleRef.current = safeTarget;
@@ -217,96 +205,89 @@ export default function LuckyDraw3DWheel({
   
   if (wheelItems.length === 0) return null;
 
-  const topDots = Array.from({ length: 9 }, (_, i) => i);
-  const bottomDots = Array.from({ length: 9 }, (_, i) => i);
-  const sideDots = Array.from({ length: 3 }, (_, i) => i);
-
   return (
-     <div className="relative w-full max-w-[600px] mx-auto py-4">
-       {/* ═══ GOLDEN CELEBRATION TECH DESIGN ═══ */}
-       <div className="relative flex items-center justify-center h-[350px]">
+     <div className="relative w-full max-w-[550px] mx-auto" style={{ perspective: '800px' }}>
+       {/* ═══ GOLDEN CELEBRATION WHEEL ═══ */}
+       <div className="relative flex items-center justify-center h-[280px]">
          
-         {/* Background Glow */}
-         <div className="absolute -inset-10 rounded-[50%] opacity-30 blur-[80px] pointer-events-none"
-           style={{ background: 'radial-gradient(ellipse, #D4A853 0%, transparent 60%)' }} />
+         {/* Subtle glow behind the wheel */}
+         <div className="absolute inset-0 rounded-3xl opacity-30 blur-3xl pointer-events-none"
+           style={{ background: 'radial-gradient(ellipse, rgba(212,168,83,0.4) 0%, transparent 70%)' }} />
 
-         {/* ─── 3D Cylinder Container ─── */}
-         <div className="absolute inset-0 flex items-center justify-center z-20">
-           <div 
-             ref={containerRef}
-             className="relative w-[90%] md:w-[450px] h-[80px]"
-             style={{ transformStyle: 'preserve-3d', transform: `translateZ(${-radius}px)` }}
-           >
-             {wheelItems.map((item, i) => (
-                <div
-                   key={`${item.id}-${i}`}
-                   className="absolute left-0 top-0 w-full h-[80px] flex items-center justify-center rounded-2xl overflow-hidden backdrop-blur-md"
-                   style={{
-                      transform: `rotateX(${i * theta}deg) translateZ(${radius}px)`,
-                      backfaceVisibility: 'hidden',
-                      background: 'linear-gradient(180deg, rgba(212,168,83,0.3) 0%, rgba(0,0,0,0.8) 20%, rgba(0,0,0,0.8) 80%, rgba(212,168,83,0.3) 100%)',
-                      border: '1px solid rgba(212,168,83,0.5)',
-                      boxShadow: '0 0 15px rgba(212,168,83,0.2), inset 0 0 20px rgba(212,168,83,0.1)',
-                   }}
-                >
-                   <div className="flex items-center justify-between w-full px-6 text-center">
-                      <div className="font-black text-2xl tracking-widest text-brand-primary drop-shadow-[0_0_8px_rgba(212,168,83,0.8)] w-20 text-left">
-                        {item.queueNumber}
-                      </div>
-                      <div className="flex-1 flex flex-col items-end">
-                        <span className="font-bold text-lg text-white uppercase tracking-wide leading-tight drop-shadow-md text-right">
-                          {item.name}
-                        </span>
-                        <span className="text-xs font-mono text-brand-primarySoft mt-0.5 text-right opacity-80 tracking-widest">
-                          {item.guestId || item.company || '-'}
-                        </span>
-                      </div>
-                   </div>
-                </div>
-             ))}
-           </div>
-         </div>
-
-         {/* ─── Holographic Center Highlight Frame ─── */}
-         <div className="absolute left-[2%] right-[2%] md:left-[-5%] md:right-[-5%] top-1/2 -translate-y-1/2 h-[90px] z-30 rounded-2xl border-[2px] border-brand-primary pointer-events-none"
-              style={{
-                boxShadow: '0 0 30px rgba(212,168,83,0.4), inset 0 0 30px rgba(212,168,83,0.2)',
-                background: 'linear-gradient(90deg, rgba(212,168,83,0.1), transparent, rgba(212,168,83,0.1))'
+         {/* ─── 3D Cylinder Viewport (overflow: hidden is the KEY fix) ─── */}
+         <div className="absolute inset-x-4 top-4 bottom-4 rounded-2xl overflow-hidden z-20 border border-brand-primary/20"
+              style={{ 
+                background: 'linear-gradient(180deg, rgba(26,26,46,0.95) 0%, rgba(10,10,18,0.98) 50%, rgba(26,26,46,0.95) 100%)',
+                boxShadow: 'inset 0 0 40px rgba(0,0,0,0.8), 0 0 30px rgba(0,0,0,0.5)'
               }}>
            
-           {/* Futuristic Chevron Indicators */}
-           <div className="absolute -left-[10px] top-1/2 -translate-y-1/2 flex items-center justify-center text-brand-primary font-black text-xl drop-shadow-[0_0_10px_rgba(212,168,83,0.8)] animate-pulse">
-              &gt;&gt;
+           {/* 3D Cylinder */}
+           <div className="absolute inset-0 flex items-center justify-center" style={{ perspective: '600px' }}>
+             <div 
+               ref={containerRef}
+               className="relative w-[90%] h-[80px]"
+               style={{ transformStyle: 'preserve-3d', transform: `translateZ(${-radius}px)` }}
+             >
+               {wheelItems.map((item, i) => (
+                  <div
+                     key={`${item.id}-${i}`}
+                     className="absolute left-0 top-0 w-full h-[80px] flex items-center justify-center"
+                     style={{
+                        transform: `rotateX(${i * theta}deg) translateZ(${radius}px)`,
+                        backfaceVisibility: 'hidden',
+                        background: 'linear-gradient(180deg, rgba(212,168,83,0.15) 0%, rgba(26,26,46,0.9) 15%, rgba(26,26,46,0.9) 85%, rgba(212,168,83,0.15) 100%)',
+                        borderTop: '1px solid rgba(212,168,83,0.3)',
+                        borderBottom: '1px solid rgba(212,168,83,0.1)',
+                     }}
+                  >
+                     <div className="flex items-center w-full px-6">
+                        <div className="font-black text-2xl tracking-widest text-brand-primary w-16 text-left shrink-0"
+                             style={{ textShadow: '0 0 10px rgba(212,168,83,0.6)' }}>
+                          {item.queueNumber}
+                        </div>
+                        <div className="flex-1 flex flex-col items-end min-w-0">
+                          <span className="font-bold text-base text-white uppercase tracking-wide leading-tight truncate w-full text-right">
+                            {item.name}
+                          </span>
+                          <span className="text-xs font-mono text-brand-primarySoft/70 mt-0.5 text-right tracking-wider truncate w-full">
+                            {item.guestId || item.company || '-'}
+                          </span>
+                        </div>
+                     </div>
+                  </div>
+               ))}
+             </div>
            </div>
-           <div className="absolute -right-[10px] top-1/2 -translate-y-1/2 flex items-center justify-center text-brand-primary font-black text-xl drop-shadow-[0_0_10px_rgba(212,168,83,0.8)] animate-pulse">
-              &lt;&lt;
+
+           {/* ─── Selection Highlight Frame ─── */}
+           <div className="absolute left-3 right-3 top-1/2 -translate-y-1/2 h-[88px] z-30 rounded-xl border-2 border-brand-primary/80 pointer-events-none"
+                style={{
+                  boxShadow: '0 0 25px rgba(212,168,83,0.35), inset 0 0 25px rgba(212,168,83,0.15)',
+                  background: 'linear-gradient(90deg, rgba(212,168,83,0.08), transparent, rgba(212,168,83,0.08))'
+                }}>
+             
+             {/* Chevron Indicators */}
+             <div className="absolute -left-5 top-1/2 -translate-y-1/2 text-brand-primary font-black text-sm tracking-tighter drop-shadow-[0_0_8px_rgba(212,168,83,0.8)]">
+                &gt;&gt;
+             </div>
+             <div className="absolute -right-5 top-1/2 -translate-y-1/2 text-brand-primary font-black text-sm tracking-tighter drop-shadow-[0_0_8px_rgba(212,168,83,0.8)]">
+                &lt;&lt;
+             </div>
+             
+             {/* Corner accents */}
+             <div className="absolute -top-px -left-px w-3 h-3 border-t-2 border-l-2 border-white/80" />
+             <div className="absolute -top-px -right-px w-3 h-3 border-t-2 border-r-2 border-white/80" />
+             <div className="absolute -bottom-px -left-px w-3 h-3 border-b-2 border-l-2 border-white/80" />
+             <div className="absolute -bottom-px -right-px w-3 h-3 border-b-2 border-r-2 border-white/80" />
            </div>
-           
-           {/* Corner Tech Accents */}
-           <div className="absolute -top-[2px] -left-[2px] w-4 h-4 border-t-[3px] border-l-[3px] border-white drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]" />
-           <div className="absolute -top-[2px] -right-[2px] w-4 h-4 border-t-[3px] border-r-[3px] border-white drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]" />
-           <div className="absolute -bottom-[2px] -left-[2px] w-4 h-4 border-b-[3px] border-l-[3px] border-white drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]" />
-           <div className="absolute -bottom-[2px] -right-[2px] w-4 h-4 border-b-[3px] border-r-[3px] border-white drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]" />
+
+           {/* Fade Gradients — uses brand-secondary to blend with app theme */}
+           <div className="absolute inset-x-0 top-0 h-[90px] z-40 pointer-events-none"
+                style={{ background: 'linear-gradient(to bottom, #1A1A2E, rgba(26,26,46,0.7), transparent)' }} />
+           <div className="absolute inset-x-0 bottom-0 h-[90px] z-40 pointer-events-none"
+                style={{ background: 'linear-gradient(to top, #1A1A2E, rgba(26,26,46,0.7), transparent)' }} />
          </div>
-
-         {/* ─── Massive Glowing Energy Ring (from Image 3) ─── */}
-         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] md:w-[130%] h-[200px] z-10 pointer-events-none rounded-[50%] border-[2px] border-brand-primary opacity-60"
-              style={{
-                transform: 'translate(-50%, -50%) rotateX(75deg)',
-                boxShadow: '0 0 50px 10px rgba(212,168,83,0.4), inset 0 0 30px rgba(212,168,83,0.4)',
-                animation: spinning ? 'spin 4s linear infinite' : 'none'
-              }} />
-         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] md:w-[140%] h-[220px] z-10 pointer-events-none rounded-[50%] border-[1px] border-brand-primarySoft opacity-30 border-dashed"
-              style={{
-                transform: 'translate(-50%, -50%) rotateX(75deg) rotate(45deg)',
-                animation: spinning ? 'spin 6s linear infinite reverse' : 'none'
-              }} />
-
-         {/* Fade Gradients for cylinder perspective */}
-         <div className="absolute inset-x-0 top-0 h-[100px] bg-gradient-to-b from-[#0B0B13] via-[#0B0B13]/80 to-transparent z-40 pointer-events-none" />
-         <div className="absolute inset-x-0 bottom-0 h-[100px] bg-gradient-to-t from-[#0B0B13] via-[#0B0B13]/80 to-transparent z-40 pointer-events-none" />
        </div>
      </div>
   );
 }
-

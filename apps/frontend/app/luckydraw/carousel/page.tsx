@@ -129,12 +129,12 @@ export default function CarouselDrawPage() {
 
     const getGridClass = () => {
         const c = winners.length || (isUtama ? 1 : drawCount);
-        if (c === 1) return 'grid-cols-1';
-        if (c <= 2) return 'grid-cols-1 md:grid-cols-2';
-        if (c <= 4) return 'grid-cols-2 md:grid-cols-2';
-        if (c <= 6) return 'grid-cols-2 md:grid-cols-3';
-        if (c <= 10) return 'grid-cols-2 md:grid-cols-4 lg:grid-cols-5';
-        return 'grid-cols-3 md:grid-cols-5 lg:grid-cols-6';
+        if (c === 1) return 'grid-cols-1 max-w-xl';
+        if (c <= 2) return 'grid-cols-1 md:grid-cols-2 max-w-3xl';
+        if (c <= 4) return 'grid-cols-2 max-w-4xl';
+        if (c <= 6) return 'grid-cols-2 md:grid-cols-3 max-w-5xl';
+        if (c <= 10) return 'grid-cols-2 md:grid-cols-4 lg:grid-cols-5 max-w-7xl';
+        return 'grid-cols-3 md:grid-cols-5 max-w-7xl';
     };
 
     const selectedPrize = prizes.find(p => p.id === selectedPrizeId);
@@ -148,28 +148,12 @@ export default function CarouselDrawPage() {
     const displayWheels = Array.from({ length: wheelCount }, (_, idx) => winners[idx] || null);
 
     return (
-        <div className={`min-h-[100dvh] flex flex-col relative overflow-hidden bg-[#0A0A12] ${screenShake ? 'animate-screen-shake' : ''}`}>
-            {/* ═══ CYBER-GOLD BACKGROUND ═══ */}
-            <div className="fixed inset-0 pointer-events-none z-0">
-                <div className="absolute inset-0 opacity-20"
-                     style={{
-                       backgroundImage: 'linear-gradient(rgba(212,168,83,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(212,168,83,0.1) 1px, transparent 1px)',
-                       backgroundSize: '40px 40px',
-                       transform: 'perspective(1000px) rotateX(60deg) translateY(-100px) scale(3)'
-                     }}
-                />
-                <div className="absolute top-0 left-0 right-0 h-[50vh] bg-gradient-to-b from-[#15120a] to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 h-[50vh] bg-gradient-to-t from-[#15120a] to-transparent" />
-            </div>
-
-            {/* Spotlights (From Image 3) */}
-            <div className="fixed -bottom-20 -left-20 w-[40vw] h-[100vh] bg-gradient-to-tr from-[rgba(212,168,83,0.15)] via-transparent to-transparent rotate-45 transform origin-bottom-left blur-2xl pointer-events-none z-0" />
-            <div className="fixed -bottom-20 -right-20 w-[40vw] h-[100vh] bg-gradient-to-tl from-[rgba(212,168,83,0.15)] via-transparent to-transparent -rotate-45 transform origin-bottom-right blur-2xl pointer-events-none z-0" />
+        <div className={`min-h-screen flex flex-col relative overflow-hidden ${screenShake ? 'animate-screen-shake' : ''}`}>
 
             {/* Mode Selector */}
             <div className="fixed top-24 left-6 z-[70]">
                 <select onChange={(e) => { if (e.target.value === 'classic') window.location.href = '/luckydraw'; else if (e.target.value === 'slot') window.location.href = '/luckydraw/display'; }} value="carousel"
-                    className="bg-black/60 border border-brand-primary/40 text-brand-primarySoft text-sm rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary backdrop-blur-xl shadow-lg font-mono tracking-wider cursor-pointer">
+                    className="bg-brand-secondary/80 border border-brand-primary/50 text-brand-primarySoft text-sm rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary backdrop-blur-xl shadow-lg font-mono tracking-wider cursor-pointer">
                     <option value="classic">🎲 Classic Mode</option>
                     <option value="slot">🎰 Slot Machine</option>
                     <option value="carousel">🎡 3D Carousel</option>
@@ -182,11 +166,16 @@ export default function CarouselDrawPage() {
             <audio ref={audioGrandWinRef} src={toApiUrl(eventCfg?.grandWinSoundUrl || "/sounds/grand-win.mp3")} preload="auto" />
 
             {!soundEnabled && !loading && (
-                <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/85 backdrop-blur-md">
-                    <button onClick={toggleSound} className="group relative p-14 rounded-[2rem] flex flex-col items-center gap-6 transition-all hover:scale-105"
-                      style={{ background: 'linear-gradient(180deg, rgba(30,30,50,0.95) 0%, rgba(15,15,30,0.98) 100%)', border: '2px solid rgba(212,168,83,0.4)', boxShadow: '0 0 40px rgba(212,168,83,0.15)' }}>
-                        <Volume2 size={56} style={{ color: '#D4A853' }} />
-                        <h3 className="text-2xl font-bold uppercase tracking-[0.3em] font-mono" style={{ color: '#D4A853' }}>Enable Audio</h3>
+                <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/40 backdrop-blur-md animate-in fade-in duration-700">
+                    <button onClick={toggleSound}
+                        className="group relative bg-brand-secondary/80 border-2 border-brand-primary/50 p-12 rounded-[3rem] flex flex-col items-center gap-6 hover:border-brand-primary transition-all hover:scale-105 shadow-[0_0_100px_rgba(212,168,83,0.2)]">
+                        <div className="w-24 h-24 rounded-full bg-brand-primary/20 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-secondary transition-all">
+                            <Volume2 size={48} />
+                        </div>
+                        <div className="text-center">
+                            <h3 className="text-2xl font-bold text-white mb-2 uppercase tracking-widest font-mono">Enable Audio Experience</h3>
+                            <p className="text-white/40 font-mono text-sm uppercase tracking-wider">Click anywhere to start with sound</p>
+                        </div>
                     </button>
                 </div>
             )}
@@ -195,78 +184,64 @@ export default function CarouselDrawPage() {
             {darkReveal && <div className="dark-reveal pointer-events-none z-[50]" />}
 
             {/* ═══ MAIN CONTENT ═══ */}
-            <div className="relative z-10 flex-1 flex flex-col items-center w-full px-4 md:px-8 py-8 gap-4 overflow-y-auto custom-scrollbar">
+            <div className="relative z-10 flex-1 flex flex-col items-center justify-between w-full px-4 md:px-8 py-6">
 
-                {/* ─── Top Header Title ─── */}
-                <div className="text-center mt-2 mb-2 relative">
-                    <div className="absolute inset-0 bg-brand-primary/20 blur-2xl rounded-full" />
-                    <div className="relative inline-block border-[3px] border-brand-primary rounded-xl px-12 py-3 bg-[#11111a]/80 shadow-[0_0_30px_rgba(212,168,83,0.3)] backdrop-blur-sm">
-                        <h1 className="text-3xl md:text-5xl font-black text-white tracking-widest font-mono drop-shadow-[0_0_10px_rgba(212,168,83,0.8)]"
-                            style={{ textShadow: '0 0 10px rgba(212,168,83,0.8), 0 0 20px rgba(212,168,83,0.4)' }}>
-                            GOLDEN CELEBRATION LUCKY DRAW
-                        </h1>
-                    </div>
-                </div>
+                {/* ─── Top: Title + Prize Info ─── */}
+                <div className="w-full flex flex-col items-center gap-4 pt-2">
+                    {/* Title */}
+                    <h1 className="text-3xl md:text-5xl font-heading font-black text-transparent bg-clip-text bg-gradient-to-b from-brand-primarySoft via-brand-primary to-brand-accent drop-shadow-[0_10px_30px_rgba(212,168,83,0.3)] tracking-[0.1em] uppercase text-center">
+                        LUCKY DRAW
+                    </h1>
 
-                {/* ─── Stats Panel & Controls ─── */}
-                <div className="w-full max-w-4xl flex flex-col items-center gap-4">
-                    <div className="flex flex-wrap items-center justify-center gap-4 px-6 py-4 rounded-2xl w-full max-w-2xl border-2 border-brand-primary/50 bg-[#1A1A2E]/80 backdrop-blur-md shadow-[0_0_20px_rgba(212,168,83,0.2)]">
-                        <div className="flex-1 flex flex-col items-center min-w-[140px] px-4 border-r border-brand-primary/30">
-                            <span className="text-xs font-mono tracking-widest text-brand-primarySoft/80 mb-1">ATTENDEES</span>
-                            <span className="text-3xl font-black text-brand-primary drop-shadow-[0_0_8px_rgba(212,168,83,0.8)]">{candidates.length}</span>
-                        </div>
-                        
-                        <div className="flex-1 flex flex-col items-center min-w-[200px] px-4 border-r border-brand-primary/30">
-                            <span className="text-xs font-mono tracking-widest text-brand-primarySoft/80 mb-1">PRIZE</span>
-                            <select value={selectedPrizeId} onChange={(e) => { setSelectedPrizeId(e.target.value); setWinners([]); setDrawCount(1); }} disabled={spinning}
-                                className="bg-transparent text-xl font-bold uppercase tracking-widest font-mono focus:outline-none disabled:opacity-50 cursor-pointer text-white text-center w-full appearance-none">
-                                {prizes.map(p => (
-                                    <option key={p.id} value={p.id} className="bg-brand-secondary text-brand-surface font-sans">
-                                        {p.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div className="flex-1 flex flex-col items-center min-w-[140px] px-4">
-                            <span className="text-xs font-mono tracking-widest text-brand-primarySoft/80 mb-1">WINNERS</span>
-                            <span className="text-3xl font-black text-brand-primary drop-shadow-[0_0_8px_rgba(212,168,83,0.8)]">{totalWon}</span>
+                    {/* Prize Info Bar */}
+                    <div className="flex flex-wrap items-center justify-center gap-4 px-6 py-3 rounded-2xl border border-brand-primary/30 bg-brand-secondary/60 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
+                        <Trophy size={20} className="text-brand-primary" />
+                        <select value={selectedPrizeId} onChange={(e) => { setSelectedPrizeId(e.target.value); setWinners([]); setDrawCount(1); }} disabled={spinning}
+                            className="bg-transparent text-lg font-bold uppercase tracking-widest font-mono focus:outline-none disabled:opacity-50 cursor-pointer text-brand-primarySoft pr-4">
+                            {prizes.map(p => (
+                                <option key={p.id} value={p.id} className="bg-brand-secondary text-brand-surface font-sans">
+                                    {p.category === 'UTAMA' ? '🏆' : '🎁'} {p.name} ({p.winners.length}/{p.quantity})
+                                </option>
+                            ))}
+                        </select>
+                        <div className="flex gap-4 text-xs font-mono tracking-widest">
+                            <span className="text-white/50">HADIR: <span className="text-brand-primary font-bold">{candidates.length}</span></span>
+                            <span className="text-white/50">MENANG: <span className="text-brand-primary font-bold">{totalWon}</span></span>
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-3 mt-2">
+                    {/* Controls Row */}
+                    <div className="flex items-center gap-3">
                         {!isUtama && (
-                            <div className="flex items-center gap-2 px-4 py-2 rounded-xl border border-brand-primary/30 bg-[#1A1A2E]/60 backdrop-blur-sm shadow-[0_0_15px_rgba(212,168,83,0.1)]">
-                                <span className="text-xs font-mono tracking-widest text-brand-primarySoft/60 mr-2">DRAW COUNT</span>
+                            <div className="flex items-center gap-2 px-3 py-2 rounded-xl border border-brand-primary/20 bg-brand-secondary/50 backdrop-blur-sm">
+                                <span className="text-xs font-mono tracking-widest text-white/40 mr-1">×</span>
                                 {[1, 5, 10].map(n => (
                                     <button key={n} onClick={() => setDrawCount(n)} disabled={spinning}
-                                        className="w-10 h-10 rounded-lg text-base font-bold transition-all disabled:opacity-50"
-                                        style={{ 
-                                            background: drawCount === n ? 'linear-gradient(180deg, #D4A853, #8B6914)' : 'rgba(255,255,255,0.05)', 
-                                            color: drawCount === n ? '#0F0F1A' : 'rgba(245,236,215,0.6)', 
-                                            border: drawCount === n ? 'none' : '1px solid rgba(212,168,83,0.2)',
-                                            boxShadow: drawCount === n ? '0 0 10px rgba(212,168,83,0.5)' : 'none'
-                                        }}>
+                                        className={`w-9 h-9 rounded-lg text-sm font-bold transition-all disabled:opacity-50 ${
+                                            drawCount === n 
+                                                ? 'bg-brand-primary text-brand-secondary' 
+                                                : 'bg-white/5 text-white/60 hover:bg-white/10'
+                                        }`}>
                                         {n}
                                     </button>
                                 ))}
                             </div>
                         )}
-                        <button onClick={toggleSound} className="p-3 rounded-xl transition-all hover:scale-105 border border-brand-primary/30 bg-[#1A1A2E]/60 backdrop-blur-sm hover:border-brand-primary/60">
-                            {soundEnabled ? <Volume2 size={24} style={{ color: '#D4A853' }} /> : <VolumeX size={24} style={{ color: 'rgba(245,236,215,0.4)' }} />}
+                        <button onClick={toggleSound} className={`p-3 rounded-xl backdrop-blur-sm border transition-all ${soundEnabled ? 'bg-brand-primary/20 border-brand-primary text-brand-primarySoft' : 'bg-brand-secondary/50 border-white/10 text-white/40'}`}>
+                            {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
                         </button>
-                        <button onClick={() => setShowHistory(true)} className="p-3 rounded-xl transition-all hover:scale-105 flex items-center gap-2 group border border-brand-primary/30 bg-[#1A1A2E]/60 backdrop-blur-sm hover:border-brand-primary/60">
-                            <History size={24} style={{ color: '#D4A853' }} />
-                            <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 text-sm font-mono font-bold uppercase tracking-widest whitespace-nowrap hidden md:block" style={{ color: '#D4A853' }}>Riwayat</span>
+                        <button onClick={() => setShowHistory(true)} className="p-3 rounded-xl backdrop-blur-sm border border-white/10 bg-brand-secondary/50 text-brand-primarySoft hover:border-brand-primary/50 transition-all flex items-center gap-2 group">
+                            <History size={20} />
+                            <span className="max-w-0 overflow-hidden group-hover:max-w-[100px] transition-all duration-500 text-xs font-mono font-bold uppercase tracking-widest whitespace-nowrap hidden md:block">Riwayat</span>
                         </button>
                     </div>
                 </div>
 
-                {/* ─── Wheels Area ─── */}
-                <div className={`w-full max-w-[1600px] flex-1 flex items-center justify-center transition-all duration-1000 my-6 ${isUtama ? 'scale-[1.05]' : ''}`}>
-                    <div className={`grid ${getGridClass()} gap-x-6 gap-y-12 justify-items-center w-full px-4`}>
+                {/* ─── Center: Wheels Area ─── */}
+                <div className={`w-full flex-1 flex items-center justify-center py-4 ${isUtama ? 'scale-[1.02]' : ''} transition-transform duration-500`}>
+                    <div className={`grid ${getGridClass()} gap-4 justify-items-center w-full mx-auto`}>
                         {displayWheels.map((winner, idx) => (
-                            <div key={idx} className="w-full flex flex-col items-center">
+                            <div key={idx} className="w-full">
                                 <LuckyDraw3DWheel
                                     candidates={candidates}
                                     winner={winner}
@@ -280,40 +255,19 @@ export default function CarouselDrawPage() {
                     </div>
                 </div>
 
-                {/* ─── LUXURY SPIN BUTTON ─── */}
-                <div className="mt-auto mb-10 flex justify-center w-full relative z-[60]">
+                {/* ─── Bottom: Spin Button ─── */}
+                <div className="pb-4 flex justify-center w-full">
                     <button onClick={handleSpin} disabled={spinning || isSoldOut || !selectedPrizeId}
-                        className="relative group transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:hover:scale-100 rounded-full flex items-center justify-center"
-                        style={{ width: '160px', height: '160px' }}>
-                        
-                        {/* Outer Glow Ring */}
-                        <div className="absolute inset-0 rounded-full opacity-60 border-[2px] border-brand-primary"
-                             style={{ 
-                                boxShadow: '0 0 30px rgba(212,168,83,0.5)',
-                                animation: spinning ? 'pulse 1s infinite' : 'spin 8s linear infinite'
-                             }} />
-                        
-                        {/* Inner Ring dashed */}
-                        <div className="absolute inset-2 rounded-full border-[2px] border-brand-primary border-dashed opacity-40"
-                             style={{ animation: spinning ? 'spin 1s linear infinite' : 'spin 12s linear infinite reverse' }} />
-
-                        {/* Button Core */}
-                        <div className="absolute inset-4 rounded-full overflow-hidden flex items-center justify-center"
-                          style={{
-                            background: spinning
-                              ? 'linear-gradient(180deg, #111 0%, #000 50%, #111 100%)'
-                              : isSoldOut
-                                ? 'linear-gradient(180deg, #7f1d1d 0%, #450a0a 50%, #7f1d1d 100%)'
-                                : 'linear-gradient(180deg, #D4A853 0%, #8B6914 50%, #B8860B 100%)',
-                            boxShadow: spinning ? 'inset 0 0 20px rgba(0,0,0,0.8)' : 'inset 0 0 20px rgba(255,255,255,0.2), 0 0 20px rgba(212,168,83,0.6)',
-                          }}>
-                          {/* Top shine for glass effect */}
-                          <div className="absolute top-0 left-0 right-0 h-[40%] bg-white/20 rounded-t-full" />
-                          
-                          <span className="relative z-10 font-black text-3xl tracking-widest text-white drop-shadow-md">
-                            {spinning ? '...' : isSoldOut ? 'HABIS' : 'SPIN'}
-                          </span>
-                        </div>
+                        className={`
+                            relative px-12 py-5 rounded-full font-bold text-xl md:text-2xl font-mono tracking-[0.2em] uppercase transition-all duration-300 transform hover:scale-105 active:scale-95
+                            ${spinning
+                                ? 'bg-brand-border/50 text-brand-textMuted cursor-not-allowed border border-brand-border'
+                                : isSoldOut
+                                    ? 'bg-brand-danger/20 text-brand-danger cursor-not-allowed border border-brand-danger/30'
+                                    : 'bg-gradient-to-r from-brand-primary to-brand-accent text-brand-secondary shadow-[0_0_50px_rgba(212,168,83,0.4)] hover:shadow-[0_0_80px_rgba(212,168,83,0.6)] border border-brand-primarySoft/50'
+                            }
+                        `}>
+                        {spinning ? 'SPINNING...' : isSoldOut ? 'HABIS' : isUtama ? 'GRAND PRIZE' : 'PUTAR UNDIAN'}
                     </button>
                 </div>
             </div>
