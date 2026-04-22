@@ -74,11 +74,11 @@ export default function ThemeBackground() {
       )}
 
       {effectiveType === 'IMAGE' && effectiveImage && (
-        <div className="fixed inset-0 z-0 bg-center bg-cover" style={{ backgroundImage: `url(${toApiUrl(effectiveImage)})` }} />
+        <div className="fixed inset-0 z-0 bg-top bg-cover" style={{ backgroundImage: `url(${toApiUrl(effectiveImage)})` }} />
       )}
       {effectiveType === 'VIDEO' && effectiveVideo && (
         // eslint-disable-next-line jsx-a11y/media-has-caption
-        <video className="fixed inset-0 z-0 w-full h-full object-cover" src={toApiUrl(effectiveVideo)} muted loop autoPlay playsInline />
+        <video className="fixed inset-0 z-0 w-full h-full object-cover object-top" src={toApiUrl(effectiveVideo)} muted loop autoPlay playsInline />
       )}
       {(effectiveType === 'IMAGE' || effectiveType === 'VIDEO') && (
         <div className="fixed inset-0 z-0 bg-brand-secondary" style={overlayStyle} />
