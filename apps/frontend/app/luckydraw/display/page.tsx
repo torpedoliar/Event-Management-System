@@ -547,9 +547,7 @@ export default function LiveDisplayPage() {
             <div className="relative z-10 flex justify-between items-start mb-8 mt-12 md:mt-0">
                 <div className="flex items-center gap-4">
                     {eventCfg?.logoUrl && <img src={toApiUrl(eventCfg.logoUrl)} className="h-16 drop-shadow-xl" alt="logo" />}
-                    <h1 className="text-3xl font-heading font-black text-transparent bg-clip-text bg-gradient-to-r from-brand-primarySoft to-brand-accent tracking-widest uppercase">
-                        LUCKY DRAW ★ SLOT MACHINE
-                    </h1>
+
                 </div>
                 
                 <button onClick={toggleSound} className="p-4 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-white transition-all">
