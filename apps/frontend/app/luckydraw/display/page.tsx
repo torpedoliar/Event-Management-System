@@ -514,6 +514,8 @@ export default function LiveDisplayPage() {
                     onChange={(e) => {
                         if (e.target.value === 'classic') {
                             window.location.href = '/luckydraw';
+                        } else if (e.target.value === 'carousel') {
+                            window.location.href = '/luckydraw/carousel';
                         }
                     }}
                     value="slot"
@@ -521,6 +523,7 @@ export default function LiveDisplayPage() {
                 >
                     <option value="classic">🎲 Classic Mode</option>
                     <option value="slot">🎰 Slot Machine Mode</option>
+                    <option value="carousel">🎡 3D Carousel Mode</option>
                 </select>
             </div>
 

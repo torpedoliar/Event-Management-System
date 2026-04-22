@@ -651,6 +651,8 @@ export default function LuckyDrawPage() {
                     onChange={(e) => {
                         if (e.target.value === 'slot') {
                             window.location.href = '/luckydraw/display';
+                        } else if (e.target.value === 'carousel') {
+                            window.location.href = '/luckydraw/carousel';
                         }
                     }}
                     value="classic"
@@ -658,6 +660,7 @@ export default function LuckyDrawPage() {
                 >
                     <option value="classic">🎲 Classic Mode</option>
                     <option value="slot">🎰 Slot Machine Mode</option>
+                    <option value="carousel">🎡 3D Carousel Mode</option>
                 </select>
             </div>
 
