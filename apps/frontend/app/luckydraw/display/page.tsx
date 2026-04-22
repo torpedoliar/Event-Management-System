@@ -545,21 +545,11 @@ export default function LiveDisplayPage() {
             {darkReveal && <div className="dark-reveal pointer-events-none" />}
 
             <div className="relative z-10 flex justify-between items-start mb-8 mt-12 md:mt-0">
-                <div className="flex items-center gap-6 w-full max-w-2xl">
-                    {eventCfg?.logoUrl && <img src={toApiUrl(eventCfg.logoUrl)} className="h-16 md:h-20 drop-shadow-2xl" alt="logo" />}
-                    
-                    <div className="flex-1 bg-brand-secondary/80 backdrop-blur-md border border-brand-primary/20 p-4 md:p-5 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-                        <div className="flex justify-between text-brand-surface/80 mb-3 font-mono text-xs md:text-sm tracking-widest font-bold">
-                            <span>HADIR: {candidates.length}</span>
-                            <span className="text-brand-primarySoft">MENANG: {prizes.reduce((acc, p) => acc + p.winners.length, 0)}</span>
-                        </div>
-                        <div className="w-full h-2 md:h-2.5 bg-black/60 rounded-full overflow-hidden shadow-inner border border-white/5">
-                            <div 
-                                className="h-full bg-gradient-to-r from-brand-primary to-brand-accent shadow-[0_0_15px_rgba(212,168,83,0.8)] transition-all duration-1000" 
-                                style={{ width: `${Math.max(0, 100 - (prizes.reduce((acc, p) => acc + p.winners.length, 0) / (candidates.length || 1) * 100))}%` }} 
-                            />
-                        </div>
-                    </div>
+                <div className="flex items-center gap-4">
+                    {eventCfg?.logoUrl && <img src={toApiUrl(eventCfg.logoUrl)} className="h-16 drop-shadow-xl" alt="logo" />}
+                    <h1 className="text-3xl font-heading font-black text-transparent bg-clip-text bg-gradient-to-r from-brand-primarySoft to-brand-accent tracking-widest uppercase">
+                        LUCKY DRAW ★ SLOT MACHINE
+                    </h1>
                 </div>
                 
                 <button onClick={toggleSound} className="p-4 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-white transition-all">
@@ -606,6 +596,20 @@ export default function LiveDisplayPage() {
                             </div>
                         </div>
                     )}
+                </div>
+
+                {/* Tracker Bar Moved Below Prize Selection */}
+                <div className="w-full max-w-4xl mx-auto bg-brand-secondary/80 backdrop-blur-md border border-brand-primary/20 p-4 md:p-5 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+                    <div className="flex justify-between text-brand-surface/80 mb-3 font-mono text-xs md:text-sm tracking-widest font-bold">
+                        <span>HADIR: {candidates.length}</span>
+                        <span className="text-brand-primarySoft">MENANG: {prizes.reduce((acc, p) => acc + p.winners.length, 0)}</span>
+                    </div>
+                    <div className="w-full h-2 md:h-2.5 bg-black/60 rounded-full overflow-hidden shadow-inner border border-white/5">
+                        <div 
+                            className="h-full bg-gradient-to-r from-brand-primary to-brand-accent shadow-[0_0_15px_rgba(212,168,83,0.8)] transition-all duration-1000" 
+                            style={{ width: `${Math.max(0, 100 - (prizes.reduce((acc, p) => acc + p.winners.length, 0) / (candidates.length || 1) * 100))}%` }} 
+                        />
+                    </div>
                 </div>
 
                 <div className={`w-full max-w-[1400px] slot-frame relative transition-all duration-1000 ${isUtama ? 'border-red-500/50 shadow-[0_0_100px_rgba(255,0,0,0.1)]' : ''}`}>
