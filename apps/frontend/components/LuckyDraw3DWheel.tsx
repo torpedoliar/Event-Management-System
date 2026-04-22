@@ -202,9 +202,10 @@ export default function LuckyDraw3DWheel({
   
   return (
      <div className={`relative w-full max-w-lg mx-auto h-[320px] flex items-center justify-center overflow-hidden transition-all duration-1000 ${isGrandPrize ? 'scale-110 drop-shadow-[0_0_50px_rgba(255,215,0,0.3)]' : ''}`} style={{ perspective: '1200px' }}>
+       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,rgba(0,0,0,0.9)_100%)] pointer-events-none z-10" />
        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black pointer-events-none z-10" />
        
-       <div className={`absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[80px] border-y-4 shadow-[0_0_30px_rgba(212,168,83,0.5)] z-0 transition-colors duration-500 ${isGrandPrize ? 'border-yellow-400 bg-yellow-400/20 shadow-[0_0_50px_rgba(255,215,0,0.8)]' : 'border-brand-primary/50 bg-brand-primary/10'}`} />
+       <div className={`absolute left-[-10%] right-[-10%] top-1/2 -translate-y-1/2 h-[84px] border-y-[3px] z-0 transition-all duration-500 ${isGrandPrize ? 'border-yellow-400 bg-gradient-to-r from-transparent via-yellow-400/20 to-transparent shadow-[inset_0_0_40px_rgba(255,215,0,0.5)]' : 'border-brand-primary/60 bg-gradient-to-r from-transparent via-brand-primary/15 to-transparent shadow-[inset_0_0_30px_rgba(212,168,83,0.4)]'}`} />
        
        <div className={`absolute left-2 md:left-6 top-1/2 -translate-y-1/2 font-black z-20 text-2xl md:text-3xl tracking-tighter ${isGrandPrize ? 'text-yellow-400 drop-shadow-[0_0_10px_rgba(255,215,0,1)]' : 'text-brand-primary drop-shadow-[0_0_5px_rgba(212,168,83,0.8)]'}`}>
          &gt;&gt;
