@@ -507,7 +507,7 @@ export default function LiveDisplayPage() {
     if (loading) return <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>;
 
     return (
-        <div className={`min-h-screen flex flex-col p-8 relative overflow-hidden bg-black ${screenShake ? 'animate-screen-shake' : ''}`}>
+        <div className={`min-h-screen flex flex-col p-8 relative overflow-hidden ${screenShake ? 'animate-screen-shake' : ''}`}>
             {/* Mode Selector Dropdown */}
             <div className="fixed top-24 left-6 z-[70]">
                 <select
