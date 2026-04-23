@@ -27,6 +27,8 @@ class ConnectionStatusService {
   };
   private onlineHandler = () => this.setOnline();
   private offlineHandler = () => this.setOffline();
+  private consecutiveFailures = 0;
+  private baseInterval = 15000; // Default 15s (was 2s — too aggressive under load)
 
   constructor() {
     // Listen to browser events
@@ -77,17 +79,27 @@ class ConnectionStatusService {
 
     try {
       const startTime = performance.now();
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+
       const response = await fetch(healthUrl, {
         method: 'GET',
-        cache: 'no-cache',
-        // OPTIMIZATION: Abort after 5s to prevent hanging
-        signal: AbortSignal.timeout(5000)
+        cache: 'no-store',
+        // These headers tell the Service Worker / Workbox to skip caching entirely
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'ngsw-bypass': 'true',  // Standard SW bypass header
+        },
+        signal: controller.signal,
       });
+      clearTimeout(timeoutId);
 
       const latency = Math.round(performance.now() - startTime);
 
       if (response.ok) {
         const data = await response.json();
+        this.consecutiveFailures = 0; // Reset on success
         this.setOnline();
         this.currentInfo = {
           status: 'online',
@@ -98,20 +110,41 @@ class ConnectionStatusService {
           offlineSyncInterval: data.offlineSyncInterval,
           offlineQueueLimit: data.offlineQueueLimit
         };
+
+        // If we were in backoff mode, restart periodic check at normal interval
+        if (this.healthCheckInterval) {
+          this.startPeriodicCheck(this.baseInterval);
+        }
       } else {
         throw new Error(`Health check failed: ${response.status}`);
       }
     } catch (error) {
-      this.setOffline();
+      this.consecutiveFailures++;
+      // Only mark offline after 3+ consecutive failures to avoid false positives
+      if (this.consecutiveFailures >= 3) {
+        this.setOffline();
+      }
       this.currentInfo.status = this.status;
       this.currentInfo.lastCheck = new Date().toISOString();
+
+      // Exponential backoff: after repeated failures, slow down polling
+      // to avoid hammering an overloaded server
+      if (this.consecutiveFailures >= 2 && this.healthCheckInterval) {
+        const backoffInterval = Math.min(
+          this.baseInterval * Math.pow(2, this.consecutiveFailures - 1),
+          120000 // Max 2 minutes
+        );
+        console.log(`[ConnectionStatus] Health check failed ${this.consecutiveFailures}x, backing off to ${backoffInterval / 1000}s`);
+        this.startPeriodicCheck(backoffInterval);
+      }
     }
 
     this.notifyListeners();
     return { ...this.currentInfo };
   }
 
-  startPeriodicCheck(intervalMs: number = 30000) {
+  startPeriodicCheck(intervalMs: number = 15000) {
+    this.baseInterval = intervalMs;
     this.stopPeriodicCheck();
     this.healthCheckInterval = setInterval(() => {
       this.checkHealth();

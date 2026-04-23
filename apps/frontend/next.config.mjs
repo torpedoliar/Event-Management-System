@@ -38,7 +38,20 @@ const withPWA = withPWAInit({
   cacheStartUrl: true,
   dynamicStartUrl: true,
   reloadOnOnline: true,
+  // Exclude health checks and SSE streams from service worker interception entirely.
+  // These are the requests that cause "no-response" errors under load.
+  publicExcludes: ['!sw.js', '!workbox-*.js'],
+  buildExcludes: [/middleware-manifest\.json$/],
   runtimeCaching: [
+    // Health check & SSE stream: NEVER cache, NEVER intercept
+    {
+      urlPattern: /\/api\/public\/(health|stream)/i,
+      handler: 'NetworkOnly',
+      options: {
+        cacheName: 'api-realtime-bypass',
+      },
+    },
+    // All other API routes: network only (no caching)
     {
       urlPattern: /\/api\/.*/i,
       handler: 'NetworkOnly',
@@ -46,11 +59,13 @@ const withPWA = withPWAInit({
         cacheName: 'api-bypass',
       },
     },
+    // Everything else: network first with offline fallback
     {
       urlPattern: /^https?.*/,
       handler: 'NetworkFirst',
       options: {
         cacheName: 'offline-cache',
+        networkTimeoutSeconds: 15,
         expiration: {
           maxEntries: 50,
           maxAgeSeconds: 24 * 60 * 60,
