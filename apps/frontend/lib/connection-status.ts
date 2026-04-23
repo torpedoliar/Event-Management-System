@@ -28,7 +28,7 @@ class ConnectionStatusService {
   private onlineHandler = () => this.setOnline();
   private offlineHandler = () => this.setOffline();
   private consecutiveFailures = 0;
-  private baseInterval = 15000; // Default 15s (was 2s — too aggressive under load)
+  private baseInterval = 2000; // 2s interval - safe now because backend caches via Redis
 
   constructor() {
     // Listen to browser events
@@ -143,7 +143,7 @@ class ConnectionStatusService {
     return { ...this.currentInfo };
   }
 
-  startPeriodicCheck(intervalMs: number = 15000) {
+  startPeriodicCheck(intervalMs: number = 2000) {
     this.baseInterval = intervalMs;
     this.stopPeriodicCheck();
     this.healthCheckInterval = setInterval(() => {

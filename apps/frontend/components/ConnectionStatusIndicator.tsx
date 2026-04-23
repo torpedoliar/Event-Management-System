@@ -35,9 +35,9 @@ export default function ConnectionStatusIndicator({ className = '', onShowQueue,
       setPendingCount(count);
     });
 
-    // Initial health check and start periodic checking (every 15 seconds)
+    // Initial health check and start periodic checking (every 2 seconds)
     connectionStatusService.checkHealth();
-    connectionStatusService.startPeriodicCheck(15000);
+    connectionStatusService.startPeriodicCheck(2000);
 
     return () => {
       unsubStatus();

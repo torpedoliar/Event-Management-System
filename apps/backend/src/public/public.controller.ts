@@ -1,5 +1,7 @@
-import { Body, Controller, Get, Post, Query, Res, Headers, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Res, Headers, UnauthorizedException, Inject } from '@nestjs/common';
 import { SkipThrottle } from '@nestjs/throttler';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 import { GuestsService } from '../guests/guests.service';
 import { SouvenirsService } from '../souvenirs/souvenirs.service';
 import { Response } from 'express';
@@ -13,6 +15,7 @@ export class PublicController {
     private readonly guests: GuestsService,
     private readonly souvenirs: SouvenirsService,
     private readonly jwtService: JwtService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) { }
 
   // Extract user info from JWT token if present
@@ -238,9 +241,22 @@ export class PublicController {
 
   @Get('health')
   async health() {
+    const CACHE_KEY = 'public:health';
+    const CACHE_TTL = 5000; // 5 seconds - prevents DB hammering from many clients
+
+    // Try cache first (Redis if available, in-memory fallback)
+    const cached = await this.cacheManager.get<string>(CACHE_KEY);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      // Update timestamp to current so the client sees fresh timing
+      parsed.timestamp = new Date().toISOString();
+      return parsed;
+    }
+
+    // Cache miss: query DB once, then cache for all clients
     const activeEvent = await this.guests.getActiveEvent();
-    
-    return {
+
+    const result = {
       status: 'ok',
       timestamp: new Date().toISOString(),
       eventId: activeEvent?.id || null,
@@ -249,6 +265,11 @@ export class PublicController {
       offlineSyncInterval: activeEvent?.offlineSyncInterval ?? 30,
       offlineQueueLimit: activeEvent?.offlineQueueLimit ?? 500
     };
+
+    // Store in cache
+    await this.cacheManager.set(CACHE_KEY, JSON.stringify(result), CACHE_TTL);
+
+    return result;
   }
 }
 
