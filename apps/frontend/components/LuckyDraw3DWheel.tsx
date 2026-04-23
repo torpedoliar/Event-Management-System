@@ -33,7 +33,9 @@ export default function LuckyDraw3DWheel({
   const containerRef = useRef<HTMLDivElement>(null);
   
   const N = 40;
-  const H = 100;
+  // H controls the mathematical arc height of each slot.
+  // Setting it higher than the CSS height (120px) creates a physical gap between the floating items.
+  const H = 135;
   const theta = 360 / N;
   const radius = Math.round((H / 2) / Math.tan(Math.PI / N));
   
@@ -231,13 +233,13 @@ export default function LuckyDraw3DWheel({
                {wheelItems.map((item, i) => (
                   <div
                      key={`${item.id}-${i}`}
-                     className="absolute left-0 top-0 w-full h-[120px] flex items-center justify-center"
+                     className="absolute left-0 top-0 w-full h-[120px] flex items-center justify-center rounded-2xl"
                      style={{
                         transform: `rotateX(${i * theta}deg) translateZ(${radius}px)`,
                         backfaceVisibility: 'hidden',
-                        background: 'linear-gradient(180deg, rgba(212,168,83,0.15) 0%, rgba(26,26,46,0.9) 15%, rgba(26,26,46,0.9) 85%, rgba(212,168,83,0.15) 100%)',
-                        borderTop: '1px solid rgba(212,168,83,0.3)',
-                        borderBottom: '1px solid rgba(212,168,83,0.1)',
+                        background: 'linear-gradient(180deg, rgba(212,168,83,0.15) 0%, rgba(26,26,46,0.95) 20%, rgba(26,26,46,0.95) 80%, rgba(212,168,83,0.15) 100%)',
+                        border: '1px solid rgba(212,168,83,0.3)',
+                        boxShadow: '0 4px 15px rgba(0,0,0,0.5)'
                      }}
                   >
                      <div className="flex items-center w-full px-12">
