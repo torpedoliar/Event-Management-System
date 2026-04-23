@@ -8,7 +8,7 @@ import Button from '../../../components/ui/Button';
 import { Gift, Trash2, Plus, Trophy, Tag, RefreshCw, Edit2, FileDown, X } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 
 const PRIZE_CATEGORIES = [
     { value: 'HIBURAN', label: 'Hadiah Hiburan' },
@@ -175,7 +175,7 @@ export default function PrizesPage() {
             });
         });
 
-        (doc as any).autoTable({
+        autoTable(doc, {
             head: [['No', 'Nama Hadiah', 'Nama Pemenang', 'ID', 'Dept', 'Divisi', 'Waktu Menang', 'TTD Penerimaan Hadiah']],
             body: tableData,
             startY: 25,
