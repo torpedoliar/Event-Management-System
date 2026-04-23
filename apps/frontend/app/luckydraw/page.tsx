@@ -714,44 +714,48 @@ export default function LuckyDrawPage() {
                 <div className="dark-reveal pointer-events-none" />
             )}
 
-            <div className="relative z-10 w-full max-w-[1600px] px-4 md:px-8 mx-auto flex flex-col lg:flex-row gap-6 md:gap-10">
+            <div className="relative z-10 w-full max-w-[1600px] px-4 md:px-8 mx-auto flex flex-col gap-6 md:gap-8">
                 
-                {/* Panel Kiri: Mesin Undian (55%) */}
-                <div className={`w-full lg:w-[55%] text-center flex flex-col ${screenShake ? 'animate-screen-shake' : ''}`}>
-                    {/* Header / Prize Selector */}
-                    <div className="space-y-4">
-                        {eventCfg?.logoUrl && (
-                            <img src={toApiUrl(eventCfg.logoUrl)} className="h-20 mx-auto mb-4 drop-shadow-2xl" alt="logo" />
-                        )}
-                        <h1 className="text-4xl md:text-6xl font-heading font-black text-transparent bg-clip-text bg-gradient-to-b from-brand-primarySoft via-brand-primary to-brand-accent drop-shadow-[0_10px_30px_rgba(212,168,83,0.3)] tracking-[0.1em] uppercase">
-                            LUCKY DRAW
-                        </h1>
+                {/* ─── HEADER (FULL WIDTH) ─── */}
+                <div className="w-full text-center space-y-4 pt-2">
+                    {eventCfg?.logoUrl && (
+                        <img src={toApiUrl(eventCfg.logoUrl)} className="h-16 md:h-24 mx-auto mb-4 drop-shadow-2xl" alt="logo" />
+                    )}
+                    <h1 className="text-4xl md:text-6xl font-heading font-black text-transparent bg-clip-text bg-gradient-to-b from-brand-primarySoft via-brand-primary to-brand-accent drop-shadow-[0_10px_30px_rgba(212,168,83,0.3)] tracking-[0.1em] uppercase">
+                        LUCKY DRAW
+                    </h1>
 
-                        <div className="flex justify-center gap-6 mt-8 mb-8">
-                            <select
-                                value={selectedPrizeId}
-                                onChange={(e) => {
-                                    setSelectedPrizeId(e.target.value);
-                                    setWinner(null);
-                                    setDisplayCandidate(null);
-                                    setHighlightedId(null);
-                                    setDrawCount(1);
-                                }}
-                                className="bg-brand-secondary/40 border border-brand-primary/20 text-brand-primarySoft text-lg md:text-xl rounded-full px-6 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-xl transition-all hover:bg-brand-secondary/60 cursor-pointer font-mono tracking-widest uppercase shadow-[0_0_30px_rgba(0,0,0,0.5)]"
-                            >
-                                {prizes.map(p => (
-                                    <option key={p.id} value={p.id} className="bg-brand-secondary text-brand-surface font-sans">
-                                        {p.name} ({p.winners.length}/{p.quantity})
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                    <div className="flex justify-center gap-6 mt-6 mb-4">
+                        <select
+                            value={selectedPrizeId}
+                            onChange={(e) => {
+                                setSelectedPrizeId(e.target.value);
+                                setWinner(null);
+                                setDisplayCandidate(null);
+                                setHighlightedId(null);
+                                setDrawCount(1);
+                            }}
+                            className="bg-brand-secondary/40 border border-brand-primary/20 text-brand-primarySoft text-lg md:text-xl rounded-full px-6 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-xl transition-all hover:bg-brand-secondary/60 cursor-pointer font-mono tracking-widest uppercase shadow-[0_0_30px_rgba(0,0,0,0.5)]"
+                        >
+                            {prizes.map(p => (
+                                <option key={p.id} value={p.id} className="bg-brand-secondary text-brand-surface font-sans">
+                                    {p.name} ({p.winners.length}/{p.quantity})
+                                </option>
+                            ))}
+                        </select>
                     </div>
+                </div>
+
+                {/* ─── MAIN PANELS (2 COLUMNS) ─── */}
+                <div className="flex flex-col lg:flex-row gap-6 md:gap-10 w-full">
+                    
+                    {/* Panel Kiri: Mesin Undian (55%) */}
+                    <div className={`w-full lg:w-[55%] text-center flex flex-col ${screenShake ? 'animate-screen-shake' : ''}`}>
 
                     {/* Main Slot Machine Area */}
-                    <div className="relative group mx-auto w-full mt-8 flex-1 flex flex-col">
+                    <div className="relative group mx-auto w-full flex-1 flex flex-col">
                         <div className="absolute -inset-2 bg-gradient-to-r from-brand-primary/40 to-brand-accent/40 rounded-[2rem] blur-2xl opacity-60 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
-                        <div className="relative bg-brand-secondary/80 backdrop-blur-2xl border border-brand-primary/20 rounded-[2rem] p-8 md:p-12 flex-1 flex flex-col items-center justify-center min-h-[450px] shadow-2xl">
+                        <div className="relative bg-brand-secondary/80 backdrop-blur-2xl border border-brand-primary/20 rounded-[2rem] p-8 md:p-12 flex-1 flex flex-col items-center justify-center min-h-[550px] shadow-2xl">
 
                             {selectedPrize && (
                                 <div className="mb-8 text-center">
@@ -908,36 +912,11 @@ export default function LuckyDrawPage() {
                 </div>
             )}
 
-                    {/* Winners List for this Prize */}
-                    {selectedPrize && selectedPrize.winners.length > 0 && (
-                        <div className="mt-8 pb-4">
-                            <h3 className="text-xl md:text-2xl font-bold text-brand-surface mb-6 flex items-center justify-center gap-3">
-                                <PartyPopper className="text-brand-primary" size={28} /> Pemenang {selectedPrize.name}
-                            </h3>
-                            <div className="flex flex-wrap justify-center gap-4">
-                                {selectedPrize.winners.map((w: any) => (
-                                    <div key={w.id} className="bg-brand-surface/10 backdrop-blur-sm border border-brand-primary/20 rounded-2xl p-4 flex items-center gap-4 min-w-[240px]">
-                                        <div className="w-10 h-10 rounded-full bg-brand-primary/20 flex items-center justify-center font-bold text-brand-primary text-base">
-                                            {w.queueNumber}
-                                        </div>
-                                        <div className="text-left">
-                                            <div className="font-bold text-brand-surface text-base">{w.name}</div>
-                                            <div className="text-sm text-brand-surface/60">
-                                                {w.company || '-'}
-                                                {w.division && <span className="ml-1">({w.division})</span>}
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
                     {/* History Button Moved Here (Bottom of Left Panel) */}
-                    <div className="mt-auto pt-8 pb-4 flex justify-center">
+                    <div className="mt-8 pt-4 pb-4 flex justify-center">
                         <button
                             onClick={() => setShowHistory(true)}
-                            className="bg-brand-secondary/60 hover:bg-brand-secondary/80 border border-brand-primary/30 text-brand-primarySoft text-base md:text-lg rounded-2xl px-8 py-4 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-xl transition-all flex items-center justify-center gap-3 font-mono tracking-widest uppercase shadow-xl"
+                            className="bg-brand-secondary/60 hover:bg-brand-secondary/80 border border-brand-primary/30 text-brand-primarySoft text-base md:text-lg rounded-2xl px-8 py-4 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-xl transition-all flex items-center justify-center gap-3 font-mono tracking-widest uppercase shadow-xl w-[80%] max-w-sm"
                         >
                             <History size={24} />
                             RIWAYAT PEMENANG
@@ -946,7 +925,7 @@ export default function LuckyDrawPage() {
                 </div>
 
                 {/* Panel Kanan: Ticker & Actions (45%) */}
-                <div className="w-full lg:w-[45%] flex flex-col">
+                <div className="w-full lg:w-[45%] flex flex-col gap-6">
                     {/* Ticker Box */}
                     <div className={`relative rounded-[2rem] overflow-hidden border border-brand-primary/30 shadow-2xl flex flex-col flex-1 bg-brand-secondary/90 backdrop-blur-2xl transition-colors duration-1000 ${tickerMood === 'tension' ? 'ticker-mood-tension border-red-500/50' : ''}`}>
                         {/* Scanline overlay if tension */}
@@ -1019,6 +998,31 @@ export default function LuckyDrawPage() {
                             LIHAT SEMUA {candidates.length.toLocaleString()} TAMU
                         </button>
                     </div>
+
+                    {/* Winners List for this Prize (Moved to under Live Eligible) */}
+                    {selectedPrize && selectedPrize.winners.length > 0 && (
+                        <div className="mt-4 pb-8 w-full animate-in fade-in duration-500">
+                            <h3 className="text-lg md:text-xl font-bold text-brand-surface mb-4 flex items-center gap-3">
+                                <PartyPopper className="text-brand-primary" size={24} /> Pemenang {selectedPrize.name}
+                            </h3>
+                            <div className="flex flex-col gap-3">
+                                {selectedPrize.winners.map((w: any) => (
+                                    <div key={w.id} className="bg-brand-surface/10 backdrop-blur-sm border border-brand-primary/20 rounded-2xl p-4 flex items-center gap-4 w-full">
+                                        <div className="w-10 h-10 rounded-full bg-brand-primary/20 flex items-center justify-center font-bold text-brand-primary text-base shrink-0">
+                                            {w.queueNumber}
+                                        </div>
+                                        <div className="text-left flex-1 min-w-0">
+                                            <div className="font-bold text-brand-surface text-base truncate">{w.name}</div>
+                                            <div className="text-sm text-brand-surface/60 truncate">
+                                                {w.company || '-'}
+                                                {w.division && <span className="ml-1">({w.division})</span>}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 

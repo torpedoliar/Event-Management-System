@@ -238,7 +238,7 @@ export default function CarouselDrawPage() {
                 </div>
 
                 {/* ─── Center: Wheels Area ─── */}
-                <div className={`w-full flex-1 flex items-center justify-center py-4 ${isUtama ? 'scale-[1.02]' : ''} transition-transform duration-500`}>
+                <div className={`w-full flex items-center justify-center py-2 ${isUtama ? 'scale-[1.02]' : ''} transition-transform duration-500`}>
                     <div className={`grid ${getGridClass()} gap-4 justify-items-center w-full mx-auto`}>
                         {displayWheels.map((winner, idx) => (
                             <div key={idx} className="w-full">
