@@ -747,15 +747,15 @@ export default function LuckyDrawPage() {
                 </div>
 
                 {/* ─── MAIN PANELS (2 COLUMNS) ─── */}
-                <div className="flex flex-col lg:flex-row gap-6 md:gap-10 w-full">
+                <div className="flex flex-col lg:flex-row gap-6 md:gap-10 w-full items-start">
                     
                     {/* Panel Kiri: Mesin Undian (55%) */}
                     <div className={`w-full lg:w-[55%] text-center flex flex-col ${screenShake ? 'animate-screen-shake' : ''}`}>
 
                     {/* Main Slot Machine Area */}
-                    <div className="relative group mx-auto w-full flex-1 flex flex-col">
+                    <div className="relative group mx-auto w-full flex flex-col">
                         <div className="absolute -inset-2 bg-gradient-to-r from-brand-primary/40 to-brand-accent/40 rounded-[2rem] blur-2xl opacity-60 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
-                        <div className="relative bg-brand-secondary/80 backdrop-blur-2xl border border-brand-primary/20 rounded-[2rem] p-8 md:p-12 flex-1 flex flex-col items-center justify-center min-h-[550px] shadow-2xl">
+                        <div className="relative bg-brand-secondary/80 backdrop-blur-2xl border border-brand-primary/20 rounded-[2rem] p-8 md:p-12 flex flex-col items-center justify-center h-[600px] shadow-2xl">
 
                             {selectedPrize && (
                                 <div className="mb-8 text-center">
@@ -927,7 +927,7 @@ export default function LuckyDrawPage() {
                 {/* Panel Kanan: Ticker & Actions (45%) */}
                 <div className="w-full lg:w-[45%] flex flex-col gap-6">
                     {/* Ticker Box */}
-                    <div className={`relative rounded-[2rem] overflow-hidden border border-brand-primary/30 shadow-2xl flex flex-col flex-1 bg-brand-secondary/90 backdrop-blur-2xl transition-colors duration-1000 ${tickerMood === 'tension' ? 'ticker-mood-tension border-red-500/50' : ''}`}>
+                    <div className={`relative rounded-[2rem] overflow-hidden border border-brand-primary/30 shadow-2xl flex flex-col h-[600px] bg-brand-secondary/90 backdrop-blur-2xl transition-colors duration-1000 ${tickerMood === 'tension' ? 'ticker-mood-tension border-red-500/50' : ''}`}>
                         {/* Scanline overlay if tension */}
                         {tickerMood === 'tension' && <div className="scanline-overlay z-20" />}
 
