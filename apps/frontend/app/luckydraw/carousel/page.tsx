@@ -129,10 +129,10 @@ export default function CarouselDrawPage() {
 
     const getGridClass = () => {
         const c = winners.length || (isUtama ? 1 : drawCount);
-        if (c === 1) return 'grid-cols-1 max-w-xl';
-        if (c <= 2) return 'grid-cols-1 md:grid-cols-2 max-w-3xl';
-        if (c <= 4) return 'grid-cols-2 max-w-4xl';
-        if (c <= 6) return 'grid-cols-2 md:grid-cols-3 max-w-5xl';
+        if (c === 1) return 'grid-cols-1 max-w-4xl';
+        if (c <= 2) return 'grid-cols-1 md:grid-cols-2 max-w-5xl';
+        if (c <= 4) return 'grid-cols-2 max-w-5xl';
+        if (c <= 6) return 'grid-cols-2 md:grid-cols-3 max-w-6xl';
         if (c <= 10) return 'grid-cols-2 md:grid-cols-4 lg:grid-cols-5 max-w-7xl';
         return 'grid-cols-3 md:grid-cols-5 max-w-7xl';
     };

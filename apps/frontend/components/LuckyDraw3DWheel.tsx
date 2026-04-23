@@ -206,9 +206,9 @@ export default function LuckyDraw3DWheel({
   if (wheelItems.length === 0) return null;
 
   return (
-     <div className="relative w-full max-w-[550px] mx-auto" style={{ perspective: '800px' }}>
+     <div className="relative w-full max-w-[900px] mx-auto" style={{ perspective: '800px' }}>
        {/* ═══ GOLDEN CELEBRATION WHEEL ═══ */}
-       <div className="relative flex items-center justify-center h-[280px]">
+       <div className="relative flex items-center justify-center h-[420px]">
          
          {/* Subtle glow behind the wheel */}
          <div className="absolute inset-0 rounded-3xl opacity-30 blur-3xl pointer-events-none"
@@ -225,13 +225,13 @@ export default function LuckyDraw3DWheel({
            <div className="absolute inset-0 flex items-center justify-center" style={{ perspective: '600px' }}>
              <div 
                ref={containerRef}
-               className="relative w-[90%] h-[80px]"
+               className="relative w-[92%] h-[100px]"
                style={{ transformStyle: 'preserve-3d', transform: `translateZ(${-radius}px)` }}
              >
                {wheelItems.map((item, i) => (
                   <div
                      key={`${item.id}-${i}`}
-                     className="absolute left-0 top-0 w-full h-[80px] flex items-center justify-center"
+                     className="absolute left-0 top-0 w-full h-[100px] flex items-center justify-center"
                      style={{
                         transform: `rotateX(${i * theta}deg) translateZ(${radius}px)`,
                         backfaceVisibility: 'hidden',
@@ -240,16 +240,16 @@ export default function LuckyDraw3DWheel({
                         borderBottom: '1px solid rgba(212,168,83,0.1)',
                      }}
                   >
-                     <div className="flex items-center w-full px-6">
-                        <div className="font-black text-2xl tracking-widest text-brand-primary w-16 text-left shrink-0"
-                             style={{ textShadow: '0 0 10px rgba(212,168,83,0.6)' }}>
+                     <div className="flex items-center w-full px-8">
+                        <div className="font-black text-4xl tracking-widest text-brand-primary w-24 text-left shrink-0"
+                             style={{ textShadow: '0 0 12px rgba(212,168,83,0.6)' }}>
                           {item.queueNumber}
                         </div>
                         <div className="flex-1 flex flex-col items-end min-w-0">
-                          <span className="font-bold text-base text-white uppercase tracking-wide leading-tight truncate w-full text-right">
+                          <span className="font-bold text-xl text-white uppercase tracking-wide leading-tight truncate w-full text-right">
                             {item.name}
                           </span>
-                          <span className="text-xs font-mono text-brand-primarySoft/70 mt-0.5 text-right tracking-wider truncate w-full">
+                          <span className="text-sm font-mono text-brand-primarySoft/70 mt-1 text-right tracking-wider truncate w-full">
                             {item.guestId || item.company || '-'}
                           </span>
                         </div>
@@ -260,7 +260,7 @@ export default function LuckyDraw3DWheel({
            </div>
 
            {/* ─── Selection Highlight Frame ─── */}
-           <div className="absolute left-3 right-3 top-1/2 -translate-y-1/2 h-[88px] z-30 rounded-xl border-2 border-brand-primary/80 pointer-events-none"
+           <div className="absolute left-3 right-3 top-1/2 -translate-y-1/2 h-[108px] z-30 rounded-xl border-2 border-brand-primary/80 pointer-events-none"
                 style={{
                   boxShadow: '0 0 25px rgba(212,168,83,0.35), inset 0 0 25px rgba(212,168,83,0.15)',
                   background: 'linear-gradient(90deg, rgba(212,168,83,0.08), transparent, rgba(212,168,83,0.08))'

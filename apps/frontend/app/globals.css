@@ -358,62 +358,19 @@ body::after {
   .dark-reveal {
       position: fixed;
       inset: 0;
-      /* Fluid responsive spotlight using clamp:
-         Inner transparent: min 120px, prefer 30vmin, max 400px
-         Outer dark edge:   min 220px, prefer 55vmin, max 750px */
+      /* Dynamic wide spotlight covering both panels
+         transparent 55% covers most of the content
+         rgba(0,0,0, 0.9) 100% darkens the edges and corners */
       background: radial-gradient(
-          circle at 50% 50%,
-          transparent clamp(120px, 30vmin, 400px),
-          rgba(0, 0, 0, 0.85) clamp(220px, 55vmin, 750px)
+          ellipse at 50% 50%,
+          transparent 55%,
+          rgba(0, 0, 0, 0.9) 100%
       );
       z-index: 45;
       transition: opacity 0.5s ease;
       animation: dark-reveal-in 0.6s ease-out, dark-reveal-pulse 3s ease-in-out 0.6s infinite;
   }
 
-  /* Mobile: tighter spotlight for smaller screens */
-  @media (max-width: 640px) {
-      .dark-reveal {
-          background: radial-gradient(
-              circle at 50% 45%,
-              transparent 90px,
-              rgba(0, 0, 0, 0.88) 200px
-          );
-      }
-  }
-
-  /* Tablet landscape */
-  @media (min-width: 641px) and (max-width: 1024px) {
-      .dark-reveal {
-          background: radial-gradient(
-              circle at 50% 50%,
-              transparent 28vmin,
-              rgba(0, 0, 0, 0.85) 52vmin
-          );
-      }
-  }
-
-  /* Large desktop / projector displays */
-  @media (min-width: 1920px) {
-      .dark-reveal {
-          background: radial-gradient(
-              circle at 50% 50%,
-              transparent 35vmin,
-              rgba(0, 0, 0, 0.82) 60vmin
-          );
-      }
-  }
-
-  /* Ultra-wide / 4K projector */
-  @media (min-width: 2560px) {
-      .dark-reveal {
-          background: radial-gradient(
-              circle at 50% 50%,
-              transparent 30vmin,
-              rgba(0, 0, 0, 0.80) 50vmin
-          );
-      }
-  }
 
   @keyframes dark-reveal-in {
       0% { opacity: 0; }
