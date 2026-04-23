@@ -158,7 +158,7 @@ export default function PrizeReceiptModal({ isOpen, onClose, winner, prize, logo
             <style dangerouslySetInnerHTML={{__html: `
                 @media print {
                     @page {
-                        size: landscape;
+                        size: A4 portrait;
                         margin: 15mm;
                     }
                     
@@ -178,8 +178,12 @@ export default function PrizeReceiptModal({ isOpen, onClose, winner, prize, logo
                         left: 0;
                         top: 0;
                         width: 100%;
+                        height: 100%;
                         margin: 0;
                         padding: 0;
+                        page-break-after: avoid;
+                        page-break-before: avoid;
+                        break-inside: avoid;
                     }
                     
                     /* Adjust the modal container for printing */
