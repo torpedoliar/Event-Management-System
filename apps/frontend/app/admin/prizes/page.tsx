@@ -184,8 +184,7 @@ export default function PrizesPage() {
             columnStyles: {
                 7: { cellWidth: 50 } // Wide space for signature
             },
-            styles: { fontSize: 9, cellPadding: 4, valign: 'middle' },
-            minCellHeight: 15
+            styles: { fontSize: 9, cellPadding: 4, valign: 'middle', minCellHeight: 15 }
         });
 
         doc.save('Laporan_Pemenang_Lucky_Draw.pdf');
