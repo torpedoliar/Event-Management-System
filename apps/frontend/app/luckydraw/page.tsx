@@ -714,10 +714,10 @@ export default function LuckyDrawPage() {
                 <div className="dark-reveal pointer-events-none" />
             )}
 
-            <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
+            <div className="relative z-10 w-full max-w-[1600px] px-4 md:px-8 mx-auto flex flex-col lg:flex-row gap-6 md:gap-10">
                 
-                {/* Panel Kiri: Mesin Undian (60%) */}
-                <div className={`flex-[6] text-center space-y-8 ${screenShake ? 'animate-screen-shake' : ''}`}>
+                {/* Panel Kiri: Mesin Undian (55%) */}
+                <div className={`w-full lg:w-[55%] text-center flex flex-col ${screenShake ? 'animate-screen-shake' : ''}`}>
                     {/* Header / Prize Selector */}
                     <div className="space-y-4">
                         {eventCfg?.logoUrl && (
@@ -749,9 +749,9 @@ export default function LuckyDrawPage() {
                     </div>
 
                     {/* Main Slot Machine Area */}
-                    <div className="relative group mx-auto">
+                    <div className="relative group mx-auto w-full mt-8 flex-1 flex flex-col">
                         <div className="absolute -inset-2 bg-gradient-to-r from-brand-primary/40 to-brand-accent/40 rounded-[2rem] blur-2xl opacity-60 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
-                        <div className="relative bg-brand-secondary/80 backdrop-blur-2xl border border-brand-primary/20 rounded-[2rem] p-8 md:p-12 flex flex-col items-center justify-center min-h-[400px] shadow-2xl">
+                        <div className="relative bg-brand-secondary/80 backdrop-blur-2xl border border-brand-primary/20 rounded-[2rem] p-8 md:p-12 flex-1 flex flex-col items-center justify-center min-h-[450px] shadow-2xl">
 
                             {selectedPrize && (
                                 <div className="mb-8 text-center">
@@ -910,19 +910,19 @@ export default function LuckyDrawPage() {
 
                     {/* Winners List for this Prize */}
                     {selectedPrize && selectedPrize.winners.length > 0 && (
-                        <div className="mt-8 pb-8">
-                            <h3 className="text-lg font-bold text-brand-surface mb-4 flex items-center justify-center gap-2">
-                                <PartyPopper className="text-brand-primary" /> Pemenang {selectedPrize.name}
+                        <div className="mt-8 pb-4">
+                            <h3 className="text-xl md:text-2xl font-bold text-brand-surface mb-6 flex items-center justify-center gap-3">
+                                <PartyPopper className="text-brand-primary" size={28} /> Pemenang {selectedPrize.name}
                             </h3>
-                            <div className="flex flex-wrap justify-center gap-3">
+                            <div className="flex flex-wrap justify-center gap-4">
                                 {selectedPrize.winners.map((w: any) => (
-                                    <div key={w.id} className="bg-brand-surface/10 backdrop-blur-sm border border-brand-primary/20 rounded-xl p-3 flex items-center gap-3 min-w-[200px]">
-                                        <div className="w-8 h-8 rounded-full bg-brand-primary/20 flex items-center justify-center font-bold text-brand-primary text-sm">
+                                    <div key={w.id} className="bg-brand-surface/10 backdrop-blur-sm border border-brand-primary/20 rounded-2xl p-4 flex items-center gap-4 min-w-[240px]">
+                                        <div className="w-10 h-10 rounded-full bg-brand-primary/20 flex items-center justify-center font-bold text-brand-primary text-base">
                                             {w.queueNumber}
                                         </div>
                                         <div className="text-left">
-                                            <div className="font-bold text-brand-surface text-sm">{w.name}</div>
-                                            <div className="text-xs text-brand-surface/60">
+                                            <div className="font-bold text-brand-surface text-base">{w.name}</div>
+                                            <div className="text-sm text-brand-surface/60">
                                                 {w.company || '-'}
                                                 {w.division && <span className="ml-1">({w.division})</span>}
                                             </div>
@@ -932,12 +932,23 @@ export default function LuckyDrawPage() {
                             </div>
                         </div>
                     )}
+
+                    {/* History Button Moved Here (Bottom of Left Panel) */}
+                    <div className="mt-auto pt-8 pb-4 flex justify-center">
+                        <button
+                            onClick={() => setShowHistory(true)}
+                            className="bg-brand-secondary/60 hover:bg-brand-secondary/80 border border-brand-primary/30 text-brand-primarySoft text-base md:text-lg rounded-2xl px-8 py-4 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-xl transition-all flex items-center justify-center gap-3 font-mono tracking-widest uppercase shadow-xl"
+                        >
+                            <History size={24} />
+                            RIWAYAT PEMENANG
+                        </button>
+                    </div>
                 </div>
 
-                {/* Panel Kanan: Ticker & Actions (40%) */}
-                <div className="flex-[4] flex flex-col gap-6">
+                {/* Panel Kanan: Ticker & Actions (45%) */}
+                <div className="w-full lg:w-[45%] flex flex-col">
                     {/* Ticker Box */}
-                    <div className={`relative rounded-3xl overflow-hidden border border-brand-primary/30 shadow-2xl flex flex-col bg-brand-secondary/90 backdrop-blur-2xl transition-colors duration-1000 ${tickerMood === 'tension' ? 'ticker-mood-tension border-red-500/50' : ''}`}>
+                    <div className={`relative rounded-[2rem] overflow-hidden border border-brand-primary/30 shadow-2xl flex flex-col flex-1 bg-brand-secondary/90 backdrop-blur-2xl transition-colors duration-1000 ${tickerMood === 'tension' ? 'ticker-mood-tension border-red-500/50' : ''}`}>
                         {/* Scanline overlay if tension */}
                         {tickerMood === 'tension' && <div className="scanline-overlay z-20" />}
 
@@ -1002,21 +1013,12 @@ export default function LuckyDrawPage() {
                         {/* View All Action */}
                         <button
                             onClick={() => setShowEligiblePanel(true)}
-                            className="w-full py-4 bg-brand-primary/10 hover:bg-brand-primary/20 border-t border-brand-primary/10 text-brand-primary text-sm font-mono tracking-widest uppercase transition-all flex items-center justify-center gap-2 relative z-10 font-bold"
+                            className="w-full py-5 bg-brand-primary/10 hover:bg-brand-primary/20 border-t border-brand-primary/10 text-brand-primary text-base font-mono tracking-widest uppercase transition-all flex items-center justify-center gap-3 relative z-10 font-bold"
                         >
-                            <Users size={18} />
+                            <Users size={20} />
                             LIHAT SEMUA {candidates.length.toLocaleString()} TAMU
                         </button>
                     </div>
-
-                    {/* History Button Panel */}
-                    <button
-                        onClick={() => setShowHistory(true)}
-                        className="bg-brand-secondary/60 hover:bg-brand-secondary/80 border border-brand-primary/30 text-brand-primarySoft text-lg rounded-2xl px-6 py-5 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-xl transition-all flex items-center justify-center gap-3 font-mono tracking-widest uppercase shadow-xl"
-                    >
-                        <History size={24} />
-                        RIWAYAT PEMENANG
-                    </button>
                 </div>
             </div>
 

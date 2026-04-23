@@ -184,10 +184,10 @@ export default function CarouselDrawPage() {
             {darkReveal && <div className="dark-reveal pointer-events-none z-[50]" />}
 
             {/* ═══ MAIN CONTENT ═══ */}
-            <div className="relative z-10 flex-1 flex flex-col items-center justify-between w-full px-4 md:px-8 py-6">
+            <div className="relative z-10 flex-1 flex flex-col items-center justify-center gap-8 w-full px-4 md:px-8 py-6">
 
                 {/* ─── Top: Title + Prize Info ─── */}
-                <div className="w-full flex flex-col items-center gap-4 pt-2">
+                <div className="w-full flex flex-col items-center gap-4">
                     {/* Title */}
                     <h1 className="text-3xl md:text-5xl font-heading font-black text-transparent bg-clip-text bg-gradient-to-b from-brand-primarySoft via-brand-primary to-brand-accent drop-shadow-[0_10px_30px_rgba(212,168,83,0.3)] tracking-[0.1em] uppercase text-center">
                         LUCKY DRAW
