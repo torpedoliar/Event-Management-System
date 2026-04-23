@@ -362,9 +362,9 @@ body::after {
          transparent 55% covers most of the content
          rgba(0,0,0, 0.9) 100% darkens the edges and corners */
       background: radial-gradient(
-          ellipse at 50% 50%,
-          transparent 55%,
-          rgba(0, 0, 0, 0.9) 100%
+          55vw 55vh at 50% 50%,
+          transparent 50%,
+          rgba(0, 0, 0, 0.95) 100%
       );
       z-index: 45;
       transition: opacity 0.5s ease;
