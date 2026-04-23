@@ -26,7 +26,10 @@ export class PrizesService {
         // Transform to include winners array for backward compatibility
         return prizes.map(p => ({
             ...p,
-            winners: p.prizeWinners.map(pw => pw.guest)
+            winners: p.prizeWinners.map(pw => ({
+                ...pw.guest,
+                wonAt: pw.wonAt
+            }))
         }));
     }
 
@@ -251,6 +254,29 @@ export class PrizesService {
         );
 
         return selectedWinners;
+    }
+
+    async deleteWinner(prizeId: string, guestId: string) {
+        // Find the specific prize winner record
+        const prizeWinner = await this.prisma.prizeWinner.findFirst({
+            where: { prizeId, guestId }
+        });
+        
+        if (!prizeWinner) {
+            throw new BadRequestException('Pemenang tidak ditemukan pada hadiah ini');
+        }
+
+        // Remove the winner
+        await this.prisma.prizeWinner.delete({
+            where: { id: prizeWinner.id }
+        });
+
+        // Also delete from collection if it exists
+        await this.prisma.prizeCollection.deleteMany({
+            where: { prizeWinnerId: prizeWinner.id }
+        });
+
+        return { success: true };
     }
 
     async resetWinners(prizeId: string) {

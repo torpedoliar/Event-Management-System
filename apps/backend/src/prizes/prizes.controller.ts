@@ -76,6 +76,14 @@ export class PrizesController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @Delete(':id/winners/:guestId')
+    async deleteWinner(@Param('id') id: string, @Param('guestId') guestId: string) {
+        const res = await this.prizes.deleteWinner(id, guestId);
+        emitEvent({ type: 'prize_reset', data: { prizeId: id } }); // reuse prize_reset event to trigger refresh
+        return res;
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Post(':id/reset')
     async reset(@Param('id') id: string) {
         const res = await this.prizes.resetWinners(id);

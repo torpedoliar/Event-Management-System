@@ -5,7 +5,10 @@ import { apiFetch, apiBase, parseErrorMessage } from '../../../lib/api';
 import Card from '../../../components/ui/Card';
 import Input from '../../../components/ui/Input';
 import Button from '../../../components/ui/Button';
-import { Gift, Trash2, Plus, Trophy, Tag, RefreshCw } from 'lucide-react';
+import { Gift, Trash2, Plus, Trophy, Tag, RefreshCw, Edit2, FileDown, X } from 'lucide-react';
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 const PRIZE_CATEGORIES = [
     { value: 'HIBURAN', label: 'Hadiah Hiburan' },
@@ -34,6 +37,10 @@ export default function PrizesPage() {
     const [newCategory, setNewCategory] = useState('HIBURAN');
     const [newAllowMultipleWins, setNewAllowMultipleWins] = useState(false);
     const [creating, setCreating] = useState(false);
+
+    // Edit Quantity State
+    const [editingPrizeId, setEditingPrizeId] = useState<string | null>(null);
+    const [editingQty, setEditingQty] = useState(1);
 
     const load = async () => {
         setLoading(true);
@@ -98,14 +105,110 @@ export default function PrizesPage() {
         }
     };
 
+    const updateQuantity = async (id: string) => {
+        try {
+            await apiFetch(`/prizes/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ quantity: editingQty })
+            });
+            setEditingPrizeId(null);
+            load();
+        } catch (e: any) {
+            setError(parseErrorMessage(e.message));
+        }
+    };
+
+    const removeWinner = async (prizeId: string, guestId: string) => {
+        if (!confirm('Anulir pemenang ini dari hadiah? Stok hadiah akan kembali bisa diundi.')) return;
+        try {
+            await apiFetch(`/prizes/${prizeId}/winners/${guestId}`, { method: 'DELETE' });
+            load();
+        } catch (e: any) {
+            setError(parseErrorMessage(e.message));
+        }
+    };
+
+    const exportExcel = () => {
+        const data: any[] = [];
+        let no = 1;
+        prizes.forEach(p => {
+            p.winners.forEach(w => {
+                data.push({
+                    'No': no++,
+                    'Nama Hadiah': p.name,
+                    'Nama Pemenang': w.name,
+                    'ID Pendaftaran': w.guestId || '-',
+                    'Departemen': w.company || '-',
+                    'Divisi': w.division || '-',
+                    'Waktu Menang': w.wonAt ? new Date(w.wonAt).toLocaleString('id-ID') : '-',
+                    'TTD Penerimaan Hadiah': '' // Empty column for signature
+                });
+            });
+        });
+        
+        const ws = XLSX.utils.json_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Laporan Pemenang");
+        XLSX.writeFile(wb, "Laporan_Pemenang_Lucky_Draw.xlsx");
+    };
+
+    const exportPdf = () => {
+        const doc = new jsPDF('landscape');
+        doc.setFontSize(16);
+        doc.text('Laporan Pemenang Lucky Draw - Tanda Terima Hadiah', 14, 15);
+        
+        const tableData: any[][] = [];
+        let no = 1;
+        prizes.forEach(p => {
+            p.winners.forEach(w => {
+                tableData.push([
+                    no++,
+                    p.name,
+                    w.name,
+                    w.guestId || '-',
+                    w.company || '-',
+                    w.division || '-',
+                    w.wonAt ? new Date(w.wonAt).toLocaleString('id-ID') : '-',
+                    '' // Empty column for signature
+                ]);
+            });
+        });
+
+        (doc as any).autoTable({
+            head: [['No', 'Nama Hadiah', 'Nama Pemenang', 'ID', 'Dept', 'Divisi', 'Waktu Menang', 'TTD Penerimaan Hadiah']],
+            body: tableData,
+            startY: 25,
+            theme: 'grid',
+            headStyles: { fillColor: [212, 168, 83] }, // brand-primary color
+            columnStyles: {
+                7: { cellWidth: 50 } // Wide space for signature
+            },
+            styles: { fontSize: 9, cellPadding: 4, valign: 'middle' },
+            minCellHeight: 15
+        });
+
+        doc.save('Laporan_Pemenang_Lucky_Draw.pdf');
+    };
+
     return (
         <RequireAuth>
             <div className="min-h-screen p-6 md:p-8 mx-auto max-w-5xl space-y-8">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between flex-wrap gap-4">
                     <h1 className="text-2xl font-bold text-white flex items-center gap-3">
                         <Trophy className="text-brand-accent" />
                         Kelola Door Prize
                     </h1>
+                    <div className="flex gap-3">
+                        <button onClick={exportExcel} disabled={prizes.length === 0} className="flex items-center gap-2 px-4 py-2 bg-green-600/20 text-green-400 border border-green-600/50 rounded-lg hover:bg-green-600/40 transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                            <FileDown size={18} />
+                            Export Excel
+                        </button>
+                        <button onClick={exportPdf} disabled={prizes.length === 0} className="flex items-center gap-2 px-4 py-2 bg-red-600/20 text-red-400 border border-red-600/50 rounded-lg hover:bg-red-600/40 transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                            <FileDown size={18} />
+                            Export PDF
+                        </button>
+                    </div>
                 </div>
 
                 {error && <div className="p-4 rounded-lg bg-brand-danger/10 border border-brand-danger/20 text-brand-danger">{error}</div>}
@@ -199,9 +302,32 @@ export default function PrizesPage() {
                                                 <Tag size={10} className="inline mr-1" />
                                                 {PRIZE_CATEGORIES.find(c => c.value === p.category)?.label || p.category}
                                             </span>
-                                            <span className="px-2 py-0.5 rounded-full bg-brand-primary/20 text-brand-primary text-xs font-medium border border-brand-primary/30">
+                                            <span className="px-2 py-0.5 rounded-full bg-brand-primary/20 text-brand-primary text-xs font-medium border border-brand-primary/30 flex items-center gap-1">
                                                 {p.winners.length} / {p.quantity} Pemenang
+                                                <button 
+                                                    onClick={() => {
+                                                        setEditingPrizeId(p.id);
+                                                        setEditingQty(p.quantity);
+                                                    }}
+                                                    className="ml-1 text-brand-primarySoft hover:text-white transition-colors"
+                                                    title="Edit Jumlah Hadiah"
+                                                >
+                                                    <Edit2 size={12} />
+                                                </button>
                                             </span>
+                                            {editingPrizeId === p.id && (
+                                                <div className="flex items-center gap-2 bg-white/10 p-1 rounded-md ml-2">
+                                                    <input 
+                                                        type="number" 
+                                                        min={p.winners.length} 
+                                                        value={editingQty}
+                                                        onChange={(e) => setEditingQty(Number(e.target.value))}
+                                                        className="w-16 bg-black/50 text-white text-xs px-2 py-1 rounded outline-none"
+                                                    />
+                                                    <button onClick={() => updateQuantity(p.id)} className="text-xs bg-brand-primary text-brand-secondary px-2 py-1 rounded font-bold">OK</button>
+                                                    <button onClick={() => setEditingPrizeId(null)} className="text-xs bg-white/20 text-white px-2 py-1 rounded">Batal</button>
+                                                </div>
+                                            )}
                                             {p.allowMultipleWins && (
                                                 <span className="px-2 py-0.5 rounded-full bg-brand-accent/20 text-brand-accent text-xs font-medium border border-brand-accent/30">
                                                     <RefreshCw size={10} className="inline mr-1" />
@@ -217,7 +343,7 @@ export default function PrizesPage() {
                                                 <div className="text-xs font-medium text-brand-textMuted mb-2 uppercase tracking-wider">Pemenang Terpilih</div>
                                                 <div className="flex flex-wrap gap-2">
                                                     {p.winners.map((w: any) => (
-                                                        <div key={w.id} className="flex items-center gap-2 bg-brand-success/10 border border-brand-success/20 rounded-lg px-3 py-1.5">
+                                                        <div key={w.id} className="group/winner relative flex items-center gap-2 bg-brand-success/10 border border-brand-success/20 rounded-lg px-3 py-1.5 pr-6">
                                                             <div className="w-6 h-6 rounded-full bg-brand-success/20 flex items-center justify-center text-xs font-bold text-brand-success">
                                                                 {w.queueNumber}
                                                             </div>
@@ -225,6 +351,13 @@ export default function PrizesPage() {
                                                                 {w.name}
                                                                 {w.division && <span className="opacity-70 text-xs ml-1">({w.division})</span>}
                                                             </div>
+                                                            <button 
+                                                                onClick={() => removeWinner(p.id, w.id)}
+                                                                className="absolute right-1.5 opacity-0 group-hover/winner:opacity-100 p-0.5 rounded-full text-brand-danger hover:bg-brand-danger/20 transition-all"
+                                                                title="Anulir Pemenang"
+                                                            >
+                                                                <X size={12} />
+                                                            </button>
                                                         </div>
                                                     ))}
                                                 </div>
