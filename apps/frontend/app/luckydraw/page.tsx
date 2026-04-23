@@ -1030,7 +1030,8 @@ export default function LuckyDrawPage() {
             <WinnerHistoryModal 
                 isOpen={showHistory} 
                 onClose={() => setShowHistory(false)} 
-                prizes={prizes} 
+                prizes={prizes}
+                logoUrl={eventCfg?.logoUrl}
             />
 
             {/* Eligible Guests Modal */}

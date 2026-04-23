@@ -276,6 +276,7 @@ export default function CarouselDrawPage() {
                 isOpen={showHistory} 
                 onClose={() => setShowHistory(false)} 
                 prizes={prizes} 
+                logoUrl={eventCfg?.logoUrl}
             />
         </div>
     );

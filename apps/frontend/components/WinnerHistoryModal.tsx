@@ -9,6 +9,7 @@ interface Winner {
     company?: string;
     division?: string;
     queueNumber: number;
+    wonAt?: string;
 }
 
 interface Prize {
@@ -22,9 +23,15 @@ interface WinnerHistoryModalProps {
     isOpen: boolean;
     onClose: () => void;
     prizes: Prize[];
+    logoUrl?: string | null;
 }
 
-export default function WinnerHistoryModal({ isOpen, onClose, prizes }: WinnerHistoryModalProps) {
+import PrizeReceiptModal from './PrizeReceiptModal';
+
+export default function WinnerHistoryModal({ isOpen, onClose, prizes, logoUrl }: WinnerHistoryModalProps) {
+    const [selectedPrintWinner, setSelectedPrintWinner] = React.useState<Winner | null>(null);
+    const [selectedPrintPrize, setSelectedPrintPrize] = React.useState<Prize | null>(null);
+
     if (!isOpen) return null;
 
     const hasAnyWinners = prizes.some(p => p.winners.length > 0);
@@ -69,7 +76,15 @@ export default function WinnerHistoryModal({ isOpen, onClose, prizes }: WinnerHi
                                             </h4>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                                 {prize.winners.map((w) => (
-                                                    <div key={w.id} className="bg-black/40 rounded-2xl p-4 flex items-center gap-4 border border-white/5 hover:border-brand-primary/40 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(212,168,83,0.15)] transition-all duration-300 group">
+                                                    <div 
+                                                        key={w.id} 
+                                                        onClick={() => {
+                                                            setSelectedPrintWinner(w);
+                                                            setSelectedPrintPrize(prize);
+                                                        }}
+                                                        className="bg-black/40 rounded-2xl p-4 flex items-center gap-4 border border-white/5 hover:border-brand-primary/40 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(212,168,83,0.15)] transition-all duration-300 group cursor-pointer"
+                                                        title="Klik untuk cetak Tanda Serah Terima Hadiah"
+                                                    >
                                                         <div className="w-12 h-12 rounded-full bg-brand-primary/20 flex items-center justify-center font-black text-lg text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-secondary group-hover:scale-110 transition-all duration-300">
                                                             {w.queueNumber}
                                                         </div>
@@ -105,6 +120,17 @@ export default function WinnerHistoryModal({ isOpen, onClose, prizes }: WinnerHi
                    <p className="text-white/30 font-mono text-xs uppercase tracking-widest">© Event Management System • Lucky Draw History</p>
                 </div>
             </div>
+
+            <PrizeReceiptModal
+                isOpen={selectedPrintWinner !== null}
+                onClose={() => {
+                    setSelectedPrintWinner(null);
+                    setSelectedPrintPrize(null);
+                }}
+                winner={selectedPrintWinner}
+                prize={selectedPrintPrize}
+                logoUrl={logoUrl}
+            />
         </div>
     );
 }
