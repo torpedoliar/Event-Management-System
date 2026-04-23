@@ -1025,6 +1025,7 @@ export default function LuckyDrawPage() {
                     )}
                 </div>
             </div>
+        </div>
 
             <WinnerHistoryModal 
                 isOpen={showHistory} 
