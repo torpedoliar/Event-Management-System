@@ -695,12 +695,12 @@ export default function LiveDisplayPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {revealedWinners.map(w => (
                                 <div key={w.id} className="flex items-center gap-4 bg-white/5 rounded-xl p-4 border border-white/5 animate-in slide-in-from-bottom duration-500">
-                                    <div className="w-12 h-12 rounded-full bg-brand-primary/20 flex items-center justify-center font-bold text-brand-primary">
-                                        {w.queueNumber}
+                                    <div className="w-12 h-12 rounded-full bg-brand-primary/20 flex items-center justify-center font-bold text-brand-primary text-sm px-1 overflow-hidden">
+                                        {w.guestId || w.queueNumber}
                                     </div>
                                     <div className="min-w-0 flex-1">
                                         <div className="font-bold text-white truncate">{w.name}</div>
-                                        <div className="text-xs text-white/50 truncate font-mono">{guestIdToSlotChars(w.guestId || String(w.queueNumber)).join('')} • {w.company}</div>
+                                        <div className="text-xs text-white/50 truncate font-mono">{w.company || '-'}</div>
                                     </div>
                                 </div>
                             ))}

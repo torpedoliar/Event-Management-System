@@ -770,7 +770,7 @@ export default function LuckyDrawPage() {
                                     <div className={`text-center space-y-6 transition-all duration-300 ${winner ? 'scale-110' : ''}`}>
                                         {/* Foto or Queue Number Placeholder */}
                                         <div className="w-32 h-32 md:w-40 md:h-40 bg-brand-primary/20 rounded-full mx-auto flex items-center justify-center border-4 border-brand-primary/40 shadow-[0_0_50px_rgba(212,168,83,0.2)]">
-                                            <span className="text-4xl md:text-6xl font-black text-brand-primary">{displayCandidate.queueNumber}</span>
+                                            <span className="text-4xl md:text-6xl font-black text-brand-primary">{displayCandidate.guestId || displayCandidate.queueNumber}</span>
                                         </div>
                                         
                                         <div className="space-y-2">
@@ -877,8 +877,8 @@ export default function LuckyDrawPage() {
                                         key={w.id} 
                                         className="group bg-white/5 border border-white/10 rounded-3xl p-6 flex items-center gap-5 transition-all duration-500 hover:bg-white/10 hover:border-brand-primary/50 hover:scale-[1.02] animate-in slide-in-from-bottom duration-500"
                                     >
-                                        <div className="w-16 h-16 rounded-2xl bg-brand-primary/20 flex items-center justify-center font-bold text-2xl text-brand-primary shadow-inner group-hover:bg-brand-primary group-hover:text-brand-secondary transition-colors duration-500">
-                                            {w.queueNumber}
+                                        <div className="w-16 h-16 rounded-2xl bg-brand-primary/20 flex items-center justify-center font-bold text-2xl text-brand-primary shadow-inner group-hover:bg-brand-primary group-hover:text-brand-secondary transition-colors duration-500 px-2 overflow-hidden">
+                                            {w.guestId || w.queueNumber}
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="font-bold text-xl text-white truncate group-hover:text-brand-primarySoft transition-colors">{w.name}</div>
@@ -961,8 +961,8 @@ export default function LuckyDrawPage() {
                                                 : 'bg-black/40 border-brand-border opacity-70 scale-95'}
                                         `}
                                     >
-                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0 ${isHighlighted ? 'bg-brand-primary text-brand-secondary' : 'bg-brand-primary/10 text-brand-primary'}`}>
-                                            {g.queueNumber}
+                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0 px-1 overflow-hidden ${isHighlighted ? 'bg-brand-primary text-brand-secondary' : 'bg-brand-primary/10 text-brand-primary'}`}>
+                                            {g.guestId || g.queueNumber}
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className={`font-bold truncate ${isHighlighted ? 'text-brand-primarySoft text-lg' : 'text-brand-surface'}`}>{g.name}</div>
@@ -1008,8 +1008,8 @@ export default function LuckyDrawPage() {
                             <div className="flex flex-col gap-3">
                                 {selectedPrize.winners.map((w: any) => (
                                     <div key={w.id} className="bg-brand-surface/10 backdrop-blur-sm border border-brand-primary/20 rounded-2xl p-4 flex items-center gap-4 w-full">
-                                        <div className="w-10 h-10 rounded-full bg-brand-primary/20 flex items-center justify-center font-bold text-brand-primary text-base shrink-0">
-                                            {w.queueNumber}
+                                        <div className="w-10 h-10 rounded-full bg-brand-primary/20 flex items-center justify-center font-bold text-brand-primary text-sm shrink-0 px-1 overflow-hidden">
+                                            {w.guestId || w.queueNumber}
                                         </div>
                                         <div className="text-left flex-1 min-w-0">
                                             <div className="font-bold text-brand-surface text-base truncate">{w.name}</div>
@@ -1116,19 +1116,15 @@ export default function LuckyDrawPage() {
                                             : 'bg-brand-surface/5 border-brand-border hover:bg-brand-surface/10'
                                     }`}>
                                         {/* Queue Number */}
-                                        <div className="w-10 h-10 rounded-full bg-brand-primary/15 flex items-center justify-center font-bold text-sm text-brand-primary flex-shrink-0">
-                                            {guest.queueNumber}
+                                        <div className="w-10 h-10 rounded-full bg-brand-primary/15 flex items-center justify-center font-bold text-xs text-brand-primary flex-shrink-0 px-1 overflow-hidden">
+                                            {guest.guestId || guest.queueNumber}
                                         </div>
 
                                         {/* Info */}
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2">
                                                 <span className="font-bold text-brand-surface truncate">{guest.name}</span>
-                                                {guest.guestId && (
-                                                    <span className="text-xs font-mono text-brand-surface/30 bg-brand-surface/5 px-2 py-0.5 rounded flex-shrink-0">
-                                                        {guest.guestId}
-                                                    </span>
-                                                )}
+                                                {/* guest.guestId handled by main display above */}
                                             </div>
                                             <div className="text-xs text-brand-surface/50 truncate">
                                                 {guest.company || '-'}

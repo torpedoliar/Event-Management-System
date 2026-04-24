@@ -245,14 +245,14 @@ export default function LuckyDraw3DWheel({
                      <div className="flex items-center w-full px-12">
                         <div className="font-black text-5xl tracking-widest text-brand-primary w-32 text-left shrink-0"
                              style={{ textShadow: '0 0 16px rgba(212,168,83,0.6)' }}>
-                          {item.queueNumber}
+                          {item.guestId || item.queueNumber}
                         </div>
                         <div className="flex-1 flex flex-col items-end min-w-0">
                           <span className="font-bold text-3xl md:text-4xl text-white uppercase tracking-wide leading-tight truncate w-full text-right">
                             {item.name}
                           </span>
                           <span className="text-lg font-mono text-brand-primarySoft/70 mt-1 text-right tracking-wider truncate w-full">
-                            {item.guestId || item.company || '-'}
+                            {item.company || '-'}
                           </span>
                         </div>
                      </div>
