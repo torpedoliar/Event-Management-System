@@ -154,11 +154,11 @@ export default function PrizeReceiptModal({ isOpen, onClose, winner, prize, logo
                 </div>
             </div>
 
-            {/* Global Print Styles — Half Letter (5.5in x 8.5in) */}
+            {/* Global Print Styles — Top Half of A4 Portrait */}
             <style dangerouslySetInnerHTML={{__html: `
                 @media print {
                     @page {
-                        size: 8.5in 5.5in landscape;
+                        size: A4 portrait;
                         margin: 10mm;
                     }
                     
@@ -178,8 +178,9 @@ export default function PrizeReceiptModal({ isOpen, onClose, winner, prize, logo
                         left: 0;
                         top: 0;
                         width: 100%;
+                        max-height: 135mm; /* Exactly half of A4 minus margins to fit top half */
                         margin: 0;
-                        padding: 8mm;
+                        padding: 5mm;
                         page-break-after: avoid;
                         page-break-before: avoid;
                         break-inside: avoid;
@@ -208,7 +209,7 @@ export default function PrizeReceiptModal({ isOpen, onClose, winner, prize, logo
                         color-adjust: exact !important;
                     }
 
-                    /* Compact font sizes for half-letter landscape */
+                    /* Compact font sizes for half-A4 */
                     #prize-receipt-print-area h1 {
                         font-size: 16pt !important;
                         margin-bottom: 2px !important;
@@ -225,9 +226,9 @@ export default function PrizeReceiptModal({ isOpen, onClose, winner, prize, logo
                         font-size: 9pt !important;
                         margin: 4px 0 !important;
                     }
-                    /* Adjust signature gap for landscape */
+                    /* Adjust signature gap */
                     .mb-14 {
-                        margin-bottom: 2.5rem !important; /* Smaller gap so it doesn't push to next page */
+                        margin-bottom: 2.5rem !important; 
                     }
                     .mt-8 {
                         margin-top: 1rem !important;
