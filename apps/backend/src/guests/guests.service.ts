@@ -203,6 +203,56 @@ export class GuestsService {
     };
   }
 
+  async getDuplicates(eventId?: string) {
+    let eId = eventId;
+    if (!eId) {
+      const activeId = await this.getActiveEventId();
+      if (!activeId) return [];
+      eId = activeId;
+    }
+
+    // Find duplicate guestIds
+    const dupIdsResult = await this.prisma.guest.groupBy({
+      by: ['guestId'],
+      where: { eventId: eId },
+      having: { guestId: { _count: { gt: 1 } } }
+    });
+    const dupIds = dupIdsResult.map(d => d.guestId);
+
+    // Find duplicate names
+    const dupNamesResult = await this.prisma.guest.groupBy({
+      by: ['name'],
+      where: { eventId: eId },
+      having: { name: { _count: { gt: 1 } } }
+    });
+    const dupNames = dupNamesResult.map(d => d.name);
+
+    if (dupIds.length === 0 && dupNames.length === 0) {
+      return [];
+    }
+
+    // Fetch all guests that have these duplicate guestIds or names
+    return this.prisma.guest.findMany({
+      where: {
+        eventId: eId,
+        OR: [
+          ...(dupIds.length > 0 ? [{ guestId: { in: dupIds } }] : []),
+          ...(dupNames.length > 0 ? [{ name: { in: dupNames } }] : [])
+        ]
+      },
+      orderBy: [{ name: 'asc' }, { guestId: 'asc' }],
+      include: {
+        prizeWins: {
+          include: { prize: true }
+        },
+        souvenirTakes: {
+          include: { souvenir: true }
+        },
+        checkins: true
+      }
+    });
+  }
+
   async create(input: CreateGuestDto, photoUrl?: string, skipDuplicateCheck?: boolean, registrationSource?: 'MANUAL' | 'IMPORT' | 'WALKIN') {
     let eventId = input.eventId;
     if (!eventId) {

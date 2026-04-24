@@ -101,6 +101,7 @@ export default function GuestsListPage() {
   const [exporting, setExporting] = useState(false);
   const [exportingFull, setExportingFull] = useState(false);
   const [exportingPdf, setExportingPdf] = useState(false);
+  const [showDuplicatesOnly, setShowDuplicatesOnly] = useState(false);
 
   // Bulk selection state
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -127,13 +128,18 @@ export default function GuestsListPage() {
     fetch(`${apiBase()}/config/event`).then(r => r.json()).then(setEventCfg).catch(() => { });
   }, []);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (isDuplicates = showDuplicatesOnly) => {
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams({ q: qRef.current, page: String(pageRef.current), pageSize: String(pageSize) });
-      const data = await apiFetch<GuestsResponse>(`/guests?${params.toString()}`);
-      setResp(data);
+      if (isDuplicates) {
+        const data = await apiFetch<Guest[]>('/guests/duplicates');
+        setResp({ data, total: data.length });
+      } else {
+        const params = new URLSearchParams({ q: qRef.current, page: String(pageRef.current), pageSize: String(pageSize) });
+        const data = await apiFetch<GuestsResponse>(`/guests?${params.toString()}`);
+        setResp(data);
+      }
       // Clear selection when loading new data
       setSelectedIds(new Set());
     } catch (e: any) {
@@ -141,7 +147,7 @@ export default function GuestsListPage() {
     } finally {
       setLoading(false);
     }
-  }, [pageSize]);
+  }, [pageSize, showDuplicatesOnly]);
 
   const toggleSouvenir = async (id: string, current: boolean) => {
     try {
@@ -255,7 +261,7 @@ export default function GuestsListPage() {
     }
   };
 
-  useEffect(() => { load(); }, [page]);
+  useEffect(() => { load(showDuplicatesOnly); }, [page, showDuplicatesOnly]);
 
   // Realtime: auto-refresh on checkin/uncheckin events or event changes
   useEffect(() => {
@@ -521,6 +527,18 @@ export default function GuestsListPage() {
           >
             + Tambah
           </a>
+          <Button
+            size="sm"
+            variant={showDuplicatesOnly ? "primary" : "secondary"}
+            className={showDuplicatesOnly ? "bg-rose-600 hover:bg-rose-700 text-white border-rose-500" : ""}
+            onClick={() => {
+              const newMode = !showDuplicatesOnly;
+              setShowDuplicatesOnly(newMode);
+              setPage(1);
+            }}
+          >
+            {showDuplicatesOnly ? "Kembali ke Semua Data" : "Cek Data Ganda"}
+          </Button>
         </div>
 
         <div className="flex flex-wrap items-center gap-3 text-sm">
@@ -740,10 +758,10 @@ export default function GuestsListPage() {
                   const cat = CATEGORY_CONFIG[g.category] || CATEGORY_CONFIG.REGULAR;
                   const src = g.registrationSource ? SOURCE_CONFIG[g.registrationSource] : null;
                   return (
-                    <tr key={g.id} className={`group transition-all duration-300 hover:bg-brand-primary/5 hover:shadow-[inset_0_0_30px_rgba(212,168,83,0.05)] relative ${selectedIds.has(g.id) ? 'bg-brand-primary/10' : ''}`}>
+                    <tr key={g.id} className={`group transition-all duration-300 ${showDuplicatesOnly ? 'bg-rose-500/10 hover:bg-rose-500/20 shadow-[inset_0_0_30px_rgba(225,29,72,0.1)]' : 'hover:bg-brand-primary/5 hover:shadow-[inset_0_0_30px_rgba(212,168,83,0.05)]'} relative ${selectedIds.has(g.id) ? 'bg-brand-primary/10' : ''}`}>
                       <td className="px-4 py-4 align-middle whitespace-nowrap">
                         {/* Glow Row Indicator */}
-                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className={`absolute left-0 top-0 bottom-0 w-1 ${showDuplicatesOnly ? 'bg-rose-500' : 'bg-brand-primary'} opacity-0 group-hover:opacity-100 transition-opacity`} />
                         <input
                           type="checkbox"
                           checked={selectedIds.has(g.id)}
@@ -763,7 +781,10 @@ export default function GuestsListPage() {
                       </td>
                       <td className="px-4 py-4 font-mono text-xs text-brand-primarySoft/80 align-middle">{g.guestId}</td>
                       <td className="px-4 py-4 text-white font-medium align-middle">
-                        <div className="group-hover:text-brand-primarySoft transition-colors">{g.name}</div>
+                        <div className="group-hover:text-brand-primarySoft transition-colors flex items-center gap-2">
+                          {g.name}
+                          {showDuplicatesOnly && <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">DUPLIKAT</span>}
+                        </div>
                         {g.notes && (
                           <div className="text-xs text-brand-warning/80 mt-1 px-2 py-1 bg-brand-warning/10 rounded border border-brand-warning/20 max-w-xs truncate">
                             {g.notes}

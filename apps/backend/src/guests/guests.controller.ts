@@ -687,6 +687,13 @@ export class GuestsController {
     doc.end();
   }
 
+  @SkipThrottle({ default: true, short: true, medium: true, long: true })
+  @UseGuards(JwtAuthGuard)
+  @Get('guests/duplicates')
+  getDuplicates(@Query('eventId') eventId?: string) {
+    return this.guests.getDuplicates(eventId);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get('guests/:id')
   get(@Param('id') id: string) {
