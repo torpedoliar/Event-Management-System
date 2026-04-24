@@ -5,7 +5,7 @@ import { apiFetch, apiBase, parseErrorMessage } from '../../../lib/api';
 import Card from '../../../components/ui/Card';
 import Input from '../../../components/ui/Input';
 import Button from '../../../components/ui/Button';
-import { Gift, Trash2, Plus, Trophy, Tag, RefreshCw, Edit2, FileDown, X } from 'lucide-react';
+import { Gift, Trash2, Plus, Trophy, Tag, RefreshCw, Edit2, FileDown, X, Monitor, MonitorPlay } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -211,7 +211,11 @@ export default function PrizesPage() {
                         <Trophy className="text-brand-accent" />
                         Kelola Door Prize
                     </h1>
-                    <div className="flex gap-3">
+                    <div className="flex gap-3 flex-wrap">
+                        <button onClick={() => window.open('/luckydraw/winners', '_blank')} className="flex items-center gap-2 px-4 py-2 bg-brand-primary/20 text-brand-primary border border-brand-primary/50 rounded-lg hover:bg-brand-primary/40 transition-colors font-medium text-sm">
+                            <MonitorPlay size={18} />
+                            Display Pemenang
+                        </button>
                         <button onClick={exportExcel} disabled={prizes.length === 0} className="flex items-center gap-2 px-4 py-2 bg-green-600/20 text-green-400 border border-green-600/50 rounded-lg hover:bg-green-600/40 transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed">
                             <FileDown size={18} />
                             Export Excel
