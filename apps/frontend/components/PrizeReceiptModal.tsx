@@ -162,7 +162,17 @@ export default function PrizeReceiptModal({ isOpen, onClose, winner, prize, logo
                         margin: 10mm;
                     }
                     
-                    /* Hide everything by default */
+                    /* Force the entire document to be strictly 1 page height */
+                    html, body {
+                        height: 140mm !important;
+                        max-height: 140mm !important;
+                        overflow: hidden !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        box-sizing: border-box !important;
+                    }
+
+                    /* Hide everything by default (but it still takes up space, hence the height constraint above) */
                     body * {
                         visibility: hidden;
                     }
@@ -178,7 +188,9 @@ export default function PrizeReceiptModal({ isOpen, onClose, winner, prize, logo
                         left: 0;
                         top: 0;
                         width: 100%;
+                        height: 135mm;
                         max-height: 135mm; /* Exactly half of A4 minus margins to fit top half */
+                        overflow: hidden;  /* Guarantee no content spill over */
                         margin: 0;
                         padding: 5mm;
                         page-break-after: avoid;
@@ -228,10 +240,10 @@ export default function PrizeReceiptModal({ isOpen, onClose, winner, prize, logo
                     }
                     /* Adjust signature gap */
                     .mb-14 {
-                        margin-bottom: 2.5rem !important; 
+                        margin-bottom: 2rem !important; 
                     }
                     .mt-8 {
-                        margin-top: 1rem !important;
+                        margin-top: 0.5rem !important;
                     }
                 }
             `}} />
