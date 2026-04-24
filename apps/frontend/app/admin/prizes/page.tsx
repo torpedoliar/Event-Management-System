@@ -9,6 +9,7 @@ import { Gift, Trash2, Plus, Trophy, Tag, RefreshCw, Edit2, FileDown, X } from '
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import PrizeReceiptModal from '../../../components/PrizeReceiptModal';
 
 const PRIZE_CATEGORIES = [
     { value: 'HIBURAN', label: 'Hadiah Hiburan' },
@@ -42,11 +43,23 @@ export default function PrizesPage() {
     const [editingPrizeId, setEditingPrizeId] = useState<string | null>(null);
     const [editingQty, setEditingQty] = useState(1);
 
+    // Receipt Modal State
+    const [showReceiptModal, setShowReceiptModal] = useState(false);
+    const [selectedReceiptWinner, setSelectedReceiptWinner] = useState<any | null>(null);
+    const [selectedReceiptPrize, setSelectedReceiptPrize] = useState<Prize | null>(null);
+    const [logoUrl, setLogoUrl] = useState<string | null>(null);
+
     const load = async () => {
         setLoading(true);
         try {
             const data = await apiFetch<Prize[]>('/prizes');
             setPrizes(data);
+            
+            try {
+                const cfg = await apiFetch<any>('/settings');
+                setLogoUrl(cfg?.logoUrl || null);
+            } catch(e) { /* ignore settings error */ }
+
         } catch (e: any) {
             setError(parseErrorMessage(e.message));
         } finally {
@@ -342,7 +355,15 @@ export default function PrizesPage() {
                                                 <div className="text-xs font-medium text-brand-textMuted mb-2 uppercase tracking-wider">Pemenang Terpilih</div>
                                                 <div className="flex flex-wrap gap-2">
                                                     {p.winners.map((w: any) => (
-                                                        <div key={w.id} className="group/winner relative flex items-center gap-2 bg-brand-success/10 border border-brand-success/20 rounded-lg px-3 py-1.5 pr-6">
+                                                        <div 
+                                                            key={w.id} 
+                                                            className="group/winner relative flex items-center gap-2 bg-brand-success/10 border border-brand-success/20 rounded-lg px-3 py-1.5 pr-6 cursor-pointer hover:bg-brand-success/20 transition-colors"
+                                                            onClick={() => {
+                                                                setSelectedReceiptWinner(w);
+                                                                setSelectedReceiptPrize(p);
+                                                                setShowReceiptModal(true);
+                                                            }}
+                                                        >
                                                             <div className="w-6 h-6 rounded-full bg-brand-success/20 flex items-center justify-center text-xs font-bold text-brand-success">
                                                                 {w.queueNumber}
                                                             </div>
@@ -351,7 +372,10 @@ export default function PrizesPage() {
                                                                 {w.division && <span className="opacity-70 text-xs ml-1">({w.division})</span>}
                                                             </div>
                                                             <button 
-                                                                onClick={() => removeWinner(p.id, w.id)}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    removeWinner(p.id, w.id);
+                                                                }}
                                                                 className="absolute right-1.5 opacity-0 group-hover/winner:opacity-100 p-0.5 rounded-full text-brand-danger hover:bg-brand-danger/20 transition-all"
                                                                 title="Anulir Pemenang"
                                                             >
@@ -388,6 +412,25 @@ export default function PrizesPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Receipt Modal Overlay */}
+            {showReceiptModal && selectedReceiptWinner && selectedReceiptPrize && (
+                <PrizeReceiptModal
+                    isOpen={showReceiptModal}
+                    onClose={() => {
+                        setShowReceiptModal(false);
+                        setSelectedReceiptWinner(null);
+                        setSelectedReceiptPrize(null);
+                    }}
+                    winner={selectedReceiptWinner}
+                    prize={{
+                        id: selectedReceiptPrize.id,
+                        name: selectedReceiptPrize.name,
+                        category: selectedReceiptPrize.category
+                    }}
+                    logoUrl={logoUrl}
+                />
+            )}
         </RequireAuth>
     );
 }
