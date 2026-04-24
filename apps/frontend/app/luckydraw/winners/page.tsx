@@ -149,18 +149,13 @@ export default function AutoScrollWinnersPage() {
                                         
                                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-6 w-full">
                                             {prize.winners.map((winner, wIdx) => (
-                                                <div key={`${copyIdx}-${prize.id}-${winner.id}-${wIdx}`} className="flex items-center gap-5 bg-black/40 border border-brand-primary/20 rounded-2xl p-5 hover:bg-black/60 hover:border-brand-primary/50 transition-colors shadow-lg">
-                                                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-primary/30 to-brand-primary/10 border border-brand-primary/20 flex items-center justify-center font-black text-2xl text-brand-primary shadow-inner flex-shrink-0">
-                                                        {winner.queueNumber}
+                                                <div key={`${copyIdx}-${prize.id}-${winner.id}-${wIdx}`} className="flex flex-col bg-black/40 border border-brand-primary/20 rounded-2xl p-5 hover:bg-black/60 hover:border-brand-primary/50 transition-colors shadow-lg">
+                                                    <div className="text-brand-primary font-mono font-bold text-lg md:text-xl tracking-wider mb-1">
+                                                        {winner.guestId || winner.queueNumber}
                                                     </div>
-                                                    <div className="flex-1 min-w-0">
-                                                        <div className="font-bold text-xl md:text-2xl text-white truncate">{winner.name}</div>
-                                                        <div className="text-sm md:text-base text-brand-primarySoft font-mono truncate uppercase tracking-wider mt-1">
-                                                            {winner.company || '-'} {winner.division ? `(${winner.division})` : ''}
-                                                        </div>
-                                                        {winner.guestId && (
-                                                            <div className="text-xs text-white/30 font-mono mt-1">ID: {winner.guestId}</div>
-                                                        )}
+                                                    <div className="font-bold text-xl md:text-2xl text-white truncate">{winner.name}</div>
+                                                    <div className="text-sm md:text-base text-brand-primarySoft font-mono truncate uppercase tracking-wider mt-1">
+                                                        {winner.company || '-'} {winner.division ? `(${winner.division})` : ''}
                                                     </div>
                                                 </div>
                                             ))}
