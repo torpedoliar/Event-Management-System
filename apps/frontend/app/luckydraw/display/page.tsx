@@ -695,7 +695,7 @@ export default function LiveDisplayPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {revealedWinners.map(w => (
                                 <div key={w.id} className="flex items-center gap-4 bg-white/5 rounded-xl p-4 border border-white/5 animate-in slide-in-from-bottom duration-500">
-                                    <div className="w-12 h-12 rounded-full bg-brand-primary/20 flex items-center justify-center font-bold text-brand-primary text-sm px-1 overflow-hidden">
+                                    <div className="font-bold text-brand-primary text-sm font-mono shrink-0">
                                         {w.guestId || w.queueNumber}
                                     </div>
                                     <div className="min-w-0 flex-1">
