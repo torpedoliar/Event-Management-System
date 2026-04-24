@@ -533,32 +533,53 @@ export default function SouvenirPage() {
         setCheckedGuest(null);
         setAlreadyTakenInfo(null);
         setPrizeWins([]);
-        const params = new URLSearchParams();
         if (!q.trim()) return;
 
-        params.set('guestId', q.trim());
-        params.set('name', q.trim());
-        // Detect if input looks like a QR code / ID (contains digits, dashes, or is all uppercase)
-        // Pure alphabetic names like "Budi" should still trigger fuzzy search
-        const looksLikeId = /[\d\-]/.test(q.trim()) || /^[A-Z0-9_\-]+$/.test(q.trim());
-        if (looksLikeId) {
-            params.set('exact', 'true');
-        }
+        const searchTerm = q.trim();
+        const looksLikeId = /[\d\-]/.test(searchTerm) || /^[A-Z0-9_\-]+$/.test(searchTerm);
+
         setSearching(true);
         // Cancel any in-flight search to prevent stale results
         if (searchAbortRef.current) searchAbortRef.current.abort();
         const controller = new AbortController();
         searchAbortRef.current = controller;
+
+        const isOffline = connectionStatusService.getStatus() !== 'online';
+
         try {
-            // Use public search to find guest first
-            const res = await fetch(`${apiBase()}/public/guests/search?${params.toString()}`, {
-                signal: controller.signal
-            });
-            if (!res.ok) {
-                const errorText = await res.text();
-                throw new Error(parseErrorMessage(errorText));
+            let data: Guest[] = [];
+
+            if (isOffline) {
+                // ═══ OFFLINE PATH: Search from IndexedDB cache ═══
+                const exactMatch = await indexedDBService.getCachedGuestByGuestId(searchTerm);
+                if (exactMatch) {
+                    data = [exactMatch as any];
+                } else {
+                    // Fuzzy search by name or guestId in local cache
+                    const allCached = await indexedDBService.getAllCachedGuests();
+                    const lower = searchTerm.toLowerCase();
+                    data = allCached.filter((g: any) =>
+                        g.guestId?.toLowerCase() === lower ||
+                        g.name?.toLowerCase().includes(lower)
+                    ).slice(0, 20) as any;
+                }
+            } else {
+                // ═══ ONLINE PATH: Search from server ═══
+                const params = new URLSearchParams();
+                params.set('guestId', searchTerm);
+                params.set('name', searchTerm);
+                if (looksLikeId) params.set('exact', 'true');
+
+                const res = await fetch(`${apiBase()}/public/guests/search?${params.toString()}`, {
+                    signal: controller.signal
+                });
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    throw new Error(parseErrorMessage(errorText));
+                }
+                data = await res.json();
             }
-            const data = await res.json();
+
             setResults(data);
 
             if (data.length > 0) {
@@ -567,34 +588,58 @@ export default function SouvenirPage() {
                     const guest = data[0];
                     setSelected(guest);
 
-                    // Fire prize check and souvenir give in parallel for speed
-                    const prizePromise = loadGuestPrizesAndReturn(guest.id);
-
-                    if (selectedSouvenir) {
-                        // Check prizes while preparing to give souvenir
-                        const prizeData = await prizePromise;
-                        const hasUncollectedPrizes = prizeData && prizeData.some((pw: any) => !pw.collection);
-
-                        if (!hasUncollectedPrizes) {
+                    if (isOffline) {
+                        // Offline: skip prize check (no server), just give souvenir
+                        if (selectedSouvenir) {
                             await giveSouvenir(guest, selectedSouvenir);
                             setQ('');
                             setTimeout(() => inputRef.current?.focus(), 100);
-                        } else {
-                            setError('Tamu ini memiliki hadiah yang belum diambil. Silakan ambil hadiah terlebih dahulu.');
+                        }
+                    } else {
+                        // Online: check prizes first, then give souvenir
+                        const prizePromise = loadGuestPrizesAndReturn(guest.id);
+
+                        if (selectedSouvenir) {
+                            const prizeData = await prizePromise;
+                            const hasUncollectedPrizes = prizeData && prizeData.some((pw: any) => !pw.collection);
+
+                            if (!hasUncollectedPrizes) {
+                                await giveSouvenir(guest, selectedSouvenir);
+                                setQ('');
+                                setTimeout(() => inputRef.current?.focus(), 100);
+                            } else {
+                                setError('Tamu ini memiliki hadiah yang belum diambil. Silakan ambil hadiah terlebih dahulu.');
+                            }
                         }
                     }
                 }
                 // If multiple results, let user choose manually
             } else {
                 // Guest not found - offer to create if setting is enabled
-                if (autoCreateGuest) {
-                    await createAndGiveSouvenir(q.trim());
+                if (!isOffline && autoCreateGuest) {
+                    await createAndGiveSouvenir(searchTerm);
                 } else {
-                    setError('Tamu tidak ditemukan');
+                    setError(isOffline ? 'Tamu tidak ditemukan di cache offline' : 'Tamu tidak ditemukan');
                     setQ('');
                 }
             }
         } catch (e: any) {
+            // Network failure fallback: try offline search
+            if (!isOffline && e.name !== 'AbortError') {
+                try {
+                    const exactMatch = await indexedDBService.getCachedGuestByGuestId(searchTerm);
+                    if (exactMatch) {
+                        const guest = exactMatch as any;
+                        setResults([guest]);
+                        setSelected(guest);
+                        if (selectedSouvenir) {
+                            await giveSouvenir(guest, selectedSouvenir);
+                            setQ('');
+                        }
+                        return;
+                    }
+                } catch (_) { /* IndexedDB also failed, show original error */ }
+            }
             setError(e.message || 'Gagal mencari tamu');
         } finally {
             setSearching(false);
