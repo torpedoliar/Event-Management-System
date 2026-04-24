@@ -901,7 +901,7 @@ export default function SouvenirPage() {
             <div className="relative z-10 p-6 flex flex-col items-center">
                 <div className="w-full max-w-3xl rounded-2xl border border-brand-primary/20 bg-brand-secondary/75 px-4 py-5 shadow-glass">
                     {/* Souvenir Selector Dropdown */}
-                    {souvenirs.length > 0 && (
+                    {souvenirs.length > 0 && souvenirs.some(s => s.remaining > 0) && (
                         <div className="mb-4">
                             <label className="text-sm text-white/70 mb-2 block flex items-center gap-2">
                                 <Package size={16} className="text-brand-primary" />
@@ -929,6 +929,13 @@ export default function SouvenirPage() {
                         </div>
                     )}
 
+                    {souvenirs.length > 0 && !souvenirs.some(s => s.remaining > 0) && (
+                        <div className="mb-4 flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-red-300">
+                            <AlertTriangle size={20} className="text-red-400 flex-shrink-0" />
+                            <span className="text-sm">Semua stok souvenir sudah habis. Tidak dapat memberikan souvenir.</span>
+                        </div>
+                    )}
+
                     <input
                         ref={inputRef}
                         value={q}
@@ -936,10 +943,7 @@ export default function SouvenirPage() {
                         onKeyDown={(e) => { 
                             if (e.key === 'Enter') { 
                                 e.preventDefault(); 
-                                if (!q.trim()) return;
-                                rapidQueueRef.current.push(q.trim());
-                                setQ(''); 
-                                processRapidQueue(); 
+                                doSearch();
                             } 
                         }}
                         placeholder="Masukkan Guest ID atau Nama..."
@@ -1162,6 +1166,7 @@ export default function SouvenirPage() {
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2">
+                                        {souvenirs.some(s => s.remaining > 0) && (
                                         <button
                                             className={`flex items-center gap-2 rounded-full px-4 py-2 font-medium text-white shadow-soft disabled:opacity-50 transition-colors ${g.souvenirTaken
                                                 ? 'bg-green-600 hover:bg-green-700'
@@ -1181,6 +1186,10 @@ export default function SouvenirPage() {
                                                 ? 'Memproses...'
                                                 : (g.souvenirTaken ? 'Sudah Diambil' : 'Ambil Souvenir')}
                                         </button>
+                                        )}
+                                        {!souvenirs.some(s => s.remaining > 0) && g.souvenirTaken && (
+                                            <span className="flex items-center gap-1 text-green-400 text-sm"><CheckCircle size={14} /> Sudah Diambil</span>
+                                        )}
                                     </div>
                                 </div>
                             ))}
