@@ -158,7 +158,7 @@ export default function PrizeReceiptModal({ isOpen, onClose, winner, prize, logo
             <style dangerouslySetInnerHTML={{__html: `
                 @media print {
                     @page {
-                        size: 5.5in 8.5in;
+                        size: 8.5in 5.5in landscape;
                         margin: 10mm;
                     }
                     
@@ -208,15 +208,29 @@ export default function PrizeReceiptModal({ isOpen, onClose, winner, prize, logo
                         color-adjust: exact !important;
                     }
 
-                    /* Compact font sizes for half-letter */
+                    /* Compact font sizes for half-letter landscape */
                     #prize-receipt-print-area h1 {
                         font-size: 16pt !important;
+                        margin-bottom: 2px !important;
                     }
                     #prize-receipt-print-area table {
-                        font-size: 9pt !important;
+                        font-size: 10pt !important;
+                    }
+                    #prize-receipt-print-area table th, 
+                    #prize-receipt-print-area table td {
+                        padding-top: 3px !important;
+                        padding-bottom: 3px !important;
                     }
                     #prize-receipt-print-area p {
-                        font-size: 8pt !important;
+                        font-size: 9pt !important;
+                        margin: 4px 0 !important;
+                    }
+                    /* Adjust signature gap for landscape */
+                    .mb-14 {
+                        margin-bottom: 2.5rem !important; /* Smaller gap so it doesn't push to next page */
+                    }
+                    .mt-8 {
+                        margin-top: 1rem !important;
                     }
                 }
             `}} />
