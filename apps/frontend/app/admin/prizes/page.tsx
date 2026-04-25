@@ -5,7 +5,7 @@ import { apiFetch, apiBase, parseErrorMessage } from '../../../lib/api';
 import Card from '../../../components/ui/Card';
 import Input from '../../../components/ui/Input';
 import Button from '../../../components/ui/Button';
-import { Gift, Trash2, Plus, Trophy, Tag, RefreshCw, Edit2, FileDown, X, Monitor, MonitorPlay } from 'lucide-react';
+import { Gift, Trash2, Plus, Trophy, Tag, RefreshCw, Edit2, FileDown, X, Monitor, MonitorPlay, Printer } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -46,6 +46,7 @@ export default function PrizesPage() {
     // Receipt Modal State
     const [showReceiptModal, setShowReceiptModal] = useState(false);
     const [selectedReceiptWinner, setSelectedReceiptWinner] = useState<any | null>(null);
+    const [selectedReceiptWinners, setSelectedReceiptWinners] = useState<any[] | null>(null);
     const [selectedReceiptPrize, setSelectedReceiptPrize] = useState<Prize | null>(null);
     const [logoUrl, setLogoUrl] = useState<string | null>(null);
 
@@ -356,7 +357,20 @@ export default function PrizesPage() {
                                         {/* Winners List */}
                                         {p.winners.length > 0 && (
                                             <div className="mt-3 pt-3 border-t border-white/10">
-                                                <div className="text-xs font-medium text-brand-textMuted mb-2 uppercase tracking-wider">Pemenang Terpilih</div>
+                                                <div className="flex items-center justify-between mb-2">
+                                                    <div className="text-xs font-medium text-brand-textMuted uppercase tracking-wider">Pemenang Terpilih ({p.winners.length})</div>
+                                                    <button 
+                                                        onClick={() => {
+                                                            setSelectedReceiptWinners(p.winners);
+                                                            setSelectedReceiptWinner(null);
+                                                            setSelectedReceiptPrize(p);
+                                                            setShowReceiptModal(true);
+                                                        }}
+                                                        className="text-xs flex items-center gap-1 bg-brand-primary/20 hover:bg-brand-primary/40 text-brand-primary px-2 py-1 rounded transition-colors"
+                                                    >
+                                                        <Printer size={12} /> Cetak Semua
+                                                    </button>
+                                                </div>
                                                 <div className="flex flex-wrap gap-2">
                                                     {p.winners.map((w: any) => (
                                                         <div 
@@ -418,15 +432,18 @@ export default function PrizesPage() {
             </div>
 
             {/* Receipt Modal Overlay */}
-            {showReceiptModal && selectedReceiptWinner && selectedReceiptPrize && (
+            {/* Receipt Modal Overlay */}
+            {showReceiptModal && (selectedReceiptWinner || selectedReceiptWinners) && selectedReceiptPrize && (
                 <PrizeReceiptModal
                     isOpen={showReceiptModal}
                     onClose={() => {
                         setShowReceiptModal(false);
                         setSelectedReceiptWinner(null);
+                        setSelectedReceiptWinners(null);
                         setSelectedReceiptPrize(null);
                     }}
                     winner={selectedReceiptWinner}
+                    winners={selectedReceiptWinners || undefined}
                     prize={{
                         id: selectedReceiptPrize.id,
                         name: selectedReceiptPrize.name,

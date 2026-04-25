@@ -23,45 +23,37 @@ export interface Prize {
 interface PrizeReceiptModalProps {
     isOpen: boolean;
     onClose: () => void;
-    winner: Winner | null;
+    winner?: Winner | null;
+    winners?: Winner[];
     prize: Prize | null;
     logoUrl?: string | null;
 }
 
-export default function PrizeReceiptModal({ isOpen, onClose, winner, prize, logoUrl }: PrizeReceiptModalProps) {
-    if (!isOpen || !winner || !prize) return null;
+export default function PrizeReceiptModal({ isOpen, onClose, winner, winners, prize, logoUrl }: PrizeReceiptModalProps) {
+    if (!isOpen || (!winner && (!winners || winners.length === 0)) || !prize) return null;
+
+    const allWinners = winners && winners.length > 0 ? winners : (winner ? [winner] : []);
 
     const handlePrint = () => {
         window.print();
     };
 
-    // Format local time using a consistent layout
-    const formattedTime = winner.wonAt 
-        ? new Date(winner.wonAt).toLocaleString('id-ID', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
+    const getFormattedTime = (wonAt?: string) => wonAt 
+        ? new Date(wonAt).toLocaleString('id-ID', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
           })
         : new Date().toLocaleString('id-ID', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
           });
 
     return (
         <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-300 print:bg-transparent print:p-0">
             {/* Modal Container */}
-            <div className="relative bg-white text-black border border-gray-300 rounded-xl w-full max-w-[500px] max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col print:border-none print:shadow-none print:max-w-none print:max-h-none print:rounded-none print:overflow-hidden print:block print:m-0">
+            <div className="relative bg-white text-black border border-gray-300 rounded-xl w-full max-w-[500px] max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col print:border-none print:shadow-none print:max-w-none print:max-h-none print:rounded-none print:overflow-visible print:block print:m-0 print:bg-transparent">
                 
                 {/* Print Control Header (Hidden on print) */}
-                <div className="p-3 border-b border-gray-200 flex justify-between items-center bg-gray-50 rounded-t-xl print:hidden sticky top-0 z-10">
-                    <h2 className="text-base font-bold text-gray-800 font-mono">Form Print Preview</h2>
+                <div className="p-3 border-b border-gray-200 flex justify-between items-center bg-gray-50 rounded-t-xl print:hidden sticky top-0 z-10 shadow-sm">
+                    <h2 className="text-base font-bold text-gray-800 font-mono">Form Print Preview ({allWinners.length} Pemenang)</h2>
                     <div className="flex gap-3">
                         <button
                             onClick={handlePrint}
@@ -79,82 +71,86 @@ export default function PrizeReceiptModal({ isOpen, onClose, winner, prize, logo
                     </div>
                 </div>
 
-                {/* Printable Content Area — designed for half-letter (5.5" x 8.5") */}
-                <div id="prize-receipt-print-area" className="px-6 py-5 print:px-0 print:py-0 flex-1 bg-white">
-                    {/* Header: Logo and Title */}
-                    <div className="flex flex-col items-center border-b-2 border-black pb-3 mb-4">
-                        {logoUrl && (
-                            <img src={toApiUrl(logoUrl)} className="h-12 mb-2 object-contain" alt="Event Logo" />
-                        )}
-                        <h1 className="text-xl font-black uppercase tracking-wider text-center leading-tight">Tanda Serah Terima Hadiah</h1>
-                        <p className="text-[10px] uppercase tracking-widest text-gray-500 mt-1">Undian Lucky Draw</p>
-                    </div>
+                {/* Printable Content Area */}
+                <div id="prize-receipt-print-area" className="flex-1 bg-white print:bg-transparent">
+                    {allWinners.map((w, idx) => (
+                        <div key={w.id} className="receipt-page px-6 py-5 print:px-0 print:py-0 border-b-8 border-gray-100 print:border-none">
+                            {/* Header: Logo and Title */}
+                            <div className="flex flex-col items-center border-b-2 border-black pb-3 mb-4">
+                                {logoUrl && (
+                                    <img src={toApiUrl(logoUrl)} className="h-12 mb-2 object-contain" alt="Event Logo" />
+                                )}
+                                <h1 className="text-xl font-black uppercase tracking-wider text-center leading-tight">Tanda Serah Terima Hadiah</h1>
+                                <p className="text-[10px] uppercase tracking-widest text-gray-500 mt-1">Undian Lucky Draw</p>
+                            </div>
 
-                    {/* Content Body */}
-                    <div className="text-sm space-y-3">
-                        <p className="leading-relaxed text-xs">
-                            Berdasarkan hasil undian yang telah dilaksanakan, dengan ini menyatakan bahwa hadiah telah diserahkan kepada pihak yang tercantum di bawah ini:
-                        </p>
+                            {/* Content Body */}
+                            <div className="text-sm space-y-3">
+                                <p className="leading-relaxed text-xs">
+                                    Berdasarkan hasil undian yang telah dilaksanakan, dengan ini menyatakan bahwa hadiah telah diserahkan kepada pihak yang tercantum di bawah ini:
+                                </p>
 
-                        <div className="bg-gray-50 p-3 rounded border border-gray-200 print:bg-transparent print:border-black">
-                            <table className="w-full text-left text-xs">
-                                <tbody>
-                                    <tr className="border-b border-gray-200 print:border-gray-400">
-                                        <th className="py-2 font-bold w-[38%] align-top">Nama Pemenang</th>
-                                        <td className="py-2 w-3 align-top">:</td>
-                                        <td className="py-2 font-bold text-sm uppercase">{winner.name}</td>
-                                    </tr>
-                                    <tr className="border-b border-gray-200 print:border-gray-400">
-                                        <th className="py-2 font-bold align-top">ID / No. Pendaftaran</th>
-                                        <td className="py-2 align-top">:</td>
-                                        <td className="py-2 font-mono">{winner.guestId || '-'}</td>
-                                    </tr>
-                                    <tr className="border-b border-gray-200 print:border-gray-400">
-                                        <th className="py-2 font-bold align-top">Dept / Perusahaan</th>
-                                        <td className="py-2 align-top">:</td>
-                                        <td className="py-2">{winner.company || '-'}</td>
-                                    </tr>
-                                    <tr className="border-b border-gray-200 print:border-gray-400">
-                                        <th className="py-2 font-bold align-top">Divisi</th>
-                                        <td className="py-2 align-top">:</td>
-                                        <td className="py-2">{winner.division || '-'}</td>
-                                    </tr>
-                                    <tr className="border-b border-gray-200 print:border-gray-400">
-                                        <th className="py-2 font-bold align-top">Hadiah yang Didapat</th>
-                                        <td className="py-2 align-top">:</td>
-                                        <td className="py-2 font-black text-sm">{prize.name}</td>
-                                    </tr>
-                                    <tr>
-                                        <th className="py-2 font-bold align-top">Waktu Memenangkan</th>
-                                        <td className="py-2 align-top">:</td>
-                                        <td className="py-2">{formattedTime}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                <div className="bg-gray-50 p-3 rounded border border-gray-200 print:bg-transparent print:border-black">
+                                    <table className="w-full text-left text-xs">
+                                        <tbody>
+                                            <tr className="border-b border-gray-200 print:border-gray-400">
+                                                <th className="py-2 font-bold w-[38%] align-top">Nama Pemenang</th>
+                                                <td className="py-2 w-3 align-top">:</td>
+                                                <td className="py-2 font-bold text-sm uppercase">{w.name}</td>
+                                            </tr>
+                                            <tr className="border-b border-gray-200 print:border-gray-400">
+                                                <th className="py-2 font-bold align-top">ID / No. Pendaftaran</th>
+                                                <td className="py-2 align-top">:</td>
+                                                <td className="py-2 font-mono">{w.guestId || '-'}</td>
+                                            </tr>
+                                            <tr className="border-b border-gray-200 print:border-gray-400">
+                                                <th className="py-2 font-bold align-top">Dept / Perusahaan</th>
+                                                <td className="py-2 align-top">:</td>
+                                                <td className="py-2">{w.company || '-'}</td>
+                                            </tr>
+                                            <tr className="border-b border-gray-200 print:border-gray-400">
+                                                <th className="py-2 font-bold align-top">Divisi</th>
+                                                <td className="py-2 align-top">:</td>
+                                                <td className="py-2">{w.division || '-'}</td>
+                                            </tr>
+                                            <tr className="border-b border-gray-200 print:border-gray-400">
+                                                <th className="py-2 font-bold align-top">Hadiah yang Didapat</th>
+                                                <td className="py-2 align-top">:</td>
+                                                <td className="py-2 font-black text-sm">{prize.name}</td>
+                                            </tr>
+                                            <tr>
+                                                <th className="py-2 font-bold align-top">Waktu Memenangkan</th>
+                                                <td className="py-2 align-top">:</td>
+                                                <td className="py-2">{getFormattedTime(w.wonAt)}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <p className="leading-relaxed text-xs">
+                                    Demikian tanda serah terima ini dibuat dengan sebenarnya untuk dapat dipergunakan sebagaimana mestinya.
+                                </p>
+                            </div>
+
+                            {/* Signature Area */}
+                            <div className="mt-8 flex justify-between px-4 pb-2">
+                                <div className="text-center w-44">
+                                    <p className="mb-14 font-bold text-xs">Diserahkan Oleh,</p>
+                                    <div className="border-b border-black w-full mb-1"></div>
+                                    <p className="text-[10px] text-gray-600">Panitia Penyelenggara</p>
+                                </div>
+                                <div className="text-center w-44">
+                                    <p className="mb-14 font-bold text-xs">Diterima Oleh,</p>
+                                    <div className="border-b border-black w-full mb-1"></div>
+                                    <p className="text-[10px] font-bold uppercase">{w.name}</p>
+                                </div>
+                            </div>
                         </div>
-
-                        <p className="leading-relaxed text-xs">
-                            Demikian tanda serah terima ini dibuat dengan sebenarnya untuk dapat dipergunakan sebagaimana mestinya.
-                        </p>
-                    </div>
-
-                    {/* Signature Area */}
-                    <div className="mt-8 flex justify-between px-4">
-                        <div className="text-center w-44">
-                            <p className="mb-14 font-bold text-xs">Diserahkan Oleh,</p>
-                            <div className="border-b border-black w-full mb-1"></div>
-                            <p className="text-[10px] text-gray-600">Panitia Penyelenggara</p>
-                        </div>
-                        <div className="text-center w-44">
-                            <p className="mb-14 font-bold text-xs">Diterima Oleh,</p>
-                            <div className="border-b border-black w-full mb-1"></div>
-                            <p className="text-[10px] font-bold uppercase">{winner.name}</p>
-                        </div>
-                    </div>
+                    ))}
                 </div>
             </div>
 
-            {/* Global Print Styles — Top Half of A4 Portrait */}
+            {/* Global Print Styles */}
             <style dangerouslySetInnerHTML={{__html: `
                 @media print {
                     @page {
@@ -162,17 +158,17 @@ export default function PrizeReceiptModal({ isOpen, onClose, winner, prize, logo
                         margin: 10mm;
                     }
                     
-                    /* Force the entire document to be strictly 1 page height */
+                    /* Clean up the body to prevent dark backgrounds from bleeding in */
                     html, body {
-                        height: 140mm !important;
-                        max-height: 140mm !important;
-                        overflow: hidden !important;
+                        background: white !important;
+                        color: black !important;
                         margin: 0 !important;
                         padding: 0 !important;
-                        box-sizing: border-box !important;
+                        height: auto !important;
+                        overflow: visible !important;
                     }
 
-                    /* Hide everything by default (but it still takes up space, hence the height constraint above) */
+                    /* Hide everything by default to prevent other UI elements from taking up space */
                     body * {
                         visibility: hidden;
                     }
@@ -188,14 +184,21 @@ export default function PrizeReceiptModal({ isOpen, onClose, winner, prize, logo
                         left: 0;
                         top: 0;
                         width: 100%;
-                        height: 135mm;
-                        max-height: 135mm; /* Exactly half of A4 minus margins to fit top half */
-                        overflow: hidden;  /* Guarantee no content spill over */
                         margin: 0;
+                        padding: 0;
+                        display: block !important;
+                    }
+
+                    /* Each receipt takes up exactly 140mm (half A4 minus some margin) so two fit perfectly per page */
+                    .receipt-page {
+                        height: 140mm;
+                        max-height: 140mm;
+                        width: 100%;
                         padding: 5mm;
-                        page-break-after: avoid;
-                        page-break-before: avoid;
-                        break-inside: avoid;
+                        box-sizing: border-box;
+                        page-break-inside: avoid;
+                        overflow: hidden;
+                        margin-bottom: 0;
                     }
                     
                     /* Adjust the modal container for printing */
@@ -207,6 +210,7 @@ export default function PrizeReceiptModal({ isOpen, onClose, winner, prize, logo
                         max-width: none !important;
                         max-height: none !important;
                         overflow: visible !important;
+                        background: transparent !important;
                     }
 
                     /* Hide the print control header */

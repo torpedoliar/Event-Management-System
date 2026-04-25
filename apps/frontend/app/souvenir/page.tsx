@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import { apiBase, toApiUrl, apiFetch, parseErrorMessage } from "../../lib/api";
 import { Html5Qrcode } from "html5-qrcode";
-import { Search, QrCode, Loader2, CheckCircle, Clock, Users, X, Gift, XCircle, Trophy, Package, ChevronDown, ChevronUp, UserPlus, Settings, Radio, UserCheck, AlertTriangle } from 'lucide-react';
+import { Search, QrCode, Loader2, CheckCircle, Clock, Users, X, Gift, XCircle, Trophy, Package, ChevronDown, ChevronUp, UserPlus, Settings, Radio, UserCheck, AlertTriangle, Printer } from 'lucide-react';
 import { useSSE } from "../../lib/sse-context";
 import { indexedDBService, LocalGuest } from "../../lib/indexeddb";
 import { offlineSyncService } from "../../lib/offline-sync.service";
@@ -10,6 +10,7 @@ import { connectionStatusService } from "../../lib/connection-status";
 import ConnectionStatusIndicator from "../../components/ConnectionStatusIndicator";
 import QueueManagementPanel from "../../components/QueueManagementPanel";
 import StationSetupModal from "../../components/StationSetupModal";
+import PrizeReceiptModal from "../../components/PrizeReceiptModal";
 
 type EventConfig = {
     id: string;
@@ -90,6 +91,10 @@ export default function SouvenirPage() {
     const [loadingPrizes, setLoadingPrizes] = useState(false);
     const [collectingPrize, setCollectingPrize] = useState<string | null>(null);
     const [showPrizes, setShowPrizes] = useState(true);
+
+    // Receipt Modal State
+    const [showReceiptModal, setShowReceiptModal] = useState(false);
+    const [selectedReceiptPrizeWin, setSelectedReceiptPrizeWin] = useState<PrizeWin | null>(null);
 
     // Souvenir inventory states
     const [souvenirs, setSouvenirs] = useState<Souvenir[]>([]);
@@ -1280,18 +1285,27 @@ export default function SouvenirPage() {
                                                         {pw.prize.description && ` • ${pw.prize.description}`}
                                                     </div>
                                                 </div>
-                                                <button
-                                                    onClick={() => collectPrize(pw.id)}
-                                                    disabled={collectingPrize === pw.id}
-                                                    className="flex items-center gap-2 rounded-lg bg-brand-warning px-4 py-2 font-medium text-white hover:opacity-90 disabled:opacity-50 transition-colors"
-                                                >
-                                                    {collectingPrize === pw.id ? (
-                                                        <Loader2 className="animate-spin" size={16} />
-                                                    ) : (
-                                                        <CheckCircle size={16} />
-                                                    )}
-                                                    {collectingPrize === pw.id ? 'Memproses...' : 'Ambil Hadiah Ini'}
-                                                </button>
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        onClick={() => { setSelectedReceiptPrizeWin(pw); setShowReceiptModal(true); }}
+                                                        className="flex items-center gap-2 rounded-lg bg-blue-500/20 text-blue-400 border border-blue-500/30 px-3 py-2 font-medium hover:bg-blue-500/30 transition-colors"
+                                                        title="Print Tanda Terima"
+                                                    >
+                                                        <Printer size={16} />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => collectPrize(pw.id)}
+                                                        disabled={collectingPrize === pw.id}
+                                                        className="flex items-center gap-2 rounded-lg bg-brand-warning px-4 py-2 font-medium text-white hover:opacity-90 disabled:opacity-50 transition-colors"
+                                                    >
+                                                        {collectingPrize === pw.id ? (
+                                                            <Loader2 className="animate-spin" size={16} />
+                                                        ) : (
+                                                            <CheckCircle size={16} />
+                                                        )}
+                                                        {collectingPrize === pw.id ? 'Memproses...' : 'Ambil Hadiah Ini'}
+                                                    </button>
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
@@ -1304,7 +1318,7 @@ export default function SouvenirPage() {
                                             Sudah Diambil:
                                         </div>
                                         {collectedPrizes.map((pw) => (
-                                            <div key={pw.id} className="flex items-center justify-between rounded-lg border border-green-500/30 bg-green-500/10 p-3 opacity-75">
+                                            <div key={pw.id} className="flex items-center justify-between rounded-lg border border-green-500/30 bg-green-500/10 p-3 opacity-75 hover:opacity-100 transition-opacity">
                                                 <div>
                                                     <div className="font-semibold text-white flex items-center gap-2">
                                                         <CheckCircle size={16} className="text-green-400" />
@@ -1315,9 +1329,18 @@ export default function SouvenirPage() {
                                                         {pw.collection!.collectedByName && ` oleh ${pw.collection!.collectedByName}`}
                                                     </div>
                                                 </div>
-                                                <span className="px-3 py-1 rounded-full bg-green-600/30 text-green-300 text-sm font-medium">
-                                                    Sudah Diambil
-                                                </span>
+                                                <div className="flex items-center gap-3">
+                                                    <button
+                                                        onClick={() => { setSelectedReceiptPrizeWin(pw); setShowReceiptModal(true); }}
+                                                        className="flex items-center gap-2 rounded-lg bg-blue-500/20 text-blue-400 border border-blue-500/30 px-3 py-1 font-medium hover:bg-blue-500/30 transition-colors"
+                                                        title="Print Tanda Terima"
+                                                    >
+                                                        <Printer size={14} /> Cetak
+                                                    </button>
+                                                    <span className="px-3 py-1 rounded-full bg-green-600/30 text-green-300 text-sm font-medium">
+                                                        Sudah Diambil
+                                                    </span>
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
@@ -1618,6 +1641,32 @@ export default function SouvenirPage() {
                 isOpen={showQueuePanel} 
                 onClose={() => setShowQueuePanel(false)} 
             />
+
+            {/* Receipt Modal Overlay */}
+            {showReceiptModal && selectedReceiptPrizeWin && selected && (
+                <PrizeReceiptModal
+                    isOpen={showReceiptModal}
+                    onClose={() => {
+                        setShowReceiptModal(false);
+                        setSelectedReceiptPrizeWin(null);
+                    }}
+                    winner={{
+                        id: selected.id,
+                        guestId: selected.guestId,
+                        name: selected.name,
+                        company: selected.company || undefined,
+                        division: selected.division || undefined,
+                        queueNumber: selected.queueNumber,
+                        wonAt: selectedReceiptPrizeWin.wonAt
+                    }}
+                    prize={{
+                        id: selectedReceiptPrizeWin.prize.id,
+                        name: selectedReceiptPrizeWin.prize.name,
+                        category: selectedReceiptPrizeWin.prize.category
+                    }}
+                    logoUrl={stationConfig?.logoUrl} // Try to pass logoUrl if available in station settings
+                />
+            )}
         </div >
     );
 }
