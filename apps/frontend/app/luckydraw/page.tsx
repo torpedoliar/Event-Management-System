@@ -856,12 +856,12 @@ export default function LuckyDrawPage() {
                         <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] bg-brand-accent/20 rounded-full blur-[120px] animate-pulse" />
                     </div>
 
-                    <div className="relative bg-brand-secondary/40 border border-brand-primary/30 rounded-[3rem] w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col shadow-[0_0_100px_rgba(212,168,83,0.2)] animate-in zoom-in duration-500">
-                        <div className="p-8 md:p-12 text-center border-b border-white/10">
-                            <h2 className="text-4xl md:text-6xl font-heading font-black text-transparent bg-clip-text bg-gradient-to-b from-brand-primarySoft via-brand-primary to-brand-accent drop-shadow-2xl tracking-tighter uppercase mb-2">
+                    <div className="relative bg-brand-secondary/40 border border-brand-primary/30 rounded-[3rem] w-full max-w-[95vw] max-h-[95vh] overflow-hidden flex flex-col shadow-[0_0_100px_rgba(212,168,83,0.2)] animate-in zoom-in duration-500">
+                        <div className="p-6 md:p-8 text-center border-b border-white/10 shrink-0">
+                            <h2 className="text-4xl md:text-6xl lg:text-[5vw] font-heading font-black text-transparent bg-clip-text bg-gradient-to-b from-brand-primarySoft via-brand-primary to-brand-accent drop-shadow-2xl tracking-tighter uppercase mb-2">
                                 CONGRATULATIONS!
                             </h2>
-                            <p className="text-xl md:text-2xl text-white/60 font-mono tracking-[0.3em] uppercase">
+                            <p className="text-xl md:text-2xl lg:text-[1.5vw] text-white/60 font-mono tracking-[0.3em] uppercase">
                                 {isRevealing
                                     ? `${multiWinners.length} / ${totalExpectedWinners} PEMENANG ${selectedPrize?.name}`
                                     : `${multiWinners.length} PEMENANG ${selectedPrize?.name}`
@@ -869,16 +869,16 @@ export default function LuckyDrawPage() {
                             </p>
                         </div>
 
-                        <div className="p-8 md:p-12 overflow-y-auto flex-1 custom-scrollbar">
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="p-4 md:p-8 overflow-y-auto flex-1 custom-scrollbar">
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 auto-rows-fr">
                                 {multiWinners.map((w, idx) => (
                                     <div 
                                         key={w.id} 
-                                        className="group bg-white/5 border border-white/10 rounded-3xl p-5 flex flex-col transition-all duration-500 hover:bg-white/10 hover:border-brand-primary/50 hover:scale-[1.02] animate-in slide-in-from-bottom duration-500"
+                                        className="group bg-white/5 border border-white/10 rounded-3xl p-4 md:p-6 lg:p-8 flex flex-col justify-center text-center transition-all duration-500 hover:bg-white/10 hover:border-brand-primary/50 hover:scale-[1.02] animate-in slide-in-from-bottom duration-500"
                                     >
-                                        <div className="text-brand-primary font-mono font-bold text-lg tracking-wider mb-1">{w.guestId || w.queueNumber}</div>
-                                        <div className="font-bold text-lg text-white group-hover:text-brand-primarySoft transition-colors leading-tight">{w.name}</div>
-                                        <div className="text-sm text-white/40 group-hover:text-white/60 transition-colors uppercase tracking-wider font-mono mt-1">
+                                        <div className="text-brand-primary font-mono font-bold text-[clamp(1.2rem,1.5vw,2.5rem)] tracking-wider mb-2">{w.guestId || w.queueNumber}</div>
+                                        <div className="font-bold text-[clamp(1.5rem,2.5vw,4rem)] text-white group-hover:text-brand-primarySoft transition-colors leading-tight line-clamp-3">{w.name}</div>
+                                        <div className="text-[clamp(1rem,1.2vw,2rem)] text-white/50 group-hover:text-white/70 transition-colors uppercase tracking-wider font-mono mt-3">
                                             {w.company || '-'}
                                         </div>
                                     </div>
