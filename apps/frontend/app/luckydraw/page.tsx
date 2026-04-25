@@ -639,6 +639,14 @@ export default function LuckyDrawPage() {
         }
     };
 
+    const [isFullscreen, setIsFullscreen] = useState(false);
+
+    useEffect(() => {
+        if (isFullscreen) document.body.classList.add('hide-top-nav');
+        else document.body.classList.remove('hide-top-nav');
+        return () => document.body.classList.remove('hide-top-nav');
+    }, [isFullscreen]);
+
     const selectedPrize = prizes.find(p => p.id === selectedPrizeId);
     const isSoldOut = selectedPrize ? selectedPrize.winners.length >= selectedPrize.quantity : false;
 
@@ -671,8 +679,19 @@ export default function LuckyDrawPage() {
             <audio ref={audioWinRef} src={toApiUrl(eventCfg?.winSoundUrl || "/sounds/win.mp3")} preload="auto" />
             <audio ref={audioGrandWinRef} src={toApiUrl(eventCfg?.grandWinSoundUrl || "/sounds/grand-win.mp3")} preload="auto" />
 
-            {/* Sound Toggle Floating Button */}
+            {/* Controls Floating Buttons */}
             <div className="fixed top-6 right-6 z-[70] flex flex-col gap-2">
+                <button
+                    onClick={() => setIsFullscreen(!isFullscreen)}
+                    title={isFullscreen ? "Show Navigation" : "Hide Navigation (Fullscreen)"}
+                    className={`p-4 rounded-full backdrop-blur-xl border transition-all shadow-2xl ${
+                        isFullscreen 
+                        ? 'bg-brand-primary/20 border-brand-primary text-brand-primarySoft' 
+                        : 'bg-black/40 border-white/10 text-white/50 hover:bg-white/10 hover:text-white'
+                    }`}
+                >
+                    <Monitor size={24} />
+                </button>
                 <button
                     onClick={toggleSound}
                     className={`p-4 rounded-full backdrop-blur-xl border transition-all shadow-2xl ${
@@ -869,20 +888,50 @@ export default function LuckyDrawPage() {
                             </p>
                         </div>
 
-                        <div className="p-4 md:p-8 overflow-y-auto flex-1 custom-scrollbar">
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 auto-rows-fr">
-                                {multiWinners.map((w, idx) => (
-                                    <div 
-                                        key={w.id} 
-                                        className="group bg-white/5 border border-white/10 rounded-3xl p-4 md:p-6 lg:p-8 flex flex-col justify-center text-center transition-all duration-500 hover:bg-white/10 hover:border-brand-primary/50 hover:scale-[1.02] animate-in slide-in-from-bottom duration-500"
-                                    >
-                                        <div className="text-brand-primary font-mono font-bold text-[clamp(1.2rem,1.5vw,2.5rem)] tracking-wider mb-2">{w.guestId || w.queueNumber}</div>
-                                        <div className="font-bold text-[clamp(1.5rem,2.5vw,4rem)] text-white group-hover:text-brand-primarySoft transition-colors leading-tight line-clamp-3">{w.name}</div>
-                                        <div className="text-[clamp(1rem,1.2vw,2rem)] text-white/50 group-hover:text-white/70 transition-colors uppercase tracking-wider font-mono mt-3">
-                                            {w.company || '-'}
+                        <div className={`p-4 md:p-8 flex-1 custom-scrollbar relative ${multiWinners.length > 15 && !isRevealing ? 'overflow-y-hidden mask-fade-y' : 'overflow-y-auto'}`}>
+                            <style dangerouslySetInnerHTML={{__html: `
+                                @keyframes modalAutoScroll {
+                                    0% { transform: translateY(0); }
+                                    100% { transform: translateY(-50%); }
+                                }
+                            `}} />
+                            
+                            <div 
+                                className={`flex flex-col gap-4 md:gap-6 ${multiWinners.length > 15 && !isRevealing ? 'absolute w-[calc(100%-2rem)] md:w-[calc(100%-4rem)]' : 'w-full'}`}
+                                style={multiWinners.length > 15 && !isRevealing ? { animation: 'modalAutoScroll 40s linear infinite' } : {}}
+                            >
+                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 auto-rows-fr">
+                                    {multiWinners.map((w, idx) => (
+                                        <div 
+                                            key={w.id} 
+                                            className="group bg-white/5 border border-white/10 rounded-3xl p-4 md:p-6 lg:p-8 flex flex-col justify-center text-center transition-all duration-500 hover:bg-white/10 hover:border-brand-primary/50 hover:scale-[1.02] animate-in slide-in-from-bottom duration-500"
+                                        >
+                                            <div className="text-brand-primary font-mono font-bold text-[clamp(1.2rem,1.5vw,2.5rem)] tracking-wider mb-2">{w.guestId || w.queueNumber}</div>
+                                            <div className="font-bold text-[clamp(1.5rem,2.5vw,4rem)] text-white group-hover:text-brand-primarySoft transition-colors leading-tight line-clamp-3">{w.name}</div>
+                                            <div className="text-[clamp(1rem,1.2vw,2rem)] text-white/50 group-hover:text-white/70 transition-colors uppercase tracking-wider font-mono mt-3">
+                                                {w.company || '-'}
+                                            </div>
                                         </div>
+                                    ))}
+                                </div>
+                                
+                                {/* DUPLICATE SET FOR SEAMLESS LOOP SCROLLING */}
+                                {multiWinners.length > 15 && !isRevealing && (
+                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 auto-rows-fr pb-8">
+                                        {multiWinners.map((w, idx) => (
+                                            <div 
+                                                key={`dup-${w.id}`} 
+                                                className="group bg-white/5 border border-white/10 rounded-3xl p-4 md:p-6 lg:p-8 flex flex-col justify-center text-center transition-all duration-500 hover:bg-white/10 hover:border-brand-primary/50"
+                                            >
+                                                <div className="text-brand-primary font-mono font-bold text-[clamp(1.2rem,1.5vw,2.5rem)] tracking-wider mb-2">{w.guestId || w.queueNumber}</div>
+                                                <div className="font-bold text-[clamp(1.5rem,2.5vw,4rem)] text-white group-hover:text-brand-primarySoft transition-colors leading-tight line-clamp-3">{w.name}</div>
+                                                <div className="text-[clamp(1rem,1.2vw,2rem)] text-white/50 group-hover:text-white/70 transition-colors uppercase tracking-wider font-mono mt-3">
+                                                    {w.company || '-'}
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
-                                ))}
+                                )}
                             </div>
                         </div>
 

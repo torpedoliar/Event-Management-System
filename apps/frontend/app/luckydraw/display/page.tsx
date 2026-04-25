@@ -183,12 +183,19 @@ export default function LiveDisplayPage() {
     const [grandWinner, setGrandWinner] = useState<Guest | null>(null);
 
     const [soundEnabled, setSoundEnabled] = useState(false);
+    const [isFullscreen, setIsFullscreen] = useState(false);
     const audioRollRef = useRef<HTMLAudioElement | null>(null);
     const audioTensionRef = useRef<HTMLAudioElement | null>(null);
     const audioWinRef = useRef<HTMLAudioElement | null>(null);
     const audioGrandWinRef = useRef<HTMLAudioElement | null>(null);
 
     const { addEventListener, removeEventListener } = useSSE();
+
+    useEffect(() => {
+        if (isFullscreen) document.body.classList.add('hide-top-nav');
+        else document.body.classList.remove('hide-top-nav');
+        return () => document.body.classList.remove('hide-top-nav');
+    }, [isFullscreen]);
 
     const playSound = (audioRef: React.RefObject<HTMLAudioElement | null>, loop = false) => {
         if (!soundEnabled || !audioRef.current) return;
@@ -555,6 +562,9 @@ export default function LiveDisplayPage() {
                 </div>
                 
                 <div className="flex items-center gap-3">
+                    <button onClick={() => setIsFullscreen(!isFullscreen)} className="p-4 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-white transition-all flex items-center gap-2 group" title={isFullscreen ? "Show Navigation" : "Hide Navigation (Fullscreen)"}>
+                        <Monitor size={24} className={isFullscreen ? 'text-brand-primary' : ''} />
+                    </button>
                     <button onClick={() => setShowHistory(true)} className="p-4 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-brand-primarySoft transition-all flex items-center gap-2 group">
                         <History size={24} />
                         <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 font-mono text-sm uppercase tracking-widest whitespace-nowrap">Riwayat</span>

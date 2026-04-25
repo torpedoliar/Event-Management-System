@@ -510,3 +510,7 @@ body::after {
       100% { opacity: 0; transform: translateY(-24px) scale(0.3); }
   }
 }
+
+body.hide-top-nav nav {
+  display: none !important;
+}

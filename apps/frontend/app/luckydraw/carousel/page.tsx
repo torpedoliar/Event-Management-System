@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef } from 'react';
 import { apiFetch, toApiUrl } from '../../../lib/api';
-import { Trophy, Volume2, VolumeX, History } from 'lucide-react';
+import { Trophy, Volume2, VolumeX, History, Monitor } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useSSE } from '../../../lib/sse-context';
 import LuckyDraw3DWheel, { Guest } from '../../../components/LuckyDraw3DWheel';
@@ -33,6 +33,7 @@ export default function CarouselDrawPage() {
     const [darkReveal, setDarkReveal] = useState(false);
     const [screenShake, setScreenShake] = useState(false);
     const [soundEnabled, setSoundEnabled] = useState(false);
+    const [isFullscreen, setIsFullscreen] = useState(false);
     const audioRollRef = useRef<HTMLAudioElement | null>(null);
     const audioTensionRef = useRef<HTMLAudioElement | null>(null);
     const audioWinRef = useRef<HTMLAudioElement | null>(null);
@@ -40,6 +41,12 @@ export default function CarouselDrawPage() {
     const stoppedWheelsRef = useRef(0);
     const totalWheelsRef = useRef(0);
     const { addEventListener, removeEventListener } = useSSE();
+
+    useEffect(() => {
+        if (isFullscreen) document.body.classList.add('hide-top-nav');
+        else document.body.classList.remove('hide-top-nav');
+        return () => document.body.classList.remove('hide-top-nav');
+    }, [isFullscreen]);
 
     const playSound = (audioRef: React.RefObject<HTMLAudioElement | null>, loop = false) => {
         if (!soundEnabled || !audioRef.current) return;
@@ -227,6 +234,9 @@ export default function CarouselDrawPage() {
                                 ))}
                             </div>
                         )}
+                        <button onClick={() => setIsFullscreen(!isFullscreen)} title={isFullscreen ? "Show Navigation" : "Hide Navigation (Fullscreen)"} className={`p-3 rounded-xl backdrop-blur-sm border transition-all ${isFullscreen ? 'bg-brand-primary/20 border-brand-primary text-brand-primarySoft' : 'bg-brand-secondary/50 border-white/10 text-white/40 hover:text-white'}`}>
+                            <Monitor size={20} />
+                        </button>
                         <button onClick={toggleSound} className={`p-3 rounded-xl backdrop-blur-sm border transition-all ${soundEnabled ? 'bg-brand-primary/20 border-brand-primary text-brand-primarySoft' : 'bg-brand-secondary/50 border-white/10 text-white/40'}`}>
                             {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
                         </button>
