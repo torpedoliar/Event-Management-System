@@ -47,9 +47,9 @@ export default function PrizeReceiptModal({ isOpen, onClose, winner, winners, pr
           });
 
     return (
-        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-300 print:bg-transparent print:p-0">
+        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-300 print:absolute print:inset-0 print:bg-transparent print:p-0 print:block">
             {/* Modal Container */}
-            <div className="relative bg-white text-black border border-gray-300 rounded-xl w-full max-w-[500px] max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col print:border-none print:shadow-none print:max-w-none print:max-h-none print:rounded-none print:overflow-visible print:block print:m-0 print:bg-transparent">
+            <div className="relative bg-white text-black border border-gray-300 rounded-xl w-full max-w-[500px] max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col print:static print:border-none print:shadow-none print:max-w-none print:max-h-none print:rounded-none print:overflow-visible print:block print:m-0 print:bg-transparent">
                 
                 {/* Print Control Header (Hidden on print) */}
                 <div className="p-3 border-b border-gray-200 flex justify-between items-center bg-gray-50 rounded-t-xl print:hidden sticky top-0 z-10 shadow-sm">
@@ -178,11 +178,9 @@ export default function PrizeReceiptModal({ isOpen, onClose, winner, winners, pr
                         visibility: visible;
                     }
 
-                    /* Position the print area at the absolute top left of the page */
+                    /* Ensure the print area flows naturally for pagination */
                     #prize-receipt-print-area {
-                        position: absolute;
-                        left: 0;
-                        top: 0;
+                        position: static !important;
                         width: 100%;
                         margin: 0;
                         padding: 0;

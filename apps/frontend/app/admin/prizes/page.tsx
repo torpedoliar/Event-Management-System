@@ -204,6 +204,40 @@ export default function PrizesPage() {
         doc.save('Laporan_Pemenang_Lucky_Draw.pdf');
     };
 
+    const exportPdfForPrize = (prize: Prize) => {
+        const doc = new jsPDF('landscape');
+        doc.setFontSize(16);
+        doc.text(`Laporan Pemenang - ${prize.name}`, 14, 15);
+        
+        const tableData: any[][] = [];
+        let no = 1;
+        prize.winners.forEach(w => {
+            tableData.push([
+                no++,
+                w.name,
+                w.guestId || '-',
+                w.company || '-',
+                w.division || '-',
+                w.wonAt ? new Date(w.wonAt).toLocaleString('id-ID') : '-',
+                '' // Empty column for signature
+            ]);
+        });
+
+        autoTable(doc, {
+            head: [['No', 'Nama Pemenang', 'ID', 'Dept', 'Divisi', 'Waktu Menang', 'TTD Penerimaan Hadiah']],
+            body: tableData,
+            startY: 25,
+            theme: 'grid',
+            headStyles: { fillColor: [212, 168, 83] }, // brand-primary color
+            columnStyles: {
+                6: { cellWidth: 50 } // Wide space for signature
+            },
+            styles: { fontSize: 9, cellPadding: 4, valign: 'middle', minCellHeight: 15 }
+        });
+
+        doc.save(`Laporan_Pemenang_${prize.name.replace(/\s+/g, '_')}.pdf`);
+    };
+
     return (
         <RequireAuth>
             <div className="min-h-screen p-6 md:p-8 mx-auto max-w-5xl space-y-8">
@@ -359,17 +393,27 @@ export default function PrizesPage() {
                                             <div className="mt-3 pt-3 border-t border-white/10">
                                                 <div className="flex items-center justify-between mb-2">
                                                     <div className="text-xs font-medium text-brand-textMuted uppercase tracking-wider">Pemenang Terpilih ({p.winners.length})</div>
-                                                    <button 
-                                                        onClick={() => {
-                                                            setSelectedReceiptWinners(p.winners);
-                                                            setSelectedReceiptWinner(null);
-                                                            setSelectedReceiptPrize(p);
-                                                            setShowReceiptModal(true);
-                                                        }}
-                                                        className="text-xs flex items-center gap-1 bg-brand-primary/20 hover:bg-brand-primary/40 text-brand-primary px-2 py-1 rounded transition-colors"
-                                                    >
-                                                        <Printer size={12} /> Cetak Semua
-                                                    </button>
+                                                    <div className="flex items-center gap-2">
+                                                        <button 
+                                                            onClick={() => exportPdfForPrize(p)}
+                                                            className="text-xs flex items-center gap-1 bg-red-600/20 hover:bg-red-600/40 text-red-400 px-2 py-1 rounded transition-colors"
+                                                            title="Export PDF Pemenang"
+                                                        >
+                                                            <FileDown size={12} /> Export PDF
+                                                        </button>
+                                                        <button 
+                                                            onClick={() => {
+                                                                setSelectedReceiptWinners(p.winners);
+                                                                setSelectedReceiptWinner(null);
+                                                                setSelectedReceiptPrize(p);
+                                                                setShowReceiptModal(true);
+                                                            }}
+                                                            className="text-xs flex items-center gap-1 bg-brand-primary/20 hover:bg-brand-primary/40 text-brand-primary px-2 py-1 rounded transition-colors"
+                                                            title="Cetak Semua Tanda Terima"
+                                                        >
+                                                            <Printer size={12} /> Cetak Semua
+                                                        </button>
+                                                    </div>
                                                 </div>
                                                 <div className="flex flex-wrap gap-2">
                                                     {p.winners.map((w: any) => (
