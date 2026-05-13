@@ -35,7 +35,9 @@ export function SSEProvider({ children }: { children: ReactNode }) {
             esRef.current.close();
         }
 
-        const es = new EventSource(`${apiBase()}/public/stream`);
+        const token = localStorage.getItem('token');
+        const url = token ? `${apiBase()}/public/stream?token=${token}` : `${apiBase()}/public/stream`;
+        const es = new EventSource(url);
         esRef.current = es;
 
         es.onopen = () => {

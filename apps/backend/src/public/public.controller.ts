@@ -196,7 +196,17 @@ export class PublicController {
   }
 
   @Get('stream')
-  async stream(@Res() res: Response) {
+  async stream(@Res() res: Response, @Query('token') token?: string) {
+    let isAuthenticated = false;
+    if (token) {
+      try {
+        this.jwtService.verify(token);
+        isAuthenticated = true;
+      } catch (e) {
+        // Invalid token
+      }
+    }
+
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('Connection', 'keep-alive');
@@ -211,6 +221,13 @@ export class PublicController {
     };
 
     const off = onEvent((ev) => {
+      // If not authenticated, only allow safe public events
+      if (!isAuthenticated) {
+        if (ev.type !== 'config' && ev.type !== 'preview' && ev.type !== 'event_change') {
+          return; // Block restricted event data
+        }
+      }
+
       if (ev.type === 'checkin') send('checkin', ev.data);
       if (ev.type === 'uncheckin') send('uncheckin', ev.data);
       if (ev.type === 'config') send('config', ev.data);
