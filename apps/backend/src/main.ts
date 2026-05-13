@@ -8,6 +8,7 @@ import { join } from 'path';
 // Use require to avoid ESM interop issues
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const compression = require('compression');
+import helmet from 'helmet';
 
 async function bootstrap() {
   const port = process.env.PORT ? Number(process.env.PORT) : 4000;
@@ -41,6 +42,10 @@ async function bootstrap() {
   }
 
   app.setGlobalPrefix('api');
+  
+  // Use Helmet for standard security headers
+  app.use(helmet());
+  
   app.enableCors({ origin: process.env.CORS_ORIGIN || '*' });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
