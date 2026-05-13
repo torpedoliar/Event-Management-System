@@ -35,9 +35,15 @@ export function SSEProvider({ children }: { children: ReactNode }) {
             esRef.current.close();
         }
 
+        // R-001: Stream requires authentication. Do not connect without a token.
         const token = localStorage.getItem('token');
-        const url = token ? `${apiBase()}/public/stream?token=${token}` : `${apiBase()}/public/stream`;
-        const es = new EventSource(url);
+        if (!token) {
+            console.log('[SSE] No auth token found, skipping connection');
+            setConnected(false);
+            return;
+        }
+
+        const es = new EventSource(`${apiBase()}/public/stream?token=${encodeURIComponent(token)}`);
         esRef.current = es;
 
         es.onopen = () => {

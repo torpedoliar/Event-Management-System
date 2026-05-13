@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Post, Query, Res, Headers, UnauthorizedException, Inject } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req, Res, Headers, UnauthorizedException, Inject } from '@nestjs/common';
+import { Request } from 'express';
 import { SkipThrottle } from '@nestjs/throttler';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
@@ -196,15 +197,26 @@ export class PublicController {
   }
 
   @Get('stream')
-  async stream(@Res() res: Response, @Query('token') token?: string) {
-    let isAuthenticated = false;
-    if (token) {
-      try {
-        this.jwtService.verify(token);
-        isAuthenticated = true;
-      } catch (e) {
-        // Invalid token
-      }
+  async stream(@Req() req: Request, @Res() res: Response, @Query('token') token?: string) {
+    // R-001: Require valid JWT to access the event stream.
+    // Unauthenticated clients receive 401 – no SSE connection is opened.
+    if (!token) {
+      res.status(401).json({ message: 'Authentication required for event stream' });
+      return;
+    }
+
+    try {
+      this.jwtService.verify(token);
+    } catch {
+      res.status(401).json({ message: 'Invalid or expired token' });
+      return;
+    }
+
+    // R-001: Replace wildcard CORS with the actual request origin
+    const origin = req.headers.origin;
+    if (origin) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
     }
 
     res.setHeader('Content-Type', 'text/event-stream');
@@ -221,13 +233,6 @@ export class PublicController {
     };
 
     const off = onEvent((ev) => {
-      // If not authenticated, only allow safe public events
-      if (!isAuthenticated) {
-        if (ev.type !== 'config' && ev.type !== 'preview' && ev.type !== 'event_change') {
-          return; // Block restricted event data
-        }
-      }
-
       if (ev.type === 'checkin') send('checkin', ev.data);
       if (ev.type === 'uncheckin') send('uncheckin', ev.data);
       if (ev.type === 'config') send('config', ev.data);
