@@ -679,6 +679,25 @@ export default function LuckyDrawPage() {
                 </Button>
             </div>
 
+            {/* Mode Selector Dropdown */}
+            <div className="fixed top-6 left-6 z-[60]">
+                <select
+                    onChange={(e) => {
+                        if (e.target.value === 'slot') {
+                            window.location.href = '/luckydraw/display';
+                        } else if (e.target.value === 'carousel') {
+                            window.location.href = '/luckydraw/carousel';
+                        }
+                    }}
+                    value="classic"
+                    className="bg-brand-bgElevated/80 border border-brand-primary/50 text-brand-primarySoft text-sm rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary backdrop-blur-xl transition-all shadow-lg font-mono tracking-wider cursor-pointer"
+                >
+                    <option value="classic">🎲 Classic Mode</option>
+                    <option value="slot">🎰 Slot Machine Mode</option>
+                    <option value="carousel">🎡 3D Carousel Mode</option>
+                </select>
+            </div>
+
             {/* Sound initiation banner */}
             {!soundEnabled && !loading && (
                 <div className="fixed top-0 left-0 right-0 z-50 bg-brand-warning/20 backdrop-blur-sm border-b border-brand-warning/30 px-4 py-2 flex items-center justify-between">
