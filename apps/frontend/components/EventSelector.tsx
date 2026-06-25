@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { ChevronDown, Calendar, Check, Plus, Settings } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
+import { ChevronDown, Calendar, Check, Plus, Settings, Loader2 } from 'lucide-react';
 import { apiBase } from '../lib/api';
 import { useSSE } from '../lib/sse-context';
 import Link from 'next/link';
@@ -19,6 +20,7 @@ export default function EventSelector() {
   const [switching, setSwitching] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { addEventListener, removeEventListener } = useSSE();
+  const queryClient = useQueryClient();
 
   const tokenHeader = (): Record<string, string> => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
@@ -75,8 +77,8 @@ export default function EventSelector() {
       });
       if (res.ok) {
         await fetchEvents();
+        queryClient.invalidateQueries();
         setIsOpen(false);
-        window.location.reload();
       }
     } catch (err) {
       console.error('Failed to switch event:', err);
@@ -106,9 +108,16 @@ export default function EventSelector() {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-2 w-72 bg-brand-secondary border border-brand-primary/20 rounded-xl shadow-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute top-full left-0 mt-2 w-72 bg-brand-bgElevated/95 backdrop-blur-xl border border-brand-border rounded-xl shadow-lg overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="p-2 border-b border-white/10">
-            <div className="text-xs text-white/50 px-2 py-1">Pilih Event</div>
+            {switching ? (
+              <div className="flex items-center gap-2 text-xs text-brand-primary px-2 py-1">
+                <Loader2 size={12} className="animate-spin" />
+                <span>Switching event...</span>
+              </div>
+            ) : (
+              <div className="text-xs text-white/50 px-2 py-1">Pilih Event</div>
+            )}
           </div>
           <div className="max-h-64 overflow-y-auto p-2 space-y-1">
             {events.map((event) => (
@@ -118,8 +127,8 @@ export default function EventSelector() {
                 disabled={switching}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-left ${
                   event.isActive
-                    ? 'bg-brand-primary/20 border border-brand-primary/30'
-                    : 'hover:bg-white/10 border border-transparent'
+                    ? 'bg-brand-primary/10 border-l-2 border-l-brand-primary border border-brand-border'
+                    : 'hover:bg-brand-bgSubtle border border-transparent'
                 }`}
               >
                 <div className={`w-2 h-2 rounded-full ${event.isActive ? 'bg-brand-success' : 'bg-white/30'}`} />
@@ -140,7 +149,7 @@ export default function EventSelector() {
             <Link
               href={"/admin/events" as any}
               onClick={() => setIsOpen(false)}
-              className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors text-sm"
+              className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-brand-textMuted hover:text-brand-text hover:bg-brand-bgSubtle transition-colors text-sm"
             >
               <Settings size={14} />
               <span>Kelola Events</span>

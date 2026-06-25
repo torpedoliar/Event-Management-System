@@ -146,7 +146,7 @@ export default function UsersManagementPage() {
             <div className="flex items-center gap-4">
               <Link
                 href="/admin/settings/event"
-                className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all duration-200 border border-white/10"
+                className="p-2.5 rounded-xl bg-brand-surface/80 hover:bg-brand-surfaceBright text-brand-text transition-all duration-200 border border-brand-border"
               >
                 <ArrowLeft size={20} />
               </Link>
@@ -155,10 +155,10 @@ export default function UsersManagementPage() {
                   <UserCog size={24} className="text-brand-secondary" />
                 </div>
                 <div>
-                  <h1 className="text-2xl md:text-3xl font-bold text-brand-surface">User Management</h1>
+                  <h1 className="text-2xl md:text-3xl font-bold text-brand-text">User Management</h1>
                   <div className="flex items-center gap-2 mt-1">
                     <Radio size={12} className={`${connected ? 'text-brand-success pulse-live' : 'text-brand-danger'}`} />
-                    <span className="text-sm text-brand-surface/60">Kelola akun admin</span>
+                    <span className="text-sm text-brand-text/60">Kelola akun admin</span>
                   </div>
                 </div>
               </div>
@@ -181,8 +181,8 @@ export default function UsersManagementPage() {
 
           {/* Add User Form */}
           {showAddForm && (
-            <Card variant="glass" className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+            <Card variant="glass" className="surface-elevated p-6">
+              <h3 className="text-lg font-semibold text-brand-text mb-4 flex items-center gap-2">
                 <UserPlus size={20} className="text-brand-primary" />
                 Tambah User Baru
               </h3>
@@ -228,7 +228,7 @@ export default function UsersManagementPage() {
               <div className="flex justify-end gap-3 mt-6">
                 <button
                   onClick={() => setShowAddForm(false)}
-                  className="px-4 py-2 rounded-xl border border-white/20 text-white/70 hover:bg-white/10 transition-colors"
+                  className="px-4 py-2 rounded-xl border border-brand-border text-brand-textMuted hover:bg-brand-bgSubtle transition-colors"
                 >
                   Batal
                 </button>
@@ -252,7 +252,7 @@ export default function UsersManagementPage() {
           ) : (
             <div className="space-y-3">
               {users.map((user) => (
-                <Card key={user.id} variant="glass" className="p-4">
+                <Card key={user.id} variant="glass" className="surface p-4">
                   {editingId === user.id ? (
                     // Edit mode
                     <div className="space-y-4">
@@ -308,7 +308,7 @@ export default function UsersManagementPage() {
                       <div className="flex justify-end gap-3">
                         <button
                           onClick={cancelEdit}
-                          className="px-4 py-2 rounded-xl border border-white/20 text-white/70 hover:bg-white/10 transition-colors"
+                          className="px-4 py-2 rounded-xl border border-brand-border text-brand-textMuted hover:bg-brand-bgSubtle transition-colors"
                         >
                           <X size={18} />
                         </button>
@@ -344,7 +344,7 @@ export default function UsersManagementPage() {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => startEdit(user)}
-                          className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors"
+                          className="p-2 rounded-lg bg-brand-surfaceMuted hover:bg-brand-surfaceBright text-brand-textMuted hover:text-brand-text transition-colors"
                         >
                           <Pencil size={18} />
                         </button>
@@ -370,7 +370,7 @@ export default function UsersManagementPage() {
           )}
 
           {/* Info Card */}
-          <Card variant="glass" className="p-4">
+          <Card variant="glass" className="surface-elevated p-4">
             <div className="flex items-start gap-3">
               <div className="p-2 rounded-lg bg-brand-primary/20">
                 <Shield size={20} className="text-brand-primary" />

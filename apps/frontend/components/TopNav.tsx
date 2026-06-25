@@ -1,64 +1,49 @@
 "use client";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Monitor, UserCheck, LayoutDashboard, Users, UserPlus, Gift, Dices, Settings, LogOut, LogIn, Info, Menu, X, Radio, UserCog, Package, BarChart3, CalendarDays, Activity } from "lucide-react";
-
+import { Monitor, UserCheck, LayoutDashboard, Users, Dices, Settings, LogOut, LogIn, Info, Menu, X, Radio, Package, BarChart3, CalendarDays, Activity } from "lucide-react";
 import { apiBase } from "../lib/api";
 import { useSSE } from "../lib/sse-context";
 import EventSelector from "./EventSelector";
+import StatusBadge from "./ui/StatusBadge";
+import IconButton from "./ui/IconButton";
 
 export default function TopNav() {
   const pathname = usePathname();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [isAuth, setIsAuth] = useState(false);
   const [eventCfg, setEventCfg] = useState<any>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { addEventListener, removeEventListener, connected } = useSSE();
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setIsAuth(!!localStorage.getItem('token'));
+    if (typeof window === 'undefined') return;
+    setIsAuth(!!localStorage.getItem('token'));
 
-      const fetchConfig = () => {
-        fetch(`${apiBase()}/config/event`)
-          .then(r => r.json())
-          .then(data => setEventCfg(data))
-          .catch(err => console.error('Config fetch error:', err));
-      };
+    const fetchConfig = () => {
+      fetch(`${apiBase()}/config/event`)
+        .then(r => r.json())
+        .then(data => setEventCfg(data))
+        .catch(err => console.error('Config fetch error:', err));
+    };
+    fetchConfig();
 
-      fetchConfig();
+    const onConfig = (e: MessageEvent) => {
+      try { setEventCfg((prev: any) => ({ ...prev, ...JSON.parse(e.data) })); } catch { }
+    };
+    const onEventChange = () => { fetchConfig(); };
 
-      const onConfig = (e: MessageEvent) => {
-        try {
-          const data = JSON.parse(e.data);
-          setEventCfg((prev: any) => ({ ...prev, ...data }));
-        } catch (err) {
-          console.error('SSE Parse Error', err);
-        }
-      };
-
-      const onEventChange = (e: MessageEvent) => {
-        // When event changes, reload config and refresh page data
-        fetchConfig();
-      };
-
-      addEventListener('config', onConfig);
-      addEventListener('event_change', onEventChange);
-      return () => {
-        removeEventListener('config', onConfig);
-        removeEventListener('event_change', onEventChange);
-      };
-    }
+    addEventListener('config', onConfig);
+    addEventListener('event_change', onEventChange);
+    return () => {
+      removeEventListener('config', onConfig);
+      removeEventListener('event_change', onEventChange);
+    };
   }, [pathname, addEventListener, removeEventListener]);
 
-  // Close mobile menu on route change
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [pathname]);
+  useEffect(() => { setMobileMenuOpen(false); }, [pathname]);
 
-  // Hide nav on public display and login pages
   if (pathname?.startsWith('/show') || pathname === '/admin/login') return null;
 
   const logout = () => {
@@ -70,174 +55,158 @@ export default function TopNav() {
 
   const linkCls = (href: string) => {
     const active = pathname === href || (href !== '/' && pathname?.startsWith(href));
-    return `inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 ${active
-      ? 'bg-brand-primary/15 text-brand-primary shadow-lg border border-brand-primary/30'
-      : 'text-brand-surface/70 hover:text-brand-surface hover:bg-brand-surface/10 border border-transparent hover:border-brand-surface/10'
+    return `inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${active
+      ? 'bg-brand-primary/15 text-brand-primary border-b-2 border-brand-primary'
+      : 'text-brand-textMuted hover:text-brand-text hover:bg-white/5'
       }`;
   };
 
-  const NavLinks = () => (
-    <>
-      {/* Public Links */}
-      <Link className={linkCls('/show')} href="/show">
-        <Monitor size={16} />
-        <span>Display</span>
-      </Link>
-      <Link className={linkCls('/checkin')} href="/checkin">
-        <UserCheck size={16} />
-        <span>Check-in</span>
-      </Link>
-      {isAuth && (
-        <>
-          {/* Admin Core */}
-          <div className="hidden md:block w-px h-6 bg-white/20 mx-1" />
-          <Link className={linkCls('/admin/dashboard')} href="/admin/dashboard">
-            <LayoutDashboard size={16} />
-            <span>Dashboard</span>
-          </Link>
-          <Link className={linkCls('/admin/statistics')} href="/admin/statistics">
-            <BarChart3 size={16} />
-            <span>Statistik</span>
-          </Link>
-          <Link className={linkCls('/admin/guests')} href="/admin/guests">
-            <Users size={16} />
-            <span>Tamu</span>
-          </Link>
-          {/* Lucky Draw & Souvenirs */}
-          <div className="hidden md:block w-px h-6 bg-white/20 mx-1" />
-          <Link className={linkCls('/luckydraw')} href="/luckydraw">
-            <Dices size={16} />
-            <span>Lucky Draw</span>
-          </Link>
-          <Link className={linkCls('/souvenir')} href="/souvenir">
-            <Package size={16} />
-            <span>Souvenir / Hadiah</span>
-          </Link>
-          {/* Settings */}
-          <div className="hidden md:block w-px h-6 bg-white/20 mx-1" />
-          <Link className={linkCls('/admin/events')} href={"/admin/events" as any}>
-            <CalendarDays size={16} />
-            <span>Events</span>
-          </Link>
-          <Link className={linkCls('/admin/settings/event')} href="/admin/settings/event">
-            <Settings size={16} />
-            <span>Settings</span>
-          </Link>
-          <Link className={linkCls('/admin/system')} href={"/admin/system" as any}>
-            <Activity size={16} />
-            <span>System</span>
-          </Link>
-        </>
-      )}
-    </>
-  );
+  const mobileLinkCls = (href: string) => {
+    const active = pathname === href || (href !== '/' && pathname?.startsWith(href));
+    return `inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors w-full ${active
+      ? 'bg-brand-primary/15 text-brand-primary'
+      : 'text-brand-textMuted hover:text-brand-text hover:bg-white/5'
+      }`;
+  };
+
+  const NavLinks = ({ mobile = false }: { mobile?: boolean }) => {
+    const cls = mobile ? mobileLinkCls : linkCls;
+    return (
+      <>
+        <Link className={cls('/checkin')} href="/checkin">
+          <UserCheck size={16} />
+          <span>Check-in</span>
+        </Link>
+        {isAuth && (
+          <>
+            <Link className={cls('/admin/dashboard')} href="/admin/dashboard">
+              <LayoutDashboard size={16} />
+              <span>Dashboard</span>
+            </Link>
+            <Link className={cls('/admin/statistics')} href="/admin/statistics">
+              <BarChart3 size={16} />
+              <span>Statistik</span>
+            </Link>
+            <Link className={cls('/admin/guests')} href="/admin/guests">
+              <Users size={16} />
+              <span>Tamu</span>
+            </Link>
+            <Link className={cls('/luckydraw')} href="/luckydraw">
+              <Dices size={16} />
+              <span>Lucky Draw</span>
+            </Link>
+            <Link className={cls('/souvenir')} href="/souvenir">
+              <Package size={16} />
+              <span>Doorprize</span>
+            </Link>
+            <Link className={cls('/admin/events')} href="/admin/events">
+              <CalendarDays size={16} />
+              <span>Events</span>
+            </Link>
+            <Link className={cls('/admin/settings/event')} href="/admin/settings/event">
+              <Settings size={16} />
+              <span>Settings</span>
+            </Link>
+            <Link className={cls('/admin/system')} href="/admin/system">
+              <Activity size={16} />
+              <span>System</span>
+            </Link>
+          </>
+        )}
+      </>
+    );
+  };
 
   return (
-    <nav className="w-full sticky top-0 z-50 glass-nav">
-      <div className="w-full px-4 py-3">
-        <div className="grid grid-cols-[1fr_auto_1fr] items-center relative">
-          {/* Logo / Brand */}
-          <div className="flex items-center gap-3 flex-shrink-0 justify-self-start">
-            <div className="flex items-center gap-2 group cursor-default">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center shadow-lg group-hover:shadow-brand-primary/20 transition-all">
-                <Users size={16} className="text-brand-secondary" />
-              </div>
-              <span className="font-bold text-brand-surface text-lg hidden sm:block tracking-wide">
-                {eventCfg?.name || 'Event Management System'}
-              </span>
-            </div>
-            {/* Event Selector - only for authenticated users */}
-            {isAuth && <EventSelector />}
-            {/* Live indicator */}
-            <div className="hidden sm:flex items-center gap-1.5 px-2 py-1 rounded-full bg-brand-surface/5 border border-brand-surface/10">
-              <Radio size={12} className={`${connected ? 'text-brand-success pulse-live' : 'text-brand-danger'}`} />
-              <span className="text-xs text-brand-surface/60 font-medium tracking-wide uppercase">{connected ? 'Live' : 'Offline'}</span>
-            </div>
-          </div>
-
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center justify-center gap-2 justify-self-center">
-            {!isAuth && pathname?.startsWith('/checkin') ? (
-              <>
-                <Link className={linkCls('/checkin')} href="/checkin">
-                  <UserCheck size={16} />
-                  <span>Check-in</span>
-                </Link>
-              </>
-            ) : (
-              <NavLinks />
-            )}
-          </div>
-
-          {/* Right side actions */}
-          <div className="flex items-center gap-2 flex-shrink-0 justify-self-end">
-            {/* Desktop auth buttons */}
-            <div className="hidden lg:flex items-center gap-2">
-              {!isAuth ? (
-                <Link
-                  className="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold bg-gradient-to-r from-brand-primary to-brand-accent text-brand-secondary hover:opacity-90 transition-all duration-200 shadow-lg hover:shadow-brand-primary/20 hover:-translate-y-0.5"
-                  href="/admin/login"
-                >
-                  <LogIn size={16} />
-                  Login
-                </Link>
-              ) : (
-                <button
-                  className="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium text-brand-surface/70 hover:text-brand-surface hover:bg-brand-surface/10 border border-brand-surface/20 transition-all duration-200"
-                  onClick={logout}
-                >
-                  <LogOut size={16} />
-                  Logout
-                </button>
-              )}
-              <Link className={linkCls('/about')} href="/about">
-                <Info size={16} />
-                <span>About</span>
+    <>
+      <nav className="sticky top-0 z-50 h-14 bg-brand-bgElevated/90 backdrop-blur-md border-b border-brand-border">
+        <div className="w-full px-4 h-full">
+          <div className="flex items-center justify-between gap-4 h-full">
+            <div className="flex items-center gap-3">
+              <Link href="/" className="flex items-center gap-2 group">
+                <div className="bg-gradient-to-br from-brand-primary to-brand-accent p-[1px] rounded-lg">
+                  <div className="w-8 h-8 rounded-[7px] bg-brand-bgElevated flex items-center justify-center">
+                    <Users size={16} className="text-brand-primary" />
+                  </div>
+                </div>
+                <span className="font-semibold text-brand-text hidden sm:block">
+                  {eventCfg?.name || 'Event Management'}
+                </span>
               </Link>
+              {isAuth && <EventSelector />}
             </div>
 
-            {/* Mobile menu button */}
-            <button
-              className="lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-xl text-brand-surface/70 hover:text-brand-surface hover:bg-brand-surface/10 transition-colors"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            <div className="hidden lg:flex items-center gap-1">
+              <NavLinks />
+            </div>
+
+            <div className="flex items-center gap-2">
+              <StatusBadge status={connected ? 'success' : 'danger'} pulse={connected} className="hidden sm:inline-flex">
+                {connected ? 'Live' : 'Offline'}
+              </StatusBadge>
+              <div className="hidden lg:flex items-center gap-2">
+                {!isAuth ? (
+                  <Link href="/admin/login" className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold bg-brand-primary text-brand-bg hover:bg-[#c49a4a] transition-colors">
+                    <LogIn size={16} />
+                    Login
+                  </Link>
+                ) : (
+                  <button onClick={logout} className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-brand-textMuted hover:text-brand-text hover:bg-white/5 transition-colors">
+                    <LogOut size={16} />
+                    Logout
+                  </button>
+                )}
+                <Link className={linkCls('/about')} href="/about">
+                  <Info size={16} />
+                  <span>About</span>
+                </Link>
+              </div>
+              <IconButton className="lg:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Menu">
+                {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+              </IconButton>
+            </div>
           </div>
         </div>
+      </nav>
 
-        {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden mt-4 pb-2 border-t border-white/10 pt-4 space-y-2 animate-in slide-in-from-top duration-200">
-            <div className="flex flex-col gap-1">
-              <NavLinks />
-            </div>
-            <div className="border-t border-white/10 pt-3 mt-3 flex flex-col gap-1">
-              {!isAuth ? (
-                <Link
-                  className="inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold bg-gradient-to-r from-brand-primary to-brand-accent text-brand-secondary"
-                  href="/admin/login"
-                >
-                  <LogIn size={16} />
-                  Login
-                </Link>
-              ) : (
-                <button
-                  className="inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-white/70 hover:text-white hover:bg-white/10"
-                  onClick={logout}
-                >
-                  <LogOut size={16} />
-                  Logout
-                </button>
-              )}
-              <Link className={linkCls('/about')} href="/about">
-                <Info size={16} />
-                <span>About</span>
+      {/* Mobile drawer overlay */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm lg:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Mobile slide-out drawer */}
+      <div
+        className={`fixed inset-y-0 right-0 z-50 w-72 bg-brand-bgElevated/95 backdrop-blur-xl border-l border-brand-border shadow-xl transition-transform duration-300 ease-in-out lg:hidden ${
+          mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        <div className="flex items-center justify-between p-4 border-b border-brand-border">
+          <span className="font-semibold text-brand-text text-sm">Menu</span>
+          <IconButton onClick={() => setMobileMenuOpen(false)} aria-label="Close menu">
+            <X size={20} />
+          </IconButton>
+        </div>
+        <div className="p-3 space-y-1 overflow-y-auto">
+          <NavLinks mobile />
+          <div className="border-t border-brand-border pt-3 mt-3 flex flex-col gap-1">
+            {!isAuth ? (
+              <Link className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold bg-brand-primary text-brand-bg w-full" href="/admin/login">
+                <LogIn size={16} /> Login
               </Link>
-            </div>
+            ) : (
+              <button onClick={logout} className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-brand-textMuted hover:text-brand-text hover:bg-white/5 text-left w-full">
+                <LogOut size={16} /> Logout
+              </button>
+            )}
+            <Link className={mobileLinkCls('/about')} href="/about">
+              <Info size={16} /> About
+            </Link>
           </div>
-        )}
+        </div>
       </div>
-    </nav>
+    </>
   );
 }

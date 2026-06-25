@@ -28,15 +28,15 @@ function GuestStatsChart({ stats }: GuestStatsChartProps) {
     );
 
     return (
-        <Card variant="glass" className="w-full flex flex-col p-5">
-            <div className="mb-2 flex items-center justify-between border-b border-white/10 pb-3">
+        <Card className="w-full flex flex-col">
+            <div className="mb-3 flex items-center justify-between border-b border-brand-border pb-3">
                 <div>
-                    <h3 className="text-lg font-bold text-white">Statistik Kedatangan</h3>
-                    <p className="text-xs text-white/60">Real-time update</p>
+                    <h3 className="text-lg font-semibold text-brand-text">Statistik Kedatangan</h3>
+                    <p className="text-xs text-brand-textMuted">Real-time update</p>
                 </div>
                 <div className="text-right">
-                    <div className="text-2xl font-bold text-brand-success">{attendanceRate}%</div>
-                    <div className="text-xs text-white/60">Kehadiran</div>
+                    <div className="text-2xl font-semibold text-brand-success">{attendanceRate}%</div>
+                    <div className="text-xs text-brand-textMuted">Kehadiran</div>
                 </div>
             </div>
 
@@ -58,7 +58,7 @@ function GuestStatsChart({ stats }: GuestStatsChartProps) {
                         <Label
                             value={`${stats.checkedIn} / ${stats.total}`}
                             position="center"
-                            className="fill-white text-lg font-bold"
+                            className="fill-brand-text text-lg font-bold"
                         />
                     </Pie>
                     <Tooltip
@@ -66,8 +66,8 @@ function GuestStatsChart({ stats }: GuestStatsChartProps) {
                             if (active && payload && payload.length) {
                                 const data = payload[0].payload;
                                 return (
-                                    <div className="bg-brand-secondary/90 border border-brand-border p-3 rounded-lg shadow-xl backdrop-blur-md">
-                                        <p className="text-sm font-medium text-white mb-1">{data.name}</p>
+                                    <div className="surface p-3 shadow-panel">
+                                        <p className="text-sm font-medium text-brand-text mb-1">{data.name}</p>
                                         <p className="text-lg font-bold" style={{ color: payload[0].color }}>
                                             {data.value} Tamu
                                         </p>

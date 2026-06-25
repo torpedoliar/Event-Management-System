@@ -121,7 +121,7 @@ export default function EditGuestPage() {
               </div>
             )}
           </div>
-          <Card variant="glass">
+          <Card variant="glass" className="surface-elevated">
             <form onSubmit={save} className="space-y-4">
               <div>
                 <Label className="mb-1" htmlFor="guest-id">Guest ID</Label>
@@ -200,7 +200,7 @@ export default function EditGuestPage() {
                   className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-white focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary"
                 >
                   {CATEGORY_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value} className="bg-brand-secondary text-brand-surface">
+                    <option key={opt.value} value={opt.value} className="bg-brand-secondary text-brand-text">
                       {opt.label}
                     </option>
                   ))}
@@ -236,21 +236,23 @@ export default function EditGuestPage() {
               </div>
               <div>
                 <Label className="mb-1">Foto (opsional)</Label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  capture="environment"
-                  onChange={(e) => { const f = e.target.files?.[0] || null; setPhoto(f); if (f) { const url = URL.createObjectURL(f); setPreview(url); } else { setPreview(null); } }}
-                />
-                <Button
-                  type="button"
-                  onClick={() => setWebcamOpen(true)}
-                  variant="secondary"
-                  size="sm"
-                  className="ml-2"
-                >
-                  Ambil via Webcam
-                </Button>
+                <div className="p-4 border-2 border-dashed border-brand-primary/40 rounded-xl hover:border-brand-primary/60 transition-colors">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    onChange={(e) => { const f = e.target.files?.[0] || null; setPhoto(f); if (f) { const url = URL.createObjectURL(f); setPreview(url); } else { setPreview(null); } }}
+                  />
+                  <Button
+                    type="button"
+                    onClick={() => setWebcamOpen(true)}
+                    variant="secondary"
+                    size="sm"
+                    className="ml-2"
+                  >
+                    Ambil via Webcam
+                  </Button>
+                </div>
               </div>
               <div className="flex flex-wrap gap-2">
                 <Button

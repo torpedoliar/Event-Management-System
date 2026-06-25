@@ -19,6 +19,13 @@ interface Prize {
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
+// Festive confetti palette aligned with new theme (gold, coral, violet, soft cream)
+const FESTIVE_COLORS = ['#D4A853', '#E86A92', '#7C5CFC', '#F5ECD7', '#F9A8C4'];
+const GRAND_CONFETTI = ['#D4A853', '#F5ECD7', '#E86A92', '#7C5CFC', '#FFFFFF'];
+const TICKER_COLORS = ['#D4A853', '#F5ECD7'];
+const REGULAR_CONFETTI = ['#D4A853', '#E86A92', '#F9A8C4'];
+const FINALE_CONFETTI = ['#D4A853', '#E86A92', '#F9A8C4', '#7C5CFC', '#B4A0FF'];
+
 export default function CarouselDrawPage() {
     const [prizes, setPrizes] = useState<Prize[]>([]);
     const [selectedPrizeId, setSelectedPrizeId] = useState<string>('');
@@ -122,15 +129,15 @@ export default function CarouselDrawPage() {
         if (isGP) {
             setScreenShake(false); stopSound(audioRollRef); stopSound(audioTensionRef); playSound(audioGrandWinRef);
             setScreenFlash(true); setTimeout(() => setScreenFlash(false), 400); setDarkReveal(true);
-            confetti({ particleCount: 800, spread: 160, startVelocity: 70, origin: { y: 0.5, x: 0.5 }, colors: ['#FFD700', '#FFA500', '#FFFFFF', '#FF4500', '#1E3A8A'], ticks: 400 });
-            const end = Date.now() + 3000; const cols = ['#FFD700', '#FFFFFF'];
+            confetti({ particleCount: 800, spread: 160, startVelocity: 70, origin: { y: 0.5, x: 0.5 }, colors: GRAND_CONFETTI, ticks: 400 });
+            const end = Date.now() + 3000; const cols = TICKER_COLORS;
             (function frame() { confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0, y: 0.6 }, colors: cols }); confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1, y: 0.6 }, colors: cols }); if (Date.now() < end) requestAnimationFrame(frame); }());
-            setTimeout(() => { confetti({ particleCount: 300, spread: 360, startVelocity: 30, origin: { y: 0.2, x: 0.5 }, colors: ['#FFD700', '#FFFFFF', '#F0E68C'] }); setDarkReveal(false); }, 5000);
+            setTimeout(() => { confetti({ particleCount: 300, spread: 360, startVelocity: 30, origin: { y: 0.2, x: 0.5 }, colors: ['#D4A853', '#F5ECD7', '#F9A8C4'] }); setDarkReveal(false); }, 5000);
             setSpinning(false); loadData();
         } else {
             playSound(audioWinRef);
-            confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 }, colors: ['#FFD700', '#FFA500', '#FF69B4'] });
-            if (allStopped) { stopSound(audioRollRef); confetti({ particleCount: 200, spread: 120, origin: { y: 0.6 }, colors: ['#FFD700', '#FFA500', '#FF69B4', '#00FF00', '#00BFFF'] }); setSpinning(false); loadData(); }
+            confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 }, colors: REGULAR_CONFETTI });
+            if (allStopped) { stopSound(audioRollRef); confetti({ particleCount: 200, spread: 120, origin: { y: 0.6 }, colors: FINALE_CONFETTI }); setSpinning(false); loadData(); }
         }
     };
 
@@ -149,7 +156,7 @@ export default function CarouselDrawPage() {
     const isUtama = selectedPrize?.category === 'UTAMA';
     const totalWon = prizes.reduce((a, p) => a + p.winners.length, 0);
 
-    if (loading) return <div className="min-h-screen flex items-center justify-center text-white"><div className="animate-spin w-8 h-8 border-2 border-brand-primary border-t-transparent rounded-full" /></div>;
+    if (loading) return <div className="min-h-screen flex items-center justify-center text-brand-text"><div className="animate-spin w-8 h-8 border-2 border-brand-primary border-t-transparent rounded-full" /></div>;
 
     const wheelCount = winners.length > 0 ? winners.length : (isUtama ? 1 : drawCount);
     const displayWheels = Array.from({ length: wheelCount }, (_, idx) => winners[idx] || null);
@@ -173,17 +180,12 @@ export default function CarouselDrawPage() {
             <audio ref={audioGrandWinRef} src={toApiUrl(eventCfg?.grandWinSoundUrl || "/sounds/grand-win.mp3")} preload="auto" />
 
             {!soundEnabled && !loading && (
-                <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/40 backdrop-blur-md animate-in fade-in duration-700">
-                    <button onClick={toggleSound}
-                        className="group relative bg-brand-secondary/80 border-2 border-brand-primary/50 p-12 rounded-[3rem] flex flex-col items-center gap-6 hover:border-brand-primary transition-all hover:scale-105 shadow-[0_0_100px_rgba(212,168,83,0.2)]">
-                        <div className="w-24 h-24 rounded-full bg-brand-primary/20 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-secondary transition-all">
-                            <Volume2 size={48} />
-                        </div>
-                        <div className="text-center">
-                            <h3 className="text-2xl font-bold text-white mb-2 uppercase tracking-widest font-mono">Enable Audio Experience</h3>
-                            <p className="text-white/40 font-mono text-sm uppercase tracking-wider">Click anywhere to start with sound</p>
-                        </div>
-                    </button>
+                <div className="fixed top-0 left-0 right-0 z-50 bg-brand-warning/20 backdrop-blur-sm border-b border-brand-warning/30 px-4 py-2 flex items-center justify-between">
+                    <span className="text-brand-warning text-sm">Enable sound for the full experience</span>
+                    <div className="flex gap-2">
+                        <button onClick={toggleSound} className="px-3 py-1 text-xs rounded-lg bg-brand-primary text-brand-bg font-semibold">Enable</button>
+                        <button onClick={() => setSoundEnabled(true)} className="px-3 py-1 text-xs rounded-lg border border-brand-border text-brand-textMuted hover:text-brand-text">Dismiss</button>
+                    </div>
                 </div>
             )}
 
@@ -196,7 +198,7 @@ export default function CarouselDrawPage() {
                 {/* ─── Top: Title + Prize Info ─── */}
                 <div className="w-full flex flex-col items-center gap-4">
                     {/* Title */}
-                    <h1 className="text-3xl md:text-5xl font-heading font-black text-transparent bg-clip-text bg-gradient-to-b from-brand-primarySoft via-brand-primary to-brand-accent drop-shadow-[0_10px_30px_rgba(212,168,83,0.3)] tracking-[0.1em] uppercase text-center">
+                    <h1 className="text-3xl md:text-5xl font-heading font-black text-transparent bg-clip-text bg-gradient-to-b from-brand-primarySoft via-brand-primary to-brand-accent drop-shadow-[0_10px_30px_rgba(212,168,83,0.3)] tracking-[0.1em] uppercase text-center gradient-text-festive">
                         LUCKY DRAW
                     </h1>
 
@@ -206,14 +208,14 @@ export default function CarouselDrawPage() {
                         <select value={selectedPrizeId} onChange={(e) => { setSelectedPrizeId(e.target.value); setWinners([]); setDrawCount(1); }} disabled={spinning}
                             className="bg-transparent text-lg font-bold uppercase tracking-widest font-mono focus:outline-none disabled:opacity-50 cursor-pointer text-brand-primarySoft pr-4">
                             {prizes.map(p => (
-                                <option key={p.id} value={p.id} className="bg-brand-secondary text-brand-surface font-sans">
+                                <option key={p.id} value={p.id} className="bg-brand-secondary text-brand-text font-sans">
                                     {p.category === 'UTAMA' ? '🏆' : '🎁'} {p.name} ({p.winners.length}/{p.quantity})
                                 </option>
                             ))}
                         </select>
                         <div className="flex gap-4 text-xs font-mono tracking-widest">
-                            <span className="text-white/50">HADIR: <span className="text-brand-primary font-bold">{candidates.length}</span></span>
-                            <span className="text-white/50">MENANG: <span className="text-brand-primary font-bold">{totalWon}</span></span>
+                            <span className="text-brand-textMuted">HADIR: <span className="text-brand-primary font-bold">{candidates.length}</span></span>
+                            <span className="text-brand-textMuted">MENANG: <span className="text-brand-primary font-bold">{totalWon}</span></span>
                         </div>
                     </div>
 
@@ -221,26 +223,26 @@ export default function CarouselDrawPage() {
                     <div className="flex items-center gap-3">
                         {!isUtama && (
                             <div className="flex items-center gap-2 px-3 py-2 rounded-xl border border-brand-primary/20 bg-brand-secondary/50 backdrop-blur-sm">
-                                <span className="text-xs font-mono tracking-widest text-white/40 mr-1">×</span>
+                                <span className="text-xs font-mono tracking-widest text-brand-textDim mr-1">×</span>
                                 {[1, 5, 10].map(n => (
                                     <button key={n} onClick={() => setDrawCount(n)} disabled={spinning}
                                         className={`w-9 h-9 rounded-lg text-sm font-bold transition-all disabled:opacity-50 ${
                                             drawCount === n 
-                                                ? 'bg-brand-primary text-brand-secondary' 
-                                                : 'bg-white/5 text-white/60 hover:bg-white/10'
+                                                ? 'bg-brand-primary text-brand-bg' 
+                                                : 'bg-brand-text/5 text-brand-textMuted hover:bg-brand-text/10'
                                         }`}>
                                         {n}
                                     </button>
                                 ))}
                             </div>
                         )}
-                        <button onClick={() => setIsFullscreen(!isFullscreen)} title={isFullscreen ? "Show Navigation" : "Hide Navigation (Fullscreen)"} className={`p-3 rounded-xl backdrop-blur-sm border transition-all ${isFullscreen ? 'bg-brand-primary/20 border-brand-primary text-brand-primarySoft' : 'bg-brand-secondary/50 border-white/10 text-white/40 hover:text-white'}`}>
+                        <button onClick={() => setIsFullscreen(!isFullscreen)} title={isFullscreen ? "Show Navigation" : "Hide Navigation (Fullscreen)"} className={`p-3 rounded-xl backdrop-blur-sm border transition-all ${isFullscreen ? 'bg-brand-primary/20 border-brand-primary text-brand-primarySoft' : 'bg-brand-surface/50 border-brand-border text-brand-textDim hover:text-brand-text'}`}>
                             <Monitor size={20} />
                         </button>
-                        <button onClick={toggleSound} className={`p-3 rounded-xl backdrop-blur-sm border transition-all ${soundEnabled ? 'bg-brand-primary/20 border-brand-primary text-brand-primarySoft' : 'bg-brand-secondary/50 border-white/10 text-white/40'}`}>
+                        <button onClick={toggleSound} className={`p-3 rounded-xl backdrop-blur-sm border transition-all ${soundEnabled ? 'bg-brand-primary/20 border-brand-primary text-brand-primarySoft' : 'bg-brand-surface/50 border-brand-border text-brand-textDim'}`}>
                             {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
                         </button>
-                        <button onClick={() => setShowHistory(true)} className="p-3 rounded-xl backdrop-blur-sm border border-white/10 bg-brand-secondary/50 text-brand-primarySoft hover:border-brand-primary/50 transition-all flex items-center gap-2 group">
+                        <button onClick={() => setShowHistory(true)} className="p-3 rounded-xl backdrop-blur-sm border border-brand-border bg-brand-surface/50 text-brand-primarySoft hover:border-brand-primary/50 transition-all flex items-center gap-2 group">
                             <History size={20} />
                             <span className="max-w-0 overflow-hidden group-hover:max-w-[100px] transition-all duration-500 text-xs font-mono font-bold uppercase tracking-widest whitespace-nowrap hidden md:block">Riwayat</span>
                         </button>
@@ -248,7 +250,7 @@ export default function CarouselDrawPage() {
                 </div>
 
                 {/* ─── Center: Wheels Area ─── */}
-                <div className={`w-full flex items-center justify-center py-2 ${isUtama ? 'scale-[1.02]' : ''} transition-transform duration-500`}>
+                <div className={`w-full flex items-center justify-center py-2 ${isUtama ? 'scale-[1.02]' : ''} transition-transform duration-500 shadow-festive rounded-2xl`}>
                     <div className={`grid ${getGridClass()} gap-4 justify-items-center w-full mx-auto`}>
                         {displayWheels.map((winner, idx) => (
                             <div key={idx} className="w-full">

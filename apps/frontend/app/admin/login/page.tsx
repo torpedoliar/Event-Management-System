@@ -6,15 +6,11 @@ import Input from '../../../components/ui/Input';
 import Label from '../../../components/ui/Label';
 import Button from '../../../components/ui/Button';
 import Link from 'next/link';
-import { LogIn, Users, Loader2, Shield, Eye, EyeOff } from 'lucide-react';
+import { LogIn, Users, Loader2, Eye, EyeOff } from 'lucide-react';
 
 type EventConfig = {
   name?: string;
   logoUrl?: string | null;
-  backgroundType?: 'NONE' | 'IMAGE' | 'VIDEO';
-  backgroundImageUrl?: string | null;
-  backgroundVideoUrl?: string | null;
-  overlayOpacity?: number;
 };
 
 export default function LoginPage() {
@@ -56,69 +52,52 @@ export default function LoginPage() {
     }
   };
 
-  const bgType = eventCfg?.backgroundType;
-  const bgImage = eventCfg?.backgroundImageUrl;
-  const bgVideo = eventCfg?.backgroundVideoUrl;
-  const overlayOpacity = eventCfg?.overlayOpacity ?? 0.6;
-
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden">
-
-
-      <div className="w-full max-w-md relative z-10">
-        {/* Logo/Brand Header */}
+    <div className="min-h-[100dvh] flex items-center justify-center px-4 py-12">
+      <div className="w-full max-w-md">
         <div className="text-center mb-8">
           {eventCfg?.logoUrl ? (
-            <img src={toApiUrl(eventCfg.logoUrl)} alt="Logo" className="h-16 mx-auto mb-4 drop-shadow-2xl" />
+            <img src={toApiUrl(eventCfg.logoUrl)} alt="Logo" className="h-16 mx-auto mb-4" />
           ) : (
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center mx-auto mb-4 shadow-2xl">
-              <Users size={40} className="text-brand-secondary" />
+            <div className="w-16 h-16 rounded-2xl bg-brand-primary/10 border border-brand-border flex items-center justify-center mx-auto mb-4">
+              <Users size={28} className="text-brand-primary" />
             </div>
           )}
-          <h1 className="text-3xl md:text-4xl font-bold text-brand-surface text-shadow-lg mb-2 tracking-wide">
+          <h1 className="text-2xl md:text-3xl font-semibold text-brand-text mb-1">
             {eventCfg?.name || 'Event Management System'}
           </h1>
-          <p className="text-brand-surface/60 text-sm uppercase tracking-widest">Admin Panel</p>
+          <p className="text-brand-textMuted text-sm">Admin Panel</p>
         </div>
 
-        {/* Login Card */}
-        <div className="gradient-border">
-          <form
-            onSubmit={submit}
-            className="glass-card-dark p-8 space-y-6"
-          >
-            <div className="text-center space-y-2">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-brand-primary/10 border border-brand-primary/20 mb-2">
-                <Shield size={24} className="text-brand-primary" />
-              </div>
-              <h2 className="text-xl font-semibold text-brand-surface">Admin Login</h2>
-              <p className="text-sm text-brand-surface/60">Masuk untuk mengelola event dan tamu</p>
+        <div className="relative overflow-hidden bg-brand-surface/80 backdrop-blur-xl border border-white/10 rounded-xl p-6 md:p-8">
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-brand-primary via-brand-accent to-brand-vivid" />
+          <form onSubmit={submit} className="space-y-6">
+            <div className="text-center">
+              <h2 className="text-lg font-semibold text-brand-text">Admin Login</h2>
+              <p className="text-sm text-brand-textMuted">Masuk untuk mengelola event dan tamu</p>
             </div>
 
             {error && (
-              <div className="bg-brand-danger/10 border border-brand-danger/30 rounded-xl p-4 text-center">
+              <div className="bg-brand-danger/10 border border-brand-danger/30 rounded-xl p-4 text-center animate-[shake_0.5s]">
                 <p className="text-sm text-brand-danger">{error}</p>
               </div>
             )}
 
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="username" className="text-brand-surface/80">Username</Label>
-                <div className="relative">
-                  <Input
-                    id="username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    autoComplete="username"
-                    placeholder="Masukkan username"
-                    className="pl-4 pr-4 py-3 bg-brand-surface/5 border-brand-border focus:border-brand-primary/50 rounded-xl text-brand-surface"
-                    disabled={loading}
-                  />
-                </div>
+                <Label htmlFor="username" className="text-brand-text">Username</Label>
+                <Input
+                  id="username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  autoComplete="username"
+                  placeholder="Masukkan username"
+                  disabled={loading}
+                />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-brand-surface/80">Password</Label>
+                <Label htmlFor="password" className="text-brand-text">Password</Label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -127,13 +106,14 @@ export default function LoginPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     autoComplete="current-password"
                     placeholder="Masukkan password"
-                    className="pl-4 pr-12 py-3 bg-brand-surface/5 border-brand-border focus:border-brand-primary/50 rounded-xl text-brand-surface"
+                    className="pr-10"
                     disabled={loading}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-brand-surface/40 hover:text-brand-surface/70 transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-brand-textMuted hover:text-brand-text transition-colors"
+                    aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
@@ -141,45 +121,23 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <Button
-              type="submit"
-              className="w-full flex items-center justify-center gap-2 py-3 text-base font-semibold rounded-xl bg-gradient-to-r from-brand-primary to-brand-accent text-brand-secondary hover:opacity-90 shadow-lg hover:shadow-brand-primary/20 transition-all duration-300 hover:-translate-y-0.5"
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <Loader2 size={20} className="animate-spin" />
-                  Logging in...
-                </>
-              ) : (
-                <>
-                  <LogIn size={20} />
-                  Login
-                </>
-              )}
+            <Button type="submit" size="lg" className="w-full hover:shadow-[0_0_20px_rgba(212,168,83,0.3)] transition-shadow" loading={loading}>
+              {!loading && <LogIn size={20} />}
+              {loading ? 'Logging in...' : 'Login'}
             </Button>
 
-            <div className="pt-4 border-t border-brand-border">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-brand-surface/50">Guest Registration System</span>
-                <Link
-                  href="/about"
-                  className="text-brand-primary hover:text-brand-primarySoft transition-colors flex items-center gap-1"
-                >
-                  About
-                </Link>
-              </div>
+            <div className="pt-4 border-t border-brand-border flex items-center justify-between text-sm">
+              <span className="text-brand-textMuted">Guest Registration System</span>
+              <Link href="/about" className="text-brand-primary hover:text-brand-primarySoft transition-colors">
+                About
+              </Link>
             </div>
           </form>
         </div>
 
-        {/* Quick Links */}
         <div className="mt-6 text-center">
-          <Link
-            href="/checkin"
-            className="text-brand-surface/50 hover:text-brand-surface text-sm transition-colors"
-          >
-            ← Kembali ke halaman Check-in
+          <Link href="/checkin" className="text-brand-textMuted hover:text-brand-text text-sm transition-colors">
+            Kembali ke halaman Check-in
           </Link>
         </div>
       </div>

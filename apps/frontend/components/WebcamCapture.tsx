@@ -153,8 +153,8 @@ export default function WebcamCapture({ open, onClose, onCapture, aspect = "squa
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-brand-secondary border border-brand-border rounded-xl shadow-2xl p-6 w-full max-w-lg">
-        <div className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+      <div className="surface-elevated p-6 w-full max-w-lg shadow-panel">
+        <div className="text-xl font-bold text-brand-text mb-4 flex items-center gap-2">
           <Camera size={24} className="text-brand-success" />
           Ambil Foto via Webcam
         </div>
@@ -164,7 +164,7 @@ export default function WebcamCapture({ open, onClose, onCapture, aspect = "squa
             <p className="font-medium mb-1">Error:</p>
             <p>{error}</p>
             {error.includes("HTTPS") && (
-              <div className="mt-2 text-xs text-white/60">
+              <div className="mt-2 text-xs text-brand-textMuted">
                 <p>Kamera membutuhkan koneksi HTTPS atau localhost.</p>
                 <p className="mt-1">Untuk HTTP di jaringan lokal, aktifkan "Insecure origins treated as secure" di chrome://flags</p>
               </div>
@@ -172,12 +172,12 @@ export default function WebcamCapture({ open, onClose, onCapture, aspect = "squa
           </div>
         )}
         
-        <div className="relative w-full aspect-video bg-black overflow-hidden rounded-lg border border-white/10">
+        <div className="relative w-full aspect-video bg-black overflow-hidden rounded-lg border border-brand-border">
           {isLoading && !error && (
             <div className="absolute inset-0 flex items-center justify-center bg-black">
-              <div className="text-center text-white">
+              <div className="text-center text-brand-text">
                 <Loader2 className="animate-spin mx-auto mb-2" size={32} />
-                <p className="text-sm text-white/60">Memuat kamera...</p>
+                <p className="text-sm text-brand-textMuted">Memuat kamera...</p>
               </div>
             </div>
           )}
@@ -193,7 +193,7 @@ export default function WebcamCapture({ open, onClose, onCapture, aspect = "squa
         <div className="mt-4 flex items-center justify-end gap-3">
           <button 
             onClick={onClose} 
-            className="px-5 py-2.5 border border-white/30 text-white rounded-lg hover:bg-white/10 transition-colors"
+            className="px-5 py-2.5 border border-brand-border text-brand-text rounded-lg hover:bg-brand-surfaceMuted transition-colors"
           >
             Batal
           </button>

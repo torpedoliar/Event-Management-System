@@ -340,7 +340,7 @@ export default function PrizesPage() {
                         )}
 
                         {prizes.map((p) => (
-                            <Card key={p.id} variant="glass" className="group hover:bg-white/10 transition-colors">
+                            <Card key={p.id} variant="glass" className={`group surface-interactive hover:bg-brand-bgSubtle transition-colors ${p.category === 'UTAMA' ? 'border-l-2 border-l-brand-primary' : 'border-l-2 border-l-brand-textMuted'}`}>
                                 <div className="flex items-start justify-between gap-4">
                                     <div className="flex-1">
                                         <div className="flex items-center flex-wrap gap-2 mb-1">
@@ -419,7 +419,7 @@ export default function PrizesPage() {
                                                     {p.winners.map((w: any) => (
                                                         <div 
                                                             key={w.id} 
-                                                            className="group/winner relative flex items-center gap-2 bg-brand-success/10 border border-brand-success/20 rounded-lg px-3 py-1.5 pr-6 cursor-pointer hover:bg-brand-success/20 transition-colors"
+                                                            className="group/winner relative flex items-center gap-2 bg-brand-success/10 border border-brand-success/20 rounded-lg px-3 py-1.5 pr-6 cursor-pointer hover:bg-brand-bgSubtle transition-colors"
                                                             onClick={() => {
                                                                 setSelectedReceiptWinner(w);
                                                                 setSelectedReceiptPrize(p);
@@ -429,7 +429,7 @@ export default function PrizesPage() {
                                                             <div className="w-6 h-6 rounded-full bg-brand-success/20 flex items-center justify-center text-xs font-bold text-brand-success">
                                                                 {w.queueNumber}
                                                             </div>
-                                                            <div className="text-sm text-brand-surface/80">
+                                                            <div className="text-sm text-brand-text/80">
                                                                 {w.name}
                                                                 {w.division && <span className="opacity-70 text-xs ml-1">({w.division})</span>}
                                                             </div>

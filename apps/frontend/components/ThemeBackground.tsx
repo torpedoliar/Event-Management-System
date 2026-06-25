@@ -69,7 +69,7 @@ export default function ThemeBackground() {
   const effectiveImage = override?.backgroundImageUrl ?? cfg?.backgroundImageUrl;
   const effectiveVideo = override?.backgroundVideoUrl ?? cfg?.backgroundVideoUrl;
   const overlayStyle = useMemo(() => ({
-    backgroundColor: `rgba(0,0,0,${overlayOpacity})`
+    background: `linear-gradient(to bottom, rgba(11,11,17,${overlayOpacity}), rgba(22,22,42,${Math.min(overlayOpacity * 1.1, 1)}))`
   }), [overlayOpacity]);
 
   const hasTopNav = !(pathname?.startsWith('/show') || pathname === '/admin/login');
@@ -85,6 +85,7 @@ export default function ThemeBackground() {
             <div className="absolute -top-[20%] -left-[10%] w-[70%] h-[70%] bg-brand-primary/15 rounded-full blur-[160px] animate-pulse" style={{ animationDuration: '8s' }} />
             <div className="absolute top-[40%] -right-[10%] w-[60%] h-[60%] bg-brand-accent/15 rounded-full blur-[140px] animate-pulse" style={{ animationDuration: '10s' }} />
             <div className="absolute bottom-[0%] left-[30%] w-[40%] h-[40%] bg-brand-info/10 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '12s' }} />
+            <div className="absolute bottom-[10%] right-[20%] w-[50%] h-[50%] bg-brand-vivid/10 rounded-full blur-[130px] animate-pulse" style={{ animationDuration: '14s' }} />
           </div>
         </>
       )}

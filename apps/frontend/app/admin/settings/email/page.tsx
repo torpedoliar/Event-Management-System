@@ -244,7 +244,7 @@ export default function EmailSettingsPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="animate-spin text-white" size={32} />
+        <Loader2 className="animate-spin text-brand-primary" size={32} />
       </div>
     );
   }
@@ -264,7 +264,7 @@ export default function EmailSettingsPage() {
         </div>
 
         {/* SMTP Configuration */}
-        <Card variant="glass">
+        <Card variant="glass" className="surface-elevated">
           <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-4">
             <Server size={20} />
             Konfigurasi SMTP
@@ -354,7 +354,7 @@ export default function EmailSettingsPage() {
         </Card>
 
         {/* Sender Configuration */}
-        <Card variant="glass">
+        <Card variant="glass" className="surface-elevated">
           <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-4">
             <Mail size={20} />
             Pengaturan Pengirim
@@ -391,7 +391,7 @@ export default function EmailSettingsPage() {
         </Card>
 
         {/* Email Template */}
-        <Card variant="glass">
+        <Card variant="glass" className="surface-elevated">
           <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-4">
             <Send size={20} />
             Template Email (Opsional)
@@ -440,14 +440,14 @@ export default function EmailSettingsPage() {
                 placeholder="Kosongkan untuk menggunakan template default..."
                 value={settings.emailTemplate || ""}
                 onChange={(e) => handleChange("emailTemplate", e.target.value)}
-                className="font-mono text-sm"
+                className="font-mono text-sm bg-brand-bgSubtle"
               />
             </div>
           </div>
         </Card>
 
         {/* Test & Save */}
-        <Card variant="glass">
+        <Card variant="glass" className="surface-elevated">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
             <div className="flex items-center gap-4">
               <Button 
@@ -481,7 +481,7 @@ export default function EmailSettingsPage() {
         </Card>
 
         {/* Navigation to send emails */}
-        <Card variant="glass">
+        <Card variant="glass" className="surface-elevated">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
             <div>
               <h3 className="font-medium text-white">Kirim Email ke Tamu</h3>

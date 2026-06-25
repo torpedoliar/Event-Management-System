@@ -2,7 +2,13 @@
 import { useEffect, useMemo, useState, useRef } from "react";
 import { apiBase, toApiUrl, parseErrorMessage } from "../../lib/api";
 import { Html5Qrcode } from "html5-qrcode";
-import { Search, QrCode, Loader2, CheckCircle, Clock, Users, X, XCircle, UserPlus, Settings, Camera, UserCheck, Trash2 } from 'lucide-react';
+import { Search, QrCode, Loader2, CheckCircle, Clock, Users, X, XCircle, UserPlus, Settings, Camera, UserCheck, Trash2, Monitor } from 'lucide-react';
+import Label from '../../components/ui/Label';
+import Button from '../../components/ui/Button';
+import Input from '../../components/ui/Input';
+import Modal from '../../components/ui/Modal';
+import Toggle from '../../components/ui/Toggle';
+import StatusBadge from '../../components/ui/StatusBadge';
 import StationSetupModal from "../../components/StationSetupModal";
 import ConnectionStatusIndicator from "../../components/ConnectionStatusIndicator";
 import QueueManagementPanel from "../../components/QueueManagementPanel";
@@ -284,6 +290,7 @@ export default function CheckinPage() {
   const [uncheckPassword, setUncheckPassword] = useState('');
   const [uncheckReason, setUncheckReason] = useState('');
   const [uncheckTarget, setUncheckTarget] = useState<Guest | null>(null);
+  const [uncheckError, setUncheckError] = useState<string | null>(null);
   const [autoCreateGuest, setAutoCreateGuest] = useState(false);
   const [enablePhotoCapture, setEnablePhotoCapture] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -1430,340 +1437,239 @@ export default function CheckinPage() {
   return (
     <RequireAuth>
       <div className="relative min-h-screen w-full overflow-hidden">
-        {/* Header brand */}
-        <div className="relative z-30 p-4 md:p-6 pb-8 md:pb-12">
-          <div className="flex items-center justify-between max-w-5xl mx-auto">
-            <div className="flex items-center gap-4">
-              {cfg?.logoUrl ? (
-                <img src={toApiUrl(cfg.logoUrl)} className="h-12 md:h-16 w-auto drop-shadow-2xl" alt="logo" />
-              ) : (
-                <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center shadow-lg">
-                  <Users size={28} className="text-brand-secondary" />
-                </div>
-              )}
-              <div className="text-white">
-                <div className="text-xl md:text-3xl font-bold text-shadow-lg text-glow">{cfg?.name || 'Event'}</div>
-                {(cfg?.date || cfg?.location) && (
-                  <div className="text-sm md:text-base text-white/70 text-shadow flex items-center gap-2 mt-0.5">
-                    {cfg?.date && <span>{new Date(cfg.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</span>}
-                    {cfg?.date && cfg?.location && <span>•</span>}
-                    {cfg?.location && <span>{cfg.location}</span>}
+        {/* Header */}
+        <div className="relative z-30 p-4 md:p-6 pb-6">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                {cfg?.logoUrl ? (
+                  <img src={toApiUrl(cfg.logoUrl)} className="h-12 md:h-16 w-auto border border-brand-primary/30 rounded-lg" alt="logo" />
+                ) : (
+                  <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-brand-primary/10 border border-brand-border flex items-center justify-center">
+                    <Users size={28} className="text-brand-primary" />
                   </div>
                 )}
-              </div>
-            </div>
-            {/* Admin indicator */}
-            {currentAdmin ? (
-              <div className="flex items-center gap-2 bg-brand-success/20 border border-brand-success/30 rounded-lg px-3 py-2">
-                <UserCheck size={18} className="text-brand-success" />
-                <div className="text-sm">
-                  <div className="text-brand-success font-medium">{currentAdmin.name}</div>
-                  <div className="text-brand-success/60 text-xs font-mono">{currentAdmin.id.substring(0, 8)}...</div>
+                <div>
+                  <div className="text-xl md:text-3xl font-semibold text-brand-text">{cfg?.name || 'Event'}</div>
+                  {(cfg?.date || cfg?.location) && (
+                    <div className="text-sm text-brand-text/70 flex items-center gap-2 mt-0.5">
+                      {cfg?.date && <span>{new Date(cfg.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</span>}
+                      {cfg?.date && cfg?.location && <span>•</span>}
+                      {cfg?.location && <span>{cfg.location}</span>}
+                    </div>
+                  )}
                 </div>
               </div>
-            ) : (
-              <div className="flex items-center gap-2 bg-brand-warning/20 border border-brand-warning/30 rounded-lg px-3 py-2">
-                <XCircle size={18} className="text-brand-warning" />
-                <span className="text-brand-warning text-sm">Tidak Login</span>
-              </div>
-            )}
-          </div>
+              {currentAdmin ? (
+                <StatusBadge status="success">{currentAdmin.name}</StatusBadge>
+              ) : (
+                <StatusBadge status="warning">Tidak login</StatusBadge>
+              )}
+            </div>
 
-          {/* Station & Connection Status */}
-          <div className="mt-4 flex items-center justify-between max-w-5xl mx-auto">
-            {stationConfig && (
-              <div className="flex items-center gap-2 bg-brand-primary/20 border border-brand-primary/30 rounded-lg px-3 py-2">
-                <svg className="w-4 h-4 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                <span className="text-brand-primarySoft text-sm font-medium">{stationConfig.stationName}</span>
+            <div className="mt-4 flex items-center justify-between">
+              {stationConfig ? (
+                <StatusBadge status="info" className="flex items-center gap-1.5">
+                  <Monitor size={12} />
+                  {stationConfig.stationName}
+                </StatusBadge>
+              ) : <div />}
+              <div className="flex items-center gap-3">
+                <button onClick={() => setShowQueuePanel(true)} className="text-brand-text/60 hover:text-brand-text text-sm">Antrian</button>
+                <button onClick={() => setShowStationSetup(true)} className="text-brand-text/60 hover:text-brand-text text-sm">Stasiun</button>
+                <ConnectionStatusIndicator onShowQueue={() => setShowQueuePanel(true)} cachedGuestCount={cachedGuestCount} />
               </div>
-            )}
-            <div className="flex items-center gap-3 ml-auto">
-              <button
-                onClick={() => setShowQueuePanel(true)}
-                className="text-white/60 hover:text-white text-sm underline"
-                title="View Pending Queue"
-              >
-                Queue
-              </button>
-              <button
-                onClick={() => setShowStationSetup(true)}
-                className="text-white/60 hover:text-white text-sm underline"
-                title="Station Settings"
-              >
-                Station
-              </button>
-              <ConnectionStatusIndicator onShowQueue={() => setShowQueuePanel(true)} cachedGuestCount={cachedGuestCount} />
             </div>
           </div>
         </div>
 
-        {/* Search (single input: ID atau Nama) */}
-        <div className="relative z-10 mt-4 px-4 py-6 flex flex-col items-center">
+        {/* Search */}
+        <div className="relative z-10 px-4 py-6 flex flex-col items-center">
           <div className="w-full max-w-3xl">
-            <div className="glass-card-dark p-6 md:p-8">
-              {/* Search Input */}
+            <div className="surface-elevated p-6 md:p-8">
               <div className="relative">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-textMuted">
                   <Search size={22} />
                 </div>
-                <input
+                <Input
                   ref={inputRef}
                   value={q}
                   onChange={(e) => setQ(e.target.value)}
-                  onKeyDown={(e) => { 
-                    if (e.key === 'Enter') { 
-                      e.preventDefault(); 
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
                       if (!q.trim()) return;
                       rapidQueueRef.current.push(q.trim());
-                      setQ(''); 
-                      processRapidQueue(); 
-                    } 
+                      setQ('');
+                      processRapidQueue();
+                    }
                   }}
-                  placeholder="Masukkan Guest ID atau Nama, lalu tekan Enter"
-                  className="w-full rounded-xl border border-white/20 bg-white/5 pl-12 pr-4 py-4 text-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary/50 transition-all"
+                  placeholder="Masukkan ID Tamu atau Nama, lalu tekan Enter"
+                  className="pl-12 pr-4 py-4 text-lg"
                   autoFocus
                 />
               </div>
 
-              {/* Rapid Scan Logs */}
               {rapidLogs.length > 0 && (
-                <div className="relative z-10 mt-4 flex flex-col items-center">
-                  <div className="w-full max-w-3xl glass-card-dark p-4 md:p-6 text-sm text-white/80 overflow-y-auto max-h-48 border border-white/10 rounded-xl">
-                    <h3 className="text-white font-semibold mb-3">Rapid Scan Logs</h3>
-                    <ul className="space-y-2">
-                      {rapidLogs.map((log) => (
-                        <li key={log.id} className="flex justify-between items-center bg-white/5 px-3 py-2 rounded-lg">
-                          <div className="flex gap-3">
-                            <span className="opacity-60">{log.timestamp.toLocaleTimeString()}</span>
-                            <strong className="text-white">{log.guestIdOrName}</strong>
-                          </div>
-                          <span className={`font-medium ${
-                            log.status === 'SUCCESS' ? 'text-brand-success' :
-                            log.status === 'DUPLICATE' ? 'text-orange-400' :
-                            'text-brand-danger'
-                          }`}>
-                            {log.message}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                <div className="mt-4 surface-elevated p-4 text-sm max-h-48 overflow-y-auto">
+                  <h3 className="text-brand-text font-semibold mb-3">Riwayat Scan</h3>
+                  <ul className="space-y-2">
+                    {rapidLogs.map((log) => (
+                      <li key={log.id} className="flex justify-between items-center bg-brand-bgSubtle px-3 py-2 rounded-lg">
+                        <div className="flex gap-3">
+                          <span className="text-brand-textMuted">{log.timestamp.toLocaleTimeString()}</span>
+                          <strong className="text-brand-text">{log.guestIdOrName}</strong>
+                        </div>
+                        <span className={`font-medium ${
+                          log.status === 'SUCCESS' ? 'text-brand-success' :
+                          log.status === 'DUPLICATE' ? 'text-brand-warning' :
+                          'text-brand-danger'
+                        }`}>
+                          {log.message}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
 
               {error && (
                 <div className="mt-4 p-3 rounded-xl bg-brand-danger/10 border border-brand-danger/20 text-brand-danger flex items-center justify-between">
                   <span>{error}</span>
-                  {error === 'Tamu tidak ditemukan' && !autoCreateGuest && (
-                    <button
-                      onClick={() => {
-                        setAutoCreateGuest(true);
-                        localStorage.setItem('checkinAutoCreateGuest', 'true');
-                        doSearch();
-                      }}
-                      className="text-sm text-brand-primarySoft hover:text-white flex items-center gap-1 underline ml-2"
-                    >
-                      <UserPlus size={14} />
-                      Buat & Check-in
-                    </button>
-                  )}
                 </div>
               )}
 
-              {/* Action Buttons */}
               <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
-                <button
+                <Button
+                  size="lg"
+                  className="flex-1"
                   disabled={searching || checking || creatingGuest}
+                  loading={searching || checking || creatingGuest}
                   onClick={doSearch}
-                  className="flex-1 flex items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-brand-primary to-brand-accent px-6 py-4 text-lg font-semibold text-brand-secondary shadow-lg hover:shadow-xl disabled:opacity-50 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
                 >
-                  {searching || creatingGuest ? <Loader2 className="animate-spin" size={24} /> : (checking ? <Loader2 className="animate-spin" size={24} /> : <Search size={24} />)}
+                  {!searching && !checking && !creatingGuest && <Search size={22} />}
                   {searching ? 'Mencari...' : (creatingGuest ? 'Membuat Tamu...' : (checking ? 'Check-in...' : 'Cari & Check-in'))}
-                </button>
-                <button
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="flex-1 sm:flex-initial text-brand-text"
                   disabled={searching || checking || creatingGuest}
                   onClick={() => setShowScanner(true)}
-                  className="flex-1 sm:flex-initial flex items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-brand-success to-brand-success/80 px-6 py-4 text-lg font-semibold text-brand-secondary shadow-lg hover:shadow-xl disabled:opacity-50 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
                 >
-                  <QrCode size={24} />
+                  <QrCode size={22} />
                   Scan QR
-                </button>
-                <button
-                  onClick={() => setShowSettings(true)}
-                  className="flex items-center justify-center gap-2 rounded-xl bg-white/10 border border-white/20 px-4 py-4 text-white hover:bg-white/20 transition-all"
-                  title="Pengaturan"
-                >
-                  <Settings size={24} />
-                </button>
+                </Button>
+                <Button size="lg" variant="ghost" onClick={() => setShowSettings(true)} aria-label="Pengaturan">
+                  <Settings size={22} />
+                </Button>
               </div>
             </div>
           </div>
         </div>
 
         {/* Settings Modal */}
-        {showSettings && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-            <div className="w-full max-w-md rounded-xl border border-brand-border bg-brand-secondary/95 text-brand-surface shadow-2xl p-6 animate-in fade-in zoom-in duration-300">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold flex items-center gap-2">
-                  <Settings size={24} className="text-brand-primary" />
-                  Pengaturan Check-in
-                </h3>
-                <button
-                  onClick={() => setShowSettings(false)}
-                  className="text-white/60 hover:text-white"
-                >
-                  <X size={24} />
-                </button>
+        <Modal
+          open={showSettings}
+          onClose={() => setShowSettings(false)}
+          title={
+            <span className="flex items-center gap-2">
+              <Settings size={20} className="text-brand-primary" />
+              Pengaturan Stasiun
+            </span>
+          }
+          footer={
+            <Button onClick={() => setShowSettings(false)} className="w-full">
+              <CheckCircle size={18} />
+              Selesai
+            </Button>
+          }
+        >
+          <div className="space-y-3">
+            <Toggle
+              icon={<UserPlus size={18} />}
+              checked={autoCreateGuest}
+              onChange={(checked) => {
+                setAutoCreateGuest(checked);
+                localStorage.setItem('checkinAutoCreateGuest', String(checked));
+              }}
+              label="Buat tamu baru bila tidak ditemukan"
+              description="Saat pencarian tidak menemukan tamu, sistem membuat tamu baru lalu check-in."
+            />
+            <Toggle
+              icon={<Camera size={18} />}
+              checked={enablePhotoCapture}
+              onChange={(checked) => {
+                setEnablePhotoCapture(checked);
+                localStorage.setItem('checkinEnablePhotoCapture', String(checked));
+              }}
+              label="Ambil foto otomatis saat check-in"
+              description="Gunakan webcam untuk mengambil foto tamu setelah check-in berhasil."
+            />
+
+            {isAuth && (
+              <div className="pt-3 border-t border-brand-border space-y-3">
+                <div className="text-xs uppercase tracking-wider text-brand-textMuted">Pengaturan Event (Admin)</div>
+                <Toggle
+                  icon={<UserCheck size={18} />}
+                  checked={cfg?.allowMultipleCheckinPerCounter ?? false}
+                  onChange={(checked) => toggleMultipleCheckinPerCounter(checked)}
+                  disabled={savingEventSetting}
+                  label="Check-in berulang per counter"
+                  description="Tamu dapat check-in di berbagai counter, maksimal 1x per counter."
+                />
               </div>
+            )}
 
-              <div className="space-y-4">
-                <label className="flex items-center justify-between p-4 rounded-lg border border-white/20 bg-white/5 cursor-pointer hover:bg-white/10 transition-colors">
-                  <div className="flex items-center gap-3">
-                    <UserPlus size={20} className="text-brand-primary" />
-                    <div>
-                      <div className="font-medium text-white">Auto Buat Tamu Baru</div>
-                      <div className="text-sm text-white/60">Jika tamu tidak ditemukan, buat tamu baru dan langsung check-in</div>
-                    </div>
-                  </div>
-                  <div className={`w-12 h-7 rounded-full transition-colors relative ${autoCreateGuest ? 'bg-brand-primary' : 'bg-white/20'}`}>
-                    <div className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transform ${autoCreateGuest ? 'translate-x-5' : 'translate-x-0'}`} />
-                    <input
-                      type="checkbox"
-                      className="hidden"
-                      checked={autoCreateGuest}
-                      onChange={(e) => {
-                        const checked = e.target.checked;
-                        setAutoCreateGuest(checked);
-                        localStorage.setItem('checkinAutoCreateGuest', String(checked));
-                      }}
-                    />
-                  </div>
-                </label>
-
-                <label className="flex items-center justify-between p-4 rounded-lg border border-white/20 bg-white/5 cursor-pointer hover:bg-white/10 transition-colors">
-                  <div className="flex items-center gap-3">
-                    <Camera size={20} className="text-brand-success" />
-                    <div>
-                      <div className="font-medium text-white">Auto Foto Saat Check-in</div>
-                      <div className="text-sm text-white/60">Otomatis ambil foto tamu via webcam setelah check-in berhasil</div>
-                    </div>
-                  </div>
-                  <div className={`w-12 h-7 rounded-full transition-colors relative ${enablePhotoCapture ? 'bg-brand-success' : 'bg-white/20'}`}>
-                    <div className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transform ${enablePhotoCapture ? 'translate-x-5' : 'translate-x-0'}`} />
-                    <input
-                      type="checkbox"
-                      className="hidden"
-                      checked={enablePhotoCapture}
-                      onChange={(e) => {
-                        const checked = e.target.checked;
-                        setEnablePhotoCapture(checked);
-                        localStorage.setItem('checkinEnablePhotoCapture', String(checked));
-                      }}
-                    />
-                  </div>
-                </label>
-
-                {/* Event-level setting - only for authenticated admins */}
-                {isAuth && (
-                  <div className="pt-4 border-t border-white/10">
-                    <div className="text-xs text-white/40 uppercase tracking-wider mb-3">Pengaturan Event</div>
-                    <label className={`flex items-center justify-between p-4 rounded-lg border border-white/20 bg-white/5 cursor-pointer hover:bg-white/10 transition-colors ${savingEventSetting ? 'opacity-50 pointer-events-none' : ''}`}>
-                      <div className="flex items-center gap-3">
-                        <UserCheck size={20} className="text-brand-accent" />
-                        <div>
-                          <div className="font-medium text-white">Multiple Check-in Per Counter</div>
-                          <div className="text-sm text-white/60">Tamu dapat check-in di berbagai admin/counter (maks 1x per counter)</div>
-                        </div>
-                      </div>
-                      <div className={`w-12 h-7 rounded-full transition-colors relative ${cfg?.allowMultipleCheckinPerCounter ? 'bg-brand-accent' : 'bg-white/20'}`}>
-                        <div className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transform ${cfg?.allowMultipleCheckinPerCounter ? 'translate-x-5' : 'translate-x-0'}`} />
-                        <input
-                          type="checkbox"
-                          className="hidden"
-                          checked={cfg?.allowMultipleCheckinPerCounter ?? false}
-                          disabled={savingEventSetting}
-                          onChange={(e) => toggleMultipleCheckinPerCounter(e.target.checked)}
-                        />
-                      </div>
-                    </label>
-                  </div>
-                )}
-
-                {/* Bulk download for offline access */}
-                <div className="pt-4 border-t border-white/10">
-                  <div className="text-xs text-white/40 uppercase tracking-wider mb-3">Akses Offline</div>
-                  <button
-                    onClick={handleDownloadGuests}
-                    disabled={downloadingGuests}
-                    className={`w-full flex items-center justify-center gap-2 p-4 rounded-lg border border-white/20 bg-white/5 cursor-pointer transition-colors mb-2 ${downloadingGuests ? 'opacity-50 pointer-events-none' : 'hover:bg-white/10'
-                      }`}
-                  >
-                    {downloadingGuests ? (
-                      <>
-                        <Loader2 size={20} className="text-brand-primary animate-spin" />
-                        <span className="text-sm text-white">{downloadProgress}</span>
-                      </>
-                    ) : (
-                      <>
-                        <Users size={20} className="text-brand-primary" />
-                        <div className="text-left">
-                          <div className="font-medium text-white">Download Tamu untuk Akses Offline</div>
-                          <div className="text-xs text-white/60">Simpan semua data tamu ke perangkat untuk pencarian saat offline</div>
-                        </div>
-                      </>
-                    )}
-                  </button>
-
-                  <button
-                    onClick={handleClearCache}
-                    className="w-full flex items-center justify-center gap-2 p-4 rounded-lg border border-brand-danger/20 bg-brand-danger/5 cursor-pointer hover:bg-brand-danger/10 transition-colors"
-                  >
-                    <Trash2 size={20} className="text-brand-danger" />
-                    <div className="text-left">
-                      <div className="font-medium text-brand-danger">Clear Cache Tamu Lokal</div>
-                      <div className="text-xs text-brand-danger/60">Hapus semua data tamu yang tersimpan di perangkat ini</div>
-                    </div>
-                  </button>
-
-                  {downloadProgress && !downloadingGuests && (
-                    <div className="mt-2 text-xs text-brand-success text-center">{downloadProgress}</div>
-                  )}
-                </div>
-              </div>
-
-              <div className="mt-6 flex gap-3">
-                <button
-                  onClick={() => setShowSettings(false)}
-                  className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-brand-primary px-4 py-3 font-medium text-white hover:bg-brand-primarySoft transition-colors"
-                >
-                  <CheckCircle size={18} />
-                  Selesai
-                </button>
-              </div>
+            <div className="pt-3 border-t border-brand-border space-y-3">
+              <div className="text-xs uppercase tracking-wider text-brand-textMuted">Akses Offline</div>
+              <Button
+                variant="outline"
+                className="w-full justify-start text-brand-text"
+                onClick={handleDownloadGuests}
+                loading={downloadingGuests}
+              >
+                <Users size={18} />
+                <span className="text-left">
+                  <span className="block font-medium">Download data tamu</span>
+                  <span className="block text-xs text-brand-textMuted font-normal">Simpan ke perangkat untuk pencarian offline</span>
+                </span>
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full justify-start text-brand-danger border-brand-danger/30 hover:bg-brand-danger/10"
+                onClick={handleClearCache}
+              >
+                <Trash2 size={18} />
+                <span className="text-left">
+                  <span className="block font-medium">Hapus cache lokal</span>
+                  <span className="block text-xs text-brand-textMuted font-normal">Hapus semua data tamu tersimpan di perangkat ini</span>
+                </span>
+              </Button>
+              {downloadProgress && !downloadingGuests && (
+                <div className="text-xs text-brand-success text-center">{downloadProgress}</div>
+              )}
             </div>
           </div>
-        )}
+        </Modal>
 
         {/* Results */}
         <div className="relative z-10 px-4 pb-4 flex justify-center">
-          <div className="w-full max-w-3xl glass-card-dark p-4 md:p-6">
+          <div className="w-full max-w-3xl surface-elevated p-4 md:p-6">
             {!results.length && (
               <div className="text-center py-8 flex flex-col items-center gap-4">
-                <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center">
-                  <Search size={40} className="text-white/20" />
+                <div className="w-16 h-16 rounded-full bg-brand-text/5 flex items-center justify-center">
+                  <Search size={32} className="text-brand-textMuted" />
                 </div>
                 <div>
-                  <p className="text-white/60 text-lg">Siap untuk check-in</p>
-                  <p className="text-white/40 text-sm mt-1">Masukkan Guest ID / Nama atau gunakan Scan QR</p>
+                  <p className="text-brand-text text-lg">Siap untuk check-in</p>
+                  <p className="text-brand-textMuted text-sm mt-1">Masukkan ID Tamu / Nama atau gunakan Scan QR</p>
                 </div>
               </div>
             )}
             {!!results.length && (
               <div className="space-y-3">
-                <div className="text-sm text-white/60 font-medium mb-2">
+                <div className="text-sm text-brand-textMuted font-medium mb-2">
                   {results.length} tamu ditemukan
                   {results.length > 1 && (
                     <span className="ml-2 text-brand-warning">- Pilih tamu untuk check-in</span>
@@ -1772,45 +1678,41 @@ export default function CheckinPage() {
                 {results.map((g) => (
                   <div
                     key={g.id}
-                    className={`flex items-center justify-between rounded-xl p-4 transition-all duration-200 ${selected?.id === g.id ? 'bg-brand-primary/20 border border-brand-primary/30' : 'bg-white/5 border border-white/10 hover:bg-white/10'}`}
+                    className={`flex items-center justify-between rounded-xl p-4 transition-colors ${selected?.id === g.id ? 'bg-brand-primary/10 border border-brand-primary/30' : 'surface-interactive'}`}
                   >
                     <div className="flex items-center gap-4">
-                      <div className="h-14 w-14 rounded-xl bg-white/10 overflow-hidden flex-shrink-0">
+                      <div className="h-14 w-14 rounded-xl bg-brand-text/5 overflow-hidden flex-shrink-0">
                         {g.photoUrl ? (
                           <img src={toApiUrl(g.photoUrl)} className="h-full w-full object-cover" alt={g.name} />
                         ) : (
                           <div className="flex h-full w-full items-center justify-center">
-                            <Users size={24} className="text-white/30" />
+                            <Users size={24} className="text-brand-textMuted" />
                           </div>
                         )}
                       </div>
                       <div>
-                        <div className="font-semibold text-white text-lg">
-                          {g.name}
-                        </div>
-                        <div className="text-sm text-white/60 flex items-center gap-2 mt-0.5">
-                          <span className="font-mono text-brand-primarySoft">{g.guestId}</span>
+                        <div className="font-semibold text-brand-text text-lg">{g.name}</div>
+                        <div className="text-sm text-brand-textMuted flex items-center gap-2 mt-0.5">
+                          <span className="font-mono text-brand-primary">{g.guestId}</span>
                           <span>•</span>
                           <span>{g.tableLocation}</span>
                         </div>
                         {g.company && (
-                          <div className="text-sm text-brand-warning/80 mt-0.5">
+                          <div className="text-sm text-brand-warning/90 mt-0.5">
                             {g.company}
-                            {g.division && <span className="text-white/50"> - {g.division}</span>}
+                            {g.division && <span className="text-brand-textMuted"> - {g.division}</span>}
                           </div>
                         )}
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-primary to-brand-accent px-5 py-2.5 font-semibold text-brand-secondary shadow-lg disabled:opacity-50 hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
-                        disabled={checking}
-                        onClick={() => doCheckin(g, true)}
-                      >
-                        {checking && checkingId === g.id ? <Loader2 className="animate-spin" size={18} /> : <CheckCircle size={18} />}
-                        {checking && checkingId === g.id ? 'Check-in...' : 'Check-in'}
-                      </button>
-                    </div>
+                    <Button
+                      disabled={checking}
+                      loading={checking && checkingId === g.id}
+                      onClick={() => doCheckin(g, true)}
+                    >
+                      {!checking && <CheckCircle size={16} />}
+                      Check-in
+                    </Button>
                   </div>
                 ))}
               </div>
@@ -1820,37 +1722,37 @@ export default function CheckinPage() {
 
         {/* History */}
         <div className="relative z-10 px-4 pb-6 flex justify-center">
-          <div className="w-full max-w-3xl glass-card-dark p-4 md:p-6">
+          <div className="w-full max-w-3xl surface-elevated p-4 md:p-6">
             <div className="mb-4 flex items-center justify-between">
-              <div className="font-semibold flex items-center gap-2 text-white">
+              <div className="font-semibold flex items-center gap-2 text-brand-text">
                 <Clock size={18} className="text-brand-primary" />
                 Riwayat Check-in Terbaru
               </div>
-              <span className="text-xs text-white/40">{history.length} tamu</span>
+              <span className="text-xs text-brand-textMuted">{history.length} tamu</span>
             </div>
             {!history.length && (
-              <div className="text-sm text-white/50 py-6 text-center flex flex-col items-center gap-2">
-                <Clock size={32} className="text-white/20" />
+              <div className="text-sm text-brand-textMuted py-6 text-center flex flex-col items-center gap-2">
+                <Clock size={32} className="text-brand-textMuted/50" />
                 Belum ada riwayat check-in
               </div>
             )}
             {!!history.length && (
               <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                 {history.map((h) => (
-                  <div key={h.id} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3 hover:bg-white/10 transition-colors">
-                    <div className="h-12 w-12 rounded-lg bg-white/10 overflow-hidden flex-shrink-0">
+                  <div key={h.id} className="flex items-center gap-3 rounded-xl border border-brand-border surface-interactive p-3 hover:shadow-gold transition-all">
+                    <div className="h-12 w-12 rounded-lg bg-brand-text/5 overflow-hidden flex-shrink-0">
                       {h.photoUrl ? (
                         <img src={toApiUrl(h.photoUrl)} className="h-full w-full object-cover" alt={h.name} />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center">
-                          <Users size={20} className="text-white/30" />
+                          <Users size={20} className="text-brand-textMuted" />
                         </div>
                       )}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="font-medium text-white truncate">{h.name}</div>
-                      <div className="text-xs text-white/50 truncate flex items-center gap-1.5">
-                        <span className="font-mono text-brand-primarySoft/70">{h.guestId}</span>
+                      <div className="font-medium text-brand-text truncate">{h.name}</div>
+                      <div className="text-xs text-brand-textMuted truncate flex items-center gap-1.5">
+                        <span className="font-mono text-brand-primary/70">{h.guestId}</span>
                         <span>•</span>
                         <span>{h.tableLocation}</span>
                       </div>
@@ -1867,9 +1769,9 @@ export default function CheckinPage() {
 
         {/* Confirmation full display */}
         {checkedGuest && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-            <div className="w-full max-w-5xl overflow-hidden rounded-xl border border-brand-border bg-brand-secondary/90 text-brand-surface shadow-glass grid grid-cols-1 md:grid-cols-[320px_1fr] animate-in fade-in zoom-in duration-300">
-              <div className="bg-white/10 flex items-center justify-center min-h-[300px] md:min-h-full relative">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+            <div className="w-full max-w-5xl overflow-hidden rounded-2xl surface-elevated shadow-gold grid grid-cols-1 md:grid-cols-[360px_1fr]">
+              <div className="bg-brand-text/5 flex items-center justify-center min-h-[300px] md:min-h-full relative">
                 {autoCapturing ? (
                   <div className="w-full h-full flex flex-col items-center justify-center">
                     <video
@@ -1880,7 +1782,7 @@ export default function CheckinPage() {
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute bottom-4 left-0 right-0 text-center">
-                      <div className="inline-flex items-center gap-2 bg-black/70 text-white px-4 py-2 rounded-full text-sm font-medium">
+                      <div className="inline-flex items-center gap-2 bg-black/60 text-brand-text px-4 py-2 rounded-full text-sm font-medium">
                         <Loader2 className="animate-spin" size={16} />
                         {autoCaptureStatus}
                       </div>
@@ -1889,28 +1791,35 @@ export default function CheckinPage() {
                 ) : checkedGuest.photoUrl ? (
                   <img src={toApiUrl(checkedGuest.photoUrl)} alt={checkedGuest.name} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="text-gray-400 p-8 flex flex-col items-center gap-2">
-                    <Users size={48} className="opacity-50" />
-                    <span>No Photo</span>
+                  <div className="text-brand-textMuted p-8 flex flex-col items-center gap-2">
+                    <Users size={48} />
+                    <span>Tidak ada foto</span>
                   </div>
                 )}
                 <canvas ref={autoCanvasRef} className="hidden" />
               </div>
-              <div className="p-6 md:p-10 space-y-4 relative overflow-y-auto max-h-[60vh] md:max-h-full">
+              <div className="p-6 md:p-10 space-y-5 relative overflow-y-auto max-h-[60vh] md:max-h-full">
                 {isDuplicateCheckIn ? (
-                  <div className="text-brand-warning text-xl font-bold flex items-center gap-2">
-                    <XCircle size={24} />
-                    SUDAH CHECK-IN
+                  <div className="flex items-center gap-3 text-brand-warning">
+                    <div className="p-2 rounded-lg bg-brand-warning/10 border border-brand-warning/30">
+                      <XCircle size={22} />
+                    </div>
+                    <div>
+                      <div className="text-xl font-semibold">Sudah Check-in</div>
+                      <div className="text-sm text-brand-warning/80">Tamu pernah check-in sebelumnya</div>
+                    </div>
                   </div>
                 ) : (
-                  <div className="text-brand-success text-xl font-bold flex items-center gap-2">
-                    <CheckCircle size={24} />
-                    CHECK-IN BERHASIL
-                    {(checkedGuest.checkinCount ?? 0) > 1 && (
-                      <span className="text-sm bg-brand-accent/20 text-brand-accent px-2 py-0.5 rounded-full ml-2">
-                        Check-in ke-{checkedGuest.checkinCount}
-                      </span>
-                    )}
+                  <div className="flex items-center gap-3 text-brand-success">
+                    <div className="p-2 rounded-lg bg-brand-success/10 border border-brand-success/30">
+                      <CheckCircle size={22} />
+                    </div>
+                    <div>
+                      <div className="text-xl font-semibold">Check-in Berhasil</div>
+                      {(checkedGuest.checkinCount ?? 0) > 1 && (
+                        <div className="text-sm text-brand-success/80">Check-in ke-{checkedGuest.checkinCount}</div>
+                      )}
+                    </div>
                   </div>
                 )}
 
@@ -1928,7 +1837,7 @@ export default function CheckinPage() {
                         <div key={c.id || idx} className={`flex items-center justify-between text-sm rounded px-2 py-1 ${isDuplicateCheckIn ? 'bg-brand-warning/10' : 'bg-brand-success/10'}`}>
                           <span className={`font-medium ${isDuplicateCheckIn ? 'text-brand-warning' : 'text-brand-success'}`}>
                             {c.checkinByName || 'Admin'}
-                            {c.counterName && <span className="text-white/50 ml-1">({c.counterName})</span>}
+                            {c.counterName && <span className="text-brand-text/50 ml-1">({c.counterName})</span>}
                           </span>
                           <span className={`font-mono text-xs ${isDuplicateCheckIn ? 'text-brand-warning' : 'text-brand-success'}`}>
                             {new Date(c.checkinAt).toLocaleString('id-ID', {
@@ -1968,91 +1877,66 @@ export default function CheckinPage() {
                   </div>
                 )}
 
-                <div className="mb-6">
-                  <div className="text-sm text-white/60 uppercase tracking-wider font-medium">Guest ID</div>
-                  <div className="text-xl font-mono font-semibold text-white">{checkedGuest.guestId}</div>
-                </div>
-
-                <div className="mb-6">
-                  <div className="text-sm text-white/60 uppercase tracking-wider font-medium">Nama</div>
-                  <div className="text-4xl md:text-6xl font-bold text-white leading-tight">{checkedGuest.name}</div>
-                </div>
-
-                <div className="mb-6">
-                  <div className="text-sm text-white/60 uppercase tracking-wider font-medium">Meja / Ruangan</div>
-                  <div className="text-3xl md:text-5xl font-bold text-white">{checkedGuest.tableLocation}</div>
-                </div>
-
-                {checkedGuest.company && (
-                  <div className="mb-6">
-                    <div className="text-sm text-white/60 uppercase tracking-wider font-medium">Perusahaan</div>
-                    <div className="text-2xl md:text-4xl font-bold text-white">{checkedGuest.company}</div>
+                <div className="space-y-5">
+                  <div>
+                    <div className="text-sm text-brand-textMuted uppercase tracking-wider font-medium">ID Tamu</div>
+                    <div className="text-xl font-mono font-semibold text-brand-text">{checkedGuest.guestId}</div>
                   </div>
-                )}
-
-                {checkedGuest.department && (
-                  <div className="mb-6">
-                    <div className="text-sm text-white/60 uppercase tracking-wider font-medium">Departemen</div>
-                    <div className="text-2xl md:text-4xl font-bold text-white">{checkedGuest.department}</div>
+                  <div>
+                    <div className="text-sm text-brand-textMuted uppercase tracking-wider font-medium">Nama</div>
+                    <div className="text-3xl md:text-5xl font-semibold text-brand-text leading-tight">{checkedGuest.name}</div>
                   </div>
-                )}
-
-                {checkedGuest.division && (
-                  <div className="mb-6">
-                    <div className="text-sm text-white/60 uppercase tracking-wider font-medium">Divisi</div>
-                    <div className="text-2xl md:text-4xl font-bold text-white">{checkedGuest.division}</div>
+                  <div>
+                    <div className="text-sm text-brand-textMuted uppercase tracking-wider font-medium">Meja / Ruangan</div>
+                    <div className="text-2xl md:text-4xl font-semibold text-brand-text">{checkedGuest.tableLocation}</div>
                   </div>
-                )}
-
-                {checkedGuest.notes && (
-                  <div className="bg-white/5 p-3 rounded-lg border border-white/10 mb-6">
-                    <div className="text-sm text-white/60 uppercase tracking-wider font-medium mb-1">Catatan</div>
-                    <div className="text-base md:text-lg text-white italic">"{checkedGuest.notes}"</div>
-                  </div>
-                )}
-
-                <div className="mt-auto pt-4 border-t border-white/10">
-                  <div className="flex items-center justify-between">
+                  {checkedGuest.company && (
                     <div>
-                      <div className="text-xs text-white/50 uppercase tracking-wider font-medium">Queue Number</div>
-                      <div className="text-3xl font-bold text-white/80">{checkedGuest.queueNumber}</div>
+                      <div className="text-sm text-brand-textMuted uppercase tracking-wider font-medium">Perusahaan</div>
+                      <div className="text-xl md:text-2xl font-semibold text-brand-text">{checkedGuest.company}</div>
                     </div>
+                  )}
+                  {checkedGuest.department && (
+                    <div>
+                      <div className="text-sm text-brand-textMuted uppercase tracking-wider font-medium">Departemen</div>
+                      <div className="text-xl md:text-2xl font-semibold text-brand-text">{checkedGuest.department}</div>
+                    </div>
+                  )}
+                  {checkedGuest.division && (
+                    <div>
+                      <div className="text-sm text-brand-textMuted uppercase tracking-wider font-medium">Divisi</div>
+                      <div className="text-xl md:text-2xl font-semibold text-brand-text">{checkedGuest.division}</div>
+                    </div>
+                  )}
+                  {checkedGuest.notes && (
+                    <div className="p-4 bg-brand-warning/10 border border-brand-warning/20 rounded-xl">
+                      <div className="text-sm text-brand-warning uppercase tracking-wider font-medium mb-1">Catatan</div>
+                      <div className="text-base text-brand-warning italic">"{checkedGuest.notes}"</div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="pt-4 border-t border-brand-border flex items-center justify-between">
+                  <div>
+                    <div className="text-xs text-brand-textMuted uppercase tracking-wider font-medium">Nomor Antrian</div>
+                    <div className="text-2xl font-semibold text-brand-text">{checkedGuest.queueNumber}</div>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Button variant="outline" onClick={() => { setCheckedGuest(null); setIsDuplicateCheckIn(false); clearPopupTimeout(); }} disabled={autoCapturing}>
+                      <X size={18} /> Tutup
+                    </Button>
+                    {enablePhotoCapture && !isDuplicateCheckIn && !autoCapturing && (
+                      <Button onClick={() => { clearPopupTimeout(); setShowPhotoCapture(true); startCamera(); }}>
+                        <Camera size={18} /> {checkedGuest?.photoUrl ? 'Ulangi Foto' : 'Ambil Foto'}
+                      </Button>
+                    )}
+                    {isAuth && (
+                      <Button variant="danger" disabled={unchecking} onClick={() => openUncheckModal(checkedGuest)}>
+                        <XCircle size={18} /> Batalkan
+                      </Button>
+                    )}
                   </div>
                 </div>
-
-                <div className="pt-6 flex flex-wrap items-center gap-3">
-                  <button
-                    className="flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-6 py-3 text-base font-medium text-white hover:bg-white/20 transition-colors"
-                    onClick={() => { setCheckedGuest(null); setIsDuplicateCheckIn(false); clearPopupTimeout(); }}
-                    disabled={autoCapturing}
-                  >
-                    <X size={20} />
-                    Tutup
-                  </button>
-                  {enablePhotoCapture && !isDuplicateCheckIn && !autoCapturing && (
-                    <button
-                      className="flex items-center gap-2 rounded-lg bg-brand-success hover:opacity-90 px-6 py-3 text-base font-medium text-white transition-colors"
-                      onClick={() => {
-                        clearPopupTimeout();
-                        setShowPhotoCapture(true);
-                        startCamera();
-                      }}
-                    >
-                      <Camera size={20} />
-                      {checkedGuest?.photoUrl ? 'Ambil Ulang Foto' : 'Ambil Foto Manual'}
-                    </button>
-                  )}
-                  {isAuth && (
-                    <button
-                      disabled={unchecking}
-                      className="flex items-center gap-2 bg-brand-danger/80 hover:bg-brand-danger text-white rounded-lg px-6 py-3 text-base font-medium disabled:opacity-50 transition-colors ml-auto"
-                      onClick={() => openUncheckModal(checkedGuest)}
-                    >
-                      <XCircle size={20} />
-                      Batal Check-in
-                    </button>
-                  )}
-                </div>
               </div>
             </div>
 
@@ -2060,206 +1944,91 @@ export default function CheckinPage() {
           </div>
         )}
 
-        {/* Scanner Modal - Cinematic HUD */}
-        {showScanner && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 p-4 backdrop-blur-xl">
-            {/* Cinematic HUD Elements */}
-            <div className="absolute top-8 left-8 w-16 h-16 border-t-2 border-l-2 border-brand-primary opacity-50" />
-            <div className="absolute top-8 right-8 w-16 h-16 border-t-2 border-r-2 border-brand-primary opacity-50" />
-            <div className="absolute bottom-8 left-8 w-16 h-16 border-b-2 border-l-2 border-brand-primary opacity-50" />
-            <div className="absolute bottom-8 right-8 w-16 h-16 border-b-2 border-r-2 border-brand-primary opacity-50" />
-            
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg">
-              <div className="text-center mb-8">
-                <div className="text-brand-primary font-mono text-sm tracking-[0.3em] uppercase mb-2 animate-pulse">Optic Targeting System</div>
-                <h3 className="text-2xl font-bold text-white tracking-widest flex items-center justify-center gap-3 font-heading">
-                  <QrCode className="text-brand-accent" size={28} />
-                  SCAN QR CODE
-                </h3>
-              </div>
-
-              <div className="relative p-2 rounded-2xl bg-black/50 border border-brand-primary/20 shadow-[0_0_50px_rgba(212,168,83,0.15)] overflow-hidden">
-                 {/* Floating Brackets */}
-                 <div className="absolute top-0 left-0 w-12 h-12 border-t-4 border-l-4 border-brand-accent z-10" />
-                 <div className="absolute top-0 right-0 w-12 h-12 border-t-4 border-r-4 border-brand-accent z-10" />
-                 <div className="absolute bottom-0 left-0 w-12 h-12 border-b-4 border-l-4 border-brand-accent z-10" />
-                 <div className="absolute bottom-0 right-0 w-12 h-12 border-b-4 border-r-4 border-brand-accent z-10" />
-                 
-                 <div className="absolute top-1/2 left-0 w-full h-[2px] bg-brand-primary/50 z-10 shadow-[0_0_10px_rgba(212,168,83,1)] animate-pulse" />
-
-                 <Html5QrcodePlugin
-                    fps={10}
-                    qrbox={280}
-                    disableFlip={false}
-                    qrCodeSuccessCallback={onScanSuccess}
-                    onScanFailure={(err: any) => {
-                      // Silently ignore scan failures (frame not containing QR)
-                    }}
-                  />
-              </div>
-
-              <button
-                className="mt-10 mx-auto flex items-center justify-center gap-3 rounded-full bg-brand-danger/20 border border-brand-danger/50 px-8 py-3 text-brand-danger hover:bg-brand-danger hover:text-white transition-all font-mono tracking-widest text-sm"
-                onClick={() => setShowScanner(false)}
-              >
-                <X size={18} />
-                ABORT
-              </button>
+        {/* Scanner Modal */}
+        <Modal open={showScanner} onClose={() => setShowScanner(false)} className="max-w-lg" title="Scan QR Code">
+          <div className="space-y-4">
+            <div className="rounded-xl overflow-hidden border border-brand-border bg-black">
+              <Html5QrcodePlugin
+                fps={10}
+                qrbox={280}
+                disableFlip={false}
+                qrCodeSuccessCallback={onScanSuccess}
+                onScanFailure={() => { }}
+              />
             </div>
+            <Button variant="outline" className="w-full text-brand-text" onClick={() => setShowScanner(false)}>
+              <X size={18} />
+              Tutup
+            </Button>
           </div>
-        )}
+        </Modal>
 
         {/* Uncheck Confirmation Modal */}
-        {showUncheckModal && uncheckTarget && (
-          <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/80 p-4 backdrop-blur-md">
-            <div className="w-full max-w-md rounded-xl bg-brand-secondary border border-brand-danger/30 p-6 shadow-2xl">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-full bg-brand-danger/20 flex items-center justify-center">
-                  <XCircle size={24} className="text-brand-danger" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white">Batalkan Check-in</h3>
-                  <p className="text-sm text-white/60">Tindakan ini memerlukan verifikasi</p>
-                </div>
+        <Modal
+          open={showUncheckModal && !!uncheckTarget}
+          onClose={closeUncheckModal}
+          title="Batalkan Check-in"
+        >
+          <div className="space-y-4">
+            <p className="text-sm text-brand-textMuted">
+              Check-in tamu <strong className="text-brand-text">{uncheckTarget?.name}</strong> akan dibatalkan. Hak undian tamu akan dicabut sampai check-in ulang.
+            </p>
+            {uncheckError && (
+              <div className="bg-brand-danger/10 border border-brand-danger/20 text-brand-danger rounded-lg p-3 text-sm">
+                {uncheckError}
               </div>
-
-              <div className="bg-brand-warning/10 border border-brand-warning/20 rounded-lg p-3 mb-4">
-                <p className="text-sm text-brand-warning">
-                  <strong>Peringatan:</strong> Membatalkan check-in akan membuat tamu <strong>{uncheckTarget.name}</strong> tidak eligible untuk lucky draw sampai check-in ulang.
-                </p>
-              </div>
-
-              <div className="space-y-4 mb-6">
-                <div>
-                  <label className="block text-sm font-medium text-white/80 mb-2">
-                    Password Admin <span className="text-brand-danger">*</span>
-                  </label>
-                  <input
-                    type="password"
-                    value={uncheckPassword}
-                    onChange={(e) => setUncheckPassword(e.target.value)}
-                    placeholder="Masukkan password Anda"
-                    className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-brand-danger/50 focus:border-brand-danger/50"
-                    autoFocus
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-white/80 mb-2">
-                    Alasan Pembatalan <span className="text-brand-danger">*</span>
-                  </label>
-                  <textarea
-                    value={uncheckReason}
-                    onChange={(e) => setUncheckReason(e.target.value)}
-                    placeholder="Jelaskan alasan pembatalan check-in (min. 5 karakter)"
-                    rows={3}
-                    className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-brand-danger/50 focus:border-brand-danger/50 resize-none"
-                  />
-                </div>
-              </div>
-
-              {error && (
-                <div className="mb-4 p-3 rounded-lg bg-brand-danger/10 border border-brand-danger/20 text-brand-danger text-sm">
-                  {error}
-                </div>
-              )}
-
-              <div className="flex gap-3">
-                <button
-                  onClick={closeUncheckModal}
-                  disabled={unchecking}
-                  className="flex-1 flex items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/5 px-4 py-3 text-white font-medium hover:bg-white/10 transition-colors disabled:opacity-50"
-                >
-                  <X size={18} />
-                  Batal
-                </button>
-                <button
-                  onClick={doUncheckin}
-                  disabled={unchecking || !uncheckPassword || uncheckReason.length < 5}
-                  className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-brand-danger hover:opacity-90 px-4 py-3 text-white font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {unchecking ? (
-                    <>
-                      <Loader2 className="animate-spin" size={18} />
-                      Memproses...
-                    </>
-                  ) : (
-                    <>
-                      <XCircle size={18} />
-                      Konfirmasi Pembatalan
-                    </>
-                  )}
-                </button>
-              </div>
+            )}
+            <div>
+              <Label className="text-xs uppercase tracking-wider text-brand-textMuted mb-1.5 block">Password Admin</Label>
+              <Input type="password" value={uncheckPassword} onChange={(e) => { setUncheckPassword(e.target.value); setUncheckError(null); }} />
+            </div>
+            <div>
+              <Label className="text-xs uppercase tracking-wider text-brand-textMuted mb-1.5 block">Alasan (min. 5 karakter)</Label>
+              <Input value={uncheckReason} onChange={(e) => setUncheckReason(e.target.value)} />
+            </div>
+            <div className="flex gap-3 pt-2">
+              <Button variant="outline" className="flex-1" onClick={closeUncheckModal}>Batal</Button>
+              <Button variant="danger" className="flex-1" onClick={doUncheckin} disabled={!uncheckPassword || uncheckReason.length < 5 || unchecking} loading={unchecking}>
+                <XCircle size={16} />
+                Konfirmasi
+              </Button>
             </div>
           </div>
-        )}
+        </Modal>
 
         {/* Photo Capture Modal */}
-        {showPhotoCapture && checkedGuest && (
-          <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/90 p-4 backdrop-blur-md">
-            <div className="w-full max-w-lg rounded-xl bg-brand-secondary border border-brand-border p-6 text-center shadow-2xl">
-              <h3 className="mb-4 text-xl font-bold text-white flex items-center justify-center gap-2">
-                <Camera size={24} className="text-brand-success" />
-                Ambil Foto: {checkedGuest.name}
-              </h3>
-
-              <div className="relative aspect-[4/3] bg-black rounded-lg overflow-hidden mb-4">
-                {!capturedPhoto ? (
-                  <video
-                    ref={videoRef}
-                    autoPlay
-                    playsInline
-                    muted
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <img src={capturedPhoto} alt="Captured" className="w-full h-full object-cover" />
-                )}
-              </div>
-
-              <canvas ref={canvasRef} className="hidden" />
-
-              <div className="flex gap-3 justify-center">
-                {!capturedPhoto ? (
-                  <>
-                    <button
-                      onClick={closePhotoCapture}
-                      className="flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-6 py-3 text-white font-medium hover:bg-white/20 transition-colors"
-                    >
-                      <X size={20} />
-                      Batal
-                    </button>
-                    <button
-                      onClick={capturePhoto}
-                      className="flex items-center gap-2 rounded-lg bg-brand-success hover:opacity-90 px-6 py-3 text-white font-medium transition-colors"
-                    >
-                      <Camera size={20} />
-                      Ambil Foto
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      onClick={retakePhoto}
-                      className="flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-6 py-3 text-white font-medium hover:bg-white/20 transition-colors"
-                    >
-                      <Camera size={20} />
-                      Ulangi
-                    </button>
-                    <button
-                      onClick={uploadCapturedPhoto}
-                      disabled={uploadingPhoto}
-                      className="flex items-center gap-2 rounded-lg bg-brand-primary hover:bg-brand-primarySoft px-6 py-3 text-white font-medium transition-colors disabled:opacity-50"
-                    >
-                      {uploadingPhoto ? <Loader2 className="animate-spin" size={20} /> : <CheckCircle size={20} />}
-                      {uploadingPhoto ? 'Menyimpan...' : 'Simpan Foto'}
-                    </button>
-                  </>
-                )}
-              </div>
+        <Modal
+          open={showPhotoCapture && !!checkedGuest}
+          onClose={closePhotoCapture}
+          title={`Ambil Foto: ${checkedGuest?.name}`}
+        >
+          <div className="space-y-4">
+            <div className="relative aspect-[4/3] bg-black rounded-xl overflow-hidden">
+              {!capturedPhoto ? (
+                <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover" />
+              ) : (
+                <img src={capturedPhoto} alt="Captured" className="w-full h-full object-cover" />
+              )}
+            </div>
+            <canvas ref={canvasRef} className="hidden" />
+            <div className="flex gap-3 justify-center">
+              {!capturedPhoto ? (
+                <>
+                  <Button variant="outline" onClick={closePhotoCapture}><X size={18} /> Batal</Button>
+                  <Button onClick={capturePhoto}><Camera size={18} /> Ambil Foto</Button>
+                </>
+              ) : (
+                <>
+                  <Button variant="outline" onClick={retakePhoto}><Camera size={18} /> Ulangi</Button>
+                  <Button onClick={uploadCapturedPhoto} loading={uploadingPhoto}>
+                    {!uploadingPhoto && <CheckCircle size={18} />}
+                    {uploadingPhoto ? 'Menyimpan...' : 'Simpan Foto'}
+                  </Button>
+                </>
+              )}
             </div>
           </div>
-        )}
+        </Modal>
         {/* Station Setup Modal */}
         <StationSetupModal
           isOpen={showStationSetup}
@@ -2403,51 +2172,23 @@ const Html5QrcodePlugin = ({ qrCodeSuccessCallback, onScanFailure, fps, qrbox }:
 
   return (
     <div className="w-full">
-      <div id={uniqueIdRef.current} className="w-full overflow-hidden rounded-lg bg-black border-2 border-gray-200 relative min-h-[300px]">
+      <div id={uniqueIdRef.current} className="w-full overflow-hidden rounded-lg bg-black border border-brand-border relative min-h-[300px]">
         {startError && (
-          <div className="absolute inset-0 flex items-center justify-center p-4 text-center bg-brand-secondary text-brand-surface overflow-y-auto">
+          <div className="absolute inset-0 flex items-center justify-center p-4 text-center bg-brand-bgElevated text-brand-text overflow-y-auto">
             <div className="max-h-full py-4">
-              <p className="text-brand-danger font-bold mb-2">Kamera Error</p>
-              <p className="text-sm text-white/70 mb-4">
-                {startError}
-              </p>
-              <div className="text-xs text-left bg-black/30 p-3 rounded border border-white/10 mb-4 space-y-2">
-                <p className="font-bold text-yellow-400">Solusi (Chrome/Edge):</p>
-                <ol className="list-decimal pl-4 space-y-1 opacity-90">
-                  <li>Buka tab baru, ketik: <code className="bg-white/20 px-1 rounded">chrome://flags</code></li>
-                  <li>Cari: <code className="bg-white/20 px-1 rounded">insecure origins</code></li>
-                  <li>Enable <b>"Insecure origins treated as secure"</b></li>
-                  <li>Masukkan URL ini di kotak teks yang muncul: <br /><code className="bg-white/20 px-1 rounded block mt-1 select-all">{typeof window !== 'undefined' ? window.location.origin : 'http://...'}</code></li>
-                  <li>Klik <b>Relaunch</b> di bawah layar.</li>
-                </ol>
-              </div>
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="bg-white text-slate-900 px-4 py-2 rounded-full font-bold text-sm hover:bg-gray-200 transition-colors"
-              >
-                Buka Kamera / Upload
-              </button>
+              <p className="text-brand-danger font-semibold mb-2">Kamera Error</p>
+              <p className="text-sm text-brand-textMuted mb-4">{startError}</p>
+              <Button onClick={() => fileInputRef.current?.click()}>Buka Kamera / Upload</Button>
             </div>
           </div>
         )}
       </div>
 
-      {/* Always show manual upload option as backup */}
       <div className="mt-4 text-center">
-        <button
-          onClick={() => fileInputRef.current?.click()}
-          className="text-sm text-brand-primary hover:underline font-medium"
-        >
-          Masalah dengan kamera? Upload Foto / Buka Kamera App
+        <button onClick={() => fileInputRef.current?.click()} className="text-sm text-brand-primary hover:text-brand-primarySoft font-medium">
+          Masalah dengan kamera? Upload foto
         </button>
-        <input
-          type="file"
-          accept="image/*"
-          capture="environment"
-          ref={fileInputRef}
-          className="hidden"
-          onChange={handleFileUpload}
-        />
+        <input type="file" accept="image/*" capture="environment" ref={fileInputRef} className="hidden" onChange={handleFileUpload} />
       </div>
 
     </div>

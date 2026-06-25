@@ -227,7 +227,7 @@ export default function SouvenirsPage() {
                         )}
 
                         {souvenirs.map((s) => (
-                            <Card key={s.id} variant="glass" className="group hover:bg-white/10 transition-colors">
+                            <Card key={s.id} variant="glass" className="group surface-interactive hover:bg-brand-bgSubtle transition-colors">
                                 {editingId === s.id ? (
                                     // Edit Mode
                                     <div className="space-y-4">
@@ -298,7 +298,7 @@ export default function SouvenirsPage() {
                                             <div className="mt-3">
                                                 <div className="h-2 bg-white/10 rounded-full overflow-hidden">
                                                     <div
-                                                        className={`h-full transition-all ${s.remaining > 0 ? 'bg-brand-success' : 'bg-brand-danger'}`}
+                                                        className={`h-full transition-all rounded-full ${s.remaining > 0 ? 'bg-gradient-to-r from-brand-success via-brand-primary to-brand-accent' : 'bg-brand-danger'}`}
                                                         style={{ width: `${(s.takenCount / s.quantity) * 100}%` }}
                                                     />
                                                 </div>
@@ -320,7 +320,7 @@ export default function SouvenirsPage() {
                                                                 <div className="w-6 h-6 rounded-full bg-brand-accent/20 flex items-center justify-center text-xs font-bold text-brand-accent">
                                                                     {t.guest.queueNumber}
                                                                 </div>
-                                                                <div className="text-sm text-brand-surface">
+                                                                <div className="text-sm text-brand-text">
                                                                     {t.guest.name}
                                                                     {t.guest.division && <span className="opacity-70 text-xs ml-1">({t.guest.division})</span>}
                                                                 </div>

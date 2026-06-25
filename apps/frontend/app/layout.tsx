@@ -31,7 +31,7 @@ export const metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} ${cinzel.variable}`}>
-      <body className="font-sans font-medium text-brand-surface bg-brand-secondary relative antialiased selection:bg-brand-primary/30 selection:text-brand-primarySoft">
+      <body className="font-sans font-medium bg-brand-bg text-brand-text relative antialiased selection:bg-brand-primary/30 selection:text-brand-primarySoft">
         <ErrorBoundary>
           <QueryProvider>
             <SSEProvider>

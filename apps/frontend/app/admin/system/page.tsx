@@ -233,9 +233,9 @@ function SystemPage() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'healthy': return <CheckCircle className="w-5 h-5 text-brand-success" />;
-      case 'unhealthy': return <AlertCircle className="w-5 h-5 text-brand-danger" />;
-      case 'degraded': return <AlertTriangle className="w-5 h-5 text-brand-warning" />;
+      case 'healthy': return <CheckCircle className="w-5 h-5 text-brand-success drop-shadow-[0_0_8px_rgba(74,222,128,0.4)]" />;
+      case 'unhealthy': return <AlertCircle className="w-5 h-5 text-brand-danger drop-shadow-[0_0_8px_rgba(248,113,113,0.4)]" />;
+      case 'degraded': return <AlertTriangle className="w-5 h-5 text-brand-warning drop-shadow-[0_0_8px_rgba(251,191,36,0.4)]" />;
       default: return <Activity className="w-5 h-5 text-gray-400" />;
     }
   };
@@ -462,7 +462,7 @@ function SystemPage() {
 
             {/* Log Entries */}
             <div className="glass-card overflow-hidden">
-              <div className="max-h-[500px] overflow-auto">
+              <div className="max-h-[500px] overflow-auto font-mono bg-brand-bgSubtle rounded-lg">
                 {logEntries.length === 0 ? (
                   <div className="p-8 text-center text-white/40">
                     Tidak ada log entries
@@ -479,7 +479,7 @@ function SystemPage() {
                     </thead>
                     <tbody>
                       {logEntries.map((entry, i) => (
-                        <tr key={i} className="border-t border-white/5 hover:bg-white/5">
+                        <tr key={i} className="border-t border-brand-border hover:bg-brand-bgSubtle">
                           <td className="px-4 py-2 text-white/60 whitespace-nowrap font-mono text-xs">
                             {entry.timestamp}
                           </td>
@@ -541,8 +541,8 @@ function SystemPage() {
                     </thead>
                     <tbody>
                       {auditLogs.map((log) => (
-                        <tr key={log.id} className="border-t border-white/5 hover:bg-white/5">
-                          <td className="px-4 py-2 text-white/60 whitespace-nowrap text-xs">
+                        <tr key={log.id} className="border-t border-brand-border hover:bg-brand-bgSubtle">
+                          <td className="px-4 py-2 text-brand-textDim whitespace-nowrap text-xs">
                             {new Date(log.createdAt).toLocaleString('id-ID')}
                           </td>
                           <td className="px-4 py-2">

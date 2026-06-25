@@ -419,7 +419,7 @@ export default function EventSettingsPage() {
           {error && <div className="text-sm text-brand-danger bg-brand-danger/10 p-3 rounded-lg border border-brand-danger/20">{error}</div>}
           {message && <div className="text-sm text-brand-accent bg-brand-primary/10 p-3 rounded-lg border border-brand-primary/20">{message}</div>}
 
-          <Card variant="glass" className="space-y-8 p-6 md:p-8">
+          <Card variant="glass" className="space-y-8 p-6 md:p-8 surface-elevated">
             <div className="grid gap-6">
               <div>
                 <Label className="mb-2 flex items-center gap-2" htmlFor="event-name">
@@ -472,7 +472,7 @@ export default function EventSettingsPage() {
               </div>
             </div>
 
-            <div className="space-y-4 rounded-xl bg-white/5 p-6 border border-white/10">
+            <div className="space-y-4 rounded-xl bg-brand-bgSubtle p-6 border border-brand-border">
               <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                 <Settings2 size={20} />
                 Display Configuration
@@ -574,7 +574,7 @@ export default function EventSettingsPage() {
             </div>
 
             {/* Category Management */}
-            <div className="space-y-4 rounded-xl bg-white/5 p-6 border border-white/10">
+            <div className="space-y-4 rounded-xl bg-brand-bgSubtle p-6 border border-brand-border">
               <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                 <Tag size={20} />
                 Kategori Tamu
@@ -679,7 +679,7 @@ export default function EventSettingsPage() {
                   <ImageIcon size={16} />
                   Logo
                 </div>
-                <div className="p-4 rounded-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center min-h-[160px] gap-4">
+                <div className="p-4 rounded-xl bg-brand-bgSubtle border-2 border-dashed border-brand-primary/40 hover:border-brand-primary/60 transition-colors flex flex-col items-center justify-center min-h-[160px] gap-4">
                   {cfg.logoUrl ? (
                     <img src={toApiUrl(cfg.logoUrl)} className="h-20 object-contain" alt="logo" />
                   ) : (
@@ -713,7 +713,7 @@ export default function EventSettingsPage() {
                   <Monitor size={16} />
                   Background
                 </div>
-                <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-4">
+                <div className="p-4 rounded-xl bg-brand-bgSubtle border border-brand-border space-y-4">
                   <div className="flex flex-wrap gap-2">
                     {(['NONE', 'IMAGE', 'VIDEO'] as const).map((t) => (
                       <label key={t} className={`flex-1 flex items-center justify-center gap-2 p-2 rounded-lg cursor-pointer transition-colors border ${cfg.backgroundType === t ? 'bg-brand-primary text-white border-brand-primary' : 'bg-white/5 text-white/60 border-transparent hover:bg-white/10'}`}>
@@ -767,7 +767,7 @@ export default function EventSettingsPage() {
             </div>
 
             {/* Lucky Draw Sounds Management */}
-            <div className="space-y-4 rounded-xl bg-white/5 p-6 border border-white/10">
+            <div className="space-y-4 rounded-xl bg-brand-bgSubtle p-6 border border-brand-border">
               <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                 <Music size={20} />
                 Lucky Draw Sounds

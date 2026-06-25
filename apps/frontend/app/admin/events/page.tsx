@@ -309,8 +309,8 @@ export default function EventsPage() {
       className={`
         group p-4 rounded-xl border transition-all
         ${event.isActive 
-          ? 'bg-brand-success/10 border-brand-success/30' 
-          : 'bg-white/5 border-white/10 hover:bg-white/10'
+          ? 'bg-brand-success/10 border-brand-success/30 border-l-2 border-l-brand-primary' 
+          : 'surface-interactive hover:bg-brand-bgSubtle'
         }
         ${draggedEvent?.id === event.id ? 'opacity-50 scale-95' : ''}
         ${column !== 'past' ? 'cursor-grab active:cursor-grabbing' : 'cursor-default'}
@@ -426,11 +426,11 @@ export default function EventsPage() {
       
       switch (column) {
         case 'upcoming':
-          return `${baseStyles} ${isOver ? 'border-brand-primary/50 bg-brand-primary/5' : 'border-white/10 bg-white/5'}`;
+          return `${baseStyles} ${isOver ? 'border-brand-vivid/50 bg-brand-vivid/5' : 'border-white/10 bg-brand-vivid/10'}`;
         case 'active':
-          return `${baseStyles} ${isOver ? 'border-brand-success/50 bg-brand-success/5' : 'border-white/10 bg-white/5'}`;
+          return `${baseStyles} ${isOver ? 'border-brand-primary/50 bg-brand-primary/5' : 'border-white/10 bg-brand-primary/10'}`;
         case 'past':
-          return `${baseStyles} ${isOver ? 'border-gray-500/50 bg-gray-500/5' : 'border-white/10 bg-white/5'}`;
+          return `${baseStyles} ${isOver ? 'border-gray-500/50 bg-gray-500/5' : 'border-white/10 bg-brand-bgSubtle'}`;
         default:
           return `${baseStyles} border-white/10 bg-white/5`;
       }
@@ -439,9 +439,9 @@ export default function EventsPage() {
     const getIconStyles = () => {
       switch (column) {
         case 'upcoming':
-          return { bg: 'bg-brand-primary/20', text: 'text-brand-primary' };
+          return { bg: 'bg-brand-vivid/20', text: 'text-brand-vivid' };
         case 'active':
-          return { bg: 'bg-brand-success/20', text: 'text-brand-success' };
+          return { bg: 'bg-brand-primary/20', text: 'text-brand-primary' };
         case 'past':
           return { bg: 'bg-gray-500/20', text: 'text-gray-400' };
         default:
@@ -653,7 +653,7 @@ export default function EventsPage() {
                 <Card
                   key={event.id}
                   variant="glass"
-                  className={`p-5 transition-all ${event.isActive ? 'ring-2 ring-emerald-500/50' : ''}`}
+                  className={`p-5 transition-all surface-interactive ${event.isActive ? 'ring-2 ring-brand-primary/50 border-l-2 border-l-brand-primary' : ''}`}
                 >
                   {editingId === event.id ? (
                     // Edit Mode

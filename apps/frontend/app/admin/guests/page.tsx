@@ -722,11 +722,11 @@ export default function GuestsListPage() {
           </Card>
         )}
 
-        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-brand-secondary/40 backdrop-blur-xl shadow-glass">
+        <div className="relative overflow-hidden surface-elevated backdrop-blur-xl shadow-glass">
           {loading && <div className="absolute inset-0 z-20 flex items-center justify-center bg-brand-secondary/50 backdrop-blur-sm"><Loader2 className="animate-spin text-brand-primary" size={32} /></div>}
           <div className="overflow-x-auto overflow-y-auto max-h-[70vh]">
             <table className="w-full text-sm text-left border-collapse">
-              <thead className="sticky top-0 z-10 bg-brand-secondary/90 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
+              <thead className="sticky top-0 z-10 bg-brand-bgElevated/95 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
                 <tr className="text-xs font-mono uppercase tracking-widest text-brand-primarySoft/70 border-b border-brand-primary/20">
                   <th className="px-4 py-5 w-10 whitespace-nowrap">
                     <input
@@ -758,7 +758,7 @@ export default function GuestsListPage() {
                   const cat = CATEGORY_CONFIG[g.category] || CATEGORY_CONFIG.REGULAR;
                   const src = g.registrationSource ? SOURCE_CONFIG[g.registrationSource] : null;
                   return (
-                    <tr key={g.id} className={`group transition-all duration-300 ${showDuplicatesOnly ? 'bg-rose-500/10 hover:bg-rose-500/20 shadow-[inset_0_0_30px_rgba(225,29,72,0.1)]' : 'hover:bg-brand-primary/5 hover:shadow-[inset_0_0_30px_rgba(212,168,83,0.05)]'} relative ${selectedIds.has(g.id) ? 'bg-brand-primary/10' : ''}`}>
+                    <tr key={g.id} className={`group transition-all duration-300 ${showDuplicatesOnly ? 'bg-rose-500/10 hover:bg-rose-500/20 shadow-[inset_0_0_30px_rgba(225,29,72,0.1)]' : 'hover:bg-brand-bgSubtle hover:shadow-[inset_0_0_30px_rgba(212,168,83,0.05)]'} relative ${selectedIds.has(g.id) ? 'bg-brand-primary/10' : ''}`}>
                       <td className="px-4 py-4 align-middle whitespace-nowrap">
                         {/* Glow Row Indicator */}
                         <div className={`absolute left-0 top-0 bottom-0 w-1 ${showDuplicatesOnly ? 'bg-rose-500' : 'bg-brand-primary'} opacity-0 group-hover:opacity-100 transition-opacity`} />

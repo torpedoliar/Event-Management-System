@@ -930,7 +930,7 @@ export default function SouvenirPage() {
             {/* Header brand */}
             <div className="relative z-10 p-6 flex items-center gap-4">
                 {cfg?.logoUrl && <img src={toApiUrl(cfg.logoUrl)} className="h-12 w-auto" alt="logo" />}
-                <div className="text-white">
+                <div className="text-brand-text">
                     <div className="text-2xl md:text-4xl font-bold text-shadow-lg flex items-center gap-3">
                         <Gift className="text-brand-primary" size={32} />
                         Souvenir Check-in
@@ -949,23 +949,23 @@ export default function SouvenirPage() {
 
             {/* Search */}
             <div className="relative z-10 p-6 flex flex-col items-center">
-                <div className="w-full max-w-3xl rounded-2xl border border-brand-primary/20 bg-brand-secondary/75 px-4 py-5 shadow-glass">
+                <div className="w-full max-w-3xl rounded-2xl surface-elevated px-4 py-5 shadow-gold">
                     {/* Souvenir Selector Dropdown */}
                     {souvenirs.length > 0 && souvenirs.some(s => s.remaining > 0) && (
                         <div className="mb-4">
-                            <label className="text-sm text-white/70 mb-2 block flex items-center gap-2">
+                            <label className="text-sm text-brand-textMuted mb-2 block flex items-center gap-2">
                                 <Package size={16} className="text-brand-primary" />
                                 Pilih Souvenir untuk Check-in:
                             </label>
                             <select
                                 value={selectedSouvenir}
                                 onChange={(e) => setSelectedSouvenir(e.target.value)}
-                                className="w-full rounded-lg border border-brand-primary/50 bg-brand-primary/10 px-3 py-3 text-white focus:outline-none focus:ring-2 focus:ring-brand-primary/70 appearance-none cursor-pointer"
+                                className="w-full rounded-lg border border-brand-primary/50 bg-brand-primary/10 px-3 py-3 text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-primary/70 appearance-none cursor-pointer"
                                 disabled={searching || processing || creatingGuest}
                             >
-                                <option value="" className="bg-brand-secondary text-brand-surface">-- Pilih Souvenir --</option>
+                                <option value="" className="bg-brand-bgElevated text-brand-text">-- Pilih Souvenir --</option>
                                 {souvenirs.filter(s => s.remaining > 0).map((s) => (
-                                    <option key={s.id} value={s.id} className="bg-brand-secondary text-brand-surface">
+                                    <option key={s.id} value={s.id} className="bg-brand-bgElevated text-brand-text">
                                         {s.name} (Sisa: {s.remaining}/{s.quantity})
                                     </option>
                                 ))}
@@ -980,8 +980,8 @@ export default function SouvenirPage() {
                     )}
 
                     {souvenirs.length > 0 && !souvenirs.some(s => s.remaining > 0) && (
-                        <div className="mb-4 flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-red-300">
-                            <AlertTriangle size={20} className="text-red-400 flex-shrink-0" />
+                        <div className="mb-4 flex items-center gap-3 rounded-lg border border-brand-danger/30 bg-brand-danger/10 p-4 text-brand-danger">
+                            <AlertTriangle size={20} className="text-brand-danger flex-shrink-0" />
                             <span className="text-sm">Semua stok souvenir sudah habis. Tidak dapat memberikan souvenir.</span>
                         </div>
                     )}
@@ -997,24 +997,24 @@ export default function SouvenirPage() {
                             } 
                         }}
                         placeholder="Masukkan Guest ID atau Nama..."
-                        className="w-full rounded-lg border border-white/30 bg-white/10 px-3 py-3 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-brand-primary/70"
+                        className="w-full rounded-lg border border-brand-borderHover bg-brand-surfaceMuted px-3 py-3 text-brand-text placeholder:text-brand-textDim focus:outline-none focus:ring-2 focus:ring-brand-primary/70"
                         autoFocus
                     />
 
                     {rapidLogs.length > 0 && (
                         <div className="relative z-10 mt-4 flex flex-col items-center">
-                            <div className="w-full glass-card-dark p-4 md:p-6 text-sm text-white/80 overflow-y-auto max-h-48 border border-white/10 rounded-xl">
-                                <h3 className="text-white font-semibold mb-3">Rapid Scan Logs</h3>
+                            <div className="w-full glass-card-dark p-4 md:p-6 text-sm text-brand-text overflow-y-auto max-h-48 border border-brand-border rounded-xl">
+                                <h3 className="text-brand-text font-semibold mb-3">Rapid Scan Logs</h3>
                                 <ul className="space-y-2">
                                     {rapidLogs.map((log) => (
-                                        <li key={log.id} className="flex justify-between items-center bg-white/5 px-3 py-2 rounded-lg">
+                                        <li key={log.id} className="flex justify-between items-center bg-brand-bgSubtle px-3 py-2 rounded-lg">
                                             <div className="flex gap-3">
-                                                <span className="opacity-60">{log.timestamp.toLocaleTimeString()}</span>
-                                                <strong className="text-white">{log.guestIdOrName}</strong>
+                                                <span className="text-brand-textDim">{log.timestamp.toLocaleTimeString()}</span>
+                                                <strong className="text-brand-text">{log.guestIdOrName}</strong>
                                             </div>
                                             <span className={`font-medium ${
                                                 log.status === 'SUCCESS' ? 'text-brand-success' :
-                                                log.status === 'DUPLICATE' ? 'text-orange-400' :
+                                                log.status === 'DUPLICATE' ? 'text-brand-warning' :
                                                 'text-brand-danger'
                                             }`}>
                                                 {log.message}
@@ -1036,7 +1036,7 @@ export default function SouvenirPage() {
                                         localStorage.setItem('souvenirAutoCreateGuest', 'true');
                                         doSearch();
                                     }}
-                                    className="text-sm text-brand-primarySoft hover:text-white flex items-center gap-1 underline"
+                                    className="text-sm text-brand-primarySoft hover:text-brand-text flex items-center gap-1 underline"
                                 >
                                     <UserPlus size={14} />
                                     Buat & Berikan Souvenir
@@ -1048,7 +1048,7 @@ export default function SouvenirPage() {
                         <button
                             disabled={searching || processing || creatingGuest}
                             onClick={doSearch}
-                            className="flex items-center gap-2 rounded-lg bg-brand-primary px-6 py-3 text-lg font-semibold text-white shadow-soft hover:bg-brand-primarySoft disabled:opacity-50 transition-all active:scale-95"
+                            className="flex items-center gap-2 rounded-lg bg-brand-primary px-6 py-3 text-lg font-semibold text-brand-bg shadow-gold hover:bg-brand-primarySoft disabled:opacity-50 transition-all active:scale-95"
                         >
                             {searching || creatingGuest ? <Loader2 className="animate-spin" size={24} /> : <Search size={24} />}
                             {searching ? 'Mencari...' : (creatingGuest ? 'Membuat Tamu...' : 'Cari Souvenir')}
@@ -1056,14 +1056,14 @@ export default function SouvenirPage() {
                         <button
                             disabled={searching || processing || creatingGuest}
                             onClick={() => setShowScanner(true)}
-                            className="flex items-center gap-2 rounded-lg bg-brand-success px-6 py-3 text-lg font-semibold text-white shadow-soft hover:opacity-90 disabled:opacity-50 transition-all active:scale-95"
+                            className="flex items-center gap-2 rounded-lg bg-brand-success px-6 py-3 text-lg font-semibold text-brand-bg shadow-soft hover:opacity-90 disabled:opacity-50 transition-all active:scale-95"
                         >
                             <QrCode size={24} />
                             Scan QR
                         </button>
                         <button
                             onClick={() => setShowSettings(true)}
-                            className="flex items-center gap-2 rounded-lg bg-white/10 border border-white/20 px-4 py-3 text-white hover:bg-white/20 transition-all"
+                            className="flex items-center gap-2 rounded-lg bg-brand-surfaceMuted border border-brand-border px-4 py-3 text-brand-text hover:bg-brand-surfaceBright transition-all"
                             title="Pengaturan"
                         >
                             <Settings size={24} />
@@ -1071,12 +1071,12 @@ export default function SouvenirPage() {
 
                         <button
                             onClick={() => setShowQueuePanel(true)}
-                            className="relative flex items-center gap-2 rounded-lg bg-white/10 border border-white/20 px-4 py-3 text-white hover:bg-white/20 transition-all"
+                            className="relative flex items-center gap-2 rounded-lg bg-brand-surfaceMuted border border-brand-border px-4 py-3 text-brand-text hover:bg-brand-surfaceBright transition-all"
                             title="Antrean Offline"
                         >
                             <Clock size={24} />
                             {pendingSouvCount > 0 && (
-                                <span className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-brand-danger text-[10px] font-bold text-white shadow-lg animate-bounce">
+                                <span className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-brand-danger text-[10px] font-bold text-brand-bg shadow-lg animate-bounce">
                                     {pendingSouvCount}
                                 </span>
                             )}
@@ -1088,7 +1088,7 @@ export default function SouvenirPage() {
             {/* Settings Modal */}
             {showSettings && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div className="w-full max-w-md rounded-xl border border-brand-border bg-brand-secondary/95 text-brand-surface shadow-glass p-6 animate-in fade-in zoom-in duration-300">
+                    <div className="w-full max-w-md rounded-xl surface-elevated text-brand-text shadow-gold p-6 animate-in fade-in zoom-in duration-300">
                         <div className="flex items-center justify-between mb-6">
                             <h3 className="text-xl font-bold flex items-center gap-2">
                                 <Settings size={24} className="text-brand-primary" />
@@ -1096,7 +1096,7 @@ export default function SouvenirPage() {
                             </h3>
                             <button
                                 onClick={() => setShowSettings(false)}
-                                className="text-white/60 hover:text-white"
+                                className="text-brand-textDim hover:text-brand-text"
                             >
                                 <X size={24} />
                             </button>
@@ -1108,11 +1108,11 @@ export default function SouvenirPage() {
                                 <div className="flex items-center gap-3">
                                     <UserCheck size={20} className="text-brand-primary" />
                                     <div>
-                                        <div className="font-medium text-white">Wajib Check-in Dulu</div>
-                                        <div className="text-sm text-white/60">Tamu harus check-in sebelum bisa mengambil souvenir/konsumsi</div>
+                                        <div className="font-medium text-brand-text">Wajib Check-in Dulu</div>
+                                        <div className="text-sm text-brand-textMuted">Tamu harus check-in sebelum bisa mengambil souvenir/konsumsi</div>
                                     </div>
                                 </div>
-                                <div className={`w-12 h-7 rounded-full transition-colors relative ${requireCheckinForSouvenir ? 'bg-brand-primary' : 'bg-white/20'}`}>
+                                <div className={`w-12 h-7 rounded-full transition-colors relative ${requireCheckinForSouvenir ? 'bg-brand-primary' : 'bg-brand-surfaceMuted'}`}>
                                     <div className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transform ${requireCheckinForSouvenir ? 'translate-x-5' : 'translate-x-0'}`} />
                                     <input
                                         type="checkbox"
@@ -1143,15 +1143,15 @@ export default function SouvenirPage() {
                                 </div>
                             </label>
 
-                            <label className="flex items-center justify-between p-4 rounded-lg border border-white/20 bg-white/5 cursor-pointer hover:bg-white/10 transition-colors">
+                            <label className="flex items-center justify-between p-4 rounded-lg border border-brand-border bg-brand-bgSubtle cursor-pointer hover:bg-brand-surfaceMuted transition-colors">
                                 <div className="flex items-center gap-3">
                                     <UserPlus size={20} className="text-brand-primary" />
                                     <div>
-                                        <div className="font-medium text-white">Auto Buat Tamu Baru</div>
-                                        <div className="text-sm text-white/60">Jika tamu tidak ditemukan, buat tamu baru dan langsung berikan souvenir</div>
+                                        <div className="font-medium text-brand-text">Auto Buat Tamu Baru</div>
+                                        <div className="text-sm text-brand-textMuted">Jika tamu tidak ditemukan, buat tamu baru dan langsung berikan souvenir</div>
                                     </div>
                                 </div>
-                                <div className={`w-12 h-7 rounded-full transition-colors relative ${autoCreateGuest ? 'bg-brand-primary' : 'bg-white/20'}`}>
+                                <div className={`w-12 h-7 rounded-full transition-colors relative ${autoCreateGuest ? 'bg-brand-primary' : 'bg-brand-surfaceMuted'}`}>
                                     <div className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transform ${autoCreateGuest ? 'translate-x-5' : 'translate-x-0'}`} />
                                     <input
                                         type="checkbox"
@@ -1171,7 +1171,7 @@ export default function SouvenirPage() {
                             <button
                                 onClick={() => setShowSettings(false)}
                                 disabled={savingSettings}
-                                className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-brand-primary px-4 py-3 font-medium text-white hover:bg-brand-primarySoft disabled:opacity-50 transition-colors"
+                                className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-brand-primary px-4 py-3 font-medium text-brand-bg hover:bg-brand-primarySoft disabled:opacity-50 transition-colors"
                             >
                                 {savingSettings ? <Loader2 className="animate-spin" size={18} /> : <CheckCircle size={18} />}
                                 {savingSettings ? 'Menyimpan...' : 'Selesai'}
@@ -1183,10 +1183,10 @@ export default function SouvenirPage() {
 
             {/* Results */}
             <div className="relative z-10 p-6 flex justify-center">
-                <div className="w-full max-w-5xl rounded-xl border border-brand-border bg-brand-secondary/75 p-4 text-brand-surface shadow-glass backdrop-blur-sm">
+                <div className="w-full max-w-5xl rounded-xl surface-elevated p-4 text-brand-text shadow-gold backdrop-blur-sm">
                     {!results.length && (
-                        <div className="text-center text-white/80 py-8 flex flex-col items-center gap-3">
-                            <Gift size={48} className="text-white/20" />
+                        <div className="text-center text-brand-textMuted py-8 flex flex-col items-center gap-3">
+                            <Gift size={48} className="text-brand-textDim" />
                             <p>Cari tamu untuk memproses pengambilan souvenir</p>
                         </div>
                     )}
@@ -1196,21 +1196,21 @@ export default function SouvenirPage() {
                                 <div
                                     key={g.id}
                                     onClick={() => selectGuest(g)}
-                                    className={`cursor-pointer flex items-center justify-between rounded border p-3 bg-white/5 transition-colors ${selected?.id === g.id ? 'border-brand-primary/80 bg-brand-primary/10' : 'border-white/20 hover:bg-white/10'}`}
+                                    className={`cursor-pointer flex items-center justify-between rounded border p-3 transition-colors ${selected?.id === g.id ? 'border-brand-primary/80 bg-brand-primary/10' : 'border-brand-border surface-interactive hover:shadow-gold'}`}
                                 >
                                     <div className="flex items-center gap-3">
-                                        <div className="h-12 w-12 bg-white/10 rounded overflow-hidden flex-shrink-0">
+                                        <div className="h-12 w-12 bg-brand-surfaceMuted rounded overflow-hidden flex-shrink-0">
                                             {g.photoUrl ? (
                                                 <img src={toApiUrl(g.photoUrl)} className="h-full w-full object-cover" />
                                             ) : (
-                                                <div className="flex h-full w-full items-center justify-center text-xs text-white/60">No Photo</div>
+                                                <div className="flex h-full w-full items-center justify-center text-xs text-brand-textDim">No Photo</div>
                                             )}
                                         </div>
                                         <div>
-                                            <div className="font-medium text-white">
-                                                {g.name} <span className="text-white/70 font-mono text-sm">({g.guestId})</span>
+                                            <div className="font-medium text-brand-text">
+                                                {g.name} <span className="text-brand-textMuted font-mono text-sm">({g.guestId})</span>
                                             </div>
-                                            <div className="text-sm text-white/70">
+                                            <div className="text-sm text-brand-textMuted">
                                                 {g.tableLocation} {g.company ? `• ${g.company}` : ''} {g.division ? `• ${g.division}` : ''}
                                             </div>
                                         </div>
@@ -1218,8 +1218,8 @@ export default function SouvenirPage() {
                                     <div className="flex items-center gap-2">
                                         {souvenirs.some(s => s.remaining > 0) && (
                                         <button
-                                            className={`flex items-center gap-2 rounded-full px-4 py-2 font-medium text-white shadow-soft disabled:opacity-50 transition-colors ${g.souvenirTaken
-                                                ? 'bg-green-600 hover:bg-green-700'
+                                            className={`flex items-center gap-2 rounded-full px-4 py-2 font-medium text-brand-bg shadow-soft disabled:opacity-50 transition-colors ${g.souvenirTaken
+                                                ? 'bg-brand-success hover:bg-brand-success/80'
                                                 : 'bg-brand-primary hover:bg-brand-primarySoft'
                                                 }`}
                                             disabled={processing}
@@ -1238,7 +1238,7 @@ export default function SouvenirPage() {
                                         </button>
                                         )}
                                         {!souvenirs.some(s => s.remaining > 0) && g.souvenirTaken && (
-                                            <span className="flex items-center gap-1 text-green-400 text-sm"><CheckCircle size={14} /> Sudah Diambil</span>
+                                            <span className="flex items-center gap-1 text-brand-success text-sm"><CheckCircle size={14} /> Sudah Diambil</span>
                                         )}
                                     </div>
                                 </div>
@@ -1251,7 +1251,7 @@ export default function SouvenirPage() {
             {/* Prize Collection Section - Shows when guest is selected */}
             {selected && prizeWins.length > 0 && (
                 <div className="relative z-10 px-6 pb-6 flex justify-center">
-                    <div className="w-full max-w-5xl rounded-xl border border-brand-warning/30 bg-brand-warning/10 p-4 text-white shadow-glass backdrop-blur-sm">
+                    <div className="w-full max-w-5xl rounded-xl surface-elevated p-4 text-brand-text shadow-gold backdrop-blur-sm">
                         <div
                             className="flex items-center justify-between cursor-pointer"
                             onClick={() => setShowPrizes(!showPrizes)}
@@ -1260,7 +1260,7 @@ export default function SouvenirPage() {
                                 <Trophy size={20} />
                                 Hadiah Lucky Draw ({uncollectedPrizes.length} belum diambil, {collectedPrizes.length} sudah diambil)
                             </div>
-                            <button className="text-brand-warning hover:text-white">
+                            <button className="text-brand-warning hover:text-brand-text">
                                 {showPrizes ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                             </button>
                         </div>
@@ -1276,11 +1276,11 @@ export default function SouvenirPage() {
                                         {uncollectedPrizes.map((pw) => (
                                             <div key={pw.id} className="flex items-center justify-between rounded-lg border border-brand-warning/30 bg-brand-warning/10 p-3">
                                                 <div>
-                                                    <div className="font-semibold text-white flex items-center gap-2">
+                                                    <div className="font-semibold text-brand-text flex items-center gap-2">
                                                         <Trophy size={16} className="text-brand-warning" />
                                                         {pw.prize.name}
                                                     </div>
-                                                    <div className="text-xs text-white/60">
+                                                    <div className="text-xs text-brand-textMuted">
                                                         Kategori: {pw.prize.category === 'UTAMA' ? 'Hadiah Utama' : 'Hadiah Hiburan'}
                                                         {pw.prize.description && ` • ${pw.prize.description}`}
                                                     </div>
@@ -1296,7 +1296,7 @@ export default function SouvenirPage() {
                                                     <button
                                                         onClick={() => collectPrize(pw.id)}
                                                         disabled={collectingPrize === pw.id}
-                                                        className="flex items-center gap-2 rounded-lg bg-brand-warning px-4 py-2 font-medium text-white hover:opacity-90 disabled:opacity-50 transition-colors"
+                                                        className="flex items-center gap-2 rounded-lg bg-brand-warning px-4 py-2 font-medium text-brand-bg hover:opacity-90 disabled:opacity-50 transition-colors"
                                                     >
                                                         {collectingPrize === pw.id ? (
                                                             <Loader2 className="animate-spin" size={16} />
@@ -1314,17 +1314,17 @@ export default function SouvenirPage() {
                                 {/* Collected Prizes */}
                                 {collectedPrizes.length > 0 && (
                                     <div className="space-y-2">
-                                        <div className="text-xs uppercase tracking-wider text-green-400/80 font-medium">
+                                        <div className="text-xs uppercase tracking-wider text-brand-success/80 font-medium">
                                             Sudah Diambil:
                                         </div>
                                         {collectedPrizes.map((pw) => (
-                                            <div key={pw.id} className="flex items-center justify-between rounded-lg border border-green-500/30 bg-green-500/10 p-3 opacity-75 hover:opacity-100 transition-opacity">
+                                            <div key={pw.id} className="flex items-center justify-between rounded-lg border border-brand-success/30 bg-brand-success/10 p-3 opacity-75 hover:opacity-100 transition-opacity">
                                                 <div>
-                                                    <div className="font-semibold text-white flex items-center gap-2">
-                                                        <CheckCircle size={16} className="text-green-400" />
+                                                    <div className="font-semibold text-brand-text flex items-center gap-2">
+                                                        <CheckCircle size={16} className="text-brand-success" />
                                                         {pw.prize.name}
                                                     </div>
-                                                    <div className="text-xs text-green-300/80">
+                                                    <div className="text-xs text-brand-success/80">
                                                         Diambil pada {new Date(pw.collection!.collectedAt).toLocaleString('id-ID')}
                                                         {pw.collection!.collectedByName && ` oleh ${pw.collection!.collectedByName}`}
                                                     </div>
@@ -1337,7 +1337,7 @@ export default function SouvenirPage() {
                                                     >
                                                         <Printer size={14} /> Cetak
                                                     </button>
-                                                    <span className="px-3 py-1 rounded-full bg-green-600/30 text-green-300 text-sm font-medium">
+                                                    <span className="px-3 py-1 rounded-full bg-brand-success/30 text-brand-success text-sm font-medium">
                                                         Sudah Diambil
                                                     </span>
                                                 </div>
@@ -1354,7 +1354,7 @@ export default function SouvenirPage() {
             {/* Loading Prizes Indicator */}
             {selected && loadingPrizes && (
                 <div className="relative z-10 px-6 pb-6 flex justify-center">
-                    <div className="w-full max-w-5xl rounded-xl border border-brand-border bg-brand-secondary/75 p-4 text-brand-surface/60 flex items-center justify-center gap-2">
+                    <div className="w-full max-w-5xl rounded-xl surface-elevated p-4 text-brand-textDim flex items-center justify-center gap-2">
                         <Loader2 className="animate-spin" size={16} />
                         Memuat data hadiah...
                     </div>
@@ -1363,28 +1363,28 @@ export default function SouvenirPage() {
 
             {/* History */}
             <div className="relative z-10 p-6 flex justify-center">
-                <div className="w-full max-w-5xl rounded-xl border border-brand-border bg-brand-secondary/75 p-4 text-brand-surface shadow-glass backdrop-blur-sm">
-                    <div className="mb-3 font-semibold flex items-center gap-2 border-b border-white/10 pb-2">
+                <div className="w-full max-w-5xl rounded-xl surface-elevated p-4 text-brand-text shadow-gold backdrop-blur-sm">
+                    <div className="mb-3 font-semibold flex items-center gap-2 border-b border-brand-border pb-2">
                         <Clock size={18} />
                         Riwayat Pengambilan Terbaru
                     </div>
-                    {!history.length && <div className="text-sm text-white/70 py-4 text-center">Belum ada riwayat sesi ini</div>}
+                    {!history.length && <div className="text-sm text-brand-textMuted py-4 text-center">Belum ada riwayat sesi ini</div>}
                     {!!history.length && (
                         <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                             {history.map((h) => (
-                                <div key={h.id} className="flex items-center gap-3 rounded border border-white/20 bg-white/5 p-2">
-                                    <div className="h-10 w-10 rounded bg-white/10 overflow-hidden flex-shrink-0">
+                                <div key={h.id} className="flex items-center gap-3 rounded border border-brand-border surface-interactive p-2">
+                                    <div className="h-10 w-10 rounded bg-brand-surfaceMuted overflow-hidden flex-shrink-0">
                                         {h.photoUrl ? (
                                             <img src={toApiUrl(h.photoUrl)} className="h-full w-full object-cover" />
                                         ) : (
-                                            <div className="flex h-full w-full items-center justify-center text-[10px] text-white/60">No Photo</div>
+                                            <div className="flex h-full w-full items-center justify-center text-[10px] text-brand-textDim">No Photo</div>
                                         )}
                                     </div>
                                     <div className="text-sm overflow-hidden">
-                                        <div className="font-medium text-white truncate">
+                                        <div className="font-medium text-brand-text truncate">
                                             {h.name}
                                         </div>
-                                        <div className="text-green-400 text-xs flex items-center gap-1">
+                                        <div className="text-brand-success text-xs flex items-center gap-1">
                                             <CheckCircle size={10} /> Souvenir Diambil
                                         </div>
                                     </div>
@@ -1398,7 +1398,7 @@ export default function SouvenirPage() {
             {/* Souvenir Selection Modal */}
             {showSouvenirSelect && selected && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div className="w-full max-w-lg rounded-xl border border-brand-border bg-brand-secondary/95 text-brand-surface shadow-glass p-6 animate-in fade-in zoom-in duration-300">
+                    <div className="w-full max-w-lg rounded-xl surface-elevated text-brand-text shadow-gold p-6 animate-in fade-in zoom-in duration-300">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-xl font-bold flex items-center gap-2">
                                 <Package size={24} className="text-brand-primary" />
@@ -1406,7 +1406,7 @@ export default function SouvenirPage() {
                             </h3>
                             <button
                                 onClick={() => setShowSouvenirSelect(false)}
-                                className="text-white/60 hover:text-white"
+                                className="text-brand-textDim hover:text-brand-text"
                             >
                                 <X size={24} />
                             </button>
@@ -1414,7 +1414,7 @@ export default function SouvenirPage() {
 
                         <div className="space-y-3 max-h-[60vh] overflow-y-auto">
                             {souvenirs.filter(s => s.remaining > 0).length === 0 ? (
-                                <div className="text-center py-8 text-white/60">
+                                <div className="text-center py-8 text-brand-textDim">
                                     Semua souvenir sudah habis
                                 </div>
                             ) : (
@@ -1423,14 +1423,14 @@ export default function SouvenirPage() {
                                         key={s.id}
                                         className={`flex items-center justify-between rounded-lg border p-4 cursor-pointer transition-colors ${selectedSouvenir === s.id
                                             ? 'border-brand-primary bg-brand-primary/20'
-                                            : 'border-white/20 bg-white/5 hover:bg-white/10'
+                                            : 'border-brand-border surface-interactive'
                                             }`}
                                         onClick={() => setSelectedSouvenir(s.id)}
                                     >
                                         <div>
-                                            <div className="font-semibold text-white">{s.name}</div>
+                                            <div className="font-semibold text-brand-text">{s.name}</div>
                                             {s.description && (
-                                                <div className="text-sm text-white/60">{s.description}</div>
+                                                <div className="text-sm text-brand-textMuted">{s.description}</div>
                                             )}
                                             <div className="text-xs text-brand-primarySoft mt-1">
                                                 Sisa: {s.remaining} / {s.quantity}
@@ -1438,10 +1438,10 @@ export default function SouvenirPage() {
                                         </div>
                                         <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedSouvenir === s.id
                                             ? 'border-brand-primary bg-brand-primary'
-                                            : 'border-white/30'
+                                            : 'border-brand-border'
                                             }`}>
                                             {selectedSouvenir === s.id && (
-                                                <CheckCircle size={14} className="text-white" />
+                                                <CheckCircle size={14} className="text-brand-bg" />
                                             )}
                                         </div>
                                     </div>
@@ -1452,7 +1452,7 @@ export default function SouvenirPage() {
                         <div className="mt-6 flex gap-3">
                             <button
                                 onClick={() => setShowSouvenirSelect(false)}
-                                className="flex-1 flex items-center justify-center gap-2 rounded-lg border border-white/30 bg-white/10 px-4 py-3 font-medium text-white hover:bg-white/20 transition-colors"
+                                className="flex-1 flex items-center justify-center gap-2 rounded-lg border border-brand-border bg-brand-surfaceMuted px-4 py-3 font-medium text-brand-text hover:bg-brand-surfaceBright transition-colors"
                             >
                                 <X size={18} />
                                 Batal
@@ -1460,7 +1460,7 @@ export default function SouvenirPage() {
                             <button
                                 onClick={() => selected && selectedSouvenir && giveSouvenir(selected, selectedSouvenir)}
                                 disabled={!selectedSouvenir || processing}
-                                className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-brand-primary px-4 py-3 font-medium text-white hover:bg-brand-primarySoft disabled:opacity-50 transition-colors"
+                                className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-brand-primary px-4 py-3 font-medium text-brand-bg hover:bg-brand-primarySoft disabled:opacity-50 transition-colors"
                             >
                                 {processing ? (
                                     <Loader2 className="animate-spin" size={18} />
@@ -1478,12 +1478,12 @@ export default function SouvenirPage() {
             {
                 checkedGuest && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                        <div className="w-full max-w-4xl rounded-xl border border-brand-border bg-brand-secondary/90 text-brand-surface shadow-glass grid grid-cols-1 md:grid-cols-[320px_1fr] animate-in fade-in zoom-in duration-300">
-                            <div className="bg-white/10 flex items-center justify-center min-h-[300px] md:min-h-full">
+                        <div className="w-full max-w-4xl rounded-xl surface-elevated text-brand-text shadow-gold grid grid-cols-1 md:grid-cols-[320px_1fr] animate-in fade-in zoom-in duration-300">
+                            <div className="bg-brand-bgSubtle flex items-center justify-center min-h-[300px] md:min-h-full">
                                 {checkedGuest.photoUrl ? (
                                     <img src={toApiUrl(checkedGuest.photoUrl)} alt={checkedGuest.name} className="w-full h-full object-cover" />
                                 ) : (
-                                    <div className="text-gray-400 p-8 flex flex-col items-center gap-2">
+                                    <div className="text-brand-textDim p-8 flex flex-col items-center gap-2">
                                         <Users size={48} className="opacity-50" />
                                         <span>No Photo</span>
                                     </div>
@@ -1497,28 +1497,28 @@ export default function SouvenirPage() {
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <div className="text-sm text-white/60 uppercase tracking-wider font-medium">Queue</div>
-                                        <div className="text-5xl md:text-7xl font-extrabold text-white leading-none">{checkedGuest.queueNumber}</div>
+                                        <div className="text-sm text-brand-textMuted uppercase tracking-wider font-medium">Queue</div>
+                                        <div className="text-5xl md:text-7xl font-extrabold text-brand-text leading-none">{checkedGuest.queueNumber}</div>
                                     </div>
                                     <div>
-                                        <div className="text-sm text-white/60 uppercase tracking-wider font-medium">Guest ID</div>
-                                        <div className="text-2xl md:text-3xl font-mono font-semibold text-white">{checkedGuest.guestId}</div>
+                                        <div className="text-sm text-brand-textMuted uppercase tracking-wider font-medium">Guest ID</div>
+                                        <div className="text-2xl md:text-3xl font-mono font-semibold text-brand-text">{checkedGuest.guestId}</div>
                                     </div>
                                 </div>
 
                                 <div>
-                                    <div className="text-sm text-white/60 uppercase tracking-wider font-medium">Nama</div>
-                                    <div className="text-3xl md:text-5xl font-bold text-white leading-tight">{checkedGuest.name}</div>
+                                    <div className="text-sm text-brand-textMuted uppercase tracking-wider font-medium">Nama</div>
+                                    <div className="text-3xl md:text-5xl font-bold text-brand-text leading-tight">{checkedGuest.name}</div>
                                 </div>
 
                                 <div>
-                                    <div className="text-sm text-white/60 uppercase tracking-wider font-medium">Meja / Ruangan</div>
-                                    <div className="text-2xl md:text-3xl text-white">{checkedGuest.tableLocation}</div>
+                                    <div className="text-sm text-brand-textMuted uppercase tracking-wider font-medium">Meja / Ruangan</div>
+                                    <div className="text-2xl md:text-3xl text-brand-text">{checkedGuest.tableLocation}</div>
                                 </div>
 
                                 <div className="pt-6 flex items-center gap-3">
                                     <button
-                                        className="flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-6 py-3 text-base font-medium text-white hover:bg-white/20 transition-colors"
+                                        className="flex items-center gap-2 rounded-lg border border-brand-border bg-brand-surfaceMuted px-6 py-3 text-base font-medium text-brand-text hover:bg-brand-surfaceBright transition-colors"
                                         onClick={() => setCheckedGuest(null)}
                                     >
                                         <X size={20} />
@@ -1534,7 +1534,7 @@ export default function SouvenirPage() {
             {/* Already Taken Popup - Shows when souvenir was already given */}
             {alreadyTakenInfo && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div className="w-full max-w-lg rounded-xl border border-brand-warning/30 bg-brand-secondary/95 text-brand-surface shadow-glass p-6 animate-in fade-in zoom-in duration-300">
+                    <div className="w-full max-w-lg rounded-xl surface-elevated text-brand-text shadow-gold p-6 animate-in fade-in zoom-in duration-300">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-xl font-bold flex items-center gap-2 text-brand-warning">
                                 <AlertTriangle size={24} />
@@ -1542,16 +1542,16 @@ export default function SouvenirPage() {
                             </h3>
                             <button
                                 onClick={() => setAlreadyTakenInfo(null)}
-                                className="text-white/60 hover:text-white"
+                                className="text-brand-textDim hover:text-brand-text"
                             >
                                 <X size={24} />
                             </button>
                         </div>
 
-                        <div className="mb-4 p-4 rounded-lg border border-white/20 bg-white/5">
-                            <div className="text-sm text-white/60 mb-1">Tamu</div>
-                            <div className="text-xl font-bold text-white">{alreadyTakenInfo.guest.name}</div>
-                            <div className="text-sm text-white/60 font-mono">{alreadyTakenInfo.guest.guestId}</div>
+                        <div className="mb-4 p-4 rounded-lg border border-brand-border bg-brand-bgSubtle">
+                            <div className="text-sm text-brand-textMuted mb-1">Tamu</div>
+                            <div className="text-xl font-bold text-brand-text">{alreadyTakenInfo.guest.name}</div>
+                            <div className="text-sm text-brand-textMuted font-mono">{alreadyTakenInfo.guest.guestId}</div>
                         </div>
 
                         <div className="mb-4">
@@ -1562,11 +1562,11 @@ export default function SouvenirPage() {
                             <div className="space-y-2 max-h-[40vh] overflow-y-auto">
                                 {alreadyTakenInfo.takes.map((take, idx) => (
                                     <div key={idx} className="p-3 rounded-lg border border-brand-warning/20 bg-brand-warning/10">
-                                        <div className="font-semibold text-white flex items-center gap-2">
+                                        <div className="font-semibold text-brand-text flex items-center gap-2">
                                             <Gift size={16} className="text-brand-warning" />
                                             {take.souvenirName}
                                         </div>
-                                        <div className="text-sm text-white/70 mt-1 flex items-center gap-4">
+                                        <div className="text-sm text-brand-textMuted mt-1 flex items-center gap-4">
                                             <span className="flex items-center gap-1">
                                                 <Clock size={12} />
                                                 {new Date(take.takenAt).toLocaleString('id-ID', {
@@ -1592,7 +1592,7 @@ export default function SouvenirPage() {
                         <div className="flex gap-3">
                             <button
                                 onClick={() => setAlreadyTakenInfo(null)}
-                                className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-brand-warning px-4 py-3 font-medium text-white hover:opacity-90 transition-colors"
+                                className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-brand-warning px-4 py-3 font-medium text-brand-bg hover:opacity-90 transition-colors"
                             >
                                 <CheckCircle size={18} />
                                 Mengerti
@@ -1606,8 +1606,8 @@ export default function SouvenirPage() {
             {
                 showScanner && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-md">
-                        <div className="w-full max-w-md rounded-xl bg-white p-6 text-center shadow-2xl">
-                            <h3 className="mb-4 text-xl font-bold text-gray-900 flex items-center justify-center gap-2">
+                        <div className="w-full max-w-md rounded-xl surface-elevated p-6 text-center shadow-2xl">
+                            <h3 className="mb-4 text-xl font-bold text-brand-text flex items-center justify-center gap-2">
                                 <QrCode size={24} />
                                 Scan QR Code
                             </h3>
@@ -1617,7 +1617,7 @@ export default function SouvenirPage() {
                                 qrCodeSuccessCallback={onScanSuccess}
                             />
                             <button
-                                className="mt-6 flex items-center justify-center gap-2 w-full rounded-lg bg-brand-danger px-4 py-3 text-white font-medium hover:opacity-90 transition-colors"
+                                className="mt-6 flex items-center justify-center gap-2 w-full rounded-lg bg-brand-danger px-4 py-3 text-brand-bg font-medium hover:opacity-90 transition-colors"
                                 onClick={() => setShowScanner(false)}
                             >
                                 <X size={20} />
@@ -1773,25 +1773,25 @@ const Html5QrcodePlugin = ({ qrCodeSuccessCallback, onScanFailure, fps, qrbox }:
 
     return (
         <div className="w-full">
-            <div id={uniqueIdRef.current} className="w-full overflow-hidden rounded-lg bg-black border-2 border-gray-200 relative min-h-[300px]">
+            <div id={uniqueIdRef.current} className="w-full overflow-hidden rounded-lg bg-black border-2 border-brand-border relative min-h-[300px]">
                 {startError && (
-                    <div className="absolute inset-0 flex items-center justify-center p-4 text-center bg-brand-secondary text-brand-surface overflow-y-auto">
+                    <div className="absolute inset-0 flex items-center justify-center p-4 text-center bg-brand-secondary text-brand-text overflow-y-auto">
                         <div className="max-h-full py-4">
                             <p className="text-brand-danger font-bold mb-2">Kamera Error</p>
-                            <p className="text-sm text-white/70 mb-4">
+                            <p className="text-sm text-brand-textMuted mb-4">
                                 {startError}
                             </p>
-                            <div className="text-xs text-left bg-black/30 p-3 rounded border border-white/10 mb-4 space-y-2">
-                                <p className="font-bold text-yellow-400">Solusi (Chrome/Edge):</p>
+                            <div className="text-xs text-left bg-black/30 p-3 rounded border border-brand-border mb-4 space-y-2">
+                                <p className="font-bold text-brand-warning">Solusi (Chrome/Edge):</p>
                                 <ol className="list-decimal pl-4 space-y-1 opacity-90">
-                                    <li>Buka tab baru, ketik: <code className="bg-white/20 px-1 rounded">chrome://flags</code></li>
-                                    <li>Cari: <code className="bg-white/20 px-1 rounded">insecure origins</code></li>
+                                    <li>Buka tab baru, ketik: <code className="bg-brand-surfaceMuted px-1 rounded">chrome://flags</code></li>
+                                    <li>Cari: <code className="bg-brand-surfaceMuted px-1 rounded">insecure origins</code></li>
                                     <li>Enable <b>"Insecure origins treated as secure"</b></li>
-                                    <li>Masukkan URL ini di kotak teks yang muncul: <br /><code className="bg-white/20 px-1 rounded block mt-1 select-all">{typeof window !== 'undefined' ? window.location.origin : 'http://...'}</code></li>
+                                    <li>Masukkan URL ini di kotak teks yang muncul: <br /><code className="bg-brand-surfaceMuted px-1 rounded block mt-1 select-all">{typeof window !== 'undefined' ? window.location.origin : 'http://...'}</code></li>
                                     <li>Klik <b>Relaunch</b> di bawah layar.</li>
                                 </ol>
                             </div>
-                            <button onClick={() => fileInputRef.current?.click()} className="bg-white text-slate-900 px-4 py-2 rounded-full font-bold text-sm hover:bg-gray-200 transition-colors">Buka Kamera / Upload</button>
+                            <button onClick={() => fileInputRef.current?.click()} className="bg-brand-primary text-brand-bg px-4 py-2 rounded-full font-bold text-sm hover:bg-brand-primarySoft transition-colors">Buka Kamera / Upload</button>
                         </div>
                     </div>
                 )}

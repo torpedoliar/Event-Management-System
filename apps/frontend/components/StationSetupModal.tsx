@@ -100,9 +100,9 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+      <div className="surface-elevated max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-panel">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+        <div className="px-6 py-4 border-b border-brand-border flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-brand-primary/10 rounded-lg flex items-center justify-center">
               <svg className="w-6 h-6 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -110,10 +110,10 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
               </svg>
             </div>
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+              <h2 className="text-xl font-bold text-brand-text">
                 {existingConfig ? 'Pengaturan Station' : 'Setup Station Baru'}
               </h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-brand-textMuted">
                 Konfigurasi identitas dan mode offline
               </p>
             </div>
@@ -121,7 +121,7 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
           {existingConfig && (
             <button
               onClick={handleClose}
-              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              className="text-brand-textDim hover:text-brand-text transition-colors"
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -134,7 +134,7 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
         <div className="px-6 py-6 space-y-6">
           {/* Station Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-brand-textMuted mb-2">
               Nama Station
             </label>
             <input
@@ -145,23 +145,23 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
                 setError('');
               }}
               placeholder="Contoh: Station A - Pintu Utama"
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent dark:bg-gray-700 dark:text-white"
+              className="w-full px-4 py-2 bg-brand-bg border border-brand-border rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent text-brand-text placeholder:text-brand-textDim"
               disabled={isLoading}
             />
-            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            <p className="mt-1 text-xs text-brand-textDim">
               Nama ini akan muncul di laporan dan history check-in
             </p>
           </div>
 
           {/* Station ID Display */}
-          <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
-            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+          <div className="bg-brand-bg/50 rounded-lg p-4 border border-brand-border">
+            <label className="block text-xs font-medium text-brand-textDim mb-1">
               Station ID (Auto-generated)
             </label>
-            <code className="text-xs text-gray-700 dark:text-gray-300 break-all">
+            <code className="text-xs text-brand-textMuted break-all">
               {stationId}
             </code>
-            <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+            <p className="mt-2 text-xs text-brand-textDim">
               ID ini unik dan digunakan untuk mengidentifikasi station saat sync
             </p>
           </div>
@@ -173,14 +173,14 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
               id="enableOffline"
               checked={enableOfflineMode}
               onChange={(e) => setEnableOfflineMode(e.target.checked)}
-              className="mt-1 w-4 h-4 text-brand-primary border-gray-300 rounded focus:ring-brand-primary"
+              className="mt-1 w-4 h-4 text-brand-primary border-brand-border rounded focus:ring-brand-primary bg-brand-bg"
               disabled={isLoading}
             />
             <label htmlFor="enableOffline" className="flex-1">
-              <span className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <span className="block text-sm font-medium text-brand-textMuted">
                 Aktifkan Mode Offline
               </span>
-              <span className="block text-xs text-gray-500 dark:text-gray-400">
+              <span className="block text-xs text-brand-textDim">
                 Check-in tetap berjalan tanpa internet, otomatis sync saat koneksi kembali
               </span>
             </label>
@@ -189,7 +189,7 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
           {/* Sync Interval */}
           {enableOfflineMode && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-brand-textMuted mb-2">
                 Interval Sinkronisasi (detik)
               </label>
               <input
@@ -198,10 +198,10 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
                 max="120"
                 value={syncInterval}
                 onChange={(e) => setSyncInterval(parseInt(e.target.value) || 30)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent dark:bg-gray-700 dark:text-white"
+                className="w-full px-4 py-2 bg-brand-bg border border-brand-border rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent text-brand-text"
                 disabled={isLoading}
               />
-              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              <p className="mt-1 text-xs text-brand-textDim">
                 Setiap {syncInterval} detik akan mencoba sinkronisasi check-in yang pending
               </p>
             </div>
@@ -216,11 +216,11 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-3">
+        <div className="px-6 py-4 border-t border-brand-border flex justify-end gap-3">
           {existingConfig ? (
             <button
               onClick={handleClose}
-              className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              className="px-4 py-2 text-brand-textMuted hover:bg-brand-surfaceMuted rounded-lg transition-colors"
               disabled={isLoading}
             >
               Batal
@@ -229,7 +229,7 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
           <button
             onClick={handleSave}
             disabled={isLoading || !stationName.trim()}
-            className="px-6 py-2 bg-brand-primary hover:bg-brand-primarySoft disabled:bg-gray-400 text-white rounded-lg transition-colors font-medium flex items-center gap-2"
+            className="px-6 py-2 bg-brand-primary hover:bg-brand-primarySoft disabled:opacity-50 text-white rounded-lg transition-colors font-medium flex items-center gap-2"
           >
             {isLoading ? (
               <>

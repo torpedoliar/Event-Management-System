@@ -96,7 +96,7 @@ export default function NewGuestPage() {
           {error && <div className="text-sm text-brand-danger bg-brand-danger/10 p-3 rounded-lg border border-brand-danger/20">{error}</div>}
           {message && <div className="text-sm text-brand-accent bg-brand-primary/10 p-3 rounded-lg border border-brand-primary/20">{message}</div>}
 
-          <Card variant="glass" className="p-6 md:p-8">
+          <Card variant="glass" className="p-6 md:p-8 surface-elevated">
             <form onSubmit={submit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2">
@@ -175,7 +175,7 @@ export default function NewGuestPage() {
                     className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-white focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary"
                   >
                     {CATEGORY_OPTIONS.map((opt) => (
-                      <option key={opt.value} value={opt.value} className="bg-brand-secondary text-brand-surface">
+                      <option key={opt.value} value={opt.value} className="bg-brand-secondary text-brand-text">
                         {opt.label}
                       </option>
                     ))}
@@ -194,11 +194,11 @@ export default function NewGuestPage() {
                 </div>
               </div>
 
-              <div className="space-y-3 pt-2 border-t border-white/10">
+              <div className="space-y-3 pt-2 border-t border-brand-border">
                 <Label className="mb-1 block">Foto (opsional)</Label>
                 <div className="flex flex-col md:flex-row gap-4 items-start">
                   <div className="flex-1 w-full">
-                    <div className="flex items-center gap-3 mb-3">
+                    <div className="flex items-center gap-3 mb-3 p-4 border-2 border-dashed border-brand-primary/40 rounded-xl hover:border-brand-primary/60 transition-colors">
                       <input
                         type="file"
                         accept="image/*"
@@ -231,7 +231,7 @@ export default function NewGuestPage() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-brand-border">
                 <Button
                   type="button"
                   variant="secondary"

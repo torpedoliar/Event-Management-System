@@ -214,14 +214,12 @@ export default function LuckyDraw3DWheel({
          
          {/* Subtle glow behind the wheel */}
          <div className="absolute inset-0 rounded-3xl opacity-30 blur-3xl pointer-events-none"
-           style={{ background: 'radial-gradient(ellipse, rgba(212,168,83,0.4) 0%, transparent 70%)' }} />
+           style={{ background: 'radial-gradient(ellipse, rgba(212,168,83,0.35) 0%, rgba(124,92,252,0.1) 40%, transparent 70%)' }} />
 
          {/* ─── 3D Cylinder Viewport (overflow: hidden is the KEY fix) ─── */}
          <div className="absolute inset-x-4 top-4 bottom-4 rounded-2xl overflow-hidden z-20 border border-brand-primary/20"
-              style={{ 
-                background: 'linear-gradient(180deg, rgba(26,26,46,0.95) 0%, rgba(10,10,18,0.98) 50%, rgba(26,26,46,0.95) 100%)',
-                boxShadow: 'inset 0 0 40px rgba(0,0,0,0.8), 0 0 30px rgba(0,0,0,0.5)'
-              }}>
+              style={{ background: 'linear-gradient(180deg, rgba(30,30,50,0.95) 0%, rgba(11,11,17,0.98) 50%, rgba(30,30,50,0.95) 100%)',
+                boxShadow: 'inset 0 0 40px rgba(0,0,0,0.8), 0 0 30px rgba(0,0,0,0.5), 0 0 20px rgba(212,168,83,0.08)' }}>
            
            {/* 3D Cylinder */}
            <div className="absolute inset-0 flex items-center justify-center" style={{ perspective: '800px' }}>
@@ -237,9 +235,9 @@ export default function LuckyDraw3DWheel({
                      style={{
                         transform: `rotateX(${i * theta}deg) translateZ(${radius}px)`,
                         backfaceVisibility: 'hidden',
-                        background: 'linear-gradient(180deg, rgba(212,168,83,0.15) 0%, rgba(26,26,46,0.95) 20%, rgba(26,26,46,0.95) 80%, rgba(212,168,83,0.15) 100%)',
+                        background: 'linear-gradient(180deg, rgba(245,236,215,0.12) 0%, rgba(30,30,50,0.95) 20%, rgba(30,30,50,0.95) 80%, rgba(245,236,215,0.12) 100%)',
                         border: '1px solid rgba(212,168,83,0.3)',
-                        boxShadow: '0 4px 15px rgba(0,0,0,0.5)'
+                        boxShadow: '0 4px 15px rgba(0,0,0,0.5), 0 0 8px rgba(212,168,83,0.1)'
                      }}
                   >
                      <div className="flex items-center w-full px-12">
@@ -248,7 +246,7 @@ export default function LuckyDraw3DWheel({
                           {item.guestId || item.queueNumber}
                         </div>
                         <div className="flex-1 flex flex-col items-end min-w-0">
-                          <span className="font-bold text-3xl md:text-4xl text-white uppercase tracking-wide leading-tight truncate w-full text-right">
+                          <span className="font-bold text-3xl md:text-4xl text-brand-text uppercase tracking-wide leading-tight truncate w-full text-right">
                             {item.name}
                           </span>
                           <span className="text-lg font-mono text-brand-primarySoft/70 mt-1 text-right tracking-wider truncate w-full">
@@ -264,7 +262,7 @@ export default function LuckyDraw3DWheel({
            {/* ─── Selection Highlight Frame ─── */}
            <div className="absolute left-3 right-3 top-1/2 -translate-y-1/2 h-[130px] z-30 rounded-xl border-4 border-brand-primary/80 pointer-events-none"
                 style={{
-                  boxShadow: '0 0 25px rgba(212,168,83,0.35), inset 0 0 25px rgba(212,168,83,0.15)',
+                  boxShadow: '0 0 25px rgba(212,168,83,0.35), inset 0 0 25px rgba(212,168,83,0.15), 0 0 40px rgba(232,106,146,0.1)',
                   background: 'linear-gradient(90deg, rgba(212,168,83,0.08), transparent, rgba(212,168,83,0.08))'
                 }}>
              
@@ -277,17 +275,17 @@ export default function LuckyDraw3DWheel({
              </div>
              
              {/* Corner accents */}
-             <div className="absolute -top-px -left-px w-3 h-3 border-t-2 border-l-2 border-white/80" />
-             <div className="absolute -top-px -right-px w-3 h-3 border-t-2 border-r-2 border-white/80" />
-             <div className="absolute -bottom-px -left-px w-3 h-3 border-b-2 border-l-2 border-white/80" />
-             <div className="absolute -bottom-px -right-px w-3 h-3 border-b-2 border-r-2 border-white/80" />
+             <div className="absolute -top-px -left-px w-3 h-3 border-t-2 border-l-2 border-brand-text/80" />
+             <div className="absolute -top-px -right-px w-3 h-3 border-t-2 border-r-2 border-brand-text/80" />
+             <div className="absolute -bottom-px -left-px w-3 h-3 border-b-2 border-l-2 border-brand-text/80" />
+             <div className="absolute -bottom-px -right-px w-3 h-3 border-b-2 border-r-2 border-brand-text/80" />
            </div>
 
-           {/* Fade Gradients — uses brand-secondary to blend with app theme */}
+           {/* Fade Gradients — blend with app theme using brand-secondary hex */}
            <div className="absolute inset-x-0 top-0 h-[90px] z-40 pointer-events-none"
-                style={{ background: 'linear-gradient(to bottom, #1A1A2E, rgba(26,26,46,0.7), transparent)' }} />
+                style={{ background: 'linear-gradient(to bottom, #16162A, rgba(22,22,42,0.7), transparent)' }} />
            <div className="absolute inset-x-0 bottom-0 h-[90px] z-40 pointer-events-none"
-                style={{ background: 'linear-gradient(to top, #1A1A2E, rgba(26,26,46,0.7), transparent)' }} />
+                style={{ background: 'linear-gradient(to top, #16162A, rgba(22,22,42,0.7), transparent)' }} />
          </div>
        </div>
      </div>

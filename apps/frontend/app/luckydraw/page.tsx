@@ -1,9 +1,19 @@
 "use client";
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { apiFetch, apiBase, toApiUrl } from '../../lib/api';
-import { Trophy, Sparkles, PartyPopper, History, X, Users, Search, Award, Hash, Volume2, VolumeX, Monitor } from 'lucide-react';
+import { Trophy, PartyPopper, History, X, Users, Search, Award, Hash, Volume2, VolumeX, Monitor } from 'lucide-react';
+import Button from '../../components/ui/Button';
+import Input from '../../components/ui/Input';
+import Modal from '../../components/ui/Modal';
 import confetti from 'canvas-confetti';
 import WinnerHistoryModal from '../../components/WinnerHistoryModal';
+
+// Festive confetti palette aligned with new theme (gold, coral, violet, soft cream)
+const GRAND_CONFETTI = ['#D4A853', '#F5ECD7', '#E86A92', '#7C5CFC', '#FFFFFF'];
+const TICKER_COLORS = ['#D4A853', '#F5ECD7'];
+const SHIMMER_CONFETTI = ['#D4A853', '#F5ECD7', '#F9A8C4'];
+const REGULAR_CONFETTI = ['#D4A853', '#E86A92', '#F9A8C4'];
+const FINALE_CONFETTI = ['#D4A853', '#E86A92', '#F9A8C4', '#7C5CFC', '#B4A0FF'];
 
 interface Prize {
     id: string;
@@ -296,13 +306,13 @@ export default function LuckyDrawPage() {
             spread: 160,
             startVelocity: 70,
             origin: { y: 0.5, x: 0.5 },
-            colors: ['#FFD700', '#FFA500', '#FFFFFF', '#FF4500', '#1E3A8A'],
+            colors: GRAND_CONFETTI,
             ticks: 400
         });
 
         // 2. Left & Right Side Cannons
         const end = Date.now() + (3 * 1000);
-        const colors = ['#FFD700', '#FFFFFF'];
+        const colors = TICKER_COLORS;
 
         (function frame() {
             confetti({
@@ -332,7 +342,7 @@ export default function LuckyDrawPage() {
                 spread: 360,
                 startVelocity: 30,
                 origin: { y: 0.2, x: 0.5 },
-                colors: ['#FFD700', '#FFFFFF', '#F0E68C']
+                colors: SHIMMER_CONFETTI
             });
         }, 1000);
 
@@ -588,7 +598,7 @@ export default function LuckyDrawPage() {
                             particleCount: 30,
                             spread: 50,
                             origin: { y: 0.6 },
-                            colors: ['#FFD700', '#FFA500', '#FF69B4']
+                            colors: REGULAR_CONFETTI
                         });
                     }
                     
@@ -607,7 +617,7 @@ export default function LuckyDrawPage() {
                     particleCount: drama.confettiCount * (results.length > 1 ? 2 : 1),
                     spread: 70,
                     origin: { y: 0.6 },
-                    colors: ['#FFD700', '#FFA500', '#FF69B4', '#00FF00', '#00BFFF']
+                    colors: FINALE_CONFETTI
                 });
 
                 // Resume ticker after 5 seconds
@@ -650,101 +660,50 @@ export default function LuckyDrawPage() {
     const selectedPrize = prizes.find(p => p.id === selectedPrizeId);
     const isSoldOut = selectedPrize ? selectedPrize.winners.length >= selectedPrize.quantity : false;
 
-    if (loading) return <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>;
+    if (loading) return <div className="min-h-[100dvh] flex items-center justify-center text-brand-text">Memuat...</div>;
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
-            {/* Mode Selector Dropdown */}
-            <div className="fixed top-24 left-6 z-[70]">
-                <select
-                    onChange={(e) => {
-                        if (e.target.value === 'slot') {
-                            window.location.href = '/luckydraw/display';
-                        } else if (e.target.value === 'carousel') {
-                            window.location.href = '/luckydraw/carousel';
-                        }
-                    }}
-                    value="classic"
-                    className="bg-brand-secondary/80 border border-brand-primary/50 text-brand-primarySoft text-sm rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary backdrop-blur-xl transition-all shadow-lg font-mono tracking-wider cursor-pointer"
-                >
-                    <option value="classic">🎲 Classic Mode</option>
-                    <option value="slot">🎰 Slot Machine Mode</option>
-                    <option value="carousel">🎡 3D Carousel Mode</option>
-                </select>
-            </div>
-
-            {/* Audio Elements */}
+        <div className="min-h-[100dvh] flex flex-col items-center justify-center p-4 relative overflow-hidden">
             <audio ref={audioRollRef} src={toApiUrl(eventCfg?.rollSoundUrl || "/sounds/roll.mp3")} preload="auto" />
             <audio ref={audioTensionRef} src={toApiUrl(eventCfg?.tensionSoundUrl || "/sounds/tension.mp3")} preload="auto" />
             <audio ref={audioWinRef} src={toApiUrl(eventCfg?.winSoundUrl || "/sounds/win.mp3")} preload="auto" />
             <audio ref={audioGrandWinRef} src={toApiUrl(eventCfg?.grandWinSoundUrl || "/sounds/grand-win.mp3")} preload="auto" />
 
-            {/* Controls Floating Buttons */}
-            <div className="fixed top-6 right-6 z-[70] flex flex-col gap-2">
-                <button
-                    onClick={() => setIsFullscreen(!isFullscreen)}
-                    title={isFullscreen ? "Show Navigation" : "Hide Navigation (Fullscreen)"}
-                    className={`p-4 rounded-full backdrop-blur-xl border transition-all shadow-2xl ${
-                        isFullscreen 
-                        ? 'bg-brand-primary/20 border-brand-primary text-brand-primarySoft' 
-                        : 'bg-black/40 border-white/10 text-white/50 hover:bg-white/10 hover:text-white'
-                    }`}
-                >
-                    <Monitor size={24} />
-                </button>
-                <button
-                    onClick={toggleSound}
-                    className={`p-4 rounded-full backdrop-blur-xl border transition-all shadow-2xl ${
-                        soundEnabled 
-                        ? 'bg-brand-primary/20 border-brand-primary text-brand-primarySoft' 
-                        : 'bg-black/40 border-white/10 text-white/40'
-                    }`}
-                    title={soundEnabled ? 'Matikan Suara' : 'Aktifkan Suara'}
-                >
-                    {soundEnabled ? <Volume2 size={24} /> : <VolumeX size={24} />}
-                </button>
+            {/* Controls */}
+            <div className="fixed top-6 right-6 z-[60] flex flex-col gap-2">
+                <Button size="sm" variant={isFullscreen ? 'primary' : 'outline'} onClick={() => setIsFullscreen(!isFullscreen)} aria-label={isFullscreen ? 'Tampilkan navigasi' : 'Sembunyikan navigasi'}>
+                    <Monitor size={20} />
+                </Button>
+                <Button size="sm" variant={soundEnabled ? 'primary' : 'outline'} onClick={toggleSound} aria-label={soundEnabled ? 'Matikan suara' : 'Aktifkan suara'}>
+                    {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
+                </Button>
             </div>
 
-            {/* Sound Initiation Overlay (for browser compliance) */}
+            {/* Sound initiation banner */}
             {!soundEnabled && !loading && (
-                <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/40 backdrop-blur-md animate-in fade-in duration-700">
-                    <button 
-                        onClick={toggleSound}
-                        className="group relative bg-brand-secondary/80 border-2 border-brand-primary/50 p-12 rounded-[3rem] flex flex-col items-center gap-6 hover:border-brand-primary transition-all hover:scale-105 shadow-[0_0_100px_rgba(212,168,83,0.2)]"
-                    >
-                        <div className="w-24 h-24 rounded-full bg-brand-primary/20 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-secondary transition-all">
-                            <Volume2 size={48} />
-                        </div>
-                        <div className="text-center">
-                            <h3 className="text-2xl font-bold text-white mb-2 uppercase tracking-widest font-mono">Enable Audio Experience</h3>
-                            <p className="text-white/40 font-mono text-sm uppercase tracking-wider">Click anywhere to start with sound</p>
-                        </div>
-                    </button>
+                <div className="fixed top-0 left-0 right-0 z-50 bg-brand-warning/20 backdrop-blur-sm border-b border-brand-warning/30 px-4 py-2 flex items-center justify-between">
+                    <span className="text-brand-warning text-sm">Enable sound for the full experience</span>
+                    <div className="flex gap-2">
+                        <Button size="sm" onClick={toggleSound} className="px-3 py-1 text-xs">Enable</Button>
+                        <Button size="sm" variant="outline" onClick={() => setSoundEnabled(true)} className="px-3 py-1 text-xs">Dismiss</Button>
+                    </div>
                 </div>
             )}
 
-            {/* Screen Flash Overlay */}
-            {screenFlash && (
-                <div className="fixed inset-0 z-[60] bg-white pointer-events-none animate-[screen-flash_0.3s_ease-out]" />
-            )}
+            {/* Grand prize effects are preserved but scoped */}
+            {screenFlash && <div className="fixed inset-0 z-50 bg-white pointer-events-none animate-[screen-flash_0.3s_ease-out]" />}
+            {darkReveal && <div className="dark-reveal pointer-events-none" />}
 
-            {/* Dark Reveal Overlay */}
-            {darkReveal && (
-                <div className="dark-reveal pointer-events-none" />
-            )}
-
-            <div className="relative z-10 w-full max-w-[1600px] px-4 md:px-8 mx-auto flex flex-col gap-6 md:gap-8">
-                
-                {/* ─── HEADER (FULL WIDTH) ─── */}
+            <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col gap-6 md:gap-8">
+                {/* Header */}
                 <div className="w-full text-center space-y-4 pt-2">
                     {eventCfg?.logoUrl && (
-                        <img src={toApiUrl(eventCfg.logoUrl)} className="h-16 md:h-24 mx-auto mb-4 drop-shadow-2xl" alt="logo" />
+                        <img src={toApiUrl(eventCfg.logoUrl)} className="h-16 md:h-24 mx-auto mb-4" alt="logo" />
                     )}
-                    <h1 className="text-4xl md:text-6xl font-heading font-black text-transparent bg-clip-text bg-gradient-to-b from-brand-primarySoft via-brand-primary to-brand-accent drop-shadow-[0_10px_30px_rgba(212,168,83,0.3)] tracking-[0.1em] uppercase">
-                        LUCKY DRAW
+                    <h1 className="text-3xl md:text-5xl font-heading font-semibold text-brand-text tracking-tight">
+                        Lucky Draw
                     </h1>
-
-                    <div className="flex justify-center gap-6 mt-6 mb-4">
+                    <div className="flex justify-center">
                         <select
                             value={selectedPrizeId}
                             onChange={(e) => {
@@ -754,10 +713,10 @@ export default function LuckyDrawPage() {
                                 setHighlightedId(null);
                                 setDrawCount(1);
                             }}
-                            className="bg-brand-secondary/40 border border-brand-primary/20 text-brand-primarySoft text-lg md:text-xl rounded-full px-6 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-xl transition-all hover:bg-brand-secondary/60 cursor-pointer font-mono tracking-widest uppercase shadow-[0_0_30px_rgba(0,0,0,0.5)]"
+                            className="bg-brand-bgElevated border border-brand-border text-brand-text text-base md:text-lg rounded-xl px-5 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 cursor-pointer"
                         >
                             {prizes.map(p => (
-                                <option key={p.id} value={p.id} className="bg-brand-secondary text-brand-surface font-sans">
+                                <option key={p.id} value={p.id} className="bg-brand-bgElevated text-brand-text">
                                     {p.name} ({p.winners.length}/{p.quantity})
                                 </option>
                             ))}
@@ -765,71 +724,60 @@ export default function LuckyDrawPage() {
                     </div>
                 </div>
 
-                {/* ─── MAIN PANELS (2 COLUMNS) ─── */}
                 <div className="flex flex-col lg:flex-row gap-6 md:gap-10 w-full items-start">
-                    
-                    {/* Panel Kiri: Mesin Undian (55%) */}
                     <div className={`w-full lg:w-[55%] text-center flex flex-col ${screenShake ? 'animate-screen-shake' : ''}`}>
-
-                    {/* Main Slot Machine Area */}
-                    <div className="relative group mx-auto w-full flex flex-col">
-                        <div className="absolute -inset-2 bg-gradient-to-r from-brand-primary/40 to-brand-accent/40 rounded-[2rem] blur-2xl opacity-60 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
-                        <div className="relative bg-brand-secondary/80 backdrop-blur-2xl border border-brand-primary/20 rounded-[2rem] p-8 md:p-12 flex flex-col items-center justify-center h-[600px] shadow-2xl">
-
+                        <div className="surface p-6 md:p-10 flex flex-col items-center justify-center min-h-[520px]">
                             {selectedPrize && (
-                                <div className="mb-8 text-center">
-                                    <h2 className="text-2xl md:text-3xl font-heading font-bold text-brand-primarySoft mb-2 tracking-widest uppercase">{selectedPrize.name}</h2>
-                                    {selectedPrize.description && <p className="text-brand-surface/50 font-mono tracking-wider">{selectedPrize.description}</p>}
+                                <div className="mb-6 text-center">
+                                    <h2 className="text-xl md:text-2xl font-semibold text-brand-text mb-1">{selectedPrize.name}</h2>
+                                    {selectedPrize.description && <p className="text-sm text-brand-textMuted">{selectedPrize.description}</p>}
                                 </div>
                             )}
 
-                            {/* Display Area */}
-                            <div className="w-full min-h-[300px] bg-black/60 rounded-3xl border border-brand-primary/30 flex flex-col items-center justify-center p-6 relative overflow-hidden mb-8 shadow-[inset_0_0_100px_rgba(0,0,0,0.8)]">
+                            <div className="w-full min-h-[260px] bg-black rounded-2xl border border-brand-border flex flex-col items-center justify-center p-6 mb-6">
                                 {displayCandidate ? (
-                                    <div className={`text-center space-y-6 transition-all duration-300 ${winner ? 'scale-110' : ''}`}>
-                                        <div className="text-5xl md:text-7xl font-black text-brand-primary mx-auto tracking-widest" style={{ textShadow: '0 0 30px rgba(212,168,83,0.4)' }}>
+                                    <div className={`text-center space-y-4 transition-transform ${winner ? 'scale-105' : ''}`}>
+                                        <div className="text-4xl md:text-6xl font-bold text-brand-primary tracking-wider">
                                             {displayCandidate.guestId || displayCandidate.queueNumber}
                                         </div>
-                                        
-                                        <div className="space-y-2">
-                                            <div className={`text-3xl md:text-5xl font-black text-white uppercase tracking-tighter transition-all duration-500 ${isGlitching ? 'animate-pulse' : ''}`}>
+                                        <div className="space-y-1">
+                                            <div className={`text-2xl md:text-4xl font-semibold text-brand-text uppercase tracking-tight ${isGlitching ? 'animate-pulse' : ''}`}>
                                                 {displayCandidate.name}
                                             </div>
-                                            <div className="text-xl md:text-2xl text-brand-primarySoft font-mono tracking-widest uppercase">
+                                            <div className="text-lg text-brand-textMuted font-mono uppercase tracking-wider">
                                                 {displayCandidate.company || '-'}
                                             </div>
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="text-brand-surface/20 flex flex-col items-center gap-4">
-                                        <Trophy size={80} className="animate-pulse" />
-                                        <p className="font-mono tracking-[0.3em] uppercase text-center text-sm">Pilih hadiah & tekan tombol untuk mengundi</p>
+                                    <div className="text-brand-textMuted flex flex-col items-center gap-3">
+                                        <Trophy size={56} />
+                                        <p className="text-sm">Pilih hadiah dan tekan tombol untuk mengundi</p>
                                     </div>
                                 )}
                             </div>
 
-                            {/* Action Area */}
-                            <div className="flex flex-col items-center gap-6 w-full">
+                            <div className="flex flex-col items-center gap-4 w-full">
                                 {selectedPrize?.category === 'HIBURAN' && !spinning && !isSoldOut && (
-                                    <div className="flex items-center gap-4 bg-black/40 p-2 pl-6 rounded-full border border-white/10 backdrop-blur-xl">
-                                        <label className="text-sm font-mono text-white/60 uppercase tracking-widest">Draw Count:</label>
+                                    <div className="flex items-center gap-3 p-2 rounded-xl border border-brand-border bg-black/30">
+                                        <label className="text-sm text-brand-textMuted pl-3">Jumlah pemenang:</label>
                                         <div className="flex items-center gap-2">
                                             {[1, 5, 10, 20].map(n => (
                                                 <button
                                                     key={n}
                                                     onClick={() => setDrawCount(n)}
-                                                    className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all ${drawCount === n ? 'bg-brand-primary text-brand-secondary' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
+                                                    className={`w-9 h-9 rounded-lg flex items-center justify-center font-semibold text-sm transition-colors ${drawCount === n ? 'bg-brand-primary text-brand-bg' : 'bg-brand-text/5 text-brand-textMuted hover:bg-brand-text/10'}`}
                                                 >
                                                     {n}
                                                 </button>
                                             ))}
-                                            <input 
-                                                type="number" 
-                                                min={1} 
+                                            <input
+                                                type="number"
+                                                min={1}
                                                 max={100}
                                                 value={drawCount}
                                                 onChange={(e) => setDrawCount(Math.max(1, parseInt(e.target.value) || 1))}
-                                                className="w-16 h-10 bg-white/5 border border-white/10 rounded-full text-center text-white focus:outline-none focus:border-brand-primary"
+                                                className="w-16 h-9 bg-brand-text/5 border border-brand-border rounded-lg text-center text-brand-text text-sm focus:outline-none focus:border-brand-primary"
                                             />
                                         </div>
                                     </div>
@@ -838,229 +786,146 @@ export default function LuckyDrawPage() {
                                 {(() => {
                                     const drama = DRAMA_CONFIGS[selectedPrize?.category || 'HIBURAN'] || DRAMA_CONFIGS.HIBURAN;
                                     return (
-                                        <button
+                                        <Button
+                                            size="lg"
                                             onClick={handleDraw}
                                             disabled={spinning || isSoldOut || !selectedPrizeId}
-                                            className={`
-                                                relative px-12 py-5 rounded-full font-bold text-xl md:text-2xl font-mono tracking-[0.2em] uppercase transition-all duration-300 transform hover:scale-105 active:scale-95
-                                                ${spinning
-                                                    ? 'bg-brand-border/50 text-brand-textMuted cursor-not-allowed border border-brand-border'
-                                                    : isSoldOut
-                                                        ? 'bg-brand-danger/20 text-brand-danger cursor-not-allowed border border-brand-danger/30'
-                                                        : `bg-gradient-to-r from-brand-primary to-brand-accent text-brand-secondary shadow-[0_0_50px_rgba(212,168,83,0.4)] hover:shadow-[0_0_80px_rgba(212,168,83,0.6)] border border-brand-primarySoft/50 ${drama.buttonExtraClass}`
-                                                }
-                                            `}
+                                            loading={spinning}
+                                            className={drama.buttonExtraClass}
                                         >
-                                            {spinning ? (
-                                                <span className="flex items-center gap-2">
-                                                    <span className="animate-spin">🎲</span>
-                                                    {drama === DRAMA_CONFIGS.UTAMA ? 'MENGUNDI GRAND PRIZE...' : `MENGUNDI ${drawCount} PEMENANG...`}
-                                                </span>
-                                            ) : isSoldOut ? (
-                                                'Habis Terbagi'
-                                            ) : (
-                                                drawCount > 1 && selectedPrize?.category === 'HIBURAN' ? `UNDI ${drawCount} PEMENANG` : drama.buttonLabel
-                                            )}
-                                        </button>
+                                            {isSoldOut ? 'Habis Terbagi' : (drawCount > 1 && selectedPrize?.category === 'HIBURAN' ? `Undi ${drawCount} Pemenang` : drama.buttonLabel)}
+                                        </Button>
                                     );
                                 })()}
                             </div>
                         </div>
-                        </div>
 
-                        {/* Multi Winner Modal */}            {showMultiWinnerModal && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl animate-in fade-in duration-500">
-                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-brand-primary/20 rounded-full blur-[120px] animate-pulse" />
-                        <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] bg-brand-accent/20 rounded-full blur-[120px] animate-pulse" />
+                        <div className="mt-6 flex justify-center">
+                            <Button variant="outline" onClick={() => setShowHistory(true)} className="text-brand-text">
+                                <History size={18} />
+                                Riwayat Pemenang
+                            </Button>
+                        </div>
                     </div>
 
-                    <div className="relative bg-brand-secondary/40 border border-brand-primary/30 rounded-[3rem] w-full max-w-[95vw] max-h-[95vh] overflow-hidden flex flex-col shadow-[0_0_100px_rgba(212,168,83,0.2)] animate-in zoom-in duration-500">
-                        <div className="p-6 md:p-8 text-center border-b border-white/10 shrink-0">
-                            <h2 className="text-4xl md:text-6xl lg:text-[5vw] font-heading font-black text-transparent bg-clip-text bg-gradient-to-b from-brand-primarySoft via-brand-primary to-brand-accent drop-shadow-2xl tracking-tighter uppercase mb-2">
-                                CONGRATULATIONS!
-                            </h2>
-                            <p className="text-xl md:text-2xl lg:text-[1.5vw] text-white/60 font-mono tracking-[0.3em] uppercase">
-                                {isRevealing
-                                    ? `${multiWinners.length} / ${totalExpectedWinners} PEMENANG ${selectedPrize?.name}`
-                                    : `${multiWinners.length} PEMENANG ${selectedPrize?.name}`
-                                }
-                            </p>
-                        </div>
-
-                        <div className={`p-4 md:p-8 flex-1 custom-scrollbar relative ${multiWinners.length > 15 && !isRevealing ? 'overflow-y-hidden mask-fade-y' : 'overflow-y-auto'}`}>
-                            <style dangerouslySetInnerHTML={{__html: `
-                                @keyframes modalAutoScroll {
-                                    0% { transform: translateY(0); }
-                                    100% { transform: translateY(-50%); }
-                                }
-                            `}} />
-                            
-                            <div 
-                                className={`flex flex-col gap-4 md:gap-6 ${multiWinners.length > 15 && !isRevealing ? 'absolute w-[calc(100%-2rem)] md:w-[calc(100%-4rem)]' : 'w-full'}`}
-                                style={multiWinners.length > 15 && !isRevealing ? { animation: 'modalAutoScroll 40s linear infinite' } : {}}
-                            >
-                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 auto-rows-fr">
-                                    {multiWinners.map((w, idx) => (
-                                        <div 
-                                            key={w.id} 
-                                            className="group bg-white/5 border border-white/10 rounded-3xl p-4 md:p-6 lg:p-8 flex flex-col justify-center text-center transition-all duration-500 hover:bg-white/10 hover:border-brand-primary/50 hover:scale-[1.02] animate-in slide-in-from-bottom duration-500"
-                                        >
-                                            <div className="text-brand-primary font-mono font-bold text-[clamp(1.2rem,1.5vw,2.5rem)] tracking-wider mb-2">{w.guestId || w.queueNumber}</div>
-                                            <div className="font-bold text-[clamp(1.5rem,2.5vw,4rem)] text-white group-hover:text-brand-primarySoft transition-colors leading-tight line-clamp-3">{w.name}</div>
-                                            <div className="text-[clamp(1rem,1.2vw,2rem)] text-white/50 group-hover:text-white/70 transition-colors uppercase tracking-wider font-mono mt-3">
-                                                {w.company || '-'}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                                
-                                {/* DUPLICATE SET FOR SEAMLESS LOOP SCROLLING */}
-                                {multiWinners.length > 15 && !isRevealing && (
-                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 auto-rows-fr pb-8">
-                                        {multiWinners.map((w, idx) => (
-                                            <div 
-                                                key={`dup-${w.id}`} 
-                                                className="group bg-white/5 border border-white/10 rounded-3xl p-4 md:p-6 lg:p-8 flex flex-col justify-center text-center transition-all duration-500 hover:bg-white/10 hover:border-brand-primary/50"
-                                            >
-                                                <div className="text-brand-primary font-mono font-bold text-[clamp(1.2rem,1.5vw,2.5rem)] tracking-wider mb-2">{w.guestId || w.queueNumber}</div>
-                                                <div className="font-bold text-[clamp(1.5rem,2.5vw,4rem)] text-white group-hover:text-brand-primarySoft transition-colors leading-tight line-clamp-3">{w.name}</div>
-                                                <div className="text-[clamp(1rem,1.2vw,2rem)] text-white/50 group-hover:text-white/70 transition-colors uppercase tracking-wider font-mono mt-3">
-                                                    {w.company || '-'}
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
+            {/* Multi Winner Modal */}
+            <Modal
+                open={showMultiWinnerModal}
+                onClose={() => { if (!isRevealing) { setShowMultiWinnerModal(false); setMultiWinners([]); setTotalExpectedWinners(0); } }}
+                className="max-w-6xl max-h-[90vh]"
+                title={
+                    <span className="text-center w-full block">
+                        <span className="block text-2xl md:text-4xl font-heading font-semibold text-brand-text">Selamat!</span>
+                        <span className="block text-sm text-brand-textMuted mt-1">
+                            {isRevealing ? `${multiWinners.length} / ${totalExpectedWinners} pemenang ${selectedPrize?.name}` : `${multiWinners.length} pemenang ${selectedPrize?.name}`}
+                        </span>
+                    </span>
+                }
+                footer={
+                    <Button
+                        onClick={() => { setShowMultiWinnerModal(false); setMultiWinners([]); setTotalExpectedWinners(0); }}
+                        disabled={isRevealing}
+                        className="w-full"
+                    >
+                        {isRevealing ? `Mengungkap pemenang... (${multiWinners.length}/${totalExpectedWinners})` : 'Tutup'}
+                    </Button>
+                }
+            >
+                <div className={`relative ${multiWinners.length > 15 && !isRevealing ? 'overflow-hidden' : 'overflow-y-auto max-h-[50vh]'}`}>
+                    {multiWinners.length > 15 && !isRevealing && (
+                        <style dangerouslySetInnerHTML={{ __html: `
+                            @keyframes modalAutoScroll { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
+                            .modal-scroll { animation: modalAutoScroll 40s linear infinite; }
+                        `}} />
+                    )}
+                    <div className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 ${multiWinners.length > 15 && !isRevealing ? 'modal-scroll' : ''}`}>
+                        {multiWinners.map((w) => (
+                            <div key={w.id} className="surface p-4 text-center">
+                                <div className="text-brand-primary font-mono font-bold text-lg mb-1">{w.guestId || w.queueNumber}</div>
+                                <div className="font-semibold text-brand-text text-lg leading-tight line-clamp-2">{w.name}</div>
+                                <div className="text-xs text-brand-textMuted uppercase tracking-wider mt-1">{w.company || '-'}</div>
                             </div>
-                        </div>
-
-                        <div className="p-8 md:p-12 text-center border-t border-white/10 bg-black/20">
-                            <button
-                                onClick={() => {
-                                    setShowMultiWinnerModal(false);
-                                    setMultiWinners([]);
-                                    setTotalExpectedWinners(0);
-                                }}
-                                disabled={isRevealing}
-                                className={`px-16 py-4 rounded-full font-bold text-xl font-mono tracking-widest uppercase transition-all shadow-[0_0_40px_rgba(212,168,83,0.3)] ${
-                                    isRevealing 
-                                    ? 'bg-brand-primary/20 text-brand-primary/40 cursor-not-allowed' 
-                                    : 'bg-brand-primary text-brand-secondary hover:bg-brand-primarySoft hover:scale-105'
-                                }`}
-                            >
-                                {isRevealing ? `MENGUNGKAP PEMENANG... (${multiWinners.length}/${totalExpectedWinners})` : 'CLOSE & CONTINUE'}
-                            </button>
-                        </div>
+                        ))}
+                        {multiWinners.length > 15 && !isRevealing && multiWinners.map((w) => (
+                            <div key={`dup-${w.id}`} className="surface p-4 text-center">
+                                <div className="text-brand-primary font-mono font-bold text-lg mb-1">{w.guestId || w.queueNumber}</div>
+                                <div className="font-semibold text-brand-text text-lg leading-tight line-clamp-2">{w.name}</div>
+                                <div className="text-xs text-brand-textMuted uppercase tracking-wider mt-1">{w.company || '-'}</div>
+                            </div>
+                        ))}
                     </div>
                 </div>
-            )}
+            </Modal>
 
-                    {/* History Button Moved Here (Bottom of Left Panel) */}
-                    <div className="mt-8 pt-4 pb-4 flex justify-center">
-                        <button
-                            onClick={() => setShowHistory(true)}
-                            className="bg-brand-secondary/60 hover:bg-brand-secondary/80 border border-brand-primary/30 text-brand-primarySoft text-base md:text-lg rounded-2xl px-8 py-4 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 backdrop-blur-xl transition-all flex items-center justify-center gap-3 font-mono tracking-widest uppercase shadow-xl w-[80%] max-w-sm"
-                        >
-                            <History size={24} />
-                            RIWAYAT PEMENANG
-                        </button>
-                    </div>
-                </div>
 
-                {/* Panel Kanan: Ticker & Actions (45%) */}
+                {/* Right panel: ticker + winners */}
                 <div className="w-full lg:w-[45%] flex flex-col gap-6">
-                    {/* Ticker Box */}
-                    <div className={`relative rounded-[2rem] overflow-hidden border border-brand-primary/30 shadow-2xl flex flex-col h-[600px] bg-brand-secondary/90 backdrop-blur-2xl transition-colors duration-1000 ${tickerMood === 'tension' ? 'ticker-mood-tension border-red-500/50' : ''}`}>
-                        {/* Scanline overlay if tension */}
-                        {tickerMood === 'tension' && <div className="scanline-overlay z-20" />}
-
-                        {/* Ticker Header */}
-                        <div className="px-6 py-4 border-b border-brand-primary/20 flex justify-between items-center bg-black/40 relative z-10">
+                    <div className={`bg-brand-surface/80 backdrop-blur-xl border border-white/10 rounded-xl flex flex-col h-[520px] ${tickerMood === 'tension' ? 'border-brand-danger/50' : ''}`}>
+                        <div className="px-4 py-3 border-b border-brand-border flex justify-between items-center">
                             <div className="flex items-center gap-2">
-                                <span className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
-                                <span className="font-bold font-mono tracking-widest text-brand-surface text-sm">LIVE ELIGIBLE</span>
+                                <span className="w-2 h-2 rounded-full bg-brand-danger animate-pulse" />
+                                <span className="text-sm font-medium text-brand-text">Peserta Berhak</span>
                             </div>
-                            <div className="font-mono text-brand-primarySoft text-sm font-bold">
-                                {candidates.length.toLocaleString()} NAMES
+                            <div className="text-sm font-mono text-brand-textMuted">
+                                {candidates.length.toLocaleString()} tamu
                             </div>
                         </div>
 
-                        {/* Ticker List */}
-                        <div className="flex-1 min-h-[350px] relative z-10 p-4 space-y-2 overflow-hidden flex flex-col justify-center">
-                            {/* Blur gradients */}
-                            <div className="absolute top-0 left-0 right-0 h-12 bg-gradient-to-b from-brand-secondary/90 to-transparent z-20 pointer-events-none" />
-                            <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-brand-secondary/90 to-transparent z-20 pointer-events-none" />
-
+                        <div className="flex-1 min-h-[280px] relative p-3 space-y-2 overflow-hidden flex flex-col justify-center">
                             {tickerNames.map((g, idx) => {
                                 const isHighlighted = highlightedId === g.id;
-                                // Use a composite key to handle same ID appearing in different positions/times if duplication filter somehow allows it
-                                // But id+index is better for stable animations in high-speed rolling
                                 return (
-                                    <div 
+                                    <div
                                         key={`${g.id}-${idx}`}
-                                        className={`px-4 py-3 rounded-xl border flex items-center gap-3 transition-all duration-300 animate-ticker-swap
-                                            ${isHighlighted 
-                                                ? 'bg-brand-primary/20 border-brand-primary scale-105 shadow-[0_0_20px_rgba(212,168,83,0.3)] z-30' 
-                                                : 'bg-black/40 border-brand-border opacity-70 scale-95'}
+                                        className={`px-3 py-2.5 rounded-lg border flex items-center gap-3 transition-all animate-ticker-swap
+                                            ${isHighlighted
+                                                ? 'bg-brand-primary/10 border-brand-primary scale-[1.02] z-10'
+                                                : 'bg-brand-text/5 border-brand-border opacity-80'}
                                         `}
                                     >
-                                        <div className={`font-bold text-xs font-mono flex-shrink-0 ${isHighlighted ? 'text-brand-primary' : 'text-brand-primary/60'}`}>
+                                        <div className={`font-bold text-xs font-mono flex-shrink-0 ${isHighlighted ? 'text-brand-primary' : 'text-brand-primary/70'}`}>
                                             {g.guestId || g.queueNumber}
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <div className={`font-bold truncate ${isHighlighted ? 'text-brand-primarySoft text-lg' : 'text-brand-surface'}`}>{g.name}</div>
-                                            <div className="text-xs text-brand-surface/50 truncate">
-                                                {g.company || '-'}
-                                            </div>
+                                            <div className={`font-semibold truncate ${isHighlighted ? 'text-brand-text text-base' : 'text-brand-text'}`}>{g.name}</div>
+                                            <div className="text-xs text-brand-textMuted truncate">{g.company || '-'}</div>
                                         </div>
                                     </div>
                                 );
                             })}
                         </div>
 
-                        {/* Stats Footer */}
-                        <div className="px-6 py-4 bg-black/40 border-t border-brand-primary/20 relative z-10">
-                            <div className="flex justify-between text-xs text-brand-surface/60 mb-2 font-mono">
+                        <div className="px-4 py-3 border-t border-brand-border">
+                            <div className="flex justify-between text-xs text-brand-textMuted mb-2 font-mono">
                                 <span>Hadir: {candidates.length}</span>
                                 <span>Menang: {prizes.reduce((acc, p) => acc + p.winners.length, 0)}</span>
                             </div>
-                            <div className="w-full h-1.5 bg-brand-surface/10 rounded-full overflow-hidden">
-                                <div 
-                                    className="h-full bg-brand-primary" 
-                                    style={{ width: `${Math.max(0, 100 - (prizes.reduce((acc, p) => acc + p.winners.length, 0) / (candidates.length || 1) * 100))}%` }} 
-                                />
+                            <div className="w-full h-1.5 bg-brand-text/10 rounded-full overflow-hidden">
+                                <div className="h-full bg-brand-primary" style={{ width: `${Math.max(0, 100 - (prizes.reduce((acc, p) => acc + p.winners.length, 0) / (candidates.length || 1) * 100))}%` }} />
                             </div>
                         </div>
 
-                        {/* View All Action */}
                         <button
                             onClick={() => setShowEligiblePanel(true)}
-                            className="w-full py-5 bg-brand-primary/10 hover:bg-brand-primary/20 border-t border-brand-primary/10 text-brand-primary text-base font-mono tracking-widest uppercase transition-all flex items-center justify-center gap-3 relative z-10 font-bold"
+                            className="w-full py-4 border-t border-brand-border text-brand-primary text-sm font-medium transition-colors hover:bg-brand-text/5 flex items-center justify-center gap-2"
                         >
-                            <Users size={20} />
-                            LIHAT SEMUA {candidates.length.toLocaleString()} TAMU
+                            <Users size={18} />
+                            Lihat Semua {candidates.length.toLocaleString()} Tamu
                         </button>
                     </div>
 
-                    {/* Winners List for this Prize (Moved to under Live Eligible) */}
                     {selectedPrize && selectedPrize.winners.length > 0 && (
-                        <div className="mt-4 pb-8 w-full animate-in fade-in duration-500">
-                            <h3 className="text-lg md:text-xl font-bold text-brand-surface mb-4 flex items-center gap-3">
-                                <PartyPopper className="text-brand-primary" size={24} /> Pemenang {selectedPrize.name}
+                        <div className="w-full">
+                            <h3 className="text-base font-semibold text-brand-text mb-3 flex items-center gap-2">
+                                <PartyPopper className="text-brand-primary" size={20} /> Pemenang {selectedPrize.name}
                             </h3>
-                            <div className="flex flex-col gap-3">
+                            <div className="flex flex-col gap-2">
                                 {selectedPrize.winners.map((w: any) => (
-                                    <div key={w.id} className="bg-brand-surface/10 backdrop-blur-sm border border-brand-primary/20 rounded-2xl p-4 flex items-center gap-4 w-full">
-                                        <div className="font-bold text-brand-primary text-sm font-mono shrink-0">
-                                            {w.guestId || w.queueNumber}
-                                        </div>
-                                        <div className="text-left flex-1 min-w-0">
-                                            <div className="font-bold text-brand-surface text-base truncate">{w.name}</div>
-                                            <div className="text-sm text-brand-surface/60 truncate">
-                                                {w.company || '-'}
-                                                {w.division && <span className="ml-1">({w.division})</span>}
-                                            </div>
+                                    <div key={w.id} className="surface p-3 flex items-center gap-3">
+                                        <div className="font-bold text-brand-primary text-xs font-mono shrink-0">{w.guestId || w.queueNumber}</div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="font-medium text-brand-text text-sm truncate">{w.name}</div>
+                                            <div className="text-xs text-brand-textMuted truncate">{w.company || '-'}{w.division && <span> ({w.division})</span>}</div>
                                         </div>
                                     </div>
                                 ))}
@@ -1079,161 +944,107 @@ export default function LuckyDrawPage() {
             />
 
             {/* Eligible Guests Modal */}
-            {showEligiblePanel && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-                    <div className="bg-brand-secondary border border-brand-primary/20 rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl animate-in fade-in zoom-in duration-200">
-                        
-                        {/* Header */}
-                        <div className="p-6 border-b border-brand-border flex justify-between items-center bg-brand-surface/5">
-                            <h2 className="text-2xl font-bold text-brand-surface flex items-center gap-2">
-                                <Users className="text-brand-primary" />
-                                Daftar Peserta Undian
-                                <span className="text-sm font-mono text-brand-primary/70 ml-2">
-                                    ({eligibleMeta.eligible} eligible)
-                                </span>
-                            </h2>
-                            <button onClick={() => setShowEligiblePanel(false)} className="p-2 hover:bg-brand-surface/10 rounded-full text-brand-surface/70 hover:text-brand-surface transition-colors">
-                                <X size={24} />
-                            </button>
-                        </div>
+            <Modal
+                open={showEligiblePanel}
+                onClose={() => setShowEligiblePanel(false)}
+                className="max-w-4xl"
+                title={
+                    <span className="flex items-center gap-2">
+                        <Users className="text-brand-primary" size={20} />
+                        Daftar Tamu
+                        <span className="text-sm font-mono text-brand-textMuted ml-2">({eligibleMeta.eligible} berhak)</span>
+                    </span>
+                }
+            >
+                <div className="space-y-3">
+                    <div className="relative">
+                        <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-textMuted" />
+                        <Input
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Cari nama, perusahaan, atau nomor antrian..."
+                            className="pl-10"
+                        />
+                    </div>
+                    <div className="relative">
+                        <Hash size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-textMuted" />
+                        <Input
+                            value={searchGuestId}
+                            onChange={(e) => setSearchGuestId(e.target.value)}
+                            placeholder="Cari ID Tamu (contoh: G001, INV-0042)..."
+                            className="pl-10 font-mono"
+                        />
+                    </div>
 
-                        {/* Search Area */}
-                        <div className="p-4 border-b border-brand-border bg-brand-surface/5 space-y-3">
-                            {/* Pencarian Umum (nama, perusahaan, divisi) */}
-                            <div className="relative">
-                                <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-surface/40" />
-                                <input
-                                    type="text"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    placeholder="Cari nama, perusahaan, atau nomor antrian..."
-                                    className="w-full bg-brand-secondary/60 border border-brand-border rounded-xl pl-12 pr-4 py-3 text-brand-surface placeholder:text-brand-surface/30 focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
-                                />
+                    <div className="flex gap-2 pt-1">
+                        <TabButton active={activeTab === 'all'} onClick={() => setActiveTab('all')}>Semua ({eligibleMeta.totalCheckedIn})</TabButton>
+                        <TabButton active={activeTab === 'eligible'} onClick={() => setActiveTab('eligible')}>Berhak ({eligibleMeta.eligible})</TabButton>
+                        <TabButton active={activeTab === 'won'} onClick={() => setActiveTab('won')}>Menang ({eligibleMeta.won})</TabButton>
+                    </div>
+
+                    <div className="max-h-[50vh] overflow-y-auto space-y-2 pt-1">
+                        {eligibleLoading && (
+                            <div className="flex items-center justify-center py-8">
+                                <div className="w-6 h-6 border-2 border-brand-primary/30 border-t-brand-primary rounded-full animate-spin" />
                             </div>
-                            {/* Pencarian by Guest ID */}
-                            <div className="relative">
-                                <Hash size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-surface/40" />
-                                <input
-                                    type="text"
-                                    value={searchGuestId}
-                                    onChange={(e) => setSearchGuestId(e.target.value)}
-                                    placeholder="Cari Guest ID (contoh: G001, INV-0042)..."
-                                    className="w-full bg-brand-secondary/60 border border-brand-border rounded-xl pl-12 pr-4 py-3 text-brand-surface placeholder:text-brand-surface/30 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 font-mono"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Filter Tabs */}
-                        <div className="px-6 pt-4 flex gap-2">
-                            <button
-                                onClick={() => setActiveTab('all')}
-                                className={`px-4 py-2 rounded-t-lg font-bold text-sm transition-colors ${activeTab === 'all' ? 'bg-brand-primary/20 text-brand-primary border-b-2 border-brand-primary' : 'text-brand-surface/60 hover:text-brand-surface hover:bg-brand-surface/10'}`}
-                            >
-                                Semua ({eligibleMeta.totalCheckedIn})
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('eligible')}
-                                className={`px-4 py-2 rounded-t-lg font-bold text-sm transition-colors ${activeTab === 'eligible' ? 'bg-brand-primary/20 text-brand-primary border-b-2 border-brand-primary' : 'text-brand-surface/60 hover:text-brand-surface hover:bg-brand-surface/10'}`}
-                            >
-                                Eligible ({eligibleMeta.eligible})
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('won')}
-                                className={`px-4 py-2 rounded-t-lg font-bold text-sm transition-colors ${activeTab === 'won' ? 'bg-brand-primary/20 text-brand-primary border-b-2 border-brand-primary' : 'text-brand-surface/60 hover:text-brand-surface hover:bg-brand-surface/10'}`}
-                            >
-                                Menang ({eligibleMeta.won})
-                            </button>
-                        </div>
-
-                        {/* Guest List */}
-                        <div className="p-6 overflow-y-auto flex-1 bg-brand-secondary/30 relative">
-                            {eligibleLoading ? (
-                                <div className="absolute inset-0 flex items-center justify-center bg-brand-secondary/50 backdrop-blur-sm z-10">
-                                    <div className="w-8 h-8 border-4 border-brand-primary/30 border-t-brand-primary rounded-full animate-spin" />
+                        )}
+                        {!eligibleLoading && eligibleData.map(guest => (
+                            <div key={guest.id} className={`flex items-center gap-3 p-3 rounded-xl border transition-colors ${guest.wonPrizes.length > 0 ? 'bg-brand-primary/5 border-brand-primary/20' : 'bg-brand-text/5 border-brand-border'}`}>
+                                <div className="font-bold text-xs font-mono text-brand-primary shrink-0">{guest.guestId || guest.queueNumber}</div>
+                                <div className="flex-1 min-w-0">
+                                    <div className="font-medium text-brand-text text-sm truncate">{guest.name}</div>
+                                    <div className="text-xs text-brand-textMuted truncate">{guest.company || '-'}{guest.division && <span> ({guest.division})</span>}</div>
                                 </div>
-                            ) : null}
-                            <div className="space-y-3">
-                                {eligibleData.map(guest => (
-                                    <div key={guest.id} className={`flex items-center gap-4 p-3 rounded-xl border transition-colors ${
-                                        guest.wonPrizes.length > 0
-                                            ? 'bg-brand-primary/5 border-brand-primary/20'
-                                            : 'bg-brand-surface/5 border-brand-border hover:bg-brand-surface/10'
-                                    }`}>
-                                        {/* Guest ID */}
-                                        <div className="font-bold text-xs font-mono text-brand-primary flex-shrink-0">
-                                            {guest.guestId || guest.queueNumber}
-                                        </div>
-
-                                        {/* Info */}
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-2">
-                                                <span className="font-bold text-brand-surface truncate">{guest.name}</span>
-                                                {/* guest.guestId handled by main display above */}
-                                            </div>
-                                            <div className="text-xs text-brand-surface/50 truncate">
-                                                {guest.company || '-'}
-                                                {guest.division && <span className="ml-1">({guest.division})</span>}
-                                            </div>
-                                        </div>
-
-                                        {/* Status Badge */}
-                                        {guest.wonPrizes.length > 0 ? (
-                                            <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-brand-primary/20 text-brand-primary text-xs font-mono whitespace-nowrap">
-                                                <Award size={14} />
-                                                <span className="truncate max-w-[150px]">{guest.wonPrizes.join(', ')}</span>
-                                            </div>
-                                        ) : (
-                                            <div className="px-3 py-1 rounded-full bg-green-500/15 text-green-400 text-xs font-mono">
-                                                ✓ Eligible
-                                            </div>
-                                        )}
+                                {guest.wonPrizes.length > 0 ? (
+                                    <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-brand-primary/15 text-brand-primary text-xs font-mono whitespace-nowrap">
+                                        <Award size={12} />
+                                        <span className="truncate max-w-[120px]">{guest.wonPrizes.join(', ')}</span>
                                     </div>
-                                ))}
-                                {!eligibleLoading && eligibleData.length === 0 && (
-                                    <div className="text-center py-12 text-brand-surface/40">
-                                        <Users className="mx-auto mb-3 opacity-50" size={32} />
-                                        Tidak ada peserta yang cocok dengan filter pencarian.
-                                    </div>
-                                )}
-                                
-                                {/* Pagination indicator + Load More trigger */}
-                                {eligibleMeta.page < eligibleMeta.totalPages && (
-                                    <div ref={listEndRef} className="flex justify-center py-4">
-                                        {loadingMore ? (
-                                            <div className="flex items-center gap-2 text-brand-surface/40 text-sm">
-                                                <div className="w-4 h-4 border-2 border-brand-primary/30 border-t-brand-primary rounded-full animate-spin" />
-                                                Memuat lagi...
-                                            </div>
-                                        ) : (
-                                            <button
-                                                onClick={() => fetchEligibleGuests(eligibleMeta.page + 1, true)}
-                                                className="px-6 py-2 bg-brand-surface/10 hover:bg-brand-surface/20 rounded-full text-sm text-brand-surface/60 transition-colors"
-                                            >
-                                                Muat {Math.min(PAGE_SIZE, eligibleMeta.total - eligibleData.length)} tamu lagi
-                                                ({eligibleData.length}/{eligibleMeta.total})
-                                            </button>
-                                        )}
-                                    </div>
-                                )}
-
-                                {/* Info jumlah yang ditampilkan */}
-                                {eligibleData.length > 0 && (
-                                    <div className="text-center text-xs text-brand-surface/30 pt-2">
-                                        Menampilkan {eligibleData.length} dari {eligibleMeta.total} tamu
-                                    </div>
+                                ) : (
+                                    <div className="px-2 py-1 rounded-full bg-brand-success/15 text-brand-success text-xs font-mono">Berhak</div>
                                 )}
                             </div>
-                        </div>
+                        ))}
+                        {!eligibleLoading && eligibleData.length === 0 && (
+                            <div className="text-center py-10 text-brand-textMuted">
+                                <Users className="mx-auto mb-2 opacity-50" size={28} />
+                                Tidak ada tamu yang cocok.
+                            </div>
+                        )}
+                        {eligibleMeta.page < eligibleMeta.totalPages && (
+                            <div ref={listEndRef} className="flex justify-center py-3">
+                                {loadingMore ? (
+                                    <div className="flex items-center gap-2 text-brand-textMuted text-sm">
+                                        <div className="w-4 h-4 border-2 border-brand-primary/30 border-t-brand-primary rounded-full animate-spin" />
+                                        Memuat lagi...
+                                    </div>
+                                ) : (
+                                    <Button variant="outline" size="sm" onClick={() => fetchEligibleGuests(eligibleMeta.page + 1, true)}>
+                                        Muat {Math.min(PAGE_SIZE, eligibleMeta.total - eligibleData.length)} tamu lagi
+                                    </Button>
+                                )}
+                            </div>
+                        )}
+                    </div>
 
-                        {/* Footer Stats */}
-                        <div className="p-4 border-t border-brand-border bg-brand-surface/5 flex justify-between text-sm text-brand-surface/60">
-                            <span>Total Hadir: {eligibleMeta.totalCheckedIn}</span>
-                            <span>Eligible: {eligibleMeta.eligible}</span>
-                            <span>Sudah Menang: {eligibleMeta.won}</span>
-                        </div>
+                    <div className="flex justify-between text-xs text-brand-textMuted pt-2 border-t border-brand-border">
+                        <span>Hadir: {eligibleMeta.totalCheckedIn}</span>
+                        <span>Berhak: {eligibleMeta.eligible}</span>
+                        <span>Menang: {eligibleMeta.won}</span>
                     </div>
                 </div>
-            )}
+            </Modal>
         </div>
+    );
+}
+
+function TabButton({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+    return (
+        <button
+            onClick={onClick}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${active ? 'bg-brand-primary/15 text-brand-primary' : 'text-brand-textMuted hover:text-brand-text hover:bg-brand-text/5'}`}
+        >
+            {children}
+        </button>
     );
 }

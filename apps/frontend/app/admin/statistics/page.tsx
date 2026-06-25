@@ -188,6 +188,7 @@ export default function StatisticsPage() {
                                         icon={<Users size={24} />} 
                                         color="blue"
                                         subtitle="Terdaftar"
+                                        border="border-t-2 border-t-brand-primary"
                                     />
                                     <StatsCard 
                                         title="Sudah Check-in" 
@@ -195,6 +196,7 @@ export default function StatisticsPage() {
                                         icon={<CheckCircle size={24} />} 
                                         color="emerald"
                                         subtitle={`${checkinPercent}%`}
+                                        border="border-t-2 border-t-brand-success"
                                     />
                                     <StatsCard 
                                         title="Belum Check-in" 
@@ -202,6 +204,7 @@ export default function StatisticsPage() {
                                         icon={<Clock size={24} />} 
                                         color="amber"
                                         subtitle="Menunggu"
+                                        border="border-t-2 border-t-brand-accent"
                                     />
                                     <StatsCard 
                                         title="Perusahaan" 
@@ -209,6 +212,7 @@ export default function StatisticsPage() {
                                         icon={<Building2 size={24} />} 
                                         color="purple"
                                         subtitle="Terdaftar"
+                                        border="border-t-2 border-t-brand-vivid"
                                     />
                                 </div>
                             )}
@@ -239,12 +243,12 @@ export default function StatisticsPage() {
                             {/* Charts Grid */}
                             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                                 {/* Overall Stats Chart */}
-                                <div className="lg:col-span-1">
+                                <div className="lg:col-span-1 surface-elevated p-4">
                                     {stats && <GuestStatsChart stats={stats} />}
                                 </div>
 
                                 {/* Company Stats Chart */}
-                                <div className="lg:col-span-2">
+                                <div className="lg:col-span-2 surface-elevated p-4">
                                     {companyStats.length > 0 ? (
                                         <CompanyStatsChart stats={companyStats} />
                                     ) : (
@@ -410,18 +414,20 @@ function StatsCard({
     value, 
     icon, 
     color = 'blue', 
-    subtitle 
+    subtitle,
+    border = ''
 }: { 
     title: string; 
     value: number; 
     icon?: React.ReactNode;
     color?: 'blue' | 'emerald' | 'amber' | 'purple';
     subtitle?: string;
+    border?: string;
 }) {
     const colors = colorMap[color];
     
     return (
-        <div className={`stats-card glass-card p-5 border ${colors.border}`}>
+        <div className={`stats-card glass-card p-5 border ${colors.border} ${border}`}>
             <div className="flex items-start justify-between mb-3">
                 <div className={`p-2.5 rounded-xl bg-gradient-to-br ${colors.bg}`}>
                     <div className={colors.text}>{icon}</div>

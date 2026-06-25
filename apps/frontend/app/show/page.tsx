@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { apiBase, toApiUrl, parseErrorMessage } from '../../lib/api';
-import { CheckCircle, Users, X, MapPin, Building2, Layers, Hash, Clock, Sparkles, Radio } from 'lucide-react';
+import { apiBase, toApiUrl } from '../../lib/api';
+import { CheckCircle, Users, X, MapPin, Building2, Layers, Hash, Clock, Radio } from 'lucide-react';
+import StatusBadge from '../../components/ui/StatusBadge';
+import Button from '../../components/ui/Button';
 
 type EventConfig = {
   id: string;
@@ -35,11 +37,7 @@ import { useSSE } from '../../lib/sse-context';
 export default function ShowPage() {
   const [cfg, setCfg] = useState<EventConfig | null>(null);
   const [preview, setPreview] = useState<Partial<EventConfig> | null>(null);
-  const [guestId, setGuestId] = useState('');
-  const [name, setName] = useState('');
-  const [results, setResults] = useState<Guest[]>([]);
   const [selected, setSelected] = useState<Guest | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
   const { addEventListener, removeEventListener, connected } = useSSE();
 
@@ -47,15 +45,10 @@ export default function ShowPage() {
     fetch(`${apiBase()}/config/event`).then(async (r) => setCfg(await r.json()));
   }, []);
 
-  // Update time every second
   useEffect(() => {
     const interval = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(interval);
   }, []);
-
-  // Keep latest timeout in a ref for use inside SSE handler
-  const timeoutMsRef = useRef<number>(5000);
-  useEffect(() => { timeoutMsRef.current = cfg?.checkinPopupTimeoutMs ?? 5000; }, [cfg?.checkinPopupTimeoutMs]);
 
   useEffect(() => {
     const onConfig = (e: MessageEvent) => {
@@ -65,17 +58,10 @@ export default function ShowPage() {
       try { const data = JSON.parse((e as any).data); setPreview(data || null); } catch { }
     };
     const onCheckin = (e: MessageEvent) => {
-      try {
-        const g = JSON.parse((e as any).data);
-        setSelected(g);
-      } catch { }
+      try { const g = JSON.parse((e as any).data); setSelected(g); } catch { }
     };
     const onEventChange = () => {
-      // Reload config when active event changes
-      fetch(`${apiBase()}/config/event`).then(async (r) => {
-        const data = await r.json();
-        setCfg(data);
-      }).catch(() => { });
+      fetch(`${apiBase()}/config/event`).then(async (r) => { const data = await r.json(); setCfg(data); }).catch(() => { });
       setSelected(null);
     };
     addEventListener('config', onConfig);
@@ -88,7 +74,7 @@ export default function ShowPage() {
       removeEventListener('checkin', onCheckin);
       removeEventListener('event_change', onEventChange);
     };
-  }, []);
+  }, [addEventListener, removeEventListener]);
 
   useEffect(() => {
     if (!selected) return;
@@ -105,50 +91,42 @@ export default function ShowPage() {
     backgroundColor: `rgba(0,0,0,${effectiveOverlay})`,
   }), [effectiveOverlay]);
 
-  const doSearch = async () => {
-    setError(null);
-    setSelected(null);
-    const params = new URLSearchParams();
-    if (guestId) params.set('guestId', guestId);
-    if (name) params.set('name', name);
-    if (!guestId && !name) return;
-    const res = await fetch(`${apiBase()}/public/guests/search?${params.toString()}`);
-    if (!res.ok) {
-      const errorText = await res.text();
-      setError(parseErrorMessage(errorText));
-      return;
-    }
-    const data = await res.json();
-    setResults(data);
-    setSelected(data[0] ?? null);
-  };
-
   return (
-    <div className="relative min-h-screen w-full overflow-hidden">
-      {/* Header brand */}
+    <div className="relative min-h-[100dvh] w-full overflow-hidden">
+      {/* Background */}
+      {effectiveType === 'IMAGE' && effectiveImage && (
+        <img src={toApiUrl(effectiveImage)} alt="" className="absolute inset-0 w-full h-full object-cover" />
+      )}
+      {effectiveType === 'VIDEO' && effectiveVideo && (
+        <video src={toApiUrl(effectiveVideo)} autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" />
+      )}
+      <div className="absolute inset-0" style={overlayStyle} />
+
+      {/* Header */}
       <div className="relative z-10 p-6 md:p-8">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             {cfg?.logoUrl ? (
-              <img src={toApiUrl(cfg.logoUrl)} className="h-14 md:h-20 w-auto drop-shadow-2xl" alt="logo" />
+              <img src={toApiUrl(cfg.logoUrl)} className="h-14 md:h-20 w-auto" alt="logo" />
             ) : (
-              <div className="w-14 h-14 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center shadow-2xl">
-                <Users size={32} className="text-brand-secondary" />
+              <div className="w-14 h-14 md:w-20 md:h-20 rounded-2xl bg-brand-primary/10 border border-brand-border flex items-center justify-center">
+                <Users size={32} className="text-brand-primary" />
               </div>
             )}
-            <div className="text-white">
-              <div className="text-3xl md:text-5xl font-bold text-shadow-lg text-glow">{cfg?.name || 'Event'}</div>
+            <div>
+              <div className="text-2xl md:text-4xl font-semibold text-brand-text">{cfg?.name || 'Event'}</div>
               {(cfg?.date || cfg?.location) && (
-                <div className="text-base md:text-xl text-white/80 mt-1 flex items-center gap-3 text-shadow">
+                <div className="text-sm md:text-base text-brand-textMuted mt-0.5 flex flex-wrap items-center gap-2">
                   {cfg?.date && (
                     <span className="flex items-center gap-1.5">
-                      <Clock size={16} className="text-brand-primary" />
+                      <Clock size={14} className="text-brand-primary" />
                       {new Date(cfg.date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
                     </span>
                   )}
+                  {cfg?.date && cfg?.location && <span>•</span>}
                   {cfg?.location && (
                     <span className="flex items-center gap-1.5">
-                      <MapPin size={16} className="text-brand-accent" />
+                      <MapPin size={14} />
                       {cfg.location}
                     </span>
                   )}
@@ -157,153 +135,124 @@ export default function ShowPage() {
             </div>
           </div>
 
-          {/* Live status and clock */}
           <div className="hidden md:flex flex-col items-end gap-2">
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-brand-surface/10 backdrop-blur-md border border-brand-surface/20">
-              <Radio size={16} className={`${connected ? 'text-brand-success pulse-live' : 'text-brand-danger'}`} />
-              <span className="text-brand-surface/80 text-sm font-medium uppercase tracking-widest">{connected ? 'Live Display' : 'Reconnecting...'}</span>
-            </div>
-            <div className="text-4xl font-bold text-white/90 font-mono text-shadow-lg">
+            <StatusBadge status={connected ? 'success' : 'danger'} pulse={connected}>
+              {connected ? 'Live Display' : 'Reconnecting...'}
+            </StatusBadge>
+            <div className="text-3xl font-semibold text-brand-primary font-mono">
               {currentTime.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Waiting state - show when no guest selected */}
+      {/* Waiting state */}
       {!selected && (
-        <div className="relative z-10 flex-1 flex items-center justify-center min-h-[60vh]">
+        <div className="relative z-10 flex-1 flex items-center justify-center min-h-[50vh]">
           <div className="text-center">
-            <div className="w-32 h-32 mx-auto mb-8 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center float">
-              <Sparkles size={56} className="text-white/60" />
+            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-brand-surface/50 border border-brand-border flex items-center justify-center animate-float">
+              <Users size={40} className="text-brand-textMuted" />
             </div>
-            <h2 className="text-3xl md:text-5xl font-bold text-white/80 text-shadow-lg mb-4">
-              Selamat Datang
-            </h2>
-            <p className="text-xl text-white/60 text-shadow">
-              Menunggu tamu check-in...
-            </p>
+            <h2 className="text-2xl md:text-4xl font-semibold text-brand-text mb-2 gradient-text">Selamat Datang</h2>
+            <p className="text-base md:text-lg text-brand-textMuted">Menunggu tamu check-in...</p>
           </div>
         </div>
       )}
 
-      {/* Display card (driven by realtime check-in events) */}
+      {/* Check-in card */}
       {selected && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8">
-          {/* Backdrop with blur */}
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={() => setSelected(null)} />
+          <div className="absolute inset-0 bg-black/80" onClick={() => setSelected(null)} />
+          <div className="relative w-full max-w-5xl overflow-hidden rounded-2xl bg-brand-surface/80 backdrop-blur-xl border border-white/10 shadow-gold grid grid-cols-1 md:grid-cols-[360px_1fr]">
+            <div className="relative bg-white/5 flex items-center justify-center min-h-[280px] md:min-h-full overflow-hidden">
+              {selected.photoUrl ? (
+                <>
+                  <img src={toApiUrl(selected.photoUrl)} alt={selected.name} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-black/50" />
+                </>
+              ) : (
+                <div className="text-brand-textDim p-8 flex flex-col items-center gap-3">
+                  <Users size={48} />
+                  <span>Tidak ada foto</span>
+                </div>
+              )}
+              <div className="absolute top-4 left-4 md:bottom-4 md:top-auto">
+                <div className="px-3 py-2 rounded-xl bg-gradient-to-r from-brand-primary to-brand-primarySoft text-brand-bg border border-brand-primary/30">
+                  <div className="text-xs uppercase tracking-wider opacity-80">Antrian</div>
+                  <div className="text-2xl font-semibold">{selected.queueNumber}</div>
+                </div>
+              </div>
+            </div>
 
-          {/* Card */}
-          <div className="relative w-full max-w-6xl popup-success">
-            {/* Glow effect */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-brand-primary via-brand-accent to-brand-primarySoft rounded-3xl blur-lg opacity-50" />
-
-            <div className="relative overflow-hidden rounded-2xl md:rounded-3xl border border-brand-primary/20 bg-brand-secondary/95 text-brand-surface shadow-2xl grid grid-cols-1 md:grid-cols-[380px_1fr]">
-              {/* Photo Section */}
-              <div className="relative bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center min-h-[280px] md:min-h-full overflow-hidden">
-                {selected.photoUrl ? (
-                  <>
-                    <img src={toApiUrl(selected.photoUrl)} alt={selected.name} className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-slate-900/50" />
-                  </>
-                ) : (
-                  <div className="text-white/30 p-8 flex flex-col items-center gap-4">
-                    <div className="w-32 h-32 rounded-full bg-white/10 flex items-center justify-center">
-                      <Users size={64} className="opacity-50" />
-                    </div>
-                    <span className="text-lg">No Photo</span>
-                  </div>
-                )}
-
-                {/* Queue Badge */}
-                <div className="absolute top-4 left-4 md:bottom-4 md:top-auto">
-                  <div className="px-4 py-2 rounded-xl bg-white/20 backdrop-blur-md border border-white/30">
-                    <div className="text-xs text-white/60 uppercase tracking-wider">Queue</div>
-                    <div className="text-3xl font-bold text-white">{selected.queueNumber}</div>
+            <div className="p-6 md:p-10 space-y-6 relative overflow-y-auto max-h-[60vh] md:max-h-[80vh]">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-brand-success/10 border border-brand-success/30 flex items-center justify-center">
+                  <CheckCircle size={22} className="text-brand-success" />
+                </div>
+                <div>
+                  <div className="text-lg font-semibold text-brand-success">Check-in berhasil</div>
+                  <div className="text-sm text-brand-textMuted">
+                    {new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                   </div>
                 </div>
               </div>
 
-              {/* Info Section */}
-              <div className="p-6 md:p-10 space-y-6 relative overflow-y-auto max-h-[60vh] md:max-h-[80vh]">
-                {/* Success Header */}
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center border border-brand-primary/20">
-                    <CheckCircle size={28} className="text-brand-primary" />
+              <div className="space-y-5">
+                <div>
+                  <div className="text-sm text-brand-textMuted uppercase tracking-wider flex items-center gap-2 mb-1">
+                    <Hash size={14} className="text-brand-primary" />
+                    ID Tamu
                   </div>
-                  <div>
-                    <div className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-primarySoft text-xl md:text-2xl font-bold tracking-wider">CHECK-IN BERHASIL</div>
-                    <div className="text-brand-surface/60 text-sm">
-                      {new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-                    </div>
-                  </div>
+                  <div className="text-xl md:text-2xl font-mono text-brand-text">{selected.guestId}</div>
                 </div>
 
-                {/* Guest Info */}
-                <div className="space-y-6">
-                  <div>
-                    <div className="text-sm text-brand-surface/50 uppercase tracking-wider font-medium flex items-center gap-2 mb-1">
-                      <Hash size={14} className="text-brand-primary" />
-                      Guest ID
+                <div>
+                  <div className="text-sm text-brand-textMuted uppercase tracking-wider mb-1">Nama</div>
+                  <div className="text-3xl md:text-5xl font-heading font-semibold text-brand-text leading-tight text-glow-gold">{selected.name}</div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-4 surface">
+                    <div className="text-sm text-brand-textMuted uppercase tracking-wider flex items-center gap-2 mb-1">
+                      <MapPin size={14} />
+                      Meja / Ruangan
                     </div>
-                    <div className="text-xl md:text-2xl font-mono font-semibold text-brand-primarySoft">{selected.guestId}</div>
+                    <div className="text-xl md:text-2xl font-semibold text-brand-text">{selected.tableLocation}</div>
                   </div>
-
-                  <div>
-                    <div className="text-sm text-white/50 uppercase tracking-wider font-medium mb-2">Nama</div>
-                    <div className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight text-glow">
-                      {selected.name}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="p-4 rounded-xl bg-brand-surface/5 border border-brand-border">
-                      <div className="text-sm text-brand-surface/50 uppercase tracking-wider font-medium flex items-center gap-2 mb-1">
-                        <MapPin size={14} className="text-brand-accent" />
-                        Meja / Ruangan
+                  {selected.company && (
+                    <div className="p-4 surface">
+                      <div className="text-sm text-brand-textMuted uppercase tracking-wider flex items-center gap-2 mb-1">
+                        <Building2 size={14} />
+                        Perusahaan
                       </div>
-                      <div className="text-2xl md:text-3xl font-bold text-brand-surface">{selected.tableLocation}</div>
-                    </div>
-
-                    {selected.company && (
-                      <div className="p-4 rounded-xl bg-brand-surface/5 border border-brand-border">
-                        <div className="text-sm text-brand-surface/50 uppercase tracking-wider font-medium flex items-center gap-2 mb-1">
-                          <Building2 size={14} className="text-brand-primarySoft" />
-                          Perusahaan
-                        </div>
-                        <div className="text-xl md:text-2xl font-bold text-brand-surface">{selected.company}</div>
-                      </div>
-                    )}
-                  </div>
-
-                  {selected.division && (
-                    <div className="p-4 rounded-xl bg-brand-surface/5 border border-brand-border">
-                      <div className="text-sm text-brand-surface/50 uppercase tracking-wider font-medium flex items-center gap-2 mb-1">
-                        <Layers size={14} className="text-brand-info" />
-                        Divisi
-                      </div>
-                      <div className="text-xl md:text-2xl font-bold text-brand-surface">{selected.division}</div>
-                    </div>
-                  )}
-
-                  {selected.notes && (
-                    <div className="p-4 rounded-xl bg-brand-warning/10 border border-brand-warning/20">
-                      <div className="text-sm text-brand-warning/80 uppercase tracking-wider font-medium mb-2">Catatan</div>
-                      <div className="text-lg text-brand-warning/90 italic">"{selected.notes}"</div>
+                      <div className="text-xl md:text-2xl font-semibold text-brand-text">{selected.company}</div>
                     </div>
                   )}
                 </div>
 
-                {/* Close Button */}
-                <div className="pt-4 border-t border-white/10">
-                  <button
-                    className="flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-6 py-3 text-base font-medium text-white hover:bg-white/20 transition-all duration-200 hover:scale-105"
-                    onClick={() => setSelected(null)}
-                  >
-                    <X size={20} />
-                    Tutup
-                  </button>
-                </div>
+                {selected.division && (
+                  <div className="p-4 surface">
+                    <div className="text-sm text-brand-textMuted uppercase tracking-wider flex items-center gap-2 mb-1">
+                      <Layers size={14} />
+                      Divisi
+                    </div>
+                    <div className="text-xl md:text-2xl font-semibold text-brand-text">{selected.division}</div>
+                  </div>
+                )}
+
+                {selected.notes && (
+                  <div className="p-4 bg-brand-warning/10 border border-brand-warning/20 rounded-xl">
+                    <div className="text-sm text-brand-warning uppercase tracking-wider mb-1">Catatan</div>
+                    <div className="text-base text-brand-warning italic">"{selected.notes}"</div>
+                  </div>
+                )}
+              </div>
+
+              <div className="pt-4 border-t border-brand-border">
+                <Button variant="outline" onClick={() => setSelected(null)}>
+                  <X size={18} />
+                  Tutup
+                </Button>
               </div>
             </div>
           </div>

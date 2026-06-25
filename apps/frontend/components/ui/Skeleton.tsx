@@ -10,7 +10,7 @@ export function Skeleton({ className, style }: SkeletonProps) {
   return (
     <div
       className={cn(
-        "animate-pulse rounded-lg bg-white/10",
+        "animate-pulse rounded-lg bg-brand-bgSubtle",
         className
       )}
       style={style}
@@ -20,7 +20,7 @@ export function Skeleton({ className, style }: SkeletonProps) {
 
 export function SkeletonCard({ className }: SkeletonProps) {
   return (
-    <div className={cn("glass-card p-5 space-y-4", className)}>
+    <div className={cn("surface p-5 space-y-4", className)}>
       <div className="flex items-start justify-between">
         <Skeleton className="h-12 w-12 rounded-xl" />
         <Skeleton className="h-4 w-20" />
@@ -36,13 +36,11 @@ export function SkeletonCard({ className }: SkeletonProps) {
 export function SkeletonTable({ rows = 5, cols = 4 }: { rows?: number; cols?: number }) {
   return (
     <div className="space-y-3">
-      {/* Header */}
-      <div className="flex gap-4 p-4 border-b border-white/10">
+      <div className="flex gap-4 p-4 border-b border-brand-border">
         {Array.from({ length: cols }).map((_, i) => (
           <Skeleton key={i} className="h-4 flex-1" />
         ))}
       </div>
-      {/* Rows */}
       {Array.from({ length: rows }).map((_, i) => (
         <div key={i} className="flex items-center gap-4 p-4">
           <Skeleton className="h-10 w-10 rounded-lg" />
@@ -59,7 +57,7 @@ export function SkeletonTable({ rows = 5, cols = 4 }: { rows?: number; cols?: nu
 
 export function SkeletonGuestCard() {
   return (
-    <div className="flex items-center justify-between rounded-xl p-4 bg-white/5 border border-white/10">
+    <div className="flex items-center justify-between rounded-xl p-4 bg-brand-bgElevated border border-brand-border">
       <div className="flex items-center gap-4">
         <Skeleton className="h-14 w-14 rounded-xl" />
         <div className="space-y-2">
@@ -121,23 +119,18 @@ export function SkeletonForm() {
 export function SkeletonDashboard() {
   return (
     <div className="space-y-6">
-      {/* Stats */}
       <SkeletonStats />
-      
-      {/* Chart area */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="glass-card p-6">
+        <div className="surface p-6">
           <Skeleton className="h-6 w-40 mb-4" />
           <Skeleton className="h-64 w-full rounded-lg" />
         </div>
-        <div className="glass-card p-6">
+        <div className="surface p-6">
           <Skeleton className="h-6 w-40 mb-4" />
           <Skeleton className="h-64 w-full rounded-lg" />
         </div>
       </div>
-      
-      {/* Recent activity */}
-      <div className="glass-card p-6">
+      <div className="surface p-6">
         <Skeleton className="h-6 w-48 mb-4" />
         <SkeletonList items={3} />
       </div>
@@ -148,7 +141,6 @@ export function SkeletonDashboard() {
 export function SkeletonPage() {
   return (
     <div className="p-6 space-y-6">
-      {/* Page header */}
       <div className="flex items-center justify-between">
         <div className="space-y-2">
           <Skeleton className="h-8 w-48" />
@@ -156,8 +148,6 @@ export function SkeletonPage() {
         </div>
         <Skeleton className="h-10 w-32 rounded-lg" />
       </div>
-      
-      {/* Content */}
       <SkeletonTable rows={8} />
     </div>
   );
@@ -165,13 +155,13 @@ export function SkeletonPage() {
 
 export function SkeletonChart({ height = "h-64" }: { height?: string }) {
   return (
-    <div className={cn("glass-card p-6", height)}>
+    <div className={cn("surface p-6", height)}>
       <Skeleton className="h-6 w-40 mb-4" />
       <div className="flex items-end gap-2 h-[calc(100%-40px)]">
         {Array.from({ length: 7 }).map((_, i) => (
-          <Skeleton 
-            key={i} 
-            className="flex-1 rounded-t-lg" 
+          <Skeleton
+            key={i}
+            className="flex-1 rounded-t-lg"
             style={{ height: `${30 + Math.random() * 60}%` }}
           />
         ))}
@@ -182,8 +172,7 @@ export function SkeletonChart({ height = "h-64" }: { height?: string }) {
 
 export function SkeletonDetail() {
   return (
-    <div className="glass-card p-6 space-y-6">
-      {/* Header with avatar */}
+    <div className="surface p-6 space-y-6">
       <div className="flex items-center gap-4">
         <Skeleton className="h-20 w-20 rounded-xl" />
         <div className="space-y-2">
@@ -192,8 +181,6 @@ export function SkeletonDetail() {
           <Skeleton className="h-4 w-24" />
         </div>
       </div>
-      
-      {/* Info grid */}
       <div className="grid grid-cols-2 gap-4">
         {Array.from({ length: 6 }).map((_, i) => (
           <div key={i} className="space-y-1">
@@ -202,9 +189,7 @@ export function SkeletonDetail() {
           </div>
         ))}
       </div>
-      
-      {/* Actions */}
-      <div className="flex gap-3 pt-4 border-t border-white/10">
+      <div className="flex gap-3 pt-4 border-t border-brand-border">
         <Skeleton className="h-10 w-28 rounded-lg" />
         <Skeleton className="h-10 w-28 rounded-lg" />
       </div>

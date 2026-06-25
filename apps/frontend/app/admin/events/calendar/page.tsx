@@ -258,7 +258,7 @@ export default function EventCalendarPage() {
           {/* Header */}
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-white text-shadow-lg">Event Calendar</h1>
+              <h1 className="text-2xl md:text-3xl font-bold text-white">Event Calendar</h1>
               <p className="text-white/60 text-sm mt-1">Lihat dan kelola jadwal event</p>
             </div>
             <div className="flex items-center gap-2">
@@ -394,9 +394,9 @@ export default function EventCalendarPage() {
                         className={`
                           relative min-h-[80px] md:min-h-[100px] p-1 md:p-2 rounded-lg border transition-all text-left cursor-pointer group
                           ${day.isCurrentMonth ? 'bg-white/5' : 'bg-transparent'}
-                          ${day.isToday ? 'border-brand-primary/50 ring-1 ring-brand-primary/30' : 'border-white/10'}
+                          ${day.isToday ? 'border-brand-primary ring-2 ring-brand-primary/40' : 'border-white/10'}
                           ${isSelected ? 'border-brand-accent/50 ring-2 ring-brand-accent/30 bg-brand-accent/10' : ''}
-                          ${hasEvents ? 'hover:bg-white/10' : 'hover:bg-white/5'}
+                          ${hasEvents ? 'hover:bg-brand-bgSubtle' : 'hover:bg-brand-bgSubtle/50'}
                         `}
                       >
                         <div className={`
@@ -489,7 +489,7 @@ export default function EventCalendarPage() {
                             p-3 rounded-lg border transition-all
                             ${event.isActive 
                               ? 'bg-brand-success/10 border-brand-success/30' 
-                              : 'bg-white/5 border-white/10 hover:bg-white/10'
+                              : 'surface-interactive hover:bg-brand-bgSubtle'
                             }
                           `}
                         >
