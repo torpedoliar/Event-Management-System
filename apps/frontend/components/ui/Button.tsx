@@ -14,10 +14,10 @@ const base = 'inline-flex items-center justify-center rounded-lg font-medium tra
 
 const variants: Record<Variant, string> = {
   primary: 'bg-brand-primary text-brand-bg hover:bg-[#c49a4a]',
-  secondary: 'bg-brand-surface text-brand-bg hover:bg-brand-surfaceMuted',
-  outline: 'border border-brand-border bg-transparent text-brand-text hover:bg-white/5',
+  secondary: 'bg-brand-surface text-brand-text hover:bg-brand-surfaceBright border border-brand-border',
+  outline: 'border border-brand-border bg-brand-surfaceMuted/30 text-brand-text hover:bg-brand-surfaceMuted hover:border-brand-primary/50',
   danger: 'bg-brand-danger text-white hover:bg-[#b34b45]',
-  ghost: 'bg-transparent text-brand-text hover:bg-white/5',
+  ghost: 'bg-transparent text-brand-text hover:bg-brand-surfaceMuted/50',
 };
 
 const sizes: Record<Size, string> = {
