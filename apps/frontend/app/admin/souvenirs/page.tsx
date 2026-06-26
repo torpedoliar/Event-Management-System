@@ -154,7 +154,7 @@ export default function SouvenirsPage() {
             <div className="min-h-screen p-6 md:p-8 mx-auto max-w-6xl space-y-8">
                 <div className="flex items-center justify-between flex-wrap gap-4">
                     <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-                        <Package className="text-brand-accent" />
+                        <Package className="text-brand-primary" />
                         Kelola Souvenir
                     </h1>
                     {/* Summary Stats */}
@@ -298,7 +298,7 @@ export default function SouvenirsPage() {
                                             <div className="mt-3">
                                                 <div className="h-2 bg-white/10 rounded-full overflow-hidden">
                                                     <div
-                                                        className={`h-full transition-all rounded-full ${s.remaining > 0 ? 'bg-gradient-to-r from-brand-success via-brand-primary to-brand-accent' : 'bg-brand-danger'}`}
+                                                        className={`h-full transition-all rounded-full ${s.remaining > 0 ? 'bg-gradient-to-r from-brand-success via-brand-primary to-brand-primarySoft' : 'bg-brand-danger'}`}
                                                         style={{ width: `${(s.takenCount / s.quantity) * 100}%` }}
                                                     />
                                                 </div>
@@ -316,8 +316,8 @@ export default function SouvenirsPage() {
                                                     </div>
                                                     <div className="flex flex-wrap gap-2">
                                                         {s.takes.slice(-5).map((t) => (
-                                                            <div key={t.id} className="flex items-center gap-2 bg-brand-accent/10 border border-brand-accent/20 rounded-lg px-3 py-1.5">
-                                                                <div className="w-6 h-6 rounded-full bg-brand-accent/20 flex items-center justify-center text-xs font-bold text-brand-accent">
+                                                            <div key={t.id} className="flex items-center gap-2 bg-brand-primary/10 border border-brand-primary/20 rounded-lg px-3 py-1.5">
+                                                                <div className="w-6 h-6 rounded-full bg-brand-primary/20 flex items-center justify-center text-xs font-bold text-brand-primary">
                                                                     {t.guest.queueNumber}
                                                                 </div>
                                                                 <div className="text-sm text-brand-text">

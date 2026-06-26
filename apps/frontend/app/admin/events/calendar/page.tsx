@@ -395,7 +395,7 @@ export default function EventCalendarPage() {
                           relative min-h-[80px] md:min-h-[100px] p-1 md:p-2 rounded-lg border transition-all text-left cursor-pointer group
                           ${day.isCurrentMonth ? 'bg-white/5' : 'bg-transparent'}
                           ${day.isToday ? 'border-brand-primary ring-2 ring-brand-primary/40' : 'border-white/10'}
-                          ${isSelected ? 'border-brand-accent/50 ring-2 ring-brand-accent/30 bg-brand-accent/10' : ''}
+                          ${isSelected ? 'border-brand-primary/50 ring-2 ring-brand-primary/30 bg-brand-primary/10' : ''}
                           ${hasEvents ? 'hover:bg-brand-bgSubtle' : 'hover:bg-brand-bgSubtle/50'}
                         `}
                       >

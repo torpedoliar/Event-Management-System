@@ -14,18 +14,18 @@ interface CompanyStatsChartProps {
     stats: CompanyStats[];
 }
 
-// Brand-aligned palette (matching design tokens)
+// Gold-neutral cohesive palette (matching design tokens)
 const COLORS = [
     '#D4A853', // Gold (brand-primary)
-    '#E86A92', // Coral-rose (brand-accent)
-    '#4ADE80', // Green (brand-success)
-    '#FBBF24', // Amber (brand-warning)
-    '#60A5FA', // Blue (brand-info)
-    '#7C5CFC', // Violet (brand-vivid)
-    '#B4A0FF', // Soft violet (brand-vividSoft)
-    '#F87171', // Red (brand-danger)
-    '#F9A8C4', // Soft pink (brand-accentSoft)
+    '#C49A4A', // Warm gold
+    '#A18A5A', // Muted gold
+    '#8B7D6B', // Bronze neutral
+    '#6B6888', // Dusty mauve
+    '#575575', // Muted slate
     '#F5ECD7', // Cream (brand-primarySoft)
+    '#E8D5A8', // Light gold
+    '#B8A070', // Antique gold
+    '#7A7060', // Dark bronze
 ];
 
 export default function CompanyStatsChart({ stats }: CompanyStatsChartProps) {
@@ -75,8 +75,8 @@ export default function CompanyStatsChart({ stats }: CompanyStatsChartProps) {
                                                     <span className="font-mono font-bold text-brand-success">{d.checkedIn} ({percentage}%)</span>
                                                 </div>
                                                 <div className="flex justify-between gap-4">
-                                                    <span className="text-brand-accent">Belum Check-in:</span>
-                                                    <span className="font-mono font-bold text-brand-accent">{d.notCheckedIn}</span>
+                                                    <span className="text-brand-textMuted">Belum Check-in:</span>
+                                                    <span className="font-mono font-bold text-brand-textDim">{d.notCheckedIn}</span>
                                                 </div>
                                                 <div className="mt-2 pt-1 border-t border-brand-border">
                                                     <div className="w-full bg-brand-surfaceMuted rounded-full h-1.5">

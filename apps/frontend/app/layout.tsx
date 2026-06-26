@@ -37,7 +37,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <SSEProvider>
               <ThemeBackground />
               <div className="relative z-10 flex flex-col min-h-screen">
-                <Suspense fallback={<div className="h-14 w-full bg-brand-secondary/80" />}>
+                <Suspense fallback={<div className="h-14 w-full bg-brand-bgElevated/80" />}>
                   <TopNav />
                 </Suspense>
                 {children}

@@ -14,7 +14,7 @@ export function Toggle({ checked, onChange, disabled, label, description, icon }
     <label
       className={cn(
         'flex items-center justify-between gap-4 p-4 surface-interactive cursor-pointer',
-        disabled && 'opacity-50 pointer-events-none'
+        disabled && 'opacity-40 pointer-events-none'
       )}
     >
       <div className="flex items-center gap-3 min-w-0">
@@ -32,12 +32,12 @@ export function Toggle({ checked, onChange, disabled, label, description, icon }
         disabled={disabled}
         className={cn(
           'relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50',
-          checked ? 'bg-brand-primary' : 'bg-white/20'
+          checked ? 'bg-brand-primary' : 'bg-white/15'
         )}
       >
         <span
           className={cn(
-            'inline-block h-5 w-5 rounded-full bg-white transition-transform',
+            'inline-block h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200 ease-expo',
             checked ? 'translate-x-6' : 'translate-x-1'
           )}
         />

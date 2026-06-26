@@ -9,10 +9,7 @@ interface SkeletonProps {
 export function Skeleton({ className, style }: SkeletonProps) {
   return (
     <div
-      className={cn(
-        "animate-pulse rounded-lg bg-brand-bgSubtle",
-        className
-      )}
+      className={cn("animate-pulse rounded-xl bg-brand-surfaceBright/50", className)}
       style={style}
     />
   );

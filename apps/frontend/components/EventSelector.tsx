@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { ChevronDown, Calendar, Check, Plus, Settings, Loader2 } from 'lucide-react';
+import { ChevronDown, Calendar, Check, Settings, Loader2 } from 'lucide-react';
 import { apiBase } from '../lib/api';
 import { useSSE } from '../lib/sse-context';
 import Link from 'next/link';
@@ -44,11 +44,8 @@ export default function EventSelector() {
     fetchEvents();
   }, [fetchEvents]);
 
-  // Listen for event changes via SSE
   useEffect(() => {
-    const onEventChange = () => {
-      fetchEvents();
-    };
+    const onEventChange = () => { fetchEvents(); };
     addEventListener('event_change', onEventChange);
     addEventListener('config', onEventChange);
     return () => {
@@ -98,25 +95,25 @@ export default function EventSelector() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 hover:bg-white/15 transition-colors text-sm"
+        className="flex items-center gap-2 pl-3 pr-2.5 py-1.5 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-borderHover hover:bg-brand-surfaceMuted transition-all duration-fast text-sm"
       >
         <div className="w-2 h-2 rounded-full bg-brand-success" />
-        <span className="text-white font-medium max-w-[150px] truncate">
+        <span className="text-brand-text font-medium max-w-[140px] truncate">
           {activeEvent?.name || 'No Event'}
         </span>
-        <ChevronDown size={14} className={`text-white/60 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown size={14} className={`text-brand-textMuted transition-transform duration-fast ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-2 w-72 bg-brand-bgElevated/95 backdrop-blur-xl border border-brand-border rounded-xl shadow-lg overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-          <div className="p-2 border-b border-white/10">
+        <div className="absolute top-full left-0 mt-2 w-80 bg-brand-bgElevated/98 backdrop-blur-xl border border-brand-border rounded-2xl shadow-panel overflow-hidden z-50 animate-scaleIn origin-top-left">
+          <div className="p-3 border-b border-brand-border">
             {switching ? (
               <div className="flex items-center gap-2 text-xs text-brand-primary px-2 py-1">
                 <Loader2 size={12} className="animate-spin" />
                 <span>Switching event...</span>
               </div>
             ) : (
-              <div className="text-xs text-white/50 px-2 py-1">Pilih Event</div>
+              <div className="text-xs text-brand-textDim uppercase tracking-wider px-2 py-1">Pilih Event</div>
             )}
           </div>
           <div className="max-h-64 overflow-y-auto p-2 space-y-1">
@@ -125,17 +122,17 @@ export default function EventSelector() {
                 key={event.id}
                 onClick={() => switchEvent(event.id)}
                 disabled={switching}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-left ${
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left ${
                   event.isActive
-                    ? 'bg-brand-primary/10 border-l-2 border-l-brand-primary border border-brand-border'
-                    : 'hover:bg-brand-bgSubtle border border-transparent'
+                    ? 'bg-brand-primary/10 border border-brand-primary/20'
+                    : 'hover:bg-brand-surfaceMuted border border-transparent'
                 }`}
               >
-                <div className={`w-2 h-2 rounded-full ${event.isActive ? 'bg-brand-success' : 'bg-white/30'}`} />
+                <div className={`w-2 h-2 rounded-full ${event.isActive ? 'bg-brand-success' : 'bg-brand-textDim'}`} />
                 <div className="flex-1 min-w-0">
-                  <div className="text-white font-medium truncate">{event.name}</div>
+                  <div className="text-brand-text font-medium truncate">{event.name}</div>
                   {event.date && (
-                    <div className="flex items-center gap-1 text-xs text-white/50">
+                    <div className="flex items-center gap-1 text-xs text-brand-textDim">
                       <Calendar size={10} />
                       <span>{formatDate(event.date)}</span>
                     </div>
@@ -145,11 +142,11 @@ export default function EventSelector() {
               </button>
             ))}
           </div>
-          <div className="p-2 border-t border-white/10 space-y-1">
+          <div className="p-2 border-t border-brand-border">
             <Link
               href={"/admin/events" as any}
               onClick={() => setIsOpen(false)}
-              className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-brand-textMuted hover:text-brand-text hover:bg-brand-bgSubtle transition-colors text-sm"
+              className="flex items-center gap-2 w-full px-3 py-2 rounded-xl text-brand-textMuted hover:text-brand-text hover:bg-brand-surfaceMuted transition-colors text-sm"
             >
               <Settings size={14} />
               <span>Kelola Events</span>

@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { apiBase, toApiUrl } from '../lib/api';
+import { useSSE } from '../lib/sse-context';
 
 type EventConfig = {
   backgroundType: 'NONE' | 'IMAGE' | 'VIDEO';
@@ -10,8 +11,6 @@ type EventConfig = {
   overlayOpacity: number;
   logoUrl?: string | null;
 };
-
-import { useSSE } from '../lib/sse-context';
 
 export default function ThemeBackground() {
   const pathname = usePathname();
@@ -43,7 +42,6 @@ export default function ThemeBackground() {
     };
   }, [addEventListener, removeEventListener]);
 
-  // Live preview override (e.g., from settings page)
   useEffect(() => {
     const handler = (e: Event) => {
       const ev = e as CustomEvent<Partial<EventConfig> | null>;
@@ -54,7 +52,6 @@ export default function ThemeBackground() {
   }, []);
 
   useEffect(() => {
-    // Background polling fetch cfg
     const interval = setInterval(async () => {
       try {
         const r = await fetch(`${apiBase()}/config/event`);
@@ -68,37 +65,37 @@ export default function ThemeBackground() {
   const effectiveType = (override?.backgroundType as EventConfig['backgroundType'] | undefined) ?? cfg?.backgroundType;
   const effectiveImage = override?.backgroundImageUrl ?? cfg?.backgroundImageUrl;
   const effectiveVideo = override?.backgroundVideoUrl ?? cfg?.backgroundVideoUrl;
+
   const overlayStyle = useMemo(() => ({
-    background: `linear-gradient(to bottom, rgba(11,11,17,${overlayOpacity}), rgba(22,22,42,${Math.min(overlayOpacity * 1.1, 1)}))`
+    background: `linear-gradient(to bottom, rgba(9,9,11,${overlayOpacity}), rgba(9,9,11,${Math.min(overlayOpacity * 1.1, 1)}))`
   }), [overlayOpacity]);
 
   const hasTopNav = !(pathname?.startsWith('/show') || pathname === '/admin/login');
-  const posClass = hasTopNav ? "top-[60px]" : "top-0";
+  const posClass = hasTopNav ? "top-[64px]" : "top-0";
 
   return (
     <div aria-hidden className="pointer-events-none">
-      {/* Fallback & Decorative Orbs for luxury feel */}
       {(!effectiveType || effectiveType === 'NONE') && (
         <>
-          <div className={`fixed inset-x-0 bottom-0 z-0 bg-brand-secondary ${posClass}`} />
-          <div className={`fixed inset-x-0 bottom-0 z-0 overflow-hidden opacity-60 ${posClass}`}>
-            <div className="absolute -top-[20%] -left-[10%] w-[70%] h-[70%] bg-brand-primary/15 rounded-full blur-[160px] animate-pulse" style={{ animationDuration: '8s' }} />
-            <div className="absolute top-[40%] -right-[10%] w-[60%] h-[60%] bg-brand-accent/15 rounded-full blur-[140px] animate-pulse" style={{ animationDuration: '10s' }} />
-            <div className="absolute bottom-[0%] left-[30%] w-[40%] h-[40%] bg-brand-info/10 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '12s' }} />
-            <div className="absolute bottom-[10%] right-[20%] w-[50%] h-[50%] bg-brand-vivid/10 rounded-full blur-[130px] animate-pulse" style={{ animationDuration: '14s' }} />
+          <div className={`fixed inset-x-0 bottom-0 z-0 bg-brand-bg ${posClass}`} />
+          <div className={`fixed inset-x-0 bottom-0 z-0 overflow-hidden opacity-70 ${posClass}`}>
+            <div className="absolute -top-[20%] -right-[10%] w-[55%] h-[55%] bg-brand-primary/12 rounded-full blur-[160px] animate-pulse" style={{ animationDuration: '10s' }} />
+            <div className="absolute top-[35%] -left-[10%] w-[45%] h-[45%] bg-brand-primary/8 rounded-full blur-[140px] animate-pulse" style={{ animationDuration: '14s' }} />
+            <div className="absolute bottom-[0%] right-[20%] w-[35%] h-[35%] bg-brand-primary/6 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '18s' }} />
           </div>
+          <div className={`fixed inset-x-0 bottom-0 z-0 opacity-[0.015] ${posClass}`} style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.9) 1px, transparent 0)', backgroundSize: '32px 32px' }} />
         </>
       )}
 
       {effectiveType === 'IMAGE' && effectiveImage && (
-        <div className={`fixed inset-x-0 bottom-0 z-0 bg-no-repeat bg-[length:100%_100%] ${posClass}`} style={{ backgroundImage: `url(${toApiUrl(effectiveImage)})` }} />
+        <div className={`fixed inset-x-0 bottom-0 z-0 bg-no-repeat bg-cover bg-center ${posClass}`} style={{ backgroundImage: `url(${toApiUrl(effectiveImage)})` }} />
       )}
       {effectiveType === 'VIDEO' && effectiveVideo && (
         // eslint-disable-next-line jsx-a11y/media-has-caption
-        <video className={`fixed inset-x-0 bottom-0 z-0 w-full h-full object-fill ${posClass}`} src={toApiUrl(effectiveVideo)} muted loop autoPlay playsInline />
+        <video className={`fixed inset-x-0 bottom-0 z-0 w-full h-full object-cover ${posClass}`} src={toApiUrl(effectiveVideo)} muted loop autoPlay playsInline />
       )}
       {(effectiveType === 'IMAGE' || effectiveType === 'VIDEO') && (
-        <div className={`fixed inset-x-0 bottom-0 z-0 bg-brand-secondary ${posClass}`} style={overlayStyle} />
+        <div className={`fixed inset-x-0 bottom-0 z-0 ${posClass}`} style={overlayStyle} />
       )}
     </div>
   );

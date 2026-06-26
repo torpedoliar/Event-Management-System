@@ -150,7 +150,7 @@ export default function ShowPage() {
       {!selected && (
         <div className="relative z-10 flex-1 flex items-center justify-center min-h-[50vh]">
           <div className="text-center">
-            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-brand-surface/50 border border-brand-border flex items-center justify-center animate-float">
+            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-brand-surface/50 border border-brand-border flex items-center justify-center">
               <Users size={40} className="text-brand-textMuted" />
             </div>
             <h2 className="text-2xl md:text-4xl font-semibold text-brand-text mb-2 gradient-text">Selamat Datang</h2>

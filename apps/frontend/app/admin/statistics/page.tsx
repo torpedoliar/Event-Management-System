@@ -152,7 +152,7 @@ export default function StatisticsPage() {
                                 <ArrowLeft size={20} />
                             </Link>
                             <div className="flex items-center gap-3">
-                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center shadow-lg">
+                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-primary to-brand-primarySoft flex items-center justify-center shadow-lg">
                                     <BarChart3 size={24} className="text-white" />
                                 </div>
                                 <div>
@@ -204,7 +204,7 @@ export default function StatisticsPage() {
                                         icon={<Clock size={24} />} 
                                         color="amber"
                                         subtitle="Menunggu"
-                                        border="border-t-2 border-t-brand-accent"
+                                        border="border-t-2 border-t-brand-primary"
                                     />
                                     <StatsCard 
                                         title="Perusahaan" 
@@ -212,14 +212,14 @@ export default function StatisticsPage() {
                                         icon={<Building2 size={24} />} 
                                         color="purple"
                                         subtitle="Terdaftar"
-                                        border="border-t-2 border-t-brand-vivid"
+                                        border="border-t-2 border-t-brand-primarySoft"
                                     />
                                 </div>
                             )}
 
                             {/* Progress Bar */}
                             {stats && (
-                                <div className="glass-card p-6">
+                                <div className="surface p-6">
                                     <div className="flex items-center justify-between mb-3">
                                         <div className="flex items-center gap-2">
                                             <TrendingUp size={18} className="text-brand-primary" />
@@ -229,7 +229,7 @@ export default function StatisticsPage() {
                                     </div>
                                     <div className="h-4 bg-white/10 rounded-full overflow-hidden">
                                         <div 
-                                            className="h-full bg-gradient-to-r from-brand-primary via-brand-accent to-brand-primarySoft transition-all duration-1000 ease-out"
+                                            className="h-full bg-gradient-to-r from-brand-primary via-brand-primarySoft to-brand-primarySoft transition-all duration-1000 ease-out"
                                             style={{ width: `${checkinPercent}%` }}
                                         />
                                     </div>
@@ -264,7 +264,7 @@ export default function StatisticsPage() {
                             {souvenirStats && souvenirStats.totalSouvenirs > 0 && (
                                 <>
                                     <div className="flex items-center gap-3 mt-8 mb-4">
-                                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center shadow-lg">
+                                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-primary to-brand-primarySoft flex items-center justify-center shadow-lg">
                                             <Gift size={20} className="text-white" />
                                         </div>
                                         <h2 className="text-xl font-bold text-white">Statistik Souvenir</h2>
@@ -295,9 +295,9 @@ export default function StatisticsPage() {
                                     </div>
 
                                     {/* Souvenir Detail Chart */}
-                                    <div className="glass-card p-6">
+                                    <div className="surface p-6">
                                         <h3 className="text-white font-medium mb-4 flex items-center gap-2">
-                                            <Gift size={18} className="text-brand-accent" />
+                                            <Gift size={18} className="text-brand-primary" />
                                             Detail Souvenir
                                         </h3>
                                         <div className="space-y-4">
@@ -309,7 +309,7 @@ export default function StatisticsPage() {
                                                     </div>
                                                     <div className="h-3 bg-white/10 rounded-full overflow-hidden">
                                                         <div 
-                                                            className="h-full bg-gradient-to-r from-brand-primary to-brand-accent transition-all duration-500"
+                                                            className="h-full bg-gradient-to-r from-brand-primary to-brand-primarySoft transition-all duration-500"
                                                             style={{ width: `${s.quantity > 0 ? (s.taken / s.quantity) * 100 : 0}%` }}
                                                         />
                                                     </div>
@@ -362,7 +362,7 @@ export default function StatisticsPage() {
                                     </div>
 
                                     {/* Prize Detail Chart */}
-                                    <div className="glass-card p-6">
+                                    <div className="surface p-6">
                                         <h3 className="text-white font-medium mb-4 flex items-center gap-2">
                                             <Trophy size={18} className="text-yellow-400" />
                                             Detail Hadiah
@@ -406,7 +406,7 @@ const colorMap: Record<string, { bg: string; text: string; border: string }> = {
     blue: { bg: 'from-brand-primary/20 to-brand-primary/10', text: 'text-brand-primary', border: 'border-brand-primary/20' },
     emerald: { bg: 'from-brand-success/20 to-brand-success/10', text: 'text-brand-success', border: 'border-brand-success/20' },
     amber: { bg: 'from-brand-warning/20 to-brand-warning/10', text: 'text-brand-warning', border: 'border-brand-warning/20' },
-    purple: { bg: 'from-brand-accent/20 to-brand-accent/10', text: 'text-brand-accent', border: 'border-brand-accent/20' },
+    purple: { bg: 'from-brand-primary/20 to-brand-primary/10', text: 'text-brand-primary', border: 'border-brand-primary/20' },
 };
 
 function StatsCard({ 
@@ -427,7 +427,7 @@ function StatsCard({
     const colors = colorMap[color];
     
     return (
-        <div className={`stats-card glass-card p-5 border ${colors.border} ${border}`}>
+        <div className={`stats-card surface p-5 border ${colors.border} ${border}`}>
             <div className="flex items-start justify-between mb-3">
                 <div className={`p-2.5 rounded-xl bg-gradient-to-br ${colors.bg}`}>
                     <div className={colors.text}>{icon}</div>

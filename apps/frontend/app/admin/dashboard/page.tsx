@@ -8,9 +8,10 @@ import Input from '../../../components/ui/Input';
 import Button from '../../../components/ui/Button';
 import Label from '../../../components/ui/Label';
 import Modal from '../../../components/ui/Modal';
+import Alert from '../../../components/ui/Alert';
 import StatusBadge from '../../../components/ui/StatusBadge';
-import { SkeletonStats, SkeletonCard } from '../../../components/ui/Skeleton';
-import { TrendingUp, Radio, BarChart3, Users, Dices, ExternalLink, UserPlus, Save, Loader2, CheckCircle, XCircle, Activity } from 'lucide-react';
+import { SkeletonCard } from '../../../components/ui/Skeleton';
+import { TrendingUp, Radio, BarChart3, Users, Dices, ExternalLink, UserPlus, Save, CheckCircle, XCircle, Activity } from 'lucide-react';
 import { useSSE } from '../../../lib/sse-context';
 
 const GuestStatsChart = lazy(() => import('../../../components/GuestStatsChart'));
@@ -170,79 +171,69 @@ export default function DashboardPage() {
 
   return (
     <RequireAuth>
-      <div className="min-h-[100dvh] p-4 md:p-6 lg:p-8">
-        <div className="max-w-7xl mx-auto space-y-6">
+      <main className="min-h-[100dvh] py-6 md:py-8 lg:py-10">
+        <div className="container-padded space-y-8">
           {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-semibold text-brand-text">Dashboard</h1>
-              <p className="text-sm text-brand-textMuted">Pantau kehadiran dan kelola tamu</p>
+              <h1 className="text-heading-1 text-brand-text mb-1">Dashboard</h1>
+              <p className="text-body-sm text-brand-textMuted">Pantau kehadiran dan kelola tamu</p>
             </div>
             <StatusBadge status={connected ? 'success' : 'danger'} pulse={connected}>
               {connected ? 'Sinkronisasi aktif' : 'Terputus dari server'}
             </StatusBadge>
-          </div>
+          </header>
 
           {/* Alerts */}
           {(message || error) && (
             <div className="space-y-3">
-              {message && (
-                <div className="bg-brand-success/10 border border-brand-success/20 text-brand-success rounded-xl p-4 flex items-center gap-3">
-                  <CheckCircle size={18} />
-                  {message}
-                </div>
-              )}
-              {error && (
-                <div className="bg-brand-danger/10 border border-brand-danger/20 text-brand-danger rounded-xl p-4 flex items-center gap-3">
-                  <XCircle size={18} />
-                  {error}
-                </div>
-              )}
+              {message && <Alert variant="success"><CheckCircle size={18} className="shrink-0 mt-0.5" />{message}</Alert>}
+              {error && <Alert variant="error"><XCircle size={18} className="shrink-0 mt-0.5" />{error}</Alert>}
             </div>
           )}
 
           {/* Stats grid */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-            <Card className="md:col-span-8 flex flex-col justify-center border-t-2 border-t-brand-primary">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-lg bg-brand-primary/10 text-brand-primary">
-                  <TrendingUp size={20} />
+          <section className="grid grid-cols-1 md:grid-cols-12 gap-5">
+            <Card className="md:col-span-8 flex flex-col justify-center p-6 md:p-8 border-t-2 border-t-brand-primary">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2.5 rounded-xl bg-brand-primary/10 text-brand-primary">
+                  <TrendingUp size={22} />
                 </div>
-                <span className="text-sm font-medium text-brand-textMuted uppercase tracking-wider">Total Kehadiran</span>
+                <span className="text-label text-brand-textMuted uppercase">Total Kehadiran</span>
               </div>
               <div className="flex items-baseline gap-4 flex-wrap">
-                <span className="text-6xl md:text-7xl lg:text-8xl font-bold text-brand-text tracking-tight">
+                <span className="text-6xl md:text-7xl lg:text-8xl font-bold text-brand-text tracking-tight font-sans">
                   {statsLoading ? '-' : stats?.checkedIn || 0}
                 </span>
-                <span className="text-xl md:text-2xl text-brand-textMuted pb-2">
+                <span className="text-xl md:text-2xl text-brand-textMuted pb-2 tabular-nums">
                   / {statsLoading ? '-' : stats?.total || 0} register
                 </span>
               </div>
             </Card>
 
-            <div className="md:col-span-4 grid grid-cols-1 gap-4">
-              <Card className="border-t-2 border-t-brand-accent">
-                <div className="text-sm font-medium text-brand-textMuted uppercase tracking-wider mb-1">Menunggu</div>
-                <div className="text-3xl md:text-4xl font-semibold text-brand-text">
+            <div className="md:col-span-4 grid grid-cols-1 gap-5">
+              <Card className="border-t-2 border-t-brand-textDim/60">
+                <div className="text-label text-brand-textMuted uppercase mb-2">Menunggu</div>
+                <div className="text-3xl md:text-4xl font-semibold text-brand-text tabular-nums">
                   {statsLoading ? '-' : stats?.notCheckedIn || 0}
                 </div>
               </Card>
-              <Card className="border-t-2 border-t-brand-vivid">
-                <div className="text-sm font-medium text-brand-textMuted uppercase tracking-wider mb-1">Progress</div>
-                <div className="text-3xl md:text-4xl font-semibold text-brand-text">{checkinPercent}%</div>
-                <div className="w-full h-1.5 bg-white/10 rounded-full mt-3 overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-brand-primary to-brand-accent rounded-full transition-all duration-1000 ease-out animate-[pulse_3s_infinite]" style={{ width: `${checkinPercent}%` }} />
+              <Card className="border-t-2 border-t-brand-primary">
+                <div className="text-label text-brand-textMuted uppercase mb-2">Progress</div>
+                <div className="text-3xl md:text-4xl font-semibold text-brand-text tabular-nums">{checkinPercent}%</div>
+                <div className="w-full h-2 bg-white/10 rounded-full mt-4 overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-brand-primary to-brand-primaryHover rounded-full transition-all duration-1000 ease-out" style={{ width: `${checkinPercent}%` }} />
                 </div>
               </Card>
             </div>
-          </div>
+          </section>
 
           {/* Main content */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
             {/* Left column */}
             <div className="lg:col-span-2 space-y-6">
-              <Card className="surface-elevated">
-                <h2 className="text-lg font-semibold text-brand-text mb-4">Akses Cepat</h2>
+              <Card variant="elevated">
+                <h2 className="text-heading-2 text-brand-text mb-5">Akses Cepat</h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   <QuickLink href="/admin/statistics" icon={<BarChart3 size={18} />}>Statistik</QuickLink>
                   <QuickLink href="/admin/guests" icon={<Users size={18} />}>Tamu</QuickLink>
@@ -253,7 +244,7 @@ export default function DashboardPage() {
 
               {stats && (
                 <Suspense fallback={<SkeletonCard className="h-80" />}>
-                  <div className="surface-elevated p-4">
+                  <div className="surface-elevated p-5 rounded-2xl border border-brand-border">
                     <GuestStatsChart stats={stats} />
                   </div>
                 </Suspense>
@@ -261,27 +252,27 @@ export default function DashboardPage() {
             </div>
 
             {/* Right column */}
-            <div className="space-y-6">
+            <aside className="space-y-6">
               <Card>
-                <h2 className="text-lg font-semibold text-brand-text mb-4 flex items-center gap-2">
+                <h2 className="text-heading-2 text-brand-text mb-5 flex items-center gap-2">
                   <UserPlus size={18} className="text-brand-primary" />
                   Tambah Tamu
                 </h2>
                 <form onSubmit={addGuest} className="space-y-4">
                   <div>
-                    <Label className="text-xs uppercase tracking-wider text-brand-textMuted mb-1.5 block" htmlFor="quick-guest-id">ID Tamu</Label>
+                    <Label htmlFor="quick-guest-id">ID Tamu</Label>
                     <Input id="quick-guest-id" value={guestId} onChange={(e) => setGuestId(e.target.value)} required />
                   </div>
                   <div>
-                    <Label className="text-xs uppercase tracking-wider text-brand-textMuted mb-1.5 block" htmlFor="quick-name">Nama Lengkap</Label>
+                    <Label htmlFor="quick-name">Nama Lengkap</Label>
                     <Input id="quick-name" value={name} onChange={(e) => setName(e.target.value)} required />
                   </div>
                   <div>
-                    <Label className="text-xs uppercase tracking-wider text-brand-textMuted mb-1.5 block" htmlFor="quick-table">Meja / Ruangan</Label>
+                    <Label htmlFor="quick-table">Meja / Ruangan</Label>
                     <Input id="quick-table" value={tableLocation} onChange={(e) => setTableLocation(e.target.value)} required />
                   </div>
                   <div>
-                    <Label className="text-xs uppercase tracking-wider text-brand-textMuted mb-1.5 block" htmlFor="quick-company">Perusahaan</Label>
+                    <Label htmlFor="quick-company">Perusahaan</Label>
                     <Input id="quick-company" value={company} onChange={(e) => setCompany(e.target.value)} />
                   </div>
                   <Button type="submit" className="w-full" loading={saving}>
@@ -292,13 +283,13 @@ export default function DashboardPage() {
               </Card>
 
               <Card>
-                <h2 className="text-lg font-semibold text-brand-text mb-4 flex items-center gap-2">
+                <h2 className="text-heading-2 text-brand-text mb-5 flex items-center gap-2">
                   <Activity size={18} className="text-brand-danger" />
                   Tindakan Admin
                 </h2>
-                <div className="space-y-4">
+                <div className="space-y-5">
                   <div>
-                    <Label className="text-xs uppercase tracking-wider text-brand-textMuted mb-1.5 block">Check-in Manual</Label>
+                    <Label className="mb-2 block">Check-in Manual</Label>
                     <div className="flex gap-2">
                       <Input value={adminGuestId} onChange={(e) => setAdminGuestId(e.target.value)} placeholder="ID Tamu" />
                       <Button onClick={manualCheckin} disabled={busyAdminCheck || !adminGuestId} loading={busyAdminCheck}>
@@ -307,7 +298,7 @@ export default function DashboardPage() {
                     </div>
                   </div>
                   <div>
-                    <Label className="text-xs uppercase tracking-wider text-brand-textMuted mb-1.5 block">Batalkan Check-in</Label>
+                    <Label className="mb-2 block">Batalkan Check-in</Label>
                     <div className="flex gap-2">
                       <Input value={adminGuestId} onChange={(e) => setAdminGuestId(e.target.value)} placeholder="ID Tamu" />
                       <Button variant="danger" onClick={openUncheck} disabled={busyAdminUncheck || !adminGuestId} loading={busyAdminUncheck}>
@@ -317,32 +308,31 @@ export default function DashboardPage() {
                   </div>
                 </div>
               </Card>
-            </div>
-          </div>
+            </aside>
+          </section>
         </div>
-      </div>
+      </main>
 
       {/* Uncheck Modal */}
       <Modal
         open={showUncheckModal && !!uncheckGuestInfo}
         onClose={() => { setShowUncheckModal(false); setUncheckPassword(''); setUncheckReason(''); setUncheckError(null); }}
         title="Batalkan Check-in"
+        description="Membatalkan check-in akan mencabut hak undian tamu."
       >
         <div className="space-y-4">
-          <p className="text-sm text-brand-textMuted">
-            Membatalkan check-in akan mencabut hak undian tamu: <strong className="text-brand-text">{uncheckGuestInfo?.name}</strong>.
+          <p className="text-body-sm text-brand-textMuted">
+            Tamu: <strong className="text-brand-text">{uncheckGuestInfo?.name}</strong>
           </p>
           {uncheckError && (
-            <div className="bg-brand-danger/10 border border-brand-danger/20 text-brand-danger rounded-lg p-3 text-sm">
-              {uncheckError}
-            </div>
+            <Alert variant="error">{uncheckError}</Alert>
           )}
           <div>
-            <Label className="text-xs uppercase tracking-wider text-brand-textMuted mb-1.5 block">Password Admin</Label>
+            <Label>Password Admin</Label>
             <Input type="password" value={uncheckPassword} onChange={(e) => { setUncheckPassword(e.target.value); setUncheckError(null); }} />
           </div>
           <div>
-            <Label className="text-xs uppercase tracking-wider text-brand-textMuted mb-1.5 block">Alasan (min. 5 karakter)</Label>
+            <Label>Alasan (min. 5 karakter)</Label>
             <Input value={uncheckReason} onChange={(e) => setUncheckReason(e.target.value)} />
           </div>
           <div className="flex gap-3 pt-2">
@@ -361,7 +351,7 @@ export default function DashboardPage() {
 }
 
 function QuickLink({ href, children, icon, external }: { href: string; children: React.ReactNode; icon: React.ReactNode; external?: boolean }) {
-  const base = 'flex flex-col gap-2 p-4 surface-interactive rounded-xl text-brand-text transition-colors';
+  const base = 'flex flex-col gap-3 p-4 surface-interactive rounded-xl text-brand-text transition-all duration-fast';
   const content = (
     <>
       <div className="text-brand-primary">{icon}</div>

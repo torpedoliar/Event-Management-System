@@ -71,7 +71,7 @@ export default function WinnerHistoryModal({ isOpen, onClose, prizes, logoUrl }:
                                     {categoryPrizes.filter(p => p.winners.length > 0).map(prize => (
                                         <div key={prize.id} className="surface rounded-3xl p-6 shadow-xl">
                                             <h4 className="text-xl font-bold text-brand-text mb-6 flex items-center gap-3 font-mono tracking-wider uppercase">
-                                                <PartyPopper size={24} className="text-brand-accent" />
+                                                <PartyPopper size={24} className="text-brand-primary" />
                                                 {prize.name}
                                             </h4>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

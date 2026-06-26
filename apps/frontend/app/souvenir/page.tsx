@@ -1003,7 +1003,7 @@ export default function SouvenirPage() {
 
                     {rapidLogs.length > 0 && (
                         <div className="relative z-10 mt-4 flex flex-col items-center">
-                            <div className="w-full glass-card-dark p-4 md:p-6 text-sm text-brand-text overflow-y-auto max-h-48 border border-brand-border rounded-xl">
+                            <div className="w-full surface p-4 md:p-6 text-sm text-brand-text overflow-y-auto max-h-48 border border-brand-border rounded-xl">
                                 <h3 className="text-brand-text font-semibold mb-3">Rapid Scan Logs</h3>
                                 <ul className="space-y-2">
                                     {rapidLogs.map((log) => (
@@ -1775,7 +1775,7 @@ const Html5QrcodePlugin = ({ qrCodeSuccessCallback, onScanFailure, fps, qrbox }:
         <div className="w-full">
             <div id={uniqueIdRef.current} className="w-full overflow-hidden rounded-lg bg-black border-2 border-brand-border relative min-h-[300px]">
                 {startError && (
-                    <div className="absolute inset-0 flex items-center justify-center p-4 text-center bg-brand-secondary text-brand-text overflow-y-auto">
+                    <div className="absolute inset-0 flex items-center justify-center p-4 text-center bg-brand-bgElevated text-brand-text overflow-y-auto">
                         <div className="max-h-full py-4">
                             <p className="text-brand-danger font-bold mb-2">Kamera Error</p>
                             <p className="text-sm text-brand-textMuted mb-4">

@@ -15,7 +15,7 @@ type GuestCategory = 'REGULAR' | 'VIP' | 'VVIP' | 'MEDIA' | 'SPONSOR' | 'SPEAKER
 const CATEGORY_OPTIONS: { value: GuestCategory; label: string; color: string }[] = [
   { value: 'REGULAR', label: 'Regular', color: 'text-gray-300' },
   { value: 'VIP', label: 'VIP', color: 'text-brand-warning' },
-  { value: 'VVIP', label: 'VVIP', color: 'text-brand-accent' },
+  { value: 'VVIP', label: 'VVIP', color: 'text-brand-primary' },
   { value: 'MEDIA', label: 'Media', color: 'text-brand-info' },
   { value: 'SPONSOR', label: 'Sponsor', color: 'text-brand-success' },
   { value: 'SPEAKER', label: 'Speaker', color: 'text-rose-300' },
@@ -106,7 +106,7 @@ export default function EditGuestPage() {
         <div className="mx-auto max-w-2xl space-y-4">
           <h1 className="text-2xl md:text-3xl font-bold text-white text-shadow-lg">Edit Tamu</h1>
           {error && <div className="text-sm text-brand-danger">{error}</div>}
-          {message && <div className="text-sm text-brand-accent">{message}</div>}
+          {message && <div className="text-sm text-brand-primary">{message}</div>}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {guest.photoUrl && (
               <div>
@@ -200,7 +200,7 @@ export default function EditGuestPage() {
                   className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-white focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary"
                 >
                   {CATEGORY_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value} className="bg-brand-secondary text-brand-text">
+                    <option key={opt.value} value={opt.value} className="bg-brand-bgElevated text-brand-text">
                       {opt.label}
                     </option>
                   ))}

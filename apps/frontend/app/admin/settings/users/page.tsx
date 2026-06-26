@@ -151,8 +151,8 @@ export default function UsersManagementPage() {
                 <ArrowLeft size={20} />
               </Link>
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center shadow-lg">
-                  <UserCog size={24} className="text-brand-secondary" />
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-primary to-brand-primarySoft flex items-center justify-center shadow-lg">
+                  <UserCog size={24} className="text-brand-bg" />
                 </div>
                 <div>
                   <h1 className="text-2xl md:text-3xl font-bold text-brand-text">User Management</h1>
@@ -166,7 +166,7 @@ export default function UsersManagementPage() {
 
             <button
               onClick={() => { setShowAddForm(true); setEditingId(null); setFormData({ username: '', password: '', displayName: '', isActive: true }); }}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-primary to-brand-accent px-5 py-2.5 text-sm font-semibold text-brand-secondary shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-primary to-brand-primarySoft px-5 py-2.5 text-sm font-semibold text-brand-bg shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
             >
               <UserPlus size={18} />
               Tambah User
@@ -235,7 +235,7 @@ export default function UsersManagementPage() {
                 <button
                   onClick={handleAdd}
                   disabled={saving}
-                  className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-brand-success to-brand-success/80 text-brand-secondary font-medium disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-brand-success to-brand-success/80 text-brand-bg font-medium disabled:opacity-50"
                 >
                   {saving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
                   Simpan
@@ -315,7 +315,7 @@ export default function UsersManagementPage() {
                         <button
                           onClick={() => handleUpdate(user.id)}
                           disabled={saving}
-                          className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-brand-success to-brand-success/80 text-brand-secondary font-medium disabled:opacity-50"
+                          className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-brand-success to-brand-success/80 text-brand-bg font-medium disabled:opacity-50"
                         >
                           {saving ? <Loader2 size={18} className="animate-spin" /> : <Check size={18} />}
                           Update

@@ -355,7 +355,7 @@ export default function EventsPage() {
                 <Users size={10} />
                 {event.stats.checkedIn}/{event.stats.totalGuests}
               </span>
-              <span className="flex items-center gap-1 text-brand-accent">
+              <span className="flex items-center gap-1 text-brand-primary">
                 <Package size={10} />
                 {event.stats.souvenirs}
               </span>
@@ -426,7 +426,7 @@ export default function EventsPage() {
       
       switch (column) {
         case 'upcoming':
-          return `${baseStyles} ${isOver ? 'border-brand-vivid/50 bg-brand-vivid/5' : 'border-white/10 bg-brand-vivid/10'}`;
+          return `${baseStyles} ${isOver ? 'border-brand-primary/50 bg-brand-primary/5' : 'border-white/10 bg-brand-primary/10'}`;
         case 'active':
           return `${baseStyles} ${isOver ? 'border-brand-primary/50 bg-brand-primary/5' : 'border-white/10 bg-brand-primary/10'}`;
         case 'past':
@@ -439,7 +439,7 @@ export default function EventsPage() {
     const getIconStyles = () => {
       switch (column) {
         case 'upcoming':
-          return { bg: 'bg-brand-vivid/20', text: 'text-brand-vivid' };
+          return { bg: 'bg-brand-primary/20', text: 'text-brand-primary' };
         case 'active':
           return { bg: 'bg-brand-primary/20', text: 'text-brand-primary' };
         case 'past':
@@ -720,7 +720,7 @@ export default function EventsPage() {
                               <Users size={14} />
                               {event.stats.checkedIn}/{event.stats.totalGuests} tamu
                             </span>
-                            <span className="flex items-center gap-1.5 text-brand-accent">
+                            <span className="flex items-center gap-1.5 text-brand-primary">
                               <Package size={14} />
                               {event.stats.souvenirs} souvenir
                             </span>

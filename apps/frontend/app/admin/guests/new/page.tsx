@@ -17,7 +17,7 @@ type GuestCategory = 'REGULAR' | 'VIP' | 'VVIP' | 'MEDIA' | 'SPONSOR' | 'SPEAKER
 const CATEGORY_OPTIONS: { value: GuestCategory; label: string; color: string }[] = [
   { value: 'REGULAR', label: 'Regular', color: 'text-gray-300' },
   { value: 'VIP', label: 'VIP', color: 'text-brand-warning' },
-  { value: 'VVIP', label: 'VVIP', color: 'text-brand-accent' },
+  { value: 'VVIP', label: 'VVIP', color: 'text-brand-primary' },
   { value: 'MEDIA', label: 'Media', color: 'text-brand-info' },
   { value: 'SPONSOR', label: 'Sponsor', color: 'text-brand-success' },
   { value: 'SPEAKER', label: 'Speaker', color: 'text-rose-300' },
@@ -94,7 +94,7 @@ export default function NewGuestPage() {
           </div>
 
           {error && <div className="text-sm text-brand-danger bg-brand-danger/10 p-3 rounded-lg border border-brand-danger/20">{error}</div>}
-          {message && <div className="text-sm text-brand-accent bg-brand-primary/10 p-3 rounded-lg border border-brand-primary/20">{message}</div>}
+          {message && <div className="text-sm text-brand-primary bg-brand-primary/10 p-3 rounded-lg border border-brand-primary/20">{message}</div>}
 
           <Card variant="glass" className="p-6 md:p-8 surface-elevated">
             <form onSubmit={submit} className="space-y-6">
@@ -175,7 +175,7 @@ export default function NewGuestPage() {
                     className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-white focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary"
                   >
                     {CATEGORY_OPTIONS.map((opt) => (
-                      <option key={opt.value} value={opt.value} className="bg-brand-secondary text-brand-text">
+                      <option key={opt.value} value={opt.value} className="bg-brand-bgElevated text-brand-text">
                         {opt.label}
                       </option>
                     ))}

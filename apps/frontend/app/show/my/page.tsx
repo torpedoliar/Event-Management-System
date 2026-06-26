@@ -140,7 +140,7 @@ export default function MyShowPage() {
           <p className="text-brand-textMuted mb-6">Silakan login terlebih dahulu untuk menggunakan My Display</p>
           <a
             href="/admin/login"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-brand-primary to-brand-accent text-brand-bg font-semibold hover:shadow-lg hover:shadow-brand-primary/20 transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-brand-primary to-brand-primarySoft text-brand-bg font-semibold hover:shadow-lg hover:shadow-brand-primary/20 transition-all"
           >
             <LogIn size={20} />
             Login
@@ -159,7 +159,7 @@ export default function MyShowPage() {
             {cfg?.logoUrl ? (
               <img src={toApiUrl(cfg.logoUrl)} className="h-14 md:h-20 w-auto drop-shadow-2xl" alt="logo" />
             ) : (
-              <div className="w-14 h-14 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center shadow-2xl">
+              <div className="w-14 h-14 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-brand-primary to-brand-primarySoft flex items-center justify-center shadow-2xl">
                 <Users size={32} className="text-brand-bg" />
               </div>
             )}
@@ -175,7 +175,7 @@ export default function MyShowPage() {
                   )}
                   {cfg?.location && (
                     <span className="flex items-center gap-1.5">
-                      <MapPin size={16} className="text-brand-accent" />
+                      <MapPin size={16} className="text-brand-primary" />
                       {cfg.location}
                     </span>
                   )}
@@ -208,7 +208,7 @@ export default function MyShowPage() {
             {/* Waiting state */}
             <div className="flex items-center justify-center">
               <div className="text-center">
-                <div className="w-32 h-32 mx-auto mb-8 rounded-full bg-brand-warning/20 backdrop-blur-md border border-brand-warning/30 flex items-center justify-center float">
+                <div className="w-32 h-32 mx-auto mb-8 rounded-full bg-brand-warning/20 backdrop-blur-md border border-brand-warning/30 flex items-center justify-center">
                   <User size={56} className="text-brand-warning" />
                 </div>
                 <h2 className="text-3xl md:text-4xl font-bold text-brand-text text-shadow-lg mb-4">
@@ -222,7 +222,7 @@ export default function MyShowPage() {
 
             {/* Recent check-ins by this admin */}
             {recentCheckins.length > 0 && (
-              <div className="glass-card-dark p-6 overflow-hidden">
+              <div className="surface p-6 overflow-hidden">
                 <h3 className="text-lg font-semibold text-brand-text mb-4 flex items-center gap-2">
                   <Clock size={20} className="text-brand-warning" />
                   Riwayat Check-in Anda
@@ -270,7 +270,7 @@ export default function MyShowPage() {
           <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={() => setSelected(null)} />
           
           <div className="relative w-full max-w-6xl popup-success">
-            <div className="absolute -inset-1 bg-gradient-to-r from-brand-warning via-brand-primary to-brand-accent rounded-3xl blur-lg opacity-50" />
+            <div className="absolute -inset-1 bg-gradient-to-r from-brand-warning via-brand-primary to-brand-primarySoft rounded-3xl blur-lg opacity-50" />
             
             <div className="relative overflow-hidden rounded-2xl md:rounded-3xl border border-brand-warning/20 bg-brand-bg/95 text-brand-text shadow-2xl grid grid-cols-1 md:grid-cols-[380px_1fr]">
               {/* Photo Section */}
@@ -330,7 +330,7 @@ export default function MyShowPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="p-4 rounded-xl bg-brand-surface/5 border border-brand-border">
                       <div className="text-sm text-brand-text/50 uppercase tracking-wider font-medium flex items-center gap-2 mb-1">
-                        <MapPin size={14} className="text-brand-accent" />
+                        <MapPin size={14} className="text-brand-primary" />
                         Meja / Ruangan
                       </div>
                       <div className="text-2xl md:text-3xl font-bold text-brand-text">{selected.tableLocation}</div>

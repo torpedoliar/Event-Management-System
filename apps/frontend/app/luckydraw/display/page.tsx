@@ -534,7 +534,7 @@ export default function LiveDisplayPage() {
                         }
                     }}
                     value="slot"
-                    className="bg-brand-secondary/80 border border-brand-primary/50 text-brand-primarySoft text-sm rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary backdrop-blur-xl transition-all shadow-lg font-mono tracking-wider cursor-pointer"
+                    className="bg-brand-bgElevated/80 border border-brand-primary/50 text-brand-primarySoft text-sm rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary backdrop-blur-xl transition-all shadow-lg font-mono tracking-wider cursor-pointer"
                 >
                     <option value="classic">🎲 Classic Mode</option>
                     <option value="slot">🎰 Slot Machine Mode</option>
@@ -593,10 +593,10 @@ export default function LiveDisplayPage() {
                                 setGrandWinner(null);
                                 setDrawCount(1);
                             }}
-                            className="w-full bg-brand-secondary/80 border border-brand-primary/30 text-brand-primarySoft text-xl rounded-full px-6 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 font-mono tracking-widest uppercase text-center"
+                            className="w-full bg-brand-bgElevated/80 border border-brand-primary/30 text-brand-primarySoft text-xl rounded-full px-6 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 font-mono tracking-widest uppercase text-center"
                         >
                             {prizes.map(p => (
-                                <option key={p.id} value={p.id} className="bg-brand-secondary text-brand-text font-sans">
+                                <option key={p.id} value={p.id} className="bg-brand-bgElevated text-brand-text font-sans">
                                     {p.category === 'UTAMA' ? '🏆' : '🎁'} {p.name} ({p.winners.length}/{p.quantity})
                                 </option>
                             ))}
@@ -622,14 +622,14 @@ export default function LiveDisplayPage() {
                 </div>
 
                 {/* Tracker Bar Moved Below Prize Selection */}
-                <div className="w-full max-w-4xl mx-auto bg-brand-secondary/80 backdrop-blur-md border border-brand-primary/20 p-4 md:p-5 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+                <div className="w-full max-w-4xl mx-auto bg-brand-bgElevated/80 backdrop-blur-md border border-brand-primary/20 p-4 md:p-5 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
                     <div className="flex justify-between text-brand-text/80 mb-3 font-mono text-xs md:text-sm tracking-widest font-bold">
                         <span>HADIR: {candidates.length}</span>
                         <span className="text-brand-primarySoft">MENANG: {prizes.reduce((acc, p) => acc + p.winners.length, 0)}</span>
                     </div>
                     <div className="w-full h-2 md:h-2.5 bg-black/60 rounded-full overflow-hidden shadow-inner border border-white/5">
                         <div 
-                            className="h-full bg-gradient-to-r from-brand-primary to-brand-accent shadow-[0_0_15px_rgba(212,168,83,0.8)] transition-all duration-1000" 
+                            className="h-full bg-gradient-to-r from-brand-primary to-brand-primarySoft shadow-[0_0_15px_rgba(212,168,83,0.8)] transition-all duration-1000" 
                             style={{ width: `${Math.max(0, 100 - (prizes.reduce((acc, p) => acc + p.winners.length, 0) / (candidates.length || 1) * 100))}%` }} 
                         />
                     </div>
@@ -672,7 +672,7 @@ export default function LiveDisplayPage() {
 
                 {grandWinner && isUtama && (
                     <div className="w-full max-w-4xl mx-auto mt-4 animate-winner-reveal relative z-[70]">
-                        <div className="bg-brand-bg/80 backdrop-blur-md border-2 border-brand-primary rounded-[3rem] p-8 text-center shadow-gold surface-festive">
+                        <div className="bg-brand-bg/80 backdrop-blur-md border-2 border-brand-primary rounded-[3rem] p-8 text-center shadow-gold">
                             <h3 className="text-2xl font-mono text-brand-primary mb-2 tracking-[0.5em] uppercase">GRAND PRIZE WINNER</h3>
                             <div className="text-5xl md:text-7xl font-black text-brand-text mb-4 uppercase tracking-tighter drop-shadow-2xl">
                                 {grandWinner.name}
@@ -696,7 +696,7 @@ export default function LiveDisplayPage() {
                                     ? 'bg-red-500/20 text-red-500 cursor-not-allowed border border-red-500/30'
                                     : isUtama 
                                         ? 'bg-gradient-to-r from-red-600 to-red-800 text-brand-text shadow-[0_0_50px_rgba(255,0,0,0.5)] hover:shadow-[0_0_80px_rgba(255,0,0,0.8)] border border-red-400/50 animate-grand-pulse'
-                                        : 'bg-gradient-to-r from-brand-primary to-brand-accent text-brand-bg shadow-[0_0_50px_rgba(212,168,83,0.4)] hover:shadow-[0_0_80px_rgba(212,168,83,0.6)] border border-brand-primarySoft/50'
+                                        : 'bg-gradient-to-r from-brand-primary to-brand-primarySoft text-brand-bg shadow-[0_0_50px_rgba(212,168,83,0.4)] hover:shadow-[0_0_80px_rgba(212,168,83,0.6)] border border-brand-primarySoft/50'
                             }
                         `}
                     >

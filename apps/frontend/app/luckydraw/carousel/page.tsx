@@ -167,7 +167,7 @@ export default function CarouselDrawPage() {
             {/* Mode Selector */}
             <div className="fixed top-24 left-6 z-[70]">
                 <select onChange={(e) => { if (e.target.value === 'classic') window.location.href = '/luckydraw'; else if (e.target.value === 'slot') window.location.href = '/luckydraw/display'; }} value="carousel"
-                    className="bg-brand-secondary/80 border border-brand-primary/50 text-brand-primarySoft text-sm rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary backdrop-blur-xl shadow-lg font-mono tracking-wider cursor-pointer">
+                    className="bg-brand-bgElevated/80 border border-brand-primary/50 text-brand-primarySoft text-sm rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary backdrop-blur-xl shadow-lg font-mono tracking-wider cursor-pointer">
                     <option value="classic">🎲 Classic Mode</option>
                     <option value="slot">🎰 Slot Machine</option>
                     <option value="carousel">🎡 3D Carousel</option>
@@ -198,17 +198,17 @@ export default function CarouselDrawPage() {
                 {/* ─── Top: Title + Prize Info ─── */}
                 <div className="w-full flex flex-col items-center gap-4">
                     {/* Title */}
-                    <h1 className="text-3xl md:text-5xl font-heading font-black text-transparent bg-clip-text bg-gradient-to-b from-brand-primarySoft via-brand-primary to-brand-accent drop-shadow-[0_10px_30px_rgba(212,168,83,0.3)] tracking-[0.1em] uppercase text-center gradient-text-festive">
+                    <h1 className="text-3xl md:text-5xl font-heading font-black text-transparent bg-clip-text bg-gradient-to-b from-brand-primarySoft via-brand-primary to-brand-primarySoft drop-shadow-[0_10px_30px_rgba(212,168,83,0.3)] tracking-[0.1em] uppercase text-center">
                         LUCKY DRAW
                     </h1>
 
                     {/* Prize Info Bar */}
-                    <div className="flex flex-wrap items-center justify-center gap-4 px-6 py-3 rounded-2xl border border-brand-primary/30 bg-brand-secondary/60 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
+                    <div className="flex flex-wrap items-center justify-center gap-4 px-6 py-3 rounded-2xl border border-brand-primary/30 bg-brand-bgElevated/60 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
                         <Trophy size={20} className="text-brand-primary" />
                         <select value={selectedPrizeId} onChange={(e) => { setSelectedPrizeId(e.target.value); setWinners([]); setDrawCount(1); }} disabled={spinning}
                             className="bg-transparent text-lg font-bold uppercase tracking-widest font-mono focus:outline-none disabled:opacity-50 cursor-pointer text-brand-primarySoft pr-4">
                             {prizes.map(p => (
-                                <option key={p.id} value={p.id} className="bg-brand-secondary text-brand-text font-sans">
+                                <option key={p.id} value={p.id} className="bg-brand-bgElevated text-brand-text font-sans">
                                     {p.category === 'UTAMA' ? '🏆' : '🎁'} {p.name} ({p.winners.length}/{p.quantity})
                                 </option>
                             ))}
@@ -222,7 +222,7 @@ export default function CarouselDrawPage() {
                     {/* Controls Row */}
                     <div className="flex items-center gap-3">
                         {!isUtama && (
-                            <div className="flex items-center gap-2 px-3 py-2 rounded-xl border border-brand-primary/20 bg-brand-secondary/50 backdrop-blur-sm">
+                            <div className="flex items-center gap-2 px-3 py-2 rounded-xl border border-brand-primary/20 bg-brand-bgElevated/50 backdrop-blur-sm">
                                 <span className="text-xs font-mono tracking-widest text-brand-textDim mr-1">×</span>
                                 {[1, 5, 10].map(n => (
                                     <button key={n} onClick={() => setDrawCount(n)} disabled={spinning}
@@ -276,7 +276,7 @@ export default function CarouselDrawPage() {
                                 ? 'bg-brand-border/50 text-brand-textMuted cursor-not-allowed border border-brand-border'
                                 : isSoldOut
                                     ? 'bg-brand-danger/20 text-brand-danger cursor-not-allowed border border-brand-danger/30'
-                                    : 'bg-gradient-to-r from-brand-primary to-brand-accent text-brand-secondary shadow-[0_0_50px_rgba(212,168,83,0.4)] hover:shadow-[0_0_80px_rgba(212,168,83,0.6)] border border-brand-primarySoft/50'
+                                    : 'bg-gradient-to-r from-brand-primary to-brand-primarySoft text-brand-bg shadow-[0_0_50px_rgba(212,168,83,0.4)] hover:shadow-[0_0_80px_rgba(212,168,83,0.6)] border border-brand-primarySoft/50'
                             }
                         `}>
                         {spinning ? 'SPINNING...' : isSoldOut ? 'HABIS' : isUtama ? 'GRAND PRIZE' : 'PUTAR UNDIAN'}

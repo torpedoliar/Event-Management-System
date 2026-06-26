@@ -16,7 +16,7 @@ type RegistrationSource = 'MANUAL' | 'IMPORT' | 'WALKIN';
 const CATEGORY_CONFIG: Record<GuestCategory, { label: string; color: string; bg: string; border: string }> = {
   REGULAR: { label: 'Regular', color: 'text-gray-300', bg: 'bg-gray-500/20', border: 'border-gray-500/30' },
   VIP: { label: 'VIP', color: 'text-brand-warning', bg: 'bg-brand-warning/20', border: 'border-brand-warning/30' },
-  VVIP: { label: 'VVIP', color: 'text-brand-accent', bg: 'bg-brand-accent/20', border: 'border-brand-accent/30' },
+  VVIP: { label: 'VVIP', color: 'text-brand-primary', bg: 'bg-brand-primary/20', border: 'border-brand-primary/30' },
   MEDIA: { label: 'Media', color: 'text-brand-primarySoft', bg: 'bg-brand-primary/20', border: 'border-brand-primary/30' },
   SPONSOR: { label: 'Sponsor', color: 'text-brand-success', bg: 'bg-brand-success/20', border: 'border-brand-success/30' },
   SPEAKER: { label: 'Speaker', color: 'text-rose-300', bg: 'bg-rose-500/20', border: 'border-rose-500/30' },
@@ -687,7 +687,7 @@ export default function GuestsListPage() {
           </div>
         )}
 
-        {message && <div className="text-sm text-brand-accent">{message}</div>}
+        {message && <div className="text-sm text-brand-primary">{message}</div>}
         {error && <div className="text-sm text-brand-danger">{error}</div>}
 
         {/* Import Result with Duplicates Warning */}
@@ -723,7 +723,7 @@ export default function GuestsListPage() {
         )}
 
         <div className="relative overflow-hidden surface-elevated backdrop-blur-xl shadow-glass">
-          {loading && <div className="absolute inset-0 z-20 flex items-center justify-center bg-brand-secondary/50 backdrop-blur-sm"><Loader2 className="animate-spin text-brand-primary" size={32} /></div>}
+          {loading && <div className="absolute inset-0 z-20 flex items-center justify-center bg-brand-bgElevated/50 backdrop-blur-sm"><Loader2 className="animate-spin text-brand-primary" size={32} /></div>}
           <div className="overflow-x-auto overflow-y-auto max-h-[70vh]">
             <table className="w-full text-sm text-left border-collapse">
               <thead className="sticky top-0 z-10 bg-brand-bgElevated/95 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
@@ -822,7 +822,7 @@ export default function GuestsListPage() {
                         <td className="px-4 py-4 align-middle text-center">
                           {g.souvenirTakes && g.souvenirTakes.length > 0 ? (
                             <div className="flex flex-col items-center gap-1">
-                              <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-brand-accent/20 text-brand-accent border border-brand-accent/30">
+                              <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-brand-primary/20 text-brand-primary border border-brand-primary/30">
                                 <Package size={12} />
                                 {g.souvenirTakes.length}
                               </span>
@@ -831,7 +831,7 @@ export default function GuestsListPage() {
                               </span>
                             </div>
                           ) : g.souvenirTaken ? (
-                            <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-brand-accent/20 text-brand-accent border border-brand-accent/30">
+                            <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-brand-primary/20 text-brand-primary border border-brand-primary/30">
                               <Gift size={12} />
                               Ya
                             </span>
@@ -959,7 +959,7 @@ export default function GuestsListPage() {
         {/* Bulk Edit Modal */}
         {showBulkEditModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => setShowBulkEditModal(false)}>
-            <div className="w-full max-w-md rounded-xl bg-brand-secondary border border-brand-border p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="w-full max-w-md rounded-xl bg-brand-bgElevated border border-brand-border p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
               <h3 className="mb-4 text-lg font-bold text-white flex items-center gap-2">
                 <Tag size={20} className="text-brand-primary" />
                 Ubah Kategori ({selectedIds.size} tamu)
@@ -1007,7 +1007,7 @@ export default function GuestsListPage() {
         {/* Email Modal */}
         {showEmailModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => setShowEmailModal(false)}>
-            <div className="w-full max-w-lg rounded-xl bg-brand-secondary border border-brand-border p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="w-full max-w-lg rounded-xl bg-brand-bgElevated border border-brand-border p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
               <h3 className="mb-4 text-lg font-bold text-white flex items-center gap-2">
                 <Mail size={20} className="text-brand-primary" />
                 Kirim Email Undangan

@@ -281,7 +281,7 @@ export default function LuckyDraw3DWheel({
              <div className="absolute -bottom-px -right-px w-3 h-3 border-b-2 border-r-2 border-brand-text/80" />
            </div>
 
-           {/* Fade Gradients — blend with app theme using brand-secondary hex */}
+           {/* Fade Gradients — blend with app theme using brand-bgElevated hex */}
            <div className="absolute inset-x-0 top-0 h-[90px] z-40 pointer-events-none"
                 style={{ background: 'linear-gradient(to bottom, #16162A, rgba(22,22,42,0.7), transparent)' }} />
            <div className="absolute inset-x-0 bottom-0 h-[90px] z-40 pointer-events-none"

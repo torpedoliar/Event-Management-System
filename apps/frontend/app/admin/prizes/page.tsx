@@ -243,7 +243,7 @@ export default function PrizesPage() {
             <div className="min-h-screen p-6 md:p-8 mx-auto max-w-5xl space-y-8">
                 <div className="flex items-center justify-between flex-wrap gap-4">
                     <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-                        <Trophy className="text-brand-accent" />
+                        <Trophy className="text-brand-primary" />
                         Kelola Door Prize
                     </h1>
                     <div className="flex gap-3 flex-wrap">
@@ -306,7 +306,7 @@ export default function PrizesPage() {
                                     className="w-full rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
                                 >
                                     {PRIZE_CATEGORIES.map((cat) => (
-                                        <option key={cat.value} value={cat.value} className="bg-brand-secondary">{cat.label}</option>
+                                        <option key={cat.value} value={cat.value} className="bg-brand-bgElevated">{cat.label}</option>
                                     ))}
                                 </select>
                             </div>
@@ -375,12 +375,12 @@ export default function PrizesPage() {
                                                         onChange={(e) => setEditingQty(Number(e.target.value))}
                                                         className="w-16 bg-black/50 text-white text-xs px-2 py-1 rounded outline-none"
                                                     />
-                                                    <button onClick={() => updateQuantity(p.id)} className="text-xs bg-brand-primary text-brand-secondary px-2 py-1 rounded font-bold">OK</button>
+                                                    <button onClick={() => updateQuantity(p.id)} className="text-xs bg-brand-primary text-brand-bg px-2 py-1 rounded font-bold">OK</button>
                                                     <button onClick={() => setEditingPrizeId(null)} className="text-xs bg-white/20 text-white px-2 py-1 rounded">Batal</button>
                                                 </div>
                                             )}
                                             {p.allowMultipleWins && (
-                                                <span className="px-2 py-0.5 rounded-full bg-brand-accent/20 text-brand-accent text-xs font-medium border border-brand-accent/30">
+                                                <span className="px-2 py-0.5 rounded-full bg-brand-primary/20 text-brand-primary text-xs font-medium border border-brand-primary/30">
                                                     <RefreshCw size={10} className="inline mr-1" />
                                                     Bisa Menang Ulang
                                                 </span>

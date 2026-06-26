@@ -16,7 +16,7 @@ interface CustomCategory {
 const DEFAULT_CATEGORIES: CustomCategory[] = [
   { value: 'REGULAR', label: 'Regular', color: 'text-gray-300' },
   { value: 'VIP', label: 'VIP', color: 'text-brand-warning' },
-  { value: 'VVIP', label: 'VVIP', color: 'text-brand-accent' },
+  { value: 'VVIP', label: 'VVIP', color: 'text-brand-primary' },
   { value: 'MEDIA', label: 'Media', color: 'text-brand-primarySoft' },
   { value: 'SPONSOR', label: 'Sponsor', color: 'text-brand-success' },
   { value: 'SPEAKER', label: 'Speaker', color: 'text-rose-300' },
@@ -26,13 +26,13 @@ const DEFAULT_CATEGORIES: CustomCategory[] = [
 const COLOR_OPTIONS = [
   { value: 'text-gray-300', label: 'Gray', bg: 'bg-gray-500' },
   { value: 'text-brand-warning', label: 'Amber', bg: 'bg-brand-warning' },
-  { value: 'text-brand-accent', label: 'Purple', bg: 'bg-brand-accent' },
+  { value: 'text-brand-primary', label: 'Gold', bg: 'bg-brand-primary' },
   { value: 'text-brand-primarySoft', label: 'Blue', bg: 'bg-brand-primary' },
   { value: 'text-brand-success', label: 'Green', bg: 'bg-brand-success' },
   { value: 'text-rose-300', label: 'Rose', bg: 'bg-rose-500' },
   { value: 'text-cyan-300', label: 'Cyan', bg: 'bg-cyan-500' },
   { value: 'text-orange-300', label: 'Orange', bg: 'bg-orange-500' },
-  { value: 'text-brand-accent', label: 'Accent', bg: 'bg-brand-accent' },
+  { value: 'text-brand-primarySoft', label: 'Accent', bg: 'bg-brand-primarySoft' },
   { value: 'text-indigo-300', label: 'Indigo', bg: 'bg-indigo-500' },
 ];
 
@@ -369,11 +369,11 @@ export default function EventSettingsPage() {
 
             <Link
               href="/admin/souvenirs"
-              className="flex items-center justify-between p-4 rounded-xl bg-brand-accent/10 border border-brand-accent/20 hover:bg-brand-accent/20 transition-colors group"
+              className="flex items-center justify-between p-4 rounded-xl bg-brand-primary/10 border border-brand-primary/20 hover:bg-brand-primary/20 transition-colors group"
             >
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-brand-accent/20">
-                  <Package size={20} className="text-brand-accent" />
+                <div className="p-2 rounded-lg bg-brand-primary/20">
+                  <Package size={20} className="text-brand-primary" />
                 </div>
                 <div>
                   <div className="font-medium text-white">Souvenir Inventory</div>
@@ -417,7 +417,7 @@ export default function EventSettingsPage() {
           </div>
 
           {error && <div className="text-sm text-brand-danger bg-brand-danger/10 p-3 rounded-lg border border-brand-danger/20">{error}</div>}
-          {message && <div className="text-sm text-brand-accent bg-brand-primary/10 p-3 rounded-lg border border-brand-primary/20">{message}</div>}
+          {message && <div className="text-sm text-brand-primary bg-brand-primary/10 p-3 rounded-lg border border-brand-primary/20">{message}</div>}
 
           <Card variant="glass" className="space-y-8 p-6 md:p-8 surface-elevated">
             <div className="grid gap-6">
@@ -639,7 +639,7 @@ export default function EventSettingsPage() {
                       className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-sm text-white focus:border-brand-primary focus:outline-none"
                     >
                       {COLOR_OPTIONS.map((opt) => (
-                        <option key={opt.value} value={opt.value} className="bg-brand-secondary">
+                        <option key={opt.value} value={opt.value} className="bg-brand-bgElevated">
                           {opt.label}
                         </option>
                       ))}

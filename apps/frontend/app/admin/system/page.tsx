@@ -320,7 +320,7 @@ function SystemPage() {
           <div className="space-y-6">
             {/* Status Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="glass-card p-5">
+              <div className="surface p-5">
                 <div className="flex items-center justify-between mb-3">
                   {getStatusIcon(health.status)}
                   <span className={`text-xs px-2 py-1 rounded-full ${
@@ -335,7 +335,7 @@ function SystemPage() {
                 <p className="text-2xl font-bold text-white capitalize">{health.status}</p>
               </div>
 
-              <div className="glass-card p-5">
+              <div className="surface p-5">
                 <div className="flex items-center justify-between mb-3">
                   <Server className="w-5 h-5 text-brand-primary" />
                 </div>
@@ -343,9 +343,9 @@ function SystemPage() {
                 <p className="text-2xl font-bold text-white">{formatUptime(health.uptime)}</p>
               </div>
 
-              <div className="glass-card p-5">
+              <div className="surface p-5">
                 <div className="flex items-center justify-between mb-3">
-                  <Database className="w-5 h-5 text-brand-accent" />
+                  <Database className="w-5 h-5 text-brand-primary" />
                   <span className={`text-xs px-2 py-1 rounded-full ${
                     health.checks.database.status === 'healthy' 
                       ? 'bg-brand-success/20 text-brand-success' 
@@ -358,7 +358,7 @@ function SystemPage() {
                 <p className="text-2xl font-bold text-white capitalize">{health.checks.database.status}</p>
               </div>
 
-              <div className="glass-card p-5">
+              <div className="surface p-5">
                 <div className="flex items-center justify-between mb-3">
                   <HardDrive className="w-5 h-5 text-brand-warning" />
                   <span className={`text-xs px-2 py-1 rounded-full ${
@@ -377,7 +377,7 @@ function SystemPage() {
             </div>
 
             {/* System Info */}
-            <div className="glass-card p-6">
+            <div className="surface p-6">
               <h3 className="text-lg font-semibold text-white mb-4">System Information</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
@@ -409,12 +409,12 @@ function SystemPage() {
             {/* Log Stats */}
             {logStats && (
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <div className="glass-card p-4">
+                <div className="surface p-4">
                   <p className="text-white/60 text-sm">Total (7 days)</p>
                   <p className="text-2xl font-bold text-white">{logStats.total.toLocaleString()}</p>
                 </div>
                 {Object.entries(logStats.byLevel).slice(0, 4).map(([level, count]) => (
-                  <div key={level} className="glass-card p-4">
+                  <div key={level} className="surface p-4">
                     <p className={`text-sm capitalize ${getLevelColor(level).split(' ')[0]}`}>{level}</p>
                     <p className="text-2xl font-bold text-white">{count.toLocaleString()}</p>
                   </div>
@@ -461,7 +461,7 @@ function SystemPage() {
             </div>
 
             {/* Log Entries */}
-            <div className="glass-card overflow-hidden">
+            <div className="surface overflow-hidden">
               <div className="max-h-[500px] overflow-auto font-mono bg-brand-bgSubtle rounded-lg">
                 {logEntries.length === 0 ? (
                   <div className="p-8 text-center text-white/40">
@@ -506,7 +506,7 @@ function SystemPage() {
             {/* Audit Stats */}
             {auditStats && (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="glass-card p-4">
+                <div className="surface p-4">
                   <p className="text-white/60 text-sm">Total (7 days)</p>
                   <p className="text-2xl font-bold text-white">{auditStats.total.toLocaleString()}</p>
                 </div>
@@ -514,7 +514,7 @@ function SystemPage() {
                   .sort((a, b) => b[1] - a[1])
                   .slice(0, 3)
                   .map(([action, count]) => (
-                    <div key={action} className="glass-card p-4">
+                    <div key={action} className="surface p-4">
                       <p className="text-white/60 text-sm truncate">{action.replace(/_/g, ' ')}</p>
                       <p className="text-2xl font-bold text-white">{count}</p>
                     </div>
@@ -523,7 +523,7 @@ function SystemPage() {
             )}
 
             {/* Audit Entries */}
-            <div className="glass-card overflow-hidden">
+            <div className="surface overflow-hidden">
               <div className="max-h-[500px] overflow-auto">
                 {auditLogs.length === 0 ? (
                   <div className="p-8 text-center text-white/40">
