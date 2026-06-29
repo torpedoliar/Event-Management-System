@@ -16,6 +16,7 @@ import { ReportsModule } from './reports/reports.module';
 import { EmailModule } from './email/email.module';
 import { StationsModule } from './stations/stations.module';
 import { LandingPageModule } from './landing-page/landing-page.module';
+import { TournamentsModule } from './tournaments/tournaments.module';
 import { throttlerConfig } from './common/throttler/throttler.config';
 
 import { HealthController } from './health.controller';
@@ -41,6 +42,7 @@ import { RedisCacheModule } from './common/redis/redis.module';
     EmailModule,
     StationsModule,
     LandingPageModule,
+    TournamentsModule,
   ],
   controllers: [HealthController],
   providers: [
