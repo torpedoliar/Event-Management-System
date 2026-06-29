@@ -1,8 +1,7 @@
 import LandingNav from '@/components/landing/LandingNav';
 import Hero from '@/components/landing/Hero';
-import TrustStrip from '@/components/landing/TrustStrip';
-import Capabilities from '@/components/landing/Capabilities';
-import ProductShowcase from '@/components/landing/ProductShowcase';
+import Features from '@/components/landing/Features';
+import Gallery from '@/components/landing/Gallery';
 import Footer from '@/components/landing/Footer';
 import { apiFetch } from '@/lib/api';
 
@@ -11,42 +10,90 @@ interface EventConfig {
   logoUrl?: string;
 }
 
+interface LandingPageData {
+  hero: {
+    headline: string;
+    subtext: string;
+    ctaPrimary: string;
+    ctaSecondary: string;
+    images: { url: string; alt?: string | null; intervalMs?: number }[];
+  };
+  features: {
+    id: string;
+    title: string;
+    description: string;
+    sortOrder: number;
+    images: { url: string; alt?: string | null; intervalMs?: number }[];
+  }[];
+  gallery: {
+    title: string;
+    subtext: string;
+    images: { url: string; alt?: string | null; caption?: string | null }[];
+  };
+  toggles: {
+    showHero: boolean;
+    showFeatures: boolean;
+    showGallery: boolean;
+    showFooter: boolean;
+  };
+}
+
 async function getEventConfig(): Promise<EventConfig | null> {
   try {
-    const config = await apiFetch<EventConfig>('/config/event');
-    return config;
+    return await apiFetch<EventConfig>('/config/event');
   } catch {
     return null;
   }
 }
 
-interface Logo {
-  name: string;
-  url: string;
-}
-
-async function getLogos(): Promise<Logo[]> {
-  // In a real implementation, this would fetch from an API
-  // For now, return empty array (TrustStrip will skip if no logos)
-  return [];
+async function getLandingPageData(): Promise<LandingPageData | null> {
+  try {
+    return await apiFetch<LandingPageData>('/public/landing-page');
+  } catch {
+    return null;
+  }
 }
 
 export default async function LandingPage() {
-  const [eventConfig, logos] = await Promise.all([
+  const [eventConfig, landingData] = await Promise.all([
     getEventConfig(),
-    getLogos(),
+    getLandingPageData(),
   ]);
+
+  const toggles = landingData?.toggles ?? {
+    showHero: true,
+    showFeatures: true,
+    showGallery: true,
+    showFooter: true,
+  };
 
   return (
     <div className="min-h-screen bg-brand-bg">
       <LandingNav eventConfig={eventConfig} />
       <main>
-        <Hero />
-        <TrustStrip logos={logos} />
-        <Capabilities />
-        <ProductShowcase />
+        {toggles.showHero && (
+          <Hero
+            headline={landingData?.hero.headline}
+            subtext={landingData?.hero.subtext}
+            ctaPrimary={landingData?.hero.ctaPrimary}
+            ctaSecondary={landingData?.hero.ctaSecondary}
+            images={landingData?.hero.images}
+          />
+        )}
+        {toggles.showFeatures && landingData?.features && (
+          <Features features={landingData.features} />
+        )}
+        {toggles.showGallery && landingData?.gallery && (
+          <Gallery
+            title={landingData.gallery.title}
+            subtext={landingData.gallery.subtext}
+            images={landingData.gallery.images}
+          />
+        )}
       </main>
-      <Footer />
+      {toggles.showFooter && (
+        <Footer eventName={eventConfig?.name} logoUrl={eventConfig?.logoUrl} />
+      )}
     </div>
   );
 }

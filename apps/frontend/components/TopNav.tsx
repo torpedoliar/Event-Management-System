@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { UserCheck, LayoutDashboard, Users, Dices, LogOut, LogIn, Info, Menu, X, Package, BarChart3, CalendarDays, Activity } from "lucide-react";
+import { UserCheck, LayoutDashboard, Users, Dices, LogOut, LogIn, Info, Menu, X, Package, BarChart3, CalendarDays, Activity, Layout } from "lucide-react";
 import { apiBase } from "../lib/api";
 import { useSSE } from "../lib/sse-context";
 import EventSelector from "./EventSelector";
@@ -111,6 +111,10 @@ export default function TopNav() {
             <Link className={cls('/admin/settings/event')} href="/admin/settings/event">
               <Activity size={16} />
               <span>Settings</span>
+            </Link>
+            <Link className={cls('/admin/settings/landing-page')} href="/admin/settings/landing-page">
+              <Layout size={16} />
+              <span>Landing</span>
             </Link>
             <Link className={cls('/admin/system')} href="/admin/system">
               <Activity size={16} />
