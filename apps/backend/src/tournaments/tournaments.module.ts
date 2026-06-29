@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '../prisma/prisma.module';
+import { BracketEngineService } from './bracket-engine.service';
 
 @Module({
   imports: [PrismaModule],
-  providers: [],
+  providers: [BracketEngineService],
   controllers: [],
-  exports: [],
+  exports: [BracketEngineService],
 })
 export class TournamentsModule {}
