@@ -7,6 +7,59 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ============================================
+// Tournament System Enums
+// ============================================
+
+enum SportType {
+  FUTSAL
+  BASKET
+  VOLLEY
+  BADMINTON
+  CHESS
+  ESPORTS
+  OTHER
+}
+
+enum TournamentFormat {
+  SINGLE_ELIM
+  DOUBLE_ELIM
+  ROUND_ROBIN
+  SWISS
+  GROUP_KNOCKOUT
+}
+
+enum ParticipantType {
+  TEAM
+  INDIVIDUAL
+}
+
+enum ScoringMode {
+  SIMPLE
+  SETS
+  POINTS
+}
+
+enum SchedulingMode {
+  MANUAL
+  AUTO
+}
+
+enum TournamentStatus {
+  DRAFT
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum MatchStatus {
+  SCHEDULED
+  ONGOING
+  COMPLETED
+  CANCELLED
+  WALKOVER
+}
+
 enum EventBackgroundType {
   NONE
   IMAGE
@@ -45,18 +98,21 @@ model Event {
   allowMultipleCheckinPerCounter Boolean     @default(false) // Allow 1 check-in per admin/counter
   requireCheckinForSouvenir Boolean         @default(true)  // Require check-in before taking souvenir/consumption
   customCategories      Json?                // Array of {value: string, label: string, color: string}
-  
+
   // Offline mode settings
   allowOfflineMode        Boolean            @default(true)  // Enable offline check-in
   offlineSyncInterval     Int                @default(30)    // Seconds between sync attempts
   offlineQueueLimit       Int                @default(500)   // Max pending check-ins before warning
-  
+
   // Lucky Draw Sounds
   rollSoundUrl            String?
   tensionSoundUrl         String?
   winSoundUrl             String?
   grandWinSoundUrl        String?
-  
+
+  // Tournament settings
+  enableTournament        Boolean            @default(false)  // Enable tournament system
+
   createdAt             DateTime             @default(now())
   updatedAt             DateTime             @updatedAt
   guests                Guest[]
@@ -64,6 +120,7 @@ model Event {
   souvenirs             Souvenir[]
   stations              CheckinStation[]
   landingPageConfig     LandingPageConfig?
+  tournaments           Tournament[]
 }
 
 enum GuestCategory {
@@ -113,6 +170,9 @@ model Guest {
   updatedAt       DateTime      @updatedAt
   eventId         String
   event           Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  // Tournament team memberships
+  teamMemberships TeamMember[]
 
   // Performance indexes
   @@index([eventId])
@@ -370,4 +430,177 @@ model LandingPageGalleryImage {
   createdAt   DateTime @default(now())
 
   @@index([configId, sortOrder])
+}
+
+// ============================================
+// Tournament System Models
+// ============================================
+
+model Tournament {
+  id                String              @id @default(uuid())
+  name              String              @db.VarChar(100)
+  sportType         SportType
+  formatType        TournamentFormat
+  participantType   ParticipantType
+  scoringMode       ScoringMode         @default(SIMPLE)
+  scoringConfig     Json?
+  schedulingMode    SchedulingMode      @default(MANUAL)
+  courtCount        Int                 @default(1)
+  status            TournamentStatus    @default(DRAFT)
+  startDate         DateTime?
+  endDate           DateTime?
+  eventId           String?
+  event             Event?              @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  teams             TournamentTeam[]
+  matches           Match[]
+  brackets          TournamentBracket[]
+
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  @@index([eventId])
+  @@index([status])
+}
+
+model TournamentTeam {
+  id              String        @id @default(uuid())
+  tournamentId    String
+  tournament      Tournament    @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  name            String        @db.VarChar(100)
+  logoUrl         String?
+  seed            Int?
+  isEliminated    Boolean       @default(false)
+  wins            Int           @default(0)
+  losses          Int           @default(0)
+  draws           Int           @default(0)
+
+  members         TeamMember[]
+  matchesAsA      Match[]       @relation("TeamA")
+  matchesAsB      Match[]       @relation("TeamB")
+  matchesWon      Match[]       @relation("Winner")
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([tournamentId])
+  @@index([tournamentId, seed])
+}
+
+model TeamMember {
+  id              String          @id @default(uuid())
+  teamId          String
+  team            TournamentTeam  @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  name            String          @db.VarChar(100)
+  photoUrl        String?
+  jerseyNumber    String?         @db.VarChar(10)
+  guestId         String?
+  guest           Guest?          @relation(fields: [guestId], references: [id], onDelete: SetNull)
+  role            String?         @db.VarChar(50)
+
+  matchParticipations MatchParticipant[]
+
+  createdAt       DateTime        @default(now())
+
+  @@index([teamId])
+  @@index([guestId])
+}
+
+model Match {
+  id              String          @id @default(uuid())
+  tournamentId    String
+  tournament      Tournament      @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  roundId         String?
+  round           BracketRound?   @relation(fields: [roundId], references: [id], onDelete: SetNull)
+  matchNumber     Int
+  teamAId         String?
+  teamA           TournamentTeam? @relation("TeamA", fields: [teamAId], references: [id], onDelete: SetNull)
+  teamBId         String?
+  teamB           TournamentTeam? @relation("TeamB", fields: [teamBId], references: [id], onDelete: SetNull)
+  scoreA          Int?
+  scoreB          Int?
+  setsA           Int?
+  setsB           Int?
+  winnerId        String?
+  winner          TournamentTeam? @relation("Winner", fields: [winnerId], references: [id], onDelete: SetNull)
+  status          MatchStatus     @default(SCHEDULED)
+  scheduledAt     DateTime?
+  startedAt       DateTime?
+  completedAt     DateTime?
+  court           String?         @db.VarChar(50)
+  nextMatchId     String?
+  nextMatch       Match?          @relation("NextMatch", fields: [nextMatchId], references: [id], onDelete: SetNull)
+  nextMatchSlot   String?         @db.VarChar(1)
+
+  sets            MatchSet[]
+  participants    MatchParticipant[]
+  previousMatches Match[]          @relation("NextMatch")
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([tournamentId])
+  @@index([tournamentId, status])
+  @@index([roundId])
+  @@index([nextMatchId])
+}
+
+model MatchSet {
+  id              String    @id @default(uuid())
+  matchId         String
+  match           Match     @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  setNumber       Int
+  scoreA          Int
+  scoreB          Int
+
+  createdAt       DateTime  @default(now())
+
+  @@index([matchId])
+  @@unique([matchId, setNumber])
+}
+
+model MatchParticipant {
+  id              String      @id @default(uuid())
+  matchId         String
+  match           Match       @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  teamId          String
+  memberId        String
+  member          TeamMember  @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  isStarter       Boolean     @default(true)
+
+  createdAt       DateTime    @default(now())
+
+  @@index([matchId])
+  @@index([teamId])
+  @@index([memberId])
+}
+
+model TournamentBracket {
+  id              String        @id @default(uuid())
+  tournamentId    String
+  tournament      Tournament    @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  type            String        @default("WINNER") @db.VarChar(20)
+
+  rounds          BracketRound[]
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([tournamentId])
+  @@unique([tournamentId, type])
+}
+
+model BracketRound {
+  id              String            @id @default(uuid())
+  bracketId       String
+  bracket         TournamentBracket @relation(fields: [bracketId], references: [id], onDelete: Cascade)
+  roundNumber     Int
+  name            String?           @db.VarChar(50)
+
+  matches         Match[]
+
+  createdAt       DateTime          @default(now())
+
+  @@index([bracketId])
+  @@unique([bracketId, roundNumber])
 }
