@@ -15,6 +15,7 @@ import { AuditModule } from './common/audit';
 import { ReportsModule } from './reports/reports.module';
 import { EmailModule } from './email/email.module';
 import { StationsModule } from './stations/stations.module';
+import { LandingPageModule } from './landing-page/landing-page.module';
 import { throttlerConfig } from './common/throttler/throttler.config';
 
 import { HealthController } from './health.controller';
@@ -39,6 +40,7 @@ import { RedisCacheModule } from './common/redis/redis.module';
     ReportsModule,
     EmailModule,
     StationsModule,
+    LandingPageModule,
   ],
   controllers: [HealthController],
   providers: [

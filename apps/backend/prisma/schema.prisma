@@ -63,6 +63,7 @@ model Event {
   prizes                Prize[]
   souvenirs             Souvenir[]
   stations              CheckinStation[]
+  landingPageConfig     LandingPageConfig?
 }
 
 enum GuestCategory {
@@ -285,4 +286,88 @@ model EmailLog {
   @@index([guestId])
   @@index([eventId])
   @@index([status])
+}
+
+model LandingPageConfig {
+  id                String   @id @default(uuid())
+  eventId           String   @unique
+  event             Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  // Hero copy
+  heroHeadline      String   @default("Enterprise event management, without the noise.")
+  heroSubtext       String   @default("Check-in, display, and analytics in one system. Built for operations teams.")
+  heroCtaPrimary    String   @default("Open Display")
+  heroCtaSecondary  String   @default("Admin Login")
+
+  // Section toggles
+  showHero          Boolean  @default(true)
+  showFeatures      Boolean  @default(true)
+  showGallery       Boolean  @default(true)
+  showFooter        Boolean  @default(true)
+
+  // Gallery copy
+  galleryTitle      String   @default("Past Events")
+  gallerySubtext    String   @default("Moments from events we have powered.")
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  heroImages        LandingPageHeroImage[]
+  features          LandingPageFeature[]
+  galleryImages     LandingPageGalleryImage[]
+}
+
+model LandingPageHeroImage {
+  id          String   @id @default(uuid())
+  configId    String
+  config      LandingPageConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
+  url         String
+  alt         String?
+  sortOrder   Int      @default(0)
+  intervalMs  Int      @default(5000)
+  createdAt   DateTime @default(now())
+
+  @@index([configId, sortOrder])
+}
+
+model LandingPageFeature {
+  id          String   @id @default(uuid())
+  configId    String
+  config      LandingPageConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
+  title       String
+  description String   @db.Text
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  images      LandingPageFeatureImage[]
+
+  @@index([configId, sortOrder])
+}
+
+model LandingPageFeatureImage {
+  id          String   @id @default(uuid())
+  featureId   String
+  feature     LandingPageFeature @relation(fields: [featureId], references: [id], onDelete: Cascade)
+  url         String
+  alt         String?
+  sortOrder   Int      @default(0)
+  intervalMs  Int      @default(5000)
+  createdAt   DateTime @default(now())
+
+  @@index([featureId, sortOrder])
+}
+
+model LandingPageGalleryImage {
+  id          String   @id @default(uuid())
+  configId    String
+  config      LandingPageConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
+  url         String
+  alt         String?
+  caption     String?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  @@index([configId, sortOrder])
 }

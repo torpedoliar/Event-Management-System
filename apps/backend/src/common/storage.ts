@@ -72,3 +72,17 @@ export const soundsStorage = () =>
     ) => cb(null, uniqueName(file.originalname)),
   });
 
+export const landingPageStorage = (subfolder: 'hero' | 'features' | 'gallery') =>
+  diskStorage({
+    destination: (
+      _req: Request,
+      _file: Express.Multer.File,
+      cb: (error: Error | null, destination: string) => void,
+    ) => cb(null, ensureDir(`uploads/landing/${subfolder}`)),
+    filename: (
+      _req: Request,
+      file: Express.Multer.File,
+      cb: (error: Error | null, filename: string) => void,
+    ) => cb(null, uniqueName(file.originalname)),
+  });
+
