@@ -1,146 +1,54 @@
 "use client";
 
-import React from 'react';
-import { TournamentStatus, MatchStatus } from '@/types/tournament.types';
-import { Trophy, Clock, CheckCircle, XCircle, Play, Pause } from 'lucide-react';
-
-type StatusType = string;
-
-interface StatusConfig {
-  label: string;
-  icon: React.ReactNode;
-  bg: string;
-  text: string;
-}
+import {
+  TournamentStatus,
+  MatchStatus,
+  TournamentStatusLabels,
+  MatchStatusLabels,
+} from "@/types/tournament.types";
+import Badge from "@/components/ui/Badge";
 
 interface StatusPillProps {
-  status: StatusType;
+  status: TournamentStatus | MatchStatus | string;
+  size?: "sm" | "md" | "lg";
   isDarkMode?: boolean;
-  size?: 'sm' | 'md' | 'lg';
 }
 
-// Use unique string keys to avoid collisions since some enum values overlap
-const statusConfig: Record<string, StatusConfig> = {
-  // Tournament statuses (prefixed)
-  'tournament:DRAFT': {
-    label: 'Draft',
-    icon: <Clock className="w-3 h-3" />,
-    bg: 'bg-gray-100 dark:bg-gray-800',
-    text: 'text-gray-700 dark:text-gray-300',
-  },
-  'tournament:IN_PROGRESS': {
-    label: 'In Progress',
-    icon: <Play className="w-3 h-3" />,
-    bg: 'bg-green-100 dark:bg-green-900',
-    text: 'text-green-700 dark:text-green-300',
-  },
-  'tournament:COMPLETED': {
-    label: 'Completed',
-    icon: <CheckCircle className="w-3 h-3" />,
-    bg: 'bg-emerald-100 dark:bg-emerald-900',
-    text: 'text-emerald-700 dark:text-emerald-300',
-  },
-  'tournament:CANCELLED': {
-    label: 'Cancelled',
-    icon: <XCircle className="w-3 h-3" />,
-    bg: 'bg-red-100 dark:bg-red-900',
-    text: 'text-red-700 dark:text-red-300',
-  },
-  // Match statuses (prefixed)
-  'match:SCHEDULED': {
-    label: 'Scheduled',
-    icon: <Clock className="w-3 h-3" />,
-    bg: 'bg-gray-100 dark:bg-gray-800',
-    text: 'text-gray-700 dark:text-gray-300',
-  },
-  'match:ONGOING': {
-    label: 'Live',
-    icon: <Play className="w-3 h-3" />,
-    bg: 'bg-green-100 dark:bg-green-900',
-    text: 'text-green-700 dark:text-green-300',
-  },
-  'match:COMPLETED': {
-    label: 'Completed',
-    icon: <CheckCircle className="w-3 h-3" />,
-    bg: 'bg-emerald-100 dark:bg-emerald-900',
-    text: 'text-emerald-700 dark:text-emerald-300',
-  },
-  'match:CANCELLED': {
-    label: 'Cancelled',
-    icon: <XCircle className="w-3 h-3" />,
-    bg: 'bg-red-100 dark:bg-red-900',
-    text: 'text-red-700 dark:text-red-300',
-  },
-  'match:WALKOVER': {
-    label: 'Walkover',
-    icon: <Pause className="w-3 h-3" />,
-    bg: 'bg-yellow-100 dark:bg-yellow-900',
-    text: 'text-yellow-700 dark:text-yellow-300',
-  },
-  // Legacy/alternate string labels (common in APIs)
-  'LIVE': {
-    label: 'Live',
-    icon: <Play className="w-3 h-3" />,
-    bg: 'bg-green-100 dark:bg-green-900',
-    text: 'text-green-700 dark:text-green-300',
-  },
-  'REGISTRATION': {
-    label: 'Registration Open',
-    icon: <Trophy className="w-3 h-3" />,
-    bg: 'bg-blue-100 dark:bg-blue-900',
-    text: 'text-blue-700 dark:text-blue-300',
-  },
-  'PAUSED': {
-    label: 'Paused',
-    icon: <Pause className="w-3 h-3" />,
-    bg: 'bg-yellow-100 dark:bg-yellow-900',
-    text: 'text-yellow-700 dark:text-yellow-300',
-  },
+const statusMap: Record<string, { variant: "neutral" | "success" | "warning" | "danger" | "primary"; label: string }> = {
+  // Tournament statuses
+  'tournament:DRAFT': { variant: "neutral", label: TournamentStatusLabels[TournamentStatus.DRAFT] },
+  'tournament:IN_PROGRESS': { variant: "primary", label: TournamentStatusLabels[TournamentStatus.IN_PROGRESS] },
+  'tournament:COMPLETED': { variant: "success", label: TournamentStatusLabels[TournamentStatus.COMPLETED] },
+  'tournament:CANCELLED': { variant: "danger", label: TournamentStatusLabels[TournamentStatus.CANCELLED] },
+  // Match statuses
+  'match:SCHEDULED': { variant: "neutral", label: MatchStatusLabels[MatchStatus.SCHEDULED] },
+  'match:ONGOING': { variant: "primary", label: MatchStatusLabels[MatchStatus.ONGOING] },
+  'match:COMPLETED': { variant: "success", label: MatchStatusLabels[MatchStatus.COMPLETED] },
+  'match:CANCELLED': { variant: "danger", label: MatchStatusLabels[MatchStatus.CANCELLED] },
+  'match:WALKOVER': { variant: "warning", label: MatchStatusLabels[MatchStatus.WALKOVER] },
+  // Legacy
+  'LIVE': { variant: "primary", label: 'Live' },
+  'REGISTRATION': { variant: "primary", label: 'Registration Open' },
+  'PAUSED': { variant: "warning", label: 'Paused' },
 };
 
-// Helper function to get config key from status
-function getConfigKey(status: StatusType): string {
-  // Try exact match first
-  if (statusConfig[status]) {
-    return status;
-  }
-
-  // Try prefixed versions
-  if (Object.values(TournamentStatus).includes(status as TournamentStatus)) {
-    return `tournament:${status}`;
-  }
-  if (Object.values(MatchStatus).includes(status as MatchStatus)) {
-    return `match:${status}`;
-  }
-
+function getConfigKey(status: string): string {
+  if (statusMap[status]) return status;
+  if (Object.values(TournamentStatus).includes(status as TournamentStatus)) return `tournament:${status}`;
+  if (Object.values(MatchStatus).includes(status as MatchStatus)) return `match:${status}`;
   return status;
 }
 
-const sizeClasses = {
-  sm: 'px-2 py-0.5 text-xs gap-1',
-  md: 'px-2.5 py-1 text-xs gap-1.5',
-  lg: 'px-3 py-1.5 text-sm gap-2',
-};
-
-export function StatusPill({ status, isDarkMode = false, size = 'md' }: StatusPillProps) {
+export function StatusPill({ status, size = "md" }: StatusPillProps) {
   const configKey = getConfigKey(status);
-  const config = statusConfig[configKey] || {
-    label: status,
-    icon: null,
-    bg: 'bg-gray-100 dark:bg-gray-800',
-    text: 'text-gray-700 dark:text-gray-300',
-  };
+  const config = statusMap[configKey] || { variant: "neutral", label: status };
+  const sizeClass = size === "sm" ? "text-[10px] px-2 py-0.5" : size === "lg" ? "text-sm px-3 py-1" : "text-xs px-2.5 py-0.5";
 
   return (
-    <span
-      className={`
-        inline-flex items-center font-medium rounded-full
-        ${config.bg} ${config.text}
-        ${sizeClasses[size]}
-      `}
-    >
-      {config.icon}
+    <Badge variant={config.variant} className={sizeClass}>
       {config.label}
-    </span>
+    </Badge>
   );
 }
+
+export default StatusPill;
