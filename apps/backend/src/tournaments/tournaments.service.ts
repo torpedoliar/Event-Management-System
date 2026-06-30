@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateTournamentDto } from './dto/create-tournament.dto';
 import { UpdateTournamentDto } from './dto/update-tournament.dto';
 import { CreateTeamDto, CreateTeamMemberDto } from './dto/create-team.dto';
+import { ImportTeamsDto, ImportTeamDto } from './dto/import-teams.dto';
 import { TournamentStatus } from './types/tournament.types';
 import { BracketEngineService } from './bracket-engine.service';
 
@@ -243,6 +244,67 @@ export class TournamentsService {
     }
 
     return this.prisma.teamMember.delete({ where: { id: memberId } });
+  }
+
+  // ============================================
+  // Bulk Import
+  // ============================================
+
+  async importTeams(tournamentId: string, importDto: ImportTeamsDto) {
+    // Verify tournament exists
+    await this.findOne(tournamentId);
+
+    const results = {
+      imported: 0,
+      skipped: 0,
+      errors: [] as string[],
+      teams: [] as any[],
+    };
+
+    for (const teamData of importDto.teams) {
+      try {
+        // Check for duplicate team name
+        const existingTeam = await this.prisma.tournamentTeam.findFirst({
+          where: {
+            tournamentId,
+            name: teamData.name,
+          },
+        });
+
+        if (existingTeam) {
+          results.skipped++;
+          results.errors.push(`Team "${teamData.name}" already exists, skipping`);
+          continue;
+        }
+
+        const team = await this.prisma.tournamentTeam.create({
+          data: {
+            tournamentId,
+            name: teamData.name,
+            logoUrl: teamData.logoUrl,
+            seed: teamData.seed,
+            members: teamData.members
+              ? {
+                  create: teamData.members.map((member) => ({
+                    name: member.name,
+                    jerseyNumber: member.jerseyNumber,
+                    guestId: member.guestId,
+                    role: member.role,
+                  })),
+                }
+              : undefined,
+          },
+          include: { members: true },
+        });
+
+        results.teams.push(team);
+        results.imported++;
+      } catch (error) {
+        results.errors.push(`Error importing team "${teamData.name}": ${error}`);
+      }
+    }
+
+    return results;
   }
 
   // ============================================

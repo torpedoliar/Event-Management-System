@@ -16,6 +16,7 @@ import { CreateTournamentDto } from './dto/create-tournament.dto';
 import { UpdateTournamentDto } from './dto/update-tournament.dto';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UpdateScoreDto } from './dto/update-score.dto';
+import { ImportTeamsDto } from './dto/import-teams.dto';
 
 @Controller('api/tournaments')
 @UseGuards(JwtAuthGuard)
@@ -97,6 +98,18 @@ export class TournamentsController {
   @Delete('teams/members/:memberId')
   removeTeamMember(@Param('memberId') memberId: string) {
     return this.tournaments.removeTeamMember(memberId);
+  }
+
+  // ============================================
+  // Bulk Import Endpoints
+  // ============================================
+
+  @Post(':id/import-teams')
+  importTeams(
+    @Param('id') tournamentId: string,
+    @Body() dto: ImportTeamsDto,
+  ) {
+    return this.tournaments.importTeams(tournamentId, dto);
   }
 
   // ============================================
