@@ -15,7 +15,14 @@ export type ServerEvent =
   | { type: 'prize_uncollected'; data: any }
   | { type: 'guest_created_souvenir'; data: any }
   | { type: 'event_change'; data: any }
-  | { type: 'sync_complete'; data: any };
+  | { type: 'sync_complete'; data: any }
+  // Tournament events
+  | { type: 'match_score_update'; data: any }
+  | { type: 'match_started'; data: any }
+  | { type: 'match_completed'; data: any }
+  | { type: 'match_cancelled'; data: any }
+  | { type: 'bracket_updated'; data: any }
+  | { type: 'tournament_updated'; data: any };
 
 const emitter = new EventEmitter();
 emitter.setMaxListeners(1000);

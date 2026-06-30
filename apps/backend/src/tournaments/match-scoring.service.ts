@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { MatchStatus } from './types/tournament.types';
 import { UpdateScoreDto } from './dto/update-score.dto';
+import { emitEvent } from '../common/sse';
 
 @Injectable()
 export class MatchScoringService {
@@ -65,6 +66,18 @@ export class MatchScoringService {
       await this.updateTeamStats(match.teamAId, match.teamBId, winnerId);
     }
 
+    // Emit SSE event
+    emitEvent({
+      type: winnerId ? 'match_completed' : 'match_score_update',
+      data: updatedMatch,
+    });
+
+    // Emit bracket update
+    emitEvent({
+      type: 'bracket_updated',
+      data: { tournamentId: match.tournamentId },
+    });
+
     return updatedMatch;
   }
 
@@ -77,13 +90,21 @@ export class MatchScoringService {
       throw new NotFoundException('Match not found');
     }
 
-    return this.prisma.match.update({
+    const updatedMatch = await this.prisma.match.update({
       where: { id: matchId },
       data: {
         status: MatchStatus.ONGOING,
         startedAt: new Date(),
       },
     });
+
+    // Emit SSE event
+    emitEvent({
+      type: 'match_started',
+      data: updatedMatch,
+    });
+
+    return updatedMatch;
   }
 
   async cancelMatch(matchId: string) {
@@ -95,13 +116,21 @@ export class MatchScoringService {
       throw new NotFoundException('Match not found');
     }
 
-    return this.prisma.match.update({
+    const updatedMatch = await this.prisma.match.update({
       where: { id: matchId },
       data: {
         status: MatchStatus.CANCELLED,
         completedAt: new Date(),
       },
     });
+
+    // Emit SSE event
+    emitEvent({
+      type: 'match_cancelled',
+      data: updatedMatch,
+    });
+
+    return updatedMatch;
   }
 
   async awardWalkover(matchId: string, winnerId: string) {
