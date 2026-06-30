@@ -117,7 +117,25 @@ export class LandingPageService {
 
   async getAdminLandingPage() {
     const eventId = await this.getActiveEventId();
-    return this.getOrCreateConfig(eventId);
+    const config = await this.getOrCreateConfig(eventId);
+
+    return {
+      config: {
+        heroHeadline: config.heroHeadline,
+        heroSubtext: config.heroSubtext,
+        heroCtaPrimary: config.heroCtaPrimary,
+        heroCtaSecondary: config.heroCtaSecondary,
+        galleryTitle: config.galleryTitle,
+        gallerySubtext: config.gallerySubtext,
+        showHero: config.showHero,
+        showFeatures: config.showFeatures,
+        showGallery: config.showGallery,
+        showFooter: config.showFooter,
+      },
+      heroImages: config.heroImages,
+      features: config.features,
+      galleryImages: config.galleryImages,
+    };
   }
 
   async updateConfig(dto: UpdateLandingConfigDto) {

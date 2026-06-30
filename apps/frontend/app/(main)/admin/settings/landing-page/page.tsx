@@ -50,8 +50,6 @@ interface LandingConfig {
   heroSubtext: string;
   heroCtaPrimary: string;
   heroCtaSecondary: string;
-  featureSectionTitle: string;
-  featureSectionSubtext: string;
   galleryTitle: string;
   gallerySubtext: string;
   showHero: boolean;
@@ -73,8 +71,6 @@ const DEFAULT_CONFIG: LandingConfig = {
   heroSubtext: 'Join us for an unforgettable experience',
   heroCtaPrimary: 'Register Now',
   heroCtaSecondary: 'Learn More',
-  featureSectionTitle: 'Why Attend?',
-  featureSectionSubtext: 'Discover what makes this event special',
   galleryTitle: 'Event Gallery',
   gallerySubtext: 'Moments from our previous events',
   showHero: true,
@@ -499,25 +495,6 @@ export default function LandingPageSettingsPage() {
 
             {expandedSections.features && (
               <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label className="mb-2">Section Title</Label>
-                    <Input
-                      value={config.featureSectionTitle}
-                      onChange={(e) => setConfig({ ...config, featureSectionTitle: e.target.value })}
-                      placeholder="Why Attend?"
-                    />
-                  </div>
-                  <div>
-                    <Label className="mb-2">Section Subtext</Label>
-                    <Input
-                      value={config.featureSectionSubtext}
-                      onChange={(e) => setConfig({ ...config, featureSectionSubtext: e.target.value })}
-                      placeholder="Discover what makes this event special"
-                    />
-                  </div>
-                </div>
-
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <Label>Feature Cards</Label>
