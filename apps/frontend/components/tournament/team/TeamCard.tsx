@@ -1,45 +1,34 @@
 "use client";
 
-import React from 'react';
-import type { TournamentTeam } from '@/types/tournament.types';
-import { TeamLogo } from './TeamLogo';
-import { TeamMemberList } from './TeamMemberList';
+import React from "react";
+import type { TournamentTeam } from "@/types/tournament.types";
+import { TeamLogo } from "./TeamLogo";
+import { TeamMemberList } from "./TeamMemberList";
 
 interface TeamCardProps {
   team: TournamentTeam;
   onClick?: () => void;
-  isDarkMode?: boolean;
   showDetails?: boolean;
 }
 
-export function TeamCard({
-  team,
-  onClick,
-  isDarkMode = false,
-  showDetails = false,
-}: TeamCardProps) {
+export function TeamCard({ team, onClick, showDetails = false }: TeamCardProps) {
   return (
     <div
-      className={`
-        rounded-lg border ${
-          isDarkMode
-            ? 'bg-gray-800 border-gray-700'
-            : 'bg-white border-gray-200'
-        }
-        shadow-sm overflow-hidden
-        ${onClick ? 'cursor-pointer hover:shadow-md transition-shadow' : ''}
-      `}
+      className={cn(
+        "rounded-xl border bg-brand-surface shadow-sm overflow-hidden",
+        onClick ? "cursor-pointer hover:border-brand-primary/50 hover:shadow-md transition-all hover:-translate-y-0.5" : "border-brand-border"
+      )}
       onClick={onClick}
     >
-      <div className="p-4">
-        <div className="flex items-center gap-3">
+      <div className="p-5">
+        <div className="flex items-center gap-4">
           <TeamLogo src={team.logoUrl} name={team.name} size="lg" />
           <div className="flex-1 min-w-0">
-            <h3 className={`font-semibold truncate ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <h3 className="font-bold text-lg text-brand-text truncate">
               {team.name}
             </h3>
             {team.seed && (
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              <p className="text-sm font-medium text-brand-textMuted">
                 Seed #{team.seed}
               </p>
             )}
@@ -47,44 +36,48 @@ export function TeamCard({
         </div>
 
         {/* Stats */}
-        <div className="mt-4 flex gap-4">
-          <div className="text-center">
-            <p className={`text-2xl font-bold ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>
+        <div className="mt-6 flex gap-2">
+          <div className="flex-1 text-center bg-brand-success/10 rounded-lg p-2">
+            <p className="text-xl font-bold text-brand-success leading-none mb-1">
               {team.wins}
             </p>
-            <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Wins</p>
+            <p className="text-[10px] uppercase font-bold text-brand-success/70 tracking-wider">Wins</p>
           </div>
-          <div className="text-center">
-            <p className={`text-2xl font-bold ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>
+          <div className="flex-1 text-center bg-brand-danger/10 rounded-lg p-2">
+            <p className="text-xl font-bold text-brand-danger leading-none mb-1">
               {team.losses}
             </p>
-            <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Losses</p>
+            <p className="text-[10px] uppercase font-bold text-brand-danger/70 tracking-wider">Losses</p>
           </div>
-          <div className="text-center">
-            <p className={`text-2xl font-bold ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+          <div className="flex-1 text-center bg-brand-surface border border-brand-border rounded-lg p-2">
+            <p className="text-xl font-bold text-brand-textMuted leading-none mb-1">
               {team.draws}
             </p>
-            <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Draws</p>
+            <p className="text-[10px] uppercase font-bold text-brand-textMuted tracking-wider">Draws</p>
           </div>
         </div>
 
         {/* Members */}
         {showDetails && team.members && team.members.length > 0 && (
-          <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-            <h4 className={`text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+          <div className="mt-6 pt-5 border-t border-brand-border">
+            <h4 className="text-sm font-semibold mb-3 text-brand-text">
               Members ({team.members.length})
             </h4>
-            <TeamMemberList members={team.members} isDarkMode={isDarkMode} compact />
+            <TeamMemberList members={team.members} compact />
           </div>
         )}
       </div>
 
       {/* Eliminated badge */}
       {team.isEliminated && (
-        <div className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-xs font-medium px-4 py-1.5">
+        <div className="bg-brand-danger/10 text-brand-danger text-xs font-bold uppercase tracking-wider px-5 py-2 text-center border-t border-brand-danger/20">
           Eliminated
         </div>
       )}
     </div>
   );
+}
+
+function cn(...classes: (string | false | null | undefined)[]) {
+  return classes.filter(Boolean).join(" ");
 }
