@@ -1,10 +1,19 @@
 "use client";
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { useSSE } from '@/lib/sse-context';
 import type { Match, Tournament, TournamentEvent } from '../types/tournament.types';
 
 type TournamentEventHandler = (event: TournamentEvent) => void;
+
+interface TournamentSSEHandlers {
+  onMatchScoreUpdate: TournamentEventHandler | null;
+  onMatchStarted: TournamentEventHandler | null;
+  onMatchCompleted: TournamentEventHandler | null;
+  onMatchCancelled: TournamentEventHandler | null;
+  onBracketUpdated: TournamentEventHandler | null;
+  onTournamentUpdated: TournamentEventHandler | null;
+}
 
 /**
  * Hook for subscribing to tournament real-time events
@@ -13,144 +22,153 @@ type TournamentEventHandler = (event: TournamentEvent) => void;
 export function useTournamentSSE(tournamentId: string) {
   const { addEventListener, removeEventListener, connected } = useSSE();
 
-  // Callbacks refs to avoid re-subscribing on every render
-  const handlersRef = {
-    current: {
-      onMatchScoreUpdate: null as TournamentEventHandler | null,
-      onMatchStarted: null as TournamentEventHandler | null,
-      onMatchCompleted: null as TournamentEventHandler | null,
-      onMatchCancelled: null as TournamentEventHandler | null,
-      onBracketUpdated: null as TournamentEventHandler | null,
-      onTournamentUpdated: null as TournamentEventHandler | null,
-    },
-  };
+  // Stable handlers ref - persists across renders without causing re-subscriptions
+  const handlersRef = useRef<TournamentSSEHandlers>({
+    onMatchScoreUpdate: null,
+    onMatchStarted: null,
+    onMatchCompleted: null,
+    onMatchCancelled: null,
+    onBracketUpdated: null,
+    onTournamentUpdated: null,
+  });
+
+  // Track active subscriptions for cleanup
+  const subscriptionsRef = useRef<Array<() => void>>([]);
 
   const subscribe = useCallback(
     (eventType: string, handler: TournamentEventHandler) => {
       const wrappedHandler = (e: MessageEvent) => {
         try {
-          const data = JSON.parse(e.data);
-          handler({ type: eventType as any, data } as TournamentEvent);
+          // Handle both string and object data
+          const rawData = e.data;
+          const data = typeof rawData === 'string' ? JSON.parse(rawData) : rawData;
+          handler({ type: eventType as TournamentEvent['type'], data });
         } catch (err) {
           console.error('[TournamentSSE] Failed to parse event data:', err);
         }
       };
       addEventListener(eventType, wrappedHandler);
-      return wrappedHandler;
+      return () => removeEventListener(eventType, wrappedHandler);
     },
-    [addEventListener]
+    [addEventListener, removeEventListener]
   );
 
-  const unsubscribe = useCallback(
-    (eventType: string, handler: (e: MessageEvent) => void) => {
-      removeEventListener(eventType, handler);
-    },
-    [removeEventListener]
-  );
-
-  // Subscribe to tournament-specific events
+  // Main subscription effect - handles tournament-specific filtering
   useEffect(() => {
-    const handlers: Array<() => void> = [];
+    const unsubs: Array<() => void> = [];
 
     // Filter bracket updates by tournamentId
-    const bracketHandler = subscribe('bracket_updated', (event) => {
+    const bracketHandler = (event: TournamentEvent) => {
       const data = event.data as { tournamentId: string };
       if (data.tournamentId === tournamentId) {
         handlersRef.current.onBracketUpdated?.(event);
       }
-    });
-    handlers.push(() => unsubscribe('bracket_updated', bracketHandler));
+    };
+    const bracketUnsub = subscribe('bracket_updated', bracketHandler);
+    unsubs.push(bracketUnsub);
 
-    // Tournament updates
-    const tournamentHandler = subscribe('tournament_updated', (event) => {
+    // Tournament updates - filter by tournamentId
+    const tournamentHandler = (event: TournamentEvent) => {
       const data = event.data as Tournament;
       if (data.id === tournamentId) {
         handlersRef.current.onTournamentUpdated?.(event);
       }
-    });
-    handlers.push(() => unsubscribe('tournament_updated', tournamentHandler));
+    };
+    const tournamentUnsub = subscribe('tournament_updated', tournamentHandler);
+    unsubs.push(tournamentUnsub);
+
+    subscriptionsRef.current = unsubs;
 
     return () => {
-      handlers.forEach((unsub) => unsub());
+      unsubs.forEach(unsub => unsub());
+      subscriptionsRef.current = [];
     };
-  }, [tournamentId, subscribe, unsubscribe]);
+  }, [tournamentId, subscribe]);
+
+  /**
+   * Subscribe to match score updates
+   */
+  const onMatchScoreUpdate = useCallback((handler: TournamentEventHandler) => {
+    handlersRef.current.onMatchScoreUpdate = handler;
+    const unsub = subscribe('match_score_update', handler);
+    return () => {
+      handlersRef.current.onMatchScoreUpdate = null;
+      unsub();
+    };
+  }, [subscribe]);
+
+  /**
+   * Subscribe to match started events
+   */
+  const onMatchStarted = useCallback((handler: TournamentEventHandler) => {
+    handlersRef.current.onMatchStarted = handler;
+    const unsub = subscribe('match_started', handler);
+    return () => {
+      handlersRef.current.onMatchStarted = null;
+      unsub();
+    };
+  }, [subscribe]);
+
+  /**
+   * Subscribe to match completed events
+   */
+  const onMatchCompleted = useCallback((handler: TournamentEventHandler) => {
+    handlersRef.current.onMatchCompleted = handler;
+    const unsub = subscribe('match_completed', handler);
+    return () => {
+      handlersRef.current.onMatchCompleted = null;
+      unsub();
+    };
+  }, [subscribe]);
+
+  /**
+   * Subscribe to match cancelled events
+   */
+  const onMatchCancelled = useCallback((handler: TournamentEventHandler) => {
+    handlersRef.current.onMatchCancelled = handler;
+    const unsub = subscribe('match_cancelled', handler);
+    return () => {
+      handlersRef.current.onMatchCancelled = null;
+      unsub();
+    };
+  }, [subscribe]);
+
+  /**
+   * Subscribe to bracket updates (filtered by tournamentId)
+   * Note: Already subscribed in main effect, this just registers the callback
+   */
+  const onBracketUpdated = useCallback((handler: TournamentEventHandler) => {
+    handlersRef.current.onBracketUpdated = handler;
+    return () => {
+      handlersRef.current.onBracketUpdated = null;
+    };
+  }, []);
+
+  /**
+   * Subscribe to tournament updates (filtered by tournamentId)
+   * Note: Already subscribed in main effect, this just registers the callback
+   */
+  const onTournamentUpdated = useCallback((handler: TournamentEventHandler) => {
+    handlersRef.current.onTournamentUpdated = handler;
+    return () => {
+      handlersRef.current.onTournamentUpdated = null;
+    };
+  }, []);
 
   return {
     connected,
-    /**
-     * Subscribe to match score updates
-     */
-    onMatchScoreUpdate: useCallback((handler: TournamentEventHandler) => {
-      handlersRef.current.onMatchScoreUpdate = handler;
-      const wrappedHandler = subscribe('match_score_update', handler);
-      return () => {
-        handlersRef.current.onMatchScoreUpdate = null;
-        unsubscribe('match_score_update', wrappedHandler);
-      };
-    }, [subscribe, unsubscribe]),
-
-    /**
-     * Subscribe to match started events
-     */
-    onMatchStarted: useCallback((handler: TournamentEventHandler) => {
-      handlersRef.current.onMatchStarted = handler;
-      const wrappedHandler = subscribe('match_started', handler);
-      return () => {
-        handlersRef.current.onMatchStarted = null;
-        unsubscribe('match_started', wrappedHandler);
-      };
-    }, [subscribe, unsubscribe]),
-
-    /**
-     * Subscribe to match completed events
-     */
-    onMatchCompleted: useCallback((handler: TournamentEventHandler) => {
-      handlersRef.current.onMatchCompleted = handler;
-      const wrappedHandler = subscribe('match_completed', handler);
-      return () => {
-        handlersRef.current.onMatchCompleted = null;
-        unsubscribe('match_completed', wrappedHandler);
-      };
-    }, [subscribe, unsubscribe]),
-
-    /**
-     * Subscribe to match cancelled events
-     */
-    onMatchCancelled: useCallback((handler: TournamentEventHandler) => {
-      handlersRef.current.onMatchCancelled = handler;
-      const wrappedHandler = subscribe('match_cancelled', handler);
-      return () => {
-        handlersRef.current.onMatchCancelled = null;
-        unsubscribe('match_cancelled', wrappedHandler);
-      };
-    }, [subscribe, unsubscribe]),
-
-    /**
-     * Subscribe to bracket updates (filtered by tournamentId)
-     */
-    onBracketUpdated: useCallback((handler: TournamentEventHandler) => {
-      handlersRef.current.onBracketUpdated = handler;
-      // Already subscribed in useEffect, just update the ref
-      return () => {
-        handlersRef.current.onBracketUpdated = null;
-      };
-    }, []),
-
-    /**
-     * Subscribe to tournament updates (filtered by tournamentId)
-     */
-    onTournamentUpdated: useCallback((handler: TournamentEventHandler) => {
-      handlersRef.current.onTournamentUpdated = handler;
-      // Already subscribed in useEffect, just update the ref
-      return () => {
-        handlersRef.current.onTournamentUpdated = null;
-      };
-    }, []),
+    onMatchScoreUpdate,
+    onMatchStarted,
+    onMatchCompleted,
+    onMatchCancelled,
+    onBracketUpdated,
+    onTournamentUpdated,
   };
 }
 
 /**
  * Hook for subscribing to all tournament events (no filtering)
+ * Use this when you need to observe events across all tournaments
  */
 export function useAllTournamentSSE() {
   const { addEventListener, removeEventListener, connected } = useSSE();
@@ -159,28 +177,21 @@ export function useAllTournamentSSE() {
     (eventType: string, handler: TournamentEventHandler) => {
       const wrappedHandler = (e: MessageEvent) => {
         try {
-          const data = JSON.parse(e.data);
-          handler({ type: eventType as any, data } as TournamentEvent);
+          const rawData = e.data;
+          const data = typeof rawData === 'string' ? JSON.parse(rawData) : rawData;
+          handler({ type: eventType as TournamentEvent['type'], data });
         } catch (err) {
-          console.error('[TournamentSSE] Failed to parse event data:', err);
+          console.error('[AllTournamentSSE] Failed to parse event data:', err);
         }
       };
       addEventListener(eventType, wrappedHandler);
-      return wrappedHandler;
+      return () => removeEventListener(eventType, wrappedHandler);
     },
-    [addEventListener]
-  );
-
-  const unsubscribe = useCallback(
-    (eventType: string, handler: (e: MessageEvent) => void) => {
-      removeEventListener(eventType, handler);
-    },
-    [removeEventListener]
+    [addEventListener, removeEventListener]
   );
 
   return {
     connected,
     subscribe,
-    unsubscribe,
   };
 }

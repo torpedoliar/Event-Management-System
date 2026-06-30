@@ -14,7 +14,7 @@ import { Trophy, Calendar, Users, Clock, Save, X } from 'lucide-react';
 
 interface TournamentFormProps {
   initialData?: Partial<CreateTournamentDto>;
-  onSubmit: (data: CreateTournamentDto | UpdateTournamentDto) => Promise<void>;
+  onSubmit: (data: Partial<CreateTournamentDto>) => Promise<void>;
   onCancel?: () => void;
   isDarkMode?: boolean;
   isLoading?: boolean;

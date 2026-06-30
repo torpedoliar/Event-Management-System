@@ -3,7 +3,7 @@ import withPWAInit from '@ducanh2912/next-pwa';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
-  typedRoutes: true,
+  typedRoutes: false, // Disabled - causes issues with dynamic tournament routes
   async rewrites() {
     const backendOrigin = (() => {
       const fromEnv = process.env.BACKEND_ORIGIN;

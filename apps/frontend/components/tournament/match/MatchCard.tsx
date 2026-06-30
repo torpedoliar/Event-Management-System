@@ -10,10 +10,11 @@ interface MatchCardProps {
   onClick?: () => void;
   isDarkMode?: boolean;
   compact?: boolean;
+  isLive?: boolean;
 }
 
-export function MatchCard({ match, onClick, isDarkMode = false, compact = false }: MatchCardProps) {
-  const isLive = match.status === 'ONGOING';
+export function MatchCard({ match, onClick, isDarkMode = false, compact = false, isLive: isLiveProp = false }: MatchCardProps) {
+  const isLive = isLiveProp || match.status === 'ONGOING';
   const isCompleted = match.status === 'COMPLETED' || match.status === 'WALKOVER';
   const hasScores = match.scoreA !== null && match.scoreB !== null;
 

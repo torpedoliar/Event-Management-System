@@ -27,12 +27,17 @@ export default function PublicBracketViewerPage() {
   // Set up SSE handlers
   useEffect(() => {
     const unsubBracket = sse.onBracketUpdated((event) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      setBracket(event.data as any as BracketViewType);
+      // Validate data structure before casting
+      if (event.data && typeof event.data === 'object' && 'rounds' in event.data) {
+        setBracket(event.data as unknown as BracketViewType);
+      }
     });
 
     const unsubTournament = sse.onTournamentUpdated((event) => {
-      setTournament(event.data as Tournament);
+      // Validate tournament data structure
+      if (event.data && typeof event.data === 'object' && 'id' in event.data && 'name' in event.data) {
+        setTournament(event.data as Tournament);
+      }
     });
 
     return () => {
