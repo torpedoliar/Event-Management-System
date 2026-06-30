@@ -17,7 +17,10 @@ const EVENT_TYPES = [
     'prize_draw', 'prize_reset', 'prize_collected', 'prize_uncollected',
     'guest-update', 'guest_created_souvenir',
     'souvenir_given', 'souvenir_removed', 'souvenir_reset',
-    'event_change'
+    'event_change',
+    // Tournament events
+    'match_score_update', 'match_started', 'match_completed', 'match_cancelled',
+    'bracket_updated', 'tournament_updated'
 ] as const;
 
 export function SSEProvider({ children }: { children: ReactNode }) {
