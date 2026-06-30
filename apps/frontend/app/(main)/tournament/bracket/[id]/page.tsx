@@ -243,7 +243,6 @@ export default function PublicBracketViewerPage() {
             bracket={bracket}
             onMatchClick={handleMatchClick}
             highlightedMatchId={highlightedMatchId || undefined}
-            isDarkMode={isDarkMode}
           />
         ) : (
           <div

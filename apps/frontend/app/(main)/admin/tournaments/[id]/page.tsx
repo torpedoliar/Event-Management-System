@@ -366,7 +366,6 @@ export default function TournamentDetailPage() {
             {tournament.brackets && tournament.brackets.length > 0 ? (
               <BracketView
                 bracket={tournament.brackets[0] as any}
-                isDarkMode={false}
               />
             ) : (
               <div className="text-center py-12">

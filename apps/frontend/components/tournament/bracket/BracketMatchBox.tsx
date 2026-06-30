@@ -1,15 +1,13 @@
 "use client";
 
-import React from 'react';
-import type { BracketMatchView, MatchStatus } from '@/types/tournament.types';
-import { MatchStatusLabels } from '@/types/tournament.types';
-import { TeamLogo } from '../team/TeamLogo';
+import React from "react";
+import type { BracketMatchView } from "@/types/tournament.types";
+import { TeamLogo } from "../team/TeamLogo";
 
 interface BracketMatchBoxProps {
   match: BracketMatchView;
   onClick?: () => void;
   isHighlighted?: boolean;
-  isDarkMode?: boolean;
   compact?: boolean;
 }
 
@@ -17,97 +15,69 @@ export function BracketMatchBox({
   match,
   onClick,
   isHighlighted = false,
-  isDarkMode = false,
   compact = false,
 }: BracketMatchBoxProps) {
-  const isLive = match.status === 'ONGOING';
-  const isCompleted = match.status === 'COMPLETED' || match.status === 'WALKOVER';
+  const isLive = match.status === "ONGOING";
   const hasWinner = !!match.winner;
 
-  const baseClasses = compact ? 'w-40' : 'w-48';
-  const borderColor = isHighlighted
-    ? 'border-yellow-400'
-    : isLive
-    ? 'border-red-500'
-    : isDarkMode
-    ? 'border-gray-600'
-    : 'border-gray-300';
+  const baseClasses = compact ? "w-40" : "w-48";
 
   return (
     <div
-      className={`
-        ${baseClasses}
-        rounded-lg border-2 ${borderColor}
-        ${isLive ? 'animate-pulse' : ''}
-        ${isDarkMode ? 'bg-gray-800' : 'bg-white'}
-        shadow-md overflow-hidden
-        transition-all duration-200
-        ${onClick ? 'cursor-pointer hover:shadow-lg hover:scale-105' : ''}
-      `}
+      className={cn(
+        baseClasses,
+        "rounded-xl border-2 bg-brand-surface shadow-sm overflow-hidden transition-all duration-200 relative z-10",
+        isHighlighted ? "border-brand-primary" : isLive ? "border-brand-danger animate-pulse" : "border-brand-border",
+        onClick && "cursor-pointer hover:border-brand-primary/50 hover:shadow-md hover:-translate-y-0.5"
+      )}
       onClick={onClick}
     >
-      {/* Status Badge */}
       {isLive && (
-        <div className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 flex items-center gap-1">
-          <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
-          LIVE
+        <div className="bg-brand-danger text-white text-[10px] uppercase font-bold px-2 py-0.5 flex items-center justify-center gap-1.5">
+          <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+          Live
         </div>
       )}
 
-      {/* Teams */}
-      <div className="divide-y divide-gray-200 dark:divide-gray-700">
-        {/* Team A */}
+      <div className="divide-y divide-brand-border">
         <div
-          className={`
-            flex items-center gap-2 px-2 py-1.5
-            ${hasWinner && match.winner?.id === match.teamA?.id ? 'bg-green-50 dark:bg-green-900/30' : ''}
-            ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}
-          `}
+          className={cn(
+            "flex items-center gap-2 px-2.5 py-2",
+            hasWinner && match.winner?.id === match.teamA?.id && "bg-brand-success/10"
+          )}
         >
-          <TeamLogo
-            src={match.teamA?.logoUrl}
-            name={match.teamA?.name || 'TBD'}
-            size={compact ? 'sm' : 'md'}
-          />
+          <TeamLogo src={match.teamA?.logoUrl} name={match.teamA?.name || "TBD"} size="sm" />
           <div className="flex-1 min-w-0">
-            <span className="text-sm font-medium truncate block">
-              {match.teamA?.name || 'TBD'}
+            <span className={cn("text-sm font-semibold truncate block", hasWinner && match.winner?.id === match.teamA?.id ? "text-brand-text" : "text-brand-textMuted")}>
+              {match.teamA?.name || "TBD"}
             </span>
           </div>
-          <span className="text-lg font-bold">
-            {match.teamA?.score ?? '-'}
+          <span className={cn("text-base font-bold", hasWinner && match.winner?.id === match.teamA?.id ? "text-brand-success" : "text-brand-text")}>
+            {match.teamA?.score ?? "-"}
           </span>
-          {hasWinner && match.winner?.id === match.teamA?.id && (
-            <span className="text-green-500 text-sm">✓</span>
-          )}
         </div>
 
-        {/* Team B */}
         <div
-          className={`
-            flex items-center gap-2 px-2 py-1.5
-            ${hasWinner && match.winner?.id === match.teamB?.id ? 'bg-green-50 dark:bg-green-900/30' : ''}
-            ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}
-          `}
+          className={cn(
+            "flex items-center gap-2 px-2.5 py-2",
+            hasWinner && match.winner?.id === match.teamB?.id && "bg-brand-success/10"
+          )}
         >
-          <TeamLogo
-            src={match.teamB?.logoUrl}
-            name={match.teamB?.name || 'TBD'}
-            size={compact ? 'sm' : 'md'}
-          />
+          <TeamLogo src={match.teamB?.logoUrl} name={match.teamB?.name || "TBD"} size="sm" />
           <div className="flex-1 min-w-0">
-            <span className="text-sm font-medium truncate block">
-              {match.teamB?.name || 'TBD'}
+            <span className={cn("text-sm font-semibold truncate block", hasWinner && match.winner?.id === match.teamB?.id ? "text-brand-text" : "text-brand-textMuted")}>
+              {match.teamB?.name || "TBD"}
             </span>
           </div>
-          <span className="text-lg font-bold">
-            {match.teamB?.score ?? '-'}
+          <span className={cn("text-base font-bold", hasWinner && match.winner?.id === match.teamB?.id ? "text-brand-success" : "text-brand-text")}>
+            {match.teamB?.score ?? "-"}
           </span>
-          {hasWinner && match.winner?.id === match.teamB?.id && (
-            <span className="text-green-500 text-sm">✓</span>
-          )}
         </div>
       </div>
     </div>
   );
+}
+
+function cn(...classes: (string | false | null | undefined)[]) {
+  return classes.filter(Boolean).join(" ");
 }
