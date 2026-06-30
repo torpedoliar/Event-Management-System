@@ -1,81 +1,41 @@
 "use client";
 
-import React, { useState } from 'react';
-import type { CreateTournamentDto, UpdateTournamentDto } from '@/types/tournament.types';
+import { useState } from "react";
+import type { CreateTournamentDto } from "@/types/tournament.types";
 import {
-  TournamentFormat,
-  TournamentStatus,
-  ScoringMode,
   SportType,
+  TournamentFormat,
   ParticipantType,
+  ScoringMode,
   SchedulingMode,
-} from '@/types/tournament.types';
-import { Trophy, Calendar, Users, Clock, Save, X } from 'lucide-react';
+} from "@/types/tournament.types";
+import Input from "@/components/ui/Input";
+import Select from "@/components/ui/Select";
+import Button from "@/components/ui/Button";
+import FormSection from "@/components/ui/FormSection";
+import Label from "@/components/ui/Label";
+import { Save, X } from "lucide-react";
 
 interface TournamentFormProps {
   initialData?: Partial<CreateTournamentDto>;
   onSubmit: (data: Partial<CreateTournamentDto>) => Promise<void>;
   onCancel?: () => void;
-  isDarkMode?: boolean;
   isLoading?: boolean;
 }
 
-const sportOptions: { value: SportType; label: string }[] = [
-  { value: SportType.FUTSAL, label: 'Futsal' },
-  { value: SportType.BASKET, label: 'Basketball' },
-  { value: SportType.VOLLEY, label: 'Volleyball' },
-  { value: SportType.BADMINTON, label: 'Badminton' },
-  { value: SportType.CHESS, label: 'Chess' },
-  { value: SportType.ESPORTS, label: 'Esports' },
-  { value: SportType.OTHER, label: 'Other' },
-];
+const sportOptions = Object.values(SportType).map((v) => ({ value: v, label: v }));
+const formatOptions = Object.values(TournamentFormat).map((v) => ({ value: v, label: v }));
+const participantOptions = Object.values(ParticipantType).map((v) => ({ value: v, label: v }));
+const scoringOptions = Object.values(ScoringMode).map((v) => ({ value: v, label: v }));
 
-const formatOptions: { value: TournamentFormat; label: string }[] = [
-  { value: TournamentFormat.SINGLE_ELIM, label: 'Single Elimination' },
-  { value: TournamentFormat.DOUBLE_ELIM, label: 'Double Elimination' },
-  { value: TournamentFormat.ROUND_ROBIN, label: 'Round Robin' },
-  { value: TournamentFormat.SWISS, label: 'Swiss System' },
-  { value: TournamentFormat.GROUP_KNOCKOUT, label: 'Group + Knockout' },
-];
-
-const participantOptions: { value: ParticipantType; label: string }[] = [
-  { value: ParticipantType.TEAM, label: 'Team' },
-  { value: ParticipantType.INDIVIDUAL, label: 'Individual' },
-];
-
-const scoringOptions: { value: ScoringMode; label: string }[] = [
-  { value: ScoringMode.SIMPLE, label: 'Simple (Win/Loss)' },
-  { value: ScoringMode.SETS, label: 'Sets (Best of X)' },
-  { value: ScoringMode.POINTS, label: 'Points (Score Based)' },
-];
-
-const inputClasses = (isDarkMode: boolean) => `
-  w-full px-3 py-2 rounded-lg border
-  ${isDarkMode
-    ? 'bg-gray-800 border-gray-600 text-white focus:ring-blue-500'
-    : 'bg-white border-gray-300 text-gray-900 focus:ring-blue-500'}
-  focus:outline-none focus:ring-2 focus:border-transparent
-`;
-
-const labelClasses = (isDarkMode: boolean) => `
-  block text-sm font-medium mb-1
-  ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}
-`;
-
-export function TournamentForm({
-  initialData,
-  onSubmit,
-  onCancel,
-  isDarkMode = false,
-  isLoading = false,
-}: TournamentFormProps) {
+export function TournamentForm({ initialData, onSubmit, onCancel, isLoading }: TournamentFormProps) {
   const [formData, setFormData] = useState<CreateTournamentDto>({
-    name: initialData?.name || '',
+    name: initialData?.name || "",
     sportType: initialData?.sportType || SportType.OTHER,
     formatType: initialData?.formatType || TournamentFormat.SINGLE_ELIM,
     participantType: initialData?.participantType || ParticipantType.TEAM,
     scoringMode: initialData?.scoringMode || ScoringMode.SIMPLE,
-    scoringConfig: initialData?.scoringConfig || undefined,
+    scoringConfig: initialData?.scoringConfig || { maxSets: 3, targetPoints: 21 },
     schedulingMode: initialData?.schedulingMode || SchedulingMode.MANUAL,
     courtCount: initialData?.courtCount || 1,
     startDate: initialData?.startDate || undefined,
@@ -85,276 +45,197 @@ export function TournamentForm({
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value, type } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === 'number' ? parseInt(value, 10) : value,
-    }));
-
-    if (errors[name]) {
+  const updateField = <K extends keyof CreateTournamentDto>(key: K, value: CreateTournamentDto[K]) => {
+    setFormData((prev) => ({ ...prev, [key]: value }));
+    if (errors[key]) {
       setErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors[name];
-        return newErrors;
+        const next = { ...prev };
+        delete next[key as string];
+        return next;
       });
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Validation
-    const newErrors: Record<string, string> = {};
-    if (!formData.name?.trim()) {
-      newErrors.name = 'Name is required';
+    const nextErrors: Record<string, string> = {};
+    if (!formData.name.trim()) nextErrors.name = "Name is required";
+    if (formData.startDate && formData.endDate && formData.startDate > formData.endDate) {
+      nextErrors.endDate = "End date must be after start date";
     }
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors);
       return;
     }
-
     try {
       await onSubmit(formData);
     } catch (err: any) {
-      setErrors({ submit: err.message || 'Failed to save tournament' });
+      setErrors({ submit: err.message || "Failed to save tournament" });
     }
   };
 
-  const sectionClasses = `
-    p-4 rounded-lg mb-4
-    ${isDarkMode ? 'bg-gray-800' : 'bg-gray-50'}
-  `;
-
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Basic Info */}
-      <div className={sectionClasses}>
-        <h3 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-          <Trophy className="w-4 h-4 inline mr-2" />
-          Basic Information
-        </h3>
-
-        <div className="space-y-3">
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <FormSection title="Basic Information">
+        <div className="space-y-4">
           <div>
-            <label htmlFor="name" className={labelClasses(isDarkMode)}>
-              Tournament Name *
-            </label>
-            <input
-              type="text"
+            <Label htmlFor="name" className="mb-2 block">Tournament Name *</Label>
+            <Input
               id="name"
-              name="name"
               value={formData.name}
-              onChange={handleChange}
-              className={inputClasses(isDarkMode)}
+              onChange={(e) => updateField("name", e.target.value)}
               placeholder="Enter tournament name"
             />
-            {errors.name && (
-              <p className="mt-1 text-sm text-red-500">{errors.name}</p>
-            )}
+            {errors.name && <p className="mt-1 text-sm text-brand-danger">{errors.name}</p>}
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="sportType" className={labelClasses(isDarkMode)}>
-                Sport Type
-              </label>
-              <select
+              <Label htmlFor="sportType" className="mb-2 block">Sport Type</Label>
+              <Select
                 id="sportType"
-                name="sportType"
                 value={formData.sportType}
-                onChange={handleChange}
-                className={inputClasses(isDarkMode)}
+                onChange={(e) => updateField("sportType", e.target.value as SportType)}
               >
-                {sportOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
+                {sportOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+              </Select>
             </div>
-
             <div>
-              <label htmlFor="participantType" className={labelClasses(isDarkMode)}>
-                Participant Type
-              </label>
-              <select
+              <Label htmlFor="participantType" className="mb-2 block">Participant Type</Label>
+              <Select
                 id="participantType"
-                name="participantType"
                 value={formData.participantType}
-                onChange={handleChange}
-                className={inputClasses(isDarkMode)}
+                onChange={(e) => updateField("participantType", e.target.value as ParticipantType)}
               >
-                {participantOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
+                {participantOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+              </Select>
             </div>
           </div>
         </div>
-      </div>
+      </FormSection>
 
-      {/* Format Settings */}
-      <div className={sectionClasses}>
-        <h3 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-          <Calendar className="w-4 h-4 inline mr-2" />
-          Format Settings
-        </h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <FormSection title="Format Settings">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="formatType" className={labelClasses(isDarkMode)}>
-              Tournament Format
-            </label>
-            <select
+            <Label htmlFor="formatType" className="mb-2 block">Format</Label>
+            <Select
               id="formatType"
-              name="formatType"
               value={formData.formatType}
-              onChange={handleChange}
-              className={inputClasses(isDarkMode)}
+              onChange={(e) => updateField("formatType", e.target.value as TournamentFormat)}
             >
-              {formatOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+              {formatOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+            </Select>
           </div>
-
           <div>
-            <label htmlFor="scoringMode" className={labelClasses(isDarkMode)}>
-              Scoring Mode
-            </label>
-            <select
+            <Label htmlFor="scoringMode" className="mb-2 block">Scoring Mode</Label>
+            <Select
               id="scoringMode"
-              name="scoringMode"
               value={formData.scoringMode}
-              onChange={handleChange}
-              className={inputClasses(isDarkMode)}
+              onChange={(e) => updateField("scoringMode", e.target.value as ScoringMode)}
             >
-              {scoringOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+              {scoringOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+            </Select>
           </div>
-
+          {formData.scoringMode === ScoringMode.SETS && (
+            <>
+              <div>
+                <Label htmlFor="maxSets" className="mb-2 block">Max Sets</Label>
+                <Input
+                  id="maxSets"
+                  type="number"
+                  value={formData.scoringConfig?.maxSets ?? 3}
+                  onChange={(e) =>
+                    updateField("scoringConfig", {
+                      ...formData.scoringConfig,
+                      maxSets: parseInt(e.target.value, 10),
+                    })
+                  }
+                  min={1}
+                />
+              </div>
+              <div>
+                <Label htmlFor="targetPoints" className="mb-2 block">Target Points</Label>
+                <Input
+                  id="targetPoints"
+                  type="number"
+                  value={formData.scoringConfig?.targetPoints ?? 21}
+                  onChange={(e) =>
+                    updateField("scoringConfig", {
+                      ...formData.scoringConfig,
+                      targetPoints: parseInt(e.target.value, 10),
+                    })
+                  }
+                  min={1}
+                />
+              </div>
+            </>
+          )}
           <div>
-            <label htmlFor="schedulingMode" className={labelClasses(isDarkMode)}>
-              Scheduling Mode
-            </label>
-            <select
+            <Label htmlFor="schedulingMode" className="mb-2 block">Scheduling</Label>
+            <Select
               id="schedulingMode"
-              name="schedulingMode"
               value={formData.schedulingMode}
-              onChange={handleChange}
-              className={inputClasses(isDarkMode)}
+              onChange={(e) => updateField("schedulingMode", e.target.value as SchedulingMode)}
             >
               <option value={SchedulingMode.MANUAL}>Manual</option>
               <option value={SchedulingMode.AUTO}>Automatic</option>
-            </select>
+            </Select>
           </div>
-
           <div>
-            <label htmlFor="courtCount" className={labelClasses(isDarkMode)}>
-              Number of Courts/Fields
-            </label>
-            <input
-              type="number"
+            <Label htmlFor="courtCount" className="mb-2 block">Courts / Fields</Label>
+            <Input
               id="courtCount"
-              name="courtCount"
+              type="number"
               value={formData.courtCount}
-              onChange={handleChange}
+              onChange={(e) => updateField("courtCount", parseInt(e.target.value, 10))}
               min={1}
               max={20}
-              className={inputClasses(isDarkMode)}
             />
           </div>
         </div>
-      </div>
+      </FormSection>
 
-      {/* Schedule */}
-      <div className={sectionClasses}>
-        <h3 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-          <Clock className="w-4 h-4 inline mr-2" />
-          Schedule
-        </h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <FormSection title="Schedule">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="startDate" className={labelClasses(isDarkMode)}>
-              Start Date
-            </label>
-            <input
-              type="datetime-local"
+            <Label htmlFor="startDate" className="mb-2 block">Start Date</Label>
+            <Input
               id="startDate"
-              name="startDate"
-              value={formData.startDate?.slice(0, 16) || ''}
-              onChange={handleChange}
-              className={inputClasses(isDarkMode)}
+              type="datetime-local"
+              value={formData.startDate?.slice(0, 16) || ""}
+              onChange={(e) => updateField("startDate", e.target.value)}
             />
           </div>
-
           <div>
-            <label htmlFor="endDate" className={labelClasses(isDarkMode)}>
-              End Date
-            </label>
-            <input
-              type="datetime-local"
+            <Label htmlFor="endDate" className="mb-2 block">End Date</Label>
+            <Input
               id="endDate"
-              name="endDate"
-              value={formData.endDate?.slice(0, 16) || ''}
-              onChange={handleChange}
-              className={inputClasses(isDarkMode)}
+              type="datetime-local"
+              value={formData.endDate?.slice(0, 16) || ""}
+              onChange={(e) => updateField("endDate", e.target.value)}
             />
+            {errors.endDate && <p className="mt-1 text-sm text-brand-danger">{errors.endDate}</p>}
           </div>
         </div>
-      </div>
+      </FormSection>
 
-      {/* Error */}
       {errors.submit && (
-        <div className="p-3 rounded-lg bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300">
+        <div className="p-3 rounded-xl bg-brand-danger/10 text-brand-danger border border-brand-danger/20 text-sm">
           {errors.submit}
         </div>
       )}
 
-      {/* Actions */}
-      <div className="flex justify-end gap-3 pt-4">
+      <div className="flex justify-end gap-3 pt-2">
         {onCancel && (
-          <button
-            type="button"
-            onClick={onCancel}
-            className={`
-              flex items-center gap-2 px-4 py-2 rounded-lg font-medium
-              ${isDarkMode
-                ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}
-            `}
-          >
-            <X className="w-4 h-4" />
-            Cancel
-          </button>
+          <Button type="button" variant="secondary" onClick={onCancel} disabled={isLoading}>
+            <X size={16} /> Cancel
+          </Button>
         )}
-
-        <button
-          type="submit"
-          disabled={isLoading}
-          className={`
-            flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-white
-            bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed
-          `}
-        >
-          <Save className="w-4 h-4" />
-          {isLoading ? 'Saving...' : 'Save Tournament'}
-        </button>
+        <Button type="submit" loading={isLoading}>
+          <Save size={16} /> Save Tournament
+        </Button>
       </div>
     </form>
   );
 }
+
+export default TournamentForm;
