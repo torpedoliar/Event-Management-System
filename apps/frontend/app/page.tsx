@@ -85,6 +85,7 @@ export default async function LandingPage() {
             ctaPrimary={landingData?.hero.ctaPrimary}
             ctaSecondary={landingData?.hero.ctaSecondary}
             images={landingData?.hero.images}
+            compact={toggles.showFeatures || toggles.showGallery}
           />
         )}
         {toggles.showFeatures && landingData?.features && (
@@ -92,6 +93,7 @@ export default async function LandingPage() {
             features={landingData.features}
             title={landingData.featureSection?.title}
             subtext={landingData.featureSection?.subtext}
+            compact={toggles.showHero || toggles.showGallery}
           />
         )}
         {toggles.showGallery && landingData?.gallery && (
@@ -99,6 +101,7 @@ export default async function LandingPage() {
             title={landingData.gallery.title}
             subtext={landingData.gallery.subtext}
             images={landingData.gallery.images}
+            compact={toggles.showHero || toggles.showFeatures}
           />
         )}
       </main>

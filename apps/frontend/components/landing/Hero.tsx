@@ -16,6 +16,7 @@ interface HeroProps {
   ctaPrimary?: string;
   ctaSecondary?: string;
   images?: HeroImage[];
+  compact?: boolean;
 }
 
 export default function Hero({
@@ -24,11 +25,12 @@ export default function Hero({
   ctaPrimary = 'Open Display',
   ctaSecondary = 'Admin Login',
   images = [],
+  compact = false,
 }: HeroProps) {
   const reduce = useReducedMotion();
 
   return (
-    <section className="min-h-[100dvh] pt-20 pb-16">
+    <section className={compact ? "pt-20 pb-12 min-h-auto" : "pt-20 pb-16 min-h-[100dvh]"}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-[55%_45%] gap-12 lg:gap-16 items-center">
           <motion.div

@@ -21,6 +21,11 @@ interface FeaturesProps {
   features: Feature[];
   title?: string;
   subtext?: string;
+  compact?: boolean;
+}
+
+function cn(...classes: (string | false | null | undefined)[]) {
+  return classes.filter(Boolean).join(" ");
 }
 
 function FeatureItem({ feature, index }: { feature: Feature; index: number }) {
@@ -84,12 +89,12 @@ function FeatureCentered({ feature }: { feature: Feature }) {
   );
 }
 
-export default function Features({ features, title, subtext }: FeaturesProps) {
+export default function Features({ features, title, subtext, compact = false }: FeaturesProps) {
   if (features.length === 0) return null;
 
   return (
-    <section className="py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-24">
+    <section className={compact ? "py-16" : "py-24"}>
+      <div className={cn("max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", compact ? "space-y-16" : "space-y-24")}>
         {(title || subtext) && (
           <div className="text-center max-w-3xl mx-auto mb-16">
             {title && <h2 className="text-heading-xl font-heading text-brand-text mb-4">{title}</h2>}

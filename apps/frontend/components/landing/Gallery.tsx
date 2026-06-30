@@ -12,19 +12,21 @@ interface GalleryProps {
   title?: string;
   subtext?: string;
   images: GalleryImage[];
+  compact?: boolean;
 }
 
 export default function Gallery({
   title = 'Past Events',
   subtext = 'Moments from events we have powered.',
   images,
+  compact = false,
 }: GalleryProps) {
   const reduce = useReducedMotion();
 
   if (images.length === 0) return null;
 
   return (
-    <section className="py-24">
+    <section className={compact ? "py-16" : "py-24"}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 24 }}
