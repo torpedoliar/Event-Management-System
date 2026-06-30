@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   DndContext,
   closestCenter,
@@ -125,6 +125,10 @@ export default function SortableImageList({
 }: SortableImageListProps) {
   const [uploading, setUploading] = useState(false);
   const [localImages, setLocalImages] = useState(images);
+
+  useEffect(() => {
+    setLocalImages(images);
+  }, [images]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),

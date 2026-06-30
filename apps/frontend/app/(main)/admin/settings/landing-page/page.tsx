@@ -52,6 +52,8 @@ interface LandingConfig {
   heroCtaSecondary: string;
   galleryTitle: string;
   gallerySubtext: string;
+  featureSectionTitle: string;
+  featureSectionSubtext: string;
   showHero: boolean;
   showFeatures: boolean;
   showGallery: boolean;
@@ -73,6 +75,8 @@ const DEFAULT_CONFIG: LandingConfig = {
   heroCtaSecondary: 'Learn More',
   galleryTitle: 'Event Gallery',
   gallerySubtext: 'Moments from our previous events',
+  featureSectionTitle: 'Why Attend?',
+  featureSectionSubtext: 'Discover what makes this event special',
   showHero: true,
   showFeatures: true,
   showGallery: true,
@@ -169,27 +173,38 @@ export default function LandingPageSettingsPage() {
   const handleUploadHeroImage = async (file: File) => {
     const fd = new FormData();
     fd.append('image', file);
-    const res = await fetch(`${apiBase()}/admin/landing-page/hero-image`, {
-      method: 'POST',
-      headers: tokenHeader(),
-      body: fd,
-    });
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(parseErrorMessage(text));
+    try {
+      const res = await fetch(`${apiBase()}/admin/landing-page/hero-image`, {
+        method: 'POST',
+        headers: tokenHeader(),
+        body: fd,
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(parseErrorMessage(text));
+      }
+      const newImage = await res.json();
+      setHeroImages(prev => [...prev, newImage]);
+      setMessage('Gambar hero diupload.');
+    } catch (e: any) {
+      setError(e.message);
     }
-    const newImage = await res.json();
-    setHeroImages(prev => [...prev, newImage]);
   };
 
   const handleDeleteHeroImage = async (imageId: string) => {
-    const res = await fetch(`${apiBase()}/admin/landing-page/hero-image/${imageId}`, {
-      method: 'DELETE',
-      headers: tokenHeader(),
-    });
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(parseErrorMessage(text));
+    try {
+      const res = await fetch(`${apiBase()}/admin/landing-page/hero-image/${imageId}`, {
+        method: 'DELETE',
+        headers: tokenHeader(),
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(parseErrorMessage(text));
+      }
+      setHeroImages(prev => prev.filter(img => img.id !== imageId));
+      setMessage('Gambar hero dihapus.');
+    } catch (e: any) {
+      setError(e.message);
     }
   };
 
@@ -229,15 +244,20 @@ export default function LandingPageSettingsPage() {
 
   const handleDeleteFeature = async (featureId: string) => {
     if (!confirm('Hapus feature ini?')) return;
-    const res = await fetch(`${apiBase()}/admin/landing-page/features/${featureId}`, {
-      method: 'DELETE',
-      headers: tokenHeader(),
-    });
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(parseErrorMessage(text));
+    try {
+      const res = await fetch(`${apiBase()}/admin/landing-page/features/${featureId}`, {
+        method: 'DELETE',
+        headers: tokenHeader(),
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(parseErrorMessage(text));
+      }
+      setFeatures(prev => prev.filter(f => f.id !== featureId));
+      setMessage('Feature dihapus.');
+    } catch (e: any) {
+      setError(e.message);
     }
-    setFeatures(prev => prev.filter(f => f.id !== featureId));
   };
 
   const handleReorderFeatures = async (featureIds: string[]) => {
@@ -252,33 +272,43 @@ export default function LandingPageSettingsPage() {
   const handleUploadFeatureImage = async (featureId: string, file: File) => {
     const fd = new FormData();
     fd.append('image', file);
-    const res = await fetch(`${apiBase()}/admin/landing-page/features/${featureId}/images`, {
-      method: 'POST',
-      headers: tokenHeader(),
-      body: fd,
-    });
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(parseErrorMessage(text));
+    try {
+      const res = await fetch(`${apiBase()}/admin/landing-page/features/${featureId}/images`, {
+        method: 'POST',
+        headers: tokenHeader(),
+        body: fd,
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(parseErrorMessage(text));
+      }
+      const newImage = await res.json();
+      setFeatures(prev => prev.map(f =>
+        f.id === featureId ? { ...f, images: [...f.images, newImage] } : f
+      ));
+      setMessage('Gambar feature diupload.');
+    } catch (e: any) {
+      setError(e.message);
     }
-    const newImage = await res.json();
-    setFeatures(prev => prev.map(f =>
-      f.id === featureId ? { ...f, images: [...f.images, newImage] } : f
-    ));
   };
 
   const handleDeleteFeatureImage = async (featureId: string, imageId: string) => {
-    const res = await fetch(`${apiBase()}/admin/landing-page/features/${featureId}/images/${imageId}`, {
-      method: 'DELETE',
-      headers: tokenHeader(),
-    });
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(parseErrorMessage(text));
+    try {
+      const res = await fetch(`${apiBase()}/admin/landing-page/features/${featureId}/images/${imageId}`, {
+        method: 'DELETE',
+        headers: tokenHeader(),
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(parseErrorMessage(text));
+      }
+      setFeatures(prev => prev.map(f =>
+        f.id === featureId ? { ...f, images: f.images.filter(img => img.id !== imageId) } : f
+      ));
+      setMessage('Gambar feature dihapus.');
+    } catch (e: any) {
+      setError(e.message);
     }
-    setFeatures(prev => prev.map(f =>
-      f.id === featureId ? { ...f, images: f.images.filter(img => img.id !== imageId) } : f
-    ));
   };
 
   const handleReorderFeatureImages = async (featureId: string, imageIds: string[]) => {
@@ -301,27 +331,38 @@ export default function LandingPageSettingsPage() {
   const handleUploadGalleryImage = async (file: File) => {
     const fd = new FormData();
     fd.append('image', file);
-    const res = await fetch(`${apiBase()}/admin/landing-page/gallery`, {
-      method: 'POST',
-      headers: tokenHeader(),
-      body: fd,
-    });
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(parseErrorMessage(text));
+    try {
+      const res = await fetch(`${apiBase()}/admin/landing-page/gallery`, {
+        method: 'POST',
+        headers: tokenHeader(),
+        body: fd,
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(parseErrorMessage(text));
+      }
+      const newImage = await res.json();
+      setGalleryImages(prev => [...prev, newImage]);
+      setMessage('Gambar gallery diupload.');
+    } catch (e: any) {
+      setError(e.message);
     }
-    const newImage = await res.json();
-    setGalleryImages(prev => [...prev, newImage]);
   };
 
   const handleDeleteGalleryImage = async (imageId: string) => {
-    const res = await fetch(`${apiBase()}/admin/landing-page/gallery/${imageId}`, {
-      method: 'DELETE',
-      headers: tokenHeader(),
-    });
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(parseErrorMessage(text));
+    try {
+      const res = await fetch(`${apiBase()}/admin/landing-page/gallery/${imageId}`, {
+        method: 'DELETE',
+        headers: tokenHeader(),
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(parseErrorMessage(text));
+      }
+      setGalleryImages(prev => prev.filter(img => img.id !== imageId));
+      setMessage('Gambar gallery dihapus.');
+    } catch (e: any) {
+      setError(e.message);
     }
   };
 
@@ -496,6 +537,25 @@ export default function LandingPageSettingsPage() {
             {expandedSections.features && (
               <div className="space-y-6">
                 <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div>
+                      <Label className="mb-2">Features Title</Label>
+                      <Input
+                        value={config.featureSectionTitle || ''}
+                        onChange={(e) => setConfig({ ...config, featureSectionTitle: e.target.value })}
+                        placeholder="Why Attend?"
+                      />
+                    </div>
+                    <div>
+                      <Label className="mb-2">Features Subtext</Label>
+                      <Input
+                        value={config.featureSectionSubtext || ''}
+                        onChange={(e) => setConfig({ ...config, featureSectionSubtext: e.target.value })}
+                        placeholder="Discover what makes this event special"
+                      />
+                    </div>
+                  </div>
+
                   <div className="flex items-center justify-between">
                     <Label>Feature Cards</Label>
                     <Button size="sm" variant="secondary" onClick={handleAddFeature} className="flex items-center gap-1">
@@ -623,6 +683,12 @@ function FeatureCard({
   const [title, setTitle] = useState(feature.title);
   const [description, setDescription] = useState(feature.description);
   const [isActive, setIsActive] = useState(feature.isActive);
+
+  useEffect(() => {
+    setTitle(feature.title);
+    setDescription(feature.description);
+    setIsActive(feature.isActive);
+  }, [feature.title, feature.description, feature.isActive]);
 
   const handleSave = async () => {
     await onUpdate(feature.id, { title, description, isActive });

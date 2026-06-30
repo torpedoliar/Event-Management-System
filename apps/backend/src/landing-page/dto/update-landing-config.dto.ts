@@ -46,4 +46,14 @@ export class UpdateLandingConfigDto {
   @IsString()
   @MaxLength(400)
   gallerySubtext?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  featureSectionTitle?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(400)
+  featureSectionSubtext?: string;
 }

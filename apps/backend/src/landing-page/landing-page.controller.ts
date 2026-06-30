@@ -1,7 +1,7 @@
 import {
   Controller, Get, Put, Post, Delete, Param, Body,
   UploadedFile, UseGuards, UseInterceptors, Res,
-  BadRequestException,
+  BadRequestException, Logger
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
@@ -26,6 +26,8 @@ const IMAGE_FILTER = {
 
 @Controller()
 export class LandingPageController {
+  private readonly logger = new Logger(LandingPageController.name);
+
   constructor(private readonly landingPage: LandingPageService) {}
 
   // --- Public API ---
@@ -33,7 +35,7 @@ export class LandingPageController {
   @Get('public/landing-page')
   async getPublicLandingPage(@Res() res: Response) {
     const data = await this.landingPage.getPublicLandingPage();
-    res.setHeader('Cache-Control', 'public, max-age=30');
+    res.setHeader('Cache-Control', 'no-store, max-age=0');
     return res.json(data);
   }
 
@@ -47,34 +49,59 @@ export class LandingPageController {
 
   @UseGuards(JwtAuthGuard)
   @Put('admin/landing-page')
-  updateConfig(@Body() dto: UpdateLandingConfigDto) {
-    return this.landingPage.updateConfig(dto);
+  async updateConfig(@Body() dto: UpdateLandingConfigDto) {
+    try {
+      return await this.landingPage.updateConfig(dto);
+    } catch (error: any) {
+      this.logger.error(`updateConfig failed: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   // --- Features ---
 
   @UseGuards(JwtAuthGuard)
   @Post('admin/landing-page/features')
-  createFeature(@Body() dto: CreateFeatureDto) {
-    return this.landingPage.createFeature(dto);
+  async createFeature(@Body() dto: CreateFeatureDto) {
+    try {
+      return await this.landingPage.createFeature(dto);
+    } catch (error: any) {
+      this.logger.error(`createFeature failed: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   @UseGuards(JwtAuthGuard)
   @Put('admin/landing-page/features/:id')
-  updateFeature(@Param('id') id: string, @Body() dto: UpdateFeatureDto) {
-    return this.landingPage.updateFeature(id, dto);
+  async updateFeature(@Param('id') id: string, @Body() dto: UpdateFeatureDto) {
+    try {
+      return await this.landingPage.updateFeature(id, dto);
+    } catch (error: any) {
+      this.logger.error(`updateFeature failed: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete('admin/landing-page/features/:id')
-  deleteFeature(@Param('id') id: string) {
-    return this.landingPage.deleteFeature(id);
+  async deleteFeature(@Param('id') id: string) {
+    try {
+      return await this.landingPage.deleteFeature(id);
+    } catch (error: any) {
+      this.logger.error(`deleteFeature failed: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   @UseGuards(JwtAuthGuard)
   @Put('admin/landing-page/features/reorder')
-  reorderFeatures(@Body('featureIds') featureIds: string[]) {
-    return this.landingPage.reorderFeatures(featureIds);
+  async reorderFeatures(@Body('featureIds') featureIds: string[]) {
+    try {
+      return await this.landingPage.reorderFeatures(featureIds);
+    } catch (error: any) {
+      this.logger.error(`reorderFeatures failed: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   // --- Hero Images ---
@@ -86,23 +113,38 @@ export class LandingPageController {
     ...IMAGE_FILTER,
   }))
   @Post('admin/landing-page/hero-image')
-  uploadHeroImage(
+  async uploadHeroImage(
     @UploadedFile() file: Express.Multer.File,
     @Body('alt') alt?: string,
   ) {
-    return this.landingPage.uploadHeroImage(file, alt);
+    try {
+      return await this.landingPage.uploadHeroImage(file, alt);
+    } catch (error: any) {
+      this.logger.error(`uploadHeroImage failed: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete('admin/landing-page/hero-image/:id')
-  deleteHeroImage(@Param('id') id: string) {
-    return this.landingPage.deleteHeroImage(id);
+  async deleteHeroImage(@Param('id') id: string) {
+    try {
+      return await this.landingPage.deleteHeroImage(id);
+    } catch (error: any) {
+      this.logger.error(`deleteHeroImage failed: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   @UseGuards(JwtAuthGuard)
   @Put('admin/landing-page/hero-image/reorder')
-  reorderHeroImages(@Body('imageIds') imageIds: string[]) {
-    return this.landingPage.reorderHeroImages(imageIds);
+  async reorderHeroImages(@Body('imageIds') imageIds: string[]) {
+    try {
+      return await this.landingPage.reorderHeroImages(imageIds);
+    } catch (error: any) {
+      this.logger.error(`reorderHeroImages failed: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   // --- Feature Images ---
@@ -114,24 +156,39 @@ export class LandingPageController {
     ...IMAGE_FILTER,
   }))
   @Post('admin/landing-page/features/:id/images')
-  uploadFeatureImage(
+  async uploadFeatureImage(
     @Param('id') id: string,
     @UploadedFile() file: Express.Multer.File,
     @Body('alt') alt?: string,
   ) {
-    return this.landingPage.uploadFeatureImage(id, file, alt);
+    try {
+      return await this.landingPage.uploadFeatureImage(id, file, alt);
+    } catch (error: any) {
+      this.logger.error(`uploadFeatureImage failed: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete('admin/landing-page/features/:id/images/:imageId')
-  deleteFeatureImage(@Param('id') _id: string, @Param('imageId') imageId: string) {
-    return this.landingPage.deleteFeatureImage(imageId);
+  async deleteFeatureImage(@Param('id') _id: string, @Param('imageId') imageId: string) {
+    try {
+      return await this.landingPage.deleteFeatureImage(imageId);
+    } catch (error: any) {
+      this.logger.error(`deleteFeatureImage failed: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   @UseGuards(JwtAuthGuard)
   @Put('admin/landing-page/features/:id/images/reorder')
-  reorderFeatureImages(@Body('imageIds') imageIds: string[]) {
-    return this.landingPage.reorderFeatureImages(imageIds);
+  async reorderFeatureImages(@Body('imageIds') imageIds: string[]) {
+    try {
+      return await this.landingPage.reorderFeatureImages(imageIds);
+    } catch (error: any) {
+      this.logger.error(`reorderFeatureImages failed: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   // --- Gallery Images ---
@@ -143,23 +200,38 @@ export class LandingPageController {
     ...IMAGE_FILTER,
   }))
   @Post('admin/landing-page/gallery')
-  uploadGalleryImage(
+  async uploadGalleryImage(
     @UploadedFile() file: Express.Multer.File,
     @Body('alt') alt?: string,
     @Body('caption') caption?: string,
   ) {
-    return this.landingPage.uploadGalleryImage(file, alt, caption);
+    try {
+      return await this.landingPage.uploadGalleryImage(file, alt, caption);
+    } catch (error: any) {
+      this.logger.error(`uploadGalleryImage failed: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete('admin/landing-page/gallery/:id')
-  deleteGalleryImage(@Param('id') id: string) {
-    return this.landingPage.deleteGalleryImage(id);
+  async deleteGalleryImage(@Param('id') id: string) {
+    try {
+      return await this.landingPage.deleteGalleryImage(id);
+    } catch (error: any) {
+      this.logger.error(`deleteGalleryImage failed: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   @UseGuards(JwtAuthGuard)
   @Put('admin/landing-page/gallery/reorder')
-  reorderGalleryImages(@Body('imageIds') imageIds: string[]) {
-    return this.landingPage.reorderGalleryImages(imageIds);
+  async reorderGalleryImages(@Body('imageIds') imageIds: string[]) {
+    try {
+      return await this.landingPage.reorderGalleryImages(imageIds);
+    } catch (error: any) {
+      this.logger.error(`reorderGalleryImages failed: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 }

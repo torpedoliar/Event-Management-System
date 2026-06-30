@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import LandingNav from '@/components/landing/LandingNav';
 import Hero from '@/components/landing/Hero';
 import Features from '@/components/landing/Features';
@@ -25,6 +28,10 @@ interface LandingPageData {
     sortOrder: number;
     images: { url: string; alt?: string | null; intervalMs?: number }[];
   }[];
+  featureSection?: {
+    title: string;
+    subtext: string;
+  };
   gallery: {
     title: string;
     subtext: string;
@@ -81,7 +88,11 @@ export default async function LandingPage() {
           />
         )}
         {toggles.showFeatures && landingData?.features && (
-          <Features features={landingData.features} />
+          <Features
+            features={landingData.features}
+            title={landingData.featureSection?.title}
+            subtext={landingData.featureSection?.subtext}
+          />
         )}
         {toggles.showGallery && landingData?.gallery && (
           <Gallery

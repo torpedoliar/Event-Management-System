@@ -106,6 +106,10 @@ export class LandingPageService {
           caption: img.caption,
         })),
       },
+      featureSection: {
+        title: config.featureSectionTitle,
+        subtext: config.featureSectionSubtext,
+      },
       toggles: {
         showHero: config.showHero,
         showFeatures: config.showFeatures,
@@ -127,6 +131,8 @@ export class LandingPageService {
         heroCtaSecondary: config.heroCtaSecondary,
         galleryTitle: config.galleryTitle,
         gallerySubtext: config.gallerySubtext,
+        featureSectionTitle: config.featureSectionTitle,
+        featureSectionSubtext: config.featureSectionSubtext,
         showHero: config.showHero,
         showFeatures: config.showFeatures,
         showGallery: config.showGallery,

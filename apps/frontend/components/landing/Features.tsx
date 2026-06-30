@@ -19,6 +19,8 @@ interface Feature {
 
 interface FeaturesProps {
   features: Feature[];
+  title?: string;
+  subtext?: string;
 }
 
 function FeatureItem({ feature, index }: { feature: Feature; index: number }) {
@@ -82,12 +84,18 @@ function FeatureCentered({ feature }: { feature: Feature }) {
   );
 }
 
-export default function Features({ features }: FeaturesProps) {
+export default function Features({ features, title, subtext }: FeaturesProps) {
   if (features.length === 0) return null;
 
   return (
     <section className="py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-24">
+        {(title || subtext) && (
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            {title && <h2 className="text-heading-xl font-heading text-brand-text mb-4">{title}</h2>}
+            {subtext && <p className="text-body-lg text-brand-textMuted">{subtext}</p>}
+          </div>
+        )}
         {features.map((feature, index) =>
           index < 2 ? (
             <FeatureItem key={feature.id} feature={feature} index={index} />

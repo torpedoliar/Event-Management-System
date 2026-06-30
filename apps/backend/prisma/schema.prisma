@@ -365,6 +365,10 @@ model LandingPageConfig {
   showGallery       Boolean  @default(true)
   showFooter        Boolean  @default(true)
 
+  // Feature copy
+  featureSectionTitle   String   @default("Why Attend?")
+  featureSectionSubtext String   @default("Discover what makes this event special")
+
   // Gallery copy
   galleryTitle      String   @default("Past Events")
   gallerySubtext    String   @default("Moments from events we have powered.")
