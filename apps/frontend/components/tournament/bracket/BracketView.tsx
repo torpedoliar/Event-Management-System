@@ -1,7 +1,11 @@
 "use client";
 
 import React from 'react';
-import type { BracketView as BracketViewType, MatchStatus } from '@/types/tournament.types';
+import type {
+  BracketView as BracketViewType,
+  BracketRoundView,
+  BracketMatchView,
+} from '@/types/tournament.types';
 import { BracketMatchBox } from './BracketMatchBox';
 import { BracketConnector } from './BracketConnector';
 
@@ -85,7 +89,7 @@ export function BracketView({
 function getPreviousMatches(
   currentRoundIndex: number,
   currentMatchIndex: number,
-  rounds: BracketViewType['rounds']
+  rounds: BracketRoundView[]
 ): { matchIndex: number; slot: 'A' | 'B' }[] {
   if (currentRoundIndex === 0) return [];
 
