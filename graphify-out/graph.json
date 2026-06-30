@@ -4,14 +4,304 @@
   "graph": {},
   "nodes": [
     {
+      "label": "tournaments.controller.ts",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller",
+      "community": 80,
+      "norm_label": "tournaments.controller.ts"
+    },
+    {
+      "label": "TournamentsController",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "community": 15,
+      "norm_label": "tournamentscontroller"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L24",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_constructor",
+      "community": 15,
+      "norm_label": ".constructor()"
+    },
+    {
+      "label": ".create()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L34",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_create",
+      "community": 15,
+      "norm_label": ".create()"
+    },
+    {
+      "label": ".findAll()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L39",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_findall",
+      "community": 15,
+      "norm_label": ".findall()"
+    },
+    {
+      "label": ".findOne()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L44",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_findone",
+      "community": 15,
+      "norm_label": ".findone()"
+    },
+    {
+      "label": ".update()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L49",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_update",
+      "community": 15,
+      "norm_label": ".update()"
+    },
+    {
+      "label": ".remove()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L57",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_remove",
+      "community": 15,
+      "norm_label": ".remove()"
+    },
+    {
+      "label": ".createTeam()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L66",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_createteam",
+      "community": 15,
+      "norm_label": ".createteam()"
+    },
+    {
+      "label": ".updateTeam()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L74",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_updateteam",
+      "community": 15,
+      "norm_label": ".updateteam()"
+    },
+    {
+      "label": ".removeTeam()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L82",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_removeteam",
+      "community": 15,
+      "norm_label": ".removeteam()"
+    },
+    {
+      "label": ".addTeamMember()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L91",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_addteammember",
+      "community": 15,
+      "norm_label": ".addteammember()"
+    },
+    {
+      "label": ".removeTeamMember()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L99",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_removeteammember",
+      "community": 15,
+      "norm_label": ".removeteammember()"
+    },
+    {
+      "label": ".importTeams()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L108",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_importteams",
+      "community": 15,
+      "norm_label": ".importteams()"
+    },
+    {
+      "label": ".generateBracket()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L120",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_generatebracket",
+      "community": 15,
+      "norm_label": ".generatebracket()"
+    },
+    {
+      "label": ".getBracketView()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L125",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getbracketview",
+      "community": 15,
+      "norm_label": ".getbracketview()"
+    },
+    {
+      "label": ".getMatches()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L134",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getmatches",
+      "community": 15,
+      "norm_label": ".getmatches()"
+    },
+    {
+      "label": ".getUpcomingMatches()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L142",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getupcomingmatches",
+      "community": 15,
+      "norm_label": ".getupcomingmatches()"
+    },
+    {
+      "label": ".getLiveMatches()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L147",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getlivematches",
+      "community": 15,
+      "norm_label": ".getlivematches()"
+    },
+    {
+      "label": ".getMatch()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L152",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getmatch",
+      "community": 15,
+      "norm_label": ".getmatch()"
+    },
+    {
+      "label": ".startMatch()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L157",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_startmatch",
+      "community": 15,
+      "norm_label": ".startmatch()"
+    },
+    {
+      "label": ".updateScore()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L162",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_updatescore",
+      "community": 15,
+      "norm_label": ".updatescore()"
+    },
+    {
+      "label": ".cancelMatch()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L170",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_cancelmatch",
+      "community": 15,
+      "norm_label": ".cancelmatch()"
+    },
+    {
+      "label": ".awardWalkover()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L175",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_awardwalkover",
+      "community": 15,
+      "norm_label": ".awardwalkover()"
+    },
+    {
+      "label": ".getStats()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L187",
+      "_origin": "ast",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getstats",
+      "community": 15,
+      "norm_label": ".getstats()"
+    },
+    {
+      "label": "TopNav.tsx",
+      "file_type": "code",
+      "source_file": "apps/frontend/components/TopNav.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 199,
+      "norm_label": "topnav.tsx",
+      "id": "apps_frontend_components_topnav"
+    },
+    {
+      "label": "AdminLink",
+      "file_type": "code",
+      "source_file": "apps/frontend/components/TopNav.tsx",
+      "source_location": "L30",
+      "_origin": "ast",
+      "community": 199,
+      "norm_label": "adminlink",
+      "id": "apps_frontend_components_topnav_adminlink"
+    },
+    {
+      "label": "TopNav()",
+      "file_type": "code",
+      "source_file": "apps/frontend/components/TopNav.tsx",
+      "source_location": "L36",
+      "_origin": "ast",
+      "community": 199,
+      "norm_label": "topnav()",
+      "id": "apps_frontend_components_topnav_topnav"
+    },
+    {
+      "label": "cn()",
+      "file_type": "code",
+      "source_file": "apps/frontend/components/TopNav.tsx",
+      "source_location": "L346",
+      "_origin": "ast",
+      "community": 199,
+      "norm_label": "cn()",
+      "id": "apps_frontend_components_topnav_cn"
+    },
+    {
       "label": "page.tsx",
       "file_type": "code",
       "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/edit/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_frontend_app_main_admin_tournaments_id_edit_page",
       "community": 41,
-      "norm_label": "page.tsx"
+      "norm_label": "page.tsx",
+      "id": "apps_frontend_app_main_admin_tournaments_id_edit_page"
     },
     {
       "label": "EditTournamentPage()",
@@ -19,9 +309,9 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/edit/page.tsx",
       "source_location": "L11",
       "_origin": "ast",
-      "id": "apps_frontend_app_main_admin_tournaments_id_edit_page_edittournamentpage",
       "community": 41,
-      "norm_label": "edittournamentpage()"
+      "norm_label": "edittournamentpage()",
+      "id": "apps_frontend_app_main_admin_tournaments_id_edit_page_edittournamentpage"
     },
     {
       "label": "page.tsx",
@@ -29,9 +319,9 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_frontend_app_main_admin_tournaments_id_page",
       "community": 192,
-      "norm_label": "page.tsx"
+      "norm_label": "page.tsx",
+      "id": "apps_frontend_app_main_admin_tournaments_id_page"
     },
     {
       "label": "TabId",
@@ -39,9 +329,9 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/page.tsx",
       "source_location": "L19",
       "_origin": "ast",
-      "id": "apps_frontend_app_main_admin_tournaments_id_page_tabid",
       "community": 192,
-      "norm_label": "tabid"
+      "norm_label": "tabid",
+      "id": "apps_frontend_app_main_admin_tournaments_id_page_tabid"
     },
     {
       "label": "TournamentDetailPage()",
@@ -49,9 +339,9 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/page.tsx",
       "source_location": "L21",
       "_origin": "ast",
-      "id": "apps_frontend_app_main_admin_tournaments_id_page_tournamentdetailpage",
       "community": 192,
-      "norm_label": "tournamentdetailpage()"
+      "norm_label": "tournamentdetailpage()",
+      "id": "apps_frontend_app_main_admin_tournaments_id_page_tournamentdetailpage"
     },
     {
       "label": "page.tsx",
@@ -59,9 +349,9 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/new/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_frontend_app_main_admin_tournaments_new_page",
       "community": 41,
-      "norm_label": "page.tsx"
+      "norm_label": "page.tsx",
+      "id": "apps_frontend_app_main_admin_tournaments_new_page"
     },
     {
       "label": "NewTournamentPage()",
@@ -69,9 +359,9 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/new/page.tsx",
       "source_location": "L11",
       "_origin": "ast",
-      "id": "apps_frontend_app_main_admin_tournaments_new_page_newtournamentpage",
       "community": 41,
-      "norm_label": "newtournamentpage()"
+      "norm_label": "newtournamentpage()",
+      "id": "apps_frontend_app_main_admin_tournaments_new_page_newtournamentpage"
     },
     {
       "label": "page.tsx",
@@ -79,9 +369,9 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_frontend_app_main_admin_tournaments_page",
       "community": 41,
-      "norm_label": "page.tsx"
+      "norm_label": "page.tsx",
+      "id": "apps_frontend_app_main_admin_tournaments_page"
     },
     {
       "label": "AdminTournamentsPage()",
@@ -89,9 +379,9 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/page.tsx",
       "source_location": "L11",
       "_origin": "ast",
-      "id": "apps_frontend_app_main_admin_tournaments_page_admintournamentspage",
       "community": 41,
-      "norm_label": "admintournamentspage()"
+      "norm_label": "admintournamentspage()",
+      "id": "apps_frontend_app_main_admin_tournaments_page_admintournamentspage"
     },
     {
       "label": "page.tsx",
@@ -99,9 +389,9 @@
       "source_file": "apps/frontend/app/(main)/live/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_frontend_app_main_live_page",
       "community": 192,
-      "norm_label": "page.tsx"
+      "norm_label": "page.tsx",
+      "id": "apps_frontend_app_main_live_page"
     },
     {
       "label": "LiveTournamentInfo",
@@ -109,9 +399,9 @@
       "source_file": "apps/frontend/app/(main)/live/page.tsx",
       "source_location": "L10",
       "_origin": "ast",
-      "id": "apps_frontend_app_main_live_page_livetournamentinfo",
       "community": 192,
-      "norm_label": "livetournamentinfo"
+      "norm_label": "livetournamentinfo",
+      "id": "apps_frontend_app_main_live_page_livetournamentinfo"
     },
     {
       "label": "LivePage()",
@@ -119,9 +409,9 @@
       "source_file": "apps/frontend/app/(main)/live/page.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "id": "apps_frontend_app_main_live_page_livepage",
       "community": 192,
-      "norm_label": "livepage()"
+      "norm_label": "livepage()",
+      "id": "apps_frontend_app_main_live_page_livepage"
     },
     {
       "label": "page.tsx",
@@ -129,9 +419,9 @@
       "source_file": "apps/frontend/app/(main)/tournament/bracket/[id]/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_frontend_app_main_tournament_bracket_id_page",
       "community": 192,
-      "norm_label": "page.tsx"
+      "norm_label": "page.tsx",
+      "id": "apps_frontend_app_main_tournament_bracket_id_page"
     },
     {
       "label": "PublicBracketViewerPage()",
@@ -139,9 +429,9 @@
       "source_file": "apps/frontend/app/(main)/tournament/bracket/[id]/page.tsx",
       "source_location": "L13",
       "_origin": "ast",
-      "id": "apps_frontend_app_main_tournament_bracket_id_page_publicbracketviewerpage",
       "community": 192,
-      "norm_label": "publicbracketviewerpage()"
+      "norm_label": "publicbracketviewerpage()",
+      "id": "apps_frontend_app_main_tournament_bracket_id_page_publicbracketviewerpage"
     },
     {
       "label": "page.tsx",
@@ -149,9 +439,9 @@
       "source_file": "apps/frontend/app/(main)/tournament/bracket/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_frontend_app_main_tournament_bracket_page",
       "community": 194,
-      "norm_label": "page.tsx"
+      "norm_label": "page.tsx",
+      "id": "apps_frontend_app_main_tournament_bracket_page"
     },
     {
       "label": "TournamentBracketsPage()",
@@ -159,9 +449,9 @@
       "source_file": "apps/frontend/app/(main)/tournament/bracket/page.tsx",
       "source_location": "L10",
       "_origin": "ast",
-      "id": "apps_frontend_app_main_tournament_bracket_page_tournamentbracketspage",
       "community": 194,
-      "norm_label": "tournamentbracketspage()"
+      "norm_label": "tournamentbracketspage()",
+      "id": "apps_frontend_app_main_tournament_bracket_page_tournamentbracketspage"
     },
     {
       "label": "TournamentForm.tsx",
@@ -169,9 +459,9 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_frontend_components_tournament_tournamentform",
       "community": 41,
-      "norm_label": "tournamentform.tsx"
+      "norm_label": "tournamentform.tsx",
+      "id": "apps_frontend_components_tournament_tournamentform"
     },
     {
       "label": "TournamentFormProps",
@@ -179,9 +469,9 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "id": "apps_frontend_components_tournament_tournamentform_tournamentformprops",
       "community": 41,
-      "norm_label": "tournamentformprops"
+      "norm_label": "tournamentformprops",
+      "id": "apps_frontend_components_tournament_tournamentform_tournamentformprops"
     },
     {
       "label": "sportOptions",
@@ -189,9 +479,9 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L23",
       "_origin": "ast",
-      "id": "apps_frontend_components_tournament_tournamentform_sportoptions",
       "community": 41,
-      "norm_label": "sportoptions"
+      "norm_label": "sportoptions",
+      "id": "apps_frontend_components_tournament_tournamentform_sportoptions"
     },
     {
       "label": "formatOptions",
@@ -199,9 +489,9 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L33",
       "_origin": "ast",
-      "id": "apps_frontend_components_tournament_tournamentform_formatoptions",
       "community": 41,
-      "norm_label": "formatoptions"
+      "norm_label": "formatoptions",
+      "id": "apps_frontend_components_tournament_tournamentform_formatoptions"
     },
     {
       "label": "participantOptions",
@@ -209,9 +499,9 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L41",
       "_origin": "ast",
-      "id": "apps_frontend_components_tournament_tournamentform_participantoptions",
       "community": 41,
-      "norm_label": "participantoptions"
+      "norm_label": "participantoptions",
+      "id": "apps_frontend_components_tournament_tournamentform_participantoptions"
     },
     {
       "label": "scoringOptions",
@@ -219,9 +509,9 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L46",
       "_origin": "ast",
-      "id": "apps_frontend_components_tournament_tournamentform_scoringoptions",
       "community": 41,
-      "norm_label": "scoringoptions"
+      "norm_label": "scoringoptions",
+      "id": "apps_frontend_components_tournament_tournamentform_scoringoptions"
     },
     {
       "label": "inputClasses()",
@@ -229,9 +519,9 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L52",
       "_origin": "ast",
-      "id": "apps_frontend_components_tournament_tournamentform_inputclasses",
       "community": 41,
-      "norm_label": "inputclasses()"
+      "norm_label": "inputclasses()",
+      "id": "apps_frontend_components_tournament_tournamentform_inputclasses"
     },
     {
       "label": "labelClasses()",
@@ -239,9 +529,9 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L60",
       "_origin": "ast",
-      "id": "apps_frontend_components_tournament_tournamentform_labelclasses",
       "community": 41,
-      "norm_label": "labelclasses()"
+      "norm_label": "labelclasses()",
+      "id": "apps_frontend_components_tournament_tournamentform_labelclasses"
     },
     {
       "label": "TournamentForm()",
@@ -249,9 +539,9 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L65",
       "_origin": "ast",
-      "id": "apps_frontend_components_tournament_tournamentform_tournamentform",
       "community": 41,
-      "norm_label": "tournamentform()"
+      "norm_label": "tournamentform()",
+      "id": "apps_frontend_components_tournament_tournamentform_tournamentform"
     },
     {
       "label": "LiveMatchCard.tsx",
@@ -259,9 +549,9 @@
       "source_file": "apps/frontend/components/tournament/match/LiveMatchCard.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_frontend_components_tournament_match_livematchcard",
       "community": 192,
-      "norm_label": "livematchcard.tsx"
+      "norm_label": "livematchcard.tsx",
+      "id": "apps_frontend_components_tournament_match_livematchcard"
     },
     {
       "label": "LiveMatchCardProps",
@@ -269,9 +559,9 @@
       "source_file": "apps/frontend/components/tournament/match/LiveMatchCard.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "id": "apps_frontend_components_tournament_match_livematchcard_livematchcardprops",
       "community": 192,
-      "norm_label": "livematchcardprops"
+      "norm_label": "livematchcardprops",
+      "id": "apps_frontend_components_tournament_match_livematchcard_livematchcardprops"
     },
     {
       "label": "LiveMatchCard()",
@@ -279,9 +569,9 @@
       "source_file": "apps/frontend/components/tournament/match/LiveMatchCard.tsx",
       "source_location": "L13",
       "_origin": "ast",
-      "id": "apps_frontend_components_tournament_match_livematchcard_livematchcard",
       "community": 192,
-      "norm_label": "livematchcard()"
+      "norm_label": "livematchcard()",
+      "id": "apps_frontend_components_tournament_match_livematchcard_livematchcard"
     },
     {
       "label": "MatchCard.tsx",
@@ -289,9 +579,9 @@
       "source_file": "apps/frontend/components/tournament/match/MatchCard.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_frontend_components_tournament_match_matchcard",
       "community": 192,
-      "norm_label": "matchcard.tsx"
+      "norm_label": "matchcard.tsx",
+      "id": "apps_frontend_components_tournament_match_matchcard"
     },
     {
       "label": "MatchCardProps",
@@ -299,9 +589,9 @@
       "source_file": "apps/frontend/components/tournament/match/MatchCard.tsx",
       "source_location": "L8",
       "_origin": "ast",
-      "id": "apps_frontend_components_tournament_match_matchcard_matchcardprops",
       "community": 192,
-      "norm_label": "matchcardprops"
+      "norm_label": "matchcardprops",
+      "id": "apps_frontend_components_tournament_match_matchcard_matchcardprops"
     },
     {
       "label": "MatchCard()",
@@ -309,9 +599,9 @@
       "source_file": "apps/frontend/components/tournament/match/MatchCard.tsx",
       "source_location": "L16",
       "_origin": "ast",
-      "id": "apps_frontend_components_tournament_match_matchcard_matchcard",
       "community": 192,
-      "norm_label": "matchcard()"
+      "norm_label": "matchcard()",
+      "id": "apps_frontend_components_tournament_match_matchcard_matchcard"
     },
     {
       "label": "index.ts",
@@ -319,9 +609,9 @@
       "source_file": "apps/frontend/components/tournament/match/index.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_frontend_components_tournament_match_index",
       "community": 192,
-      "norm_label": "index.ts"
+      "norm_label": "index.ts",
+      "id": "apps_frontend_components_tournament_match_index"
     },
     {
       "label": "useTournamentSSE.ts",
@@ -329,9 +619,9 @@
       "source_file": "apps/frontend/hooks/useTournamentSSE.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_frontend_hooks_usetournamentsse",
       "community": 192,
-      "norm_label": "usetournamentsse.ts"
+      "norm_label": "usetournamentsse.ts",
+      "id": "apps_frontend_hooks_usetournamentsse"
     },
     {
       "label": "TournamentEventHandler",
@@ -339,9 +629,9 @@
       "source_file": "apps/frontend/hooks/useTournamentSSE.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "id": "apps_frontend_hooks_usetournamentsse_tournamenteventhandler",
       "community": 192,
-      "norm_label": "tournamenteventhandler"
+      "norm_label": "tournamenteventhandler",
+      "id": "apps_frontend_hooks_usetournamentsse_tournamenteventhandler"
     },
     {
       "label": "TournamentSSEHandlers",
@@ -349,9 +639,9 @@
       "source_file": "apps/frontend/hooks/useTournamentSSE.ts",
       "source_location": "L9",
       "_origin": "ast",
-      "id": "apps_frontend_hooks_usetournamentsse_tournamentssehandlers",
       "community": 192,
-      "norm_label": "tournamentssehandlers"
+      "norm_label": "tournamentssehandlers",
+      "id": "apps_frontend_hooks_usetournamentsse_tournamentssehandlers"
     },
     {
       "label": "useTournamentSSE()",
@@ -359,9 +649,9 @@
       "source_file": "apps/frontend/hooks/useTournamentSSE.ts",
       "source_location": "L22",
       "_origin": "ast",
-      "id": "apps_frontend_hooks_usetournamentsse_usetournamentsse",
       "community": 192,
-      "norm_label": "usetournamentsse()"
+      "norm_label": "usetournamentsse()",
+      "id": "apps_frontend_hooks_usetournamentsse_usetournamentsse"
     },
     {
       "label": "useAllTournamentSSE()",
@@ -369,9 +659,9 @@
       "source_file": "apps/frontend/hooks/useTournamentSSE.ts",
       "source_location": "L173",
       "_origin": "ast",
-      "id": "apps_frontend_hooks_usetournamentsse_usealltournamentsse",
       "community": 192,
-      "norm_label": "usealltournamentsse()"
+      "norm_label": "usealltournamentsse()",
+      "id": "apps_frontend_hooks_usetournamentsse_usealltournamentsse"
     },
     {
       "label": "next.config.mjs",
@@ -379,9 +669,9 @@
       "source_file": "apps/frontend/next.config.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_frontend_next_config",
       "community": 61,
-      "norm_label": "next.config.mjs"
+      "norm_label": "next.config.mjs",
+      "id": "apps_frontend_next_config"
     },
     {
       "label": "nextConfig",
@@ -389,9 +679,9 @@
       "source_file": "apps/frontend/next.config.mjs",
       "source_location": "L4",
       "_origin": "ast",
-      "id": "apps_frontend_next_config_nextconfig",
       "community": 61,
-      "norm_label": "nextconfig"
+      "norm_label": "nextconfig",
+      "id": "apps_frontend_next_config_nextconfig"
     },
     {
       "label": "withPWA",
@@ -399,9 +689,9 @@
       "source_file": "apps/frontend/next.config.mjs",
       "source_location": "L34",
       "_origin": "ast",
-      "id": "apps_frontend_next_config_withpwa",
       "community": 61,
-      "norm_label": "withpwa"
+      "norm_label": "withpwa",
+      "id": "apps_frontend_next_config_withpwa"
     },
     {
       "label": "sw.js",
@@ -409,9 +699,9 @@
       "source_file": "apps/frontend/public/sw.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_frontend_public_sw",
       "community": 69,
-      "norm_label": "sw.js"
+      "norm_label": "sw.js",
+      "id": "apps_frontend_public_sw"
     },
     {
       "label": "landing-page.service.ts",
@@ -1469,7 +1759,7 @@
       "source_file": "apps/backend/src/auth/auth.service.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 53,
+      "community": 13,
       "norm_label": "auth.service.ts",
       "id": "apps_backend_src_auth_auth_service"
     },
@@ -1549,7 +1839,7 @@
       "source_file": "apps/backend/src/auth/jwt-auth.guard.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 32,
+      "community": 53,
       "norm_label": "jwt-auth.guard.ts",
       "id": "apps_backend_src_auth_jwt_auth_guard"
     },
@@ -1559,7 +1849,7 @@
       "source_file": "apps/backend/src/auth/jwt-auth.guard.ts",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 32,
+      "community": 53,
       "norm_label": "jwtauthguard",
       "id": "apps_backend_src_auth_jwt_auth_guard_jwtauthguard"
     },
@@ -1609,7 +1899,7 @@
       "source_file": "apps/backend/src/common/audit/audit.controller.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 32,
+      "community": 53,
       "norm_label": "audit.controller.ts",
       "id": "apps_backend_src_common_audit_audit_controller"
     },
@@ -1669,7 +1959,7 @@
       "source_file": "apps/backend/src/common/audit/audit.module.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 53,
+      "community": 75,
       "norm_label": "audit.module.ts",
       "id": "apps_backend_src_common_audit_audit_module"
     },
@@ -1689,7 +1979,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 53,
+      "community": 13,
       "norm_label": "audit.service.ts",
       "id": "apps_backend_src_common_audit_audit_service"
     },
@@ -1699,7 +1989,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 53,
+      "community": 13,
       "norm_label": "auditaction",
       "id": "apps_backend_src_common_audit_audit_service_auditaction"
     },
@@ -1709,7 +1999,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L49",
       "_origin": "ast",
-      "community": 53,
+      "community": 13,
       "norm_label": "auditloginput",
       "id": "apps_backend_src_common_audit_audit_service_auditloginput"
     },
@@ -1719,7 +2009,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L63",
       "_origin": "ast",
-      "community": 53,
+      "community": 13,
       "norm_label": "auditservice",
       "id": "apps_backend_src_common_audit_audit_service_auditservice"
     },
@@ -1729,7 +2019,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L64",
       "_origin": "ast",
-      "community": 53,
+      "community": 13,
       "norm_label": ".constructor()",
       "id": "apps_backend_src_common_audit_audit_service_auditservice_constructor"
     },
@@ -1739,7 +2029,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L69",
       "_origin": "ast",
-      "community": 53,
+      "community": 13,
       "norm_label": ".log()",
       "id": "apps_backend_src_common_audit_audit_service_auditservice_log"
     },
@@ -1749,7 +2039,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L95",
       "_origin": "ast",
-      "community": 53,
+      "community": 13,
       "norm_label": ".getauditlogs()",
       "id": "apps_backend_src_common_audit_audit_service_auditservice_getauditlogs"
     },
@@ -1759,7 +2049,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L145",
       "_origin": "ast",
-      "community": 53,
+      "community": 13,
       "norm_label": ".getauditactions()",
       "id": "apps_backend_src_common_audit_audit_service_auditservice_getauditactions"
     },
@@ -1769,7 +2059,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L149",
       "_origin": "ast",
-      "community": 53,
+      "community": 13,
       "norm_label": ".getauditstats()",
       "id": "apps_backend_src_common_audit_audit_service_auditservice_getauditstats"
     },
@@ -1779,7 +2069,7 @@
       "source_file": "apps/backend/src/common/audit/index.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 53,
+      "community": 75,
       "norm_label": "index.ts",
       "id": "apps_backend_src_common_audit_index"
     },
@@ -2039,7 +2329,7 @@
       "source_file": "apps/backend/src/common/sse.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 46,
+      "community": 31,
       "norm_label": "sse.ts",
       "id": "apps_backend_src_common_sse"
     },
@@ -2049,7 +2339,7 @@
       "source_file": "apps/backend/src/common/sse.ts",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 46,
+      "community": 31,
       "norm_label": "serverevent",
       "id": "apps_backend_src_common_sse_serverevent"
     },
@@ -2059,7 +2349,7 @@
       "source_file": "apps/backend/src/common/sse.ts",
       "source_location": "L27",
       "_origin": "ast",
-      "community": 46,
+      "community": 31,
       "norm_label": "emitter",
       "id": "apps_backend_src_common_sse_emitter"
     },
@@ -2069,7 +2359,7 @@
       "source_file": "apps/backend/src/common/sse.ts",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 81,
+      "community": 92,
       "norm_label": "emitevent()",
       "id": "apps_backend_src_common_sse_emitevent"
     },
@@ -2079,7 +2369,7 @@
       "source_file": "apps/backend/src/common/sse.ts",
       "source_location": "L34",
       "_origin": "ast",
-      "community": 46,
+      "community": 31,
       "norm_label": "onevent()",
       "id": "apps_backend_src_common_sse_onevent"
     },
@@ -2189,7 +2479,7 @@
       "source_file": "apps/backend/src/email/email.controller.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 32,
+      "community": 53,
       "norm_label": "email.controller.ts",
       "id": "apps_backend_src_email_email_controller"
     },
@@ -2299,7 +2589,7 @@
       "source_file": "apps/backend/src/email/email.module.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 75,
+      "community": 53,
       "norm_label": "email.module.ts",
       "id": "apps_backend_src_email_email_module"
     },
@@ -2309,7 +2599,7 @@
       "source_file": "apps/backend/src/email/email.module.ts",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 75,
+      "community": 53,
       "norm_label": "emailmodule",
       "id": "apps_backend_src_email_email_module_emailmodule"
     },
@@ -2319,7 +2609,7 @@
       "source_file": "apps/backend/src/email/email.service.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 80,
+      "community": 53,
       "norm_label": "email.service.ts",
       "id": "apps_backend_src_email_email_service"
     },
@@ -2329,7 +2619,7 @@
       "source_file": "apps/backend/src/email/email.service.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 80,
+      "community": 53,
       "norm_label": "sendemaildto",
       "id": "apps_backend_src_email_email_service_sendemaildto"
     },
@@ -2339,7 +2629,7 @@
       "source_file": "apps/backend/src/email/email.service.ts",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 80,
+      "community": 53,
       "norm_label": "bulksendemaildto",
       "id": "apps_backend_src_email_email_service_bulksendemaildto"
     },
@@ -2349,7 +2639,7 @@
       "source_file": "apps/backend/src/email/email.service.ts",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 80,
+      "community": 53,
       "norm_label": "emailsettingsdto",
       "id": "apps_backend_src_email_email_service_emailsettingsdto"
     },
@@ -2549,7 +2839,7 @@
       "source_file": "apps/backend/src/events/dto/update-event.dto.ts",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 81,
+      "community": 92,
       "norm_label": "updateeventdto",
       "id": "apps_backend_src_events_dto_update_event_dto_updateeventdto"
     },
@@ -2569,7 +2859,7 @@
       "source_file": "apps/backend/src/events/events.controller.ts",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 81,
+      "community": 92,
       "norm_label": "eventscontroller",
       "id": "apps_backend_src_events_events_controller_eventscontroller"
     },
@@ -2579,7 +2869,7 @@
       "source_file": "apps/backend/src/events/events.controller.ts",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 34,
+      "community": 92,
       "norm_label": ".constructor()",
       "id": "apps_backend_src_events_events_controller_eventscontroller_constructor"
     },
@@ -2589,7 +2879,7 @@
       "source_file": "apps/backend/src/events/events.controller.ts",
       "source_location": "L18",
       "_origin": "ast",
-      "community": 81,
+      "community": 92,
       "norm_label": ".getpublicconfig()",
       "id": "apps_backend_src_events_events_controller_eventscontroller_getpublicconfig"
     },
@@ -2599,7 +2889,7 @@
       "source_file": "apps/backend/src/events/events.controller.ts",
       "source_location": "L27",
       "_origin": "ast",
-      "community": 81,
+      "community": 92,
       "norm_label": ".findall()",
       "id": "apps_backend_src_events_events_controller_eventscontroller_findall"
     },
@@ -2609,7 +2899,7 @@
       "source_file": "apps/backend/src/events/events.controller.ts",
       "source_location": "L34",
       "_origin": "ast",
-      "community": 81,
+      "community": 92,
       "norm_label": ".getactive()",
       "id": "apps_backend_src_events_events_controller_eventscontroller_getactive"
     },
@@ -2619,7 +2909,7 @@
       "source_file": "apps/backend/src/events/events.controller.ts",
       "source_location": "L41",
       "_origin": "ast",
-      "community": 81,
+      "community": 92,
       "norm_label": ".updateactive()",
       "id": "apps_backend_src_events_events_controller_eventscontroller_updateactive"
     },
@@ -2639,7 +2929,7 @@
       "source_file": "apps/backend/src/events/events.controller.ts",
       "source_location": "L59",
       "_origin": "ast",
-      "community": 81,
+      "community": 92,
       "norm_label": ".findbyid()",
       "id": "apps_backend_src_events_events_controller_eventscontroller_findbyid"
     },
@@ -2649,7 +2939,7 @@
       "source_file": "apps/backend/src/events/events.controller.ts",
       "source_location": "L66",
       "_origin": "ast",
-      "community": 81,
+      "community": 92,
       "norm_label": ".updatebyid()",
       "id": "apps_backend_src_events_events_controller_eventscontroller_updatebyid"
     },
@@ -2659,7 +2949,7 @@
       "source_file": "apps/backend/src/events/events.controller.ts",
       "source_location": "L77",
       "_origin": "ast",
-      "community": 81,
+      "community": 92,
       "norm_label": ".delete()",
       "id": "apps_backend_src_events_events_controller_eventscontroller_delete"
     },
@@ -2669,7 +2959,7 @@
       "source_file": "apps/backend/src/events/events.controller.ts",
       "source_location": "L84",
       "_origin": "ast",
-      "community": 81,
+      "community": 92,
       "norm_label": ".activate()",
       "id": "apps_backend_src_events_events_controller_eventscontroller_activate"
     },
@@ -2679,7 +2969,7 @@
       "source_file": "apps/backend/src/events/events.controller.ts",
       "source_location": "L94",
       "_origin": "ast",
-      "community": 81,
+      "community": 92,
       "norm_label": ".clone()",
       "id": "apps_backend_src_events_events_controller_eventscontroller_clone"
     },
@@ -2689,7 +2979,7 @@
       "source_file": "apps/backend/src/events/events.controller.ts",
       "source_location": "L101",
       "_origin": "ast",
-      "community": 81,
+      "community": 92,
       "norm_label": ".getstats()",
       "id": "apps_backend_src_events_events_controller_eventscontroller_getstats"
     },
@@ -2699,7 +2989,7 @@
       "source_file": "apps/backend/src/events/events.controller.ts",
       "source_location": "L111",
       "_origin": "ast",
-      "community": 81,
+      "community": 92,
       "norm_label": ".uploadlogo()",
       "id": "apps_backend_src_events_events_controller_eventscontroller_uploadlogo"
     },
@@ -2709,7 +2999,7 @@
       "source_file": "apps/backend/src/events/events.controller.ts",
       "source_location": "L129",
       "_origin": "ast",
-      "community": 81,
+      "community": 92,
       "norm_label": ".uploadbackground()",
       "id": "apps_backend_src_events_events_controller_eventscontroller_uploadbackground"
     },
@@ -2719,7 +3009,7 @@
       "source_file": "apps/backend/src/events/events.controller.ts",
       "source_location": "L149",
       "_origin": "ast",
-      "community": 81,
+      "community": 92,
       "norm_label": ".purge()",
       "id": "apps_backend_src_events_events_controller_eventscontroller_purge"
     },
@@ -2729,7 +3019,7 @@
       "source_file": "apps/backend/src/events/events.controller.ts",
       "source_location": "L164",
       "_origin": "ast",
-      "community": 81,
+      "community": 92,
       "norm_label": ".preview()",
       "id": "apps_backend_src_events_events_controller_eventscontroller_preview"
     },
@@ -2739,7 +3029,7 @@
       "source_file": "apps/backend/src/events/events.controller.ts",
       "source_location": "L176",
       "_origin": "ast",
-      "community": 81,
+      "community": 92,
       "norm_label": ".clearpreview()",
       "id": "apps_backend_src_events_events_controller_eventscontroller_clearpreview"
     },
@@ -2749,7 +3039,7 @@
       "source_file": "apps/backend/src/events/events.controller.ts",
       "source_location": "L187",
       "_origin": "ast",
-      "community": 81,
+      "community": 92,
       "norm_label": ".uploadsound()",
       "id": "apps_backend_src_events_events_controller_eventscontroller_uploadsound"
     },
@@ -2799,7 +3089,7 @@
       "source_file": "apps/backend/src/events/events.service.ts",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 80,
+      "community": 34,
       "norm_label": ".constructor()",
       "id": "apps_backend_src_events_events_service_eventsservice_constructor"
     },
@@ -3089,7 +3379,7 @@
       "source_file": "apps/backend/src/guests/guests.controller.ts",
       "source_location": "L48",
       "_origin": "ast",
-      "community": 0,
+      "community": 81,
       "norm_label": ".list()",
       "id": "apps_backend_src_guests_guests_controller_guestscontroller_list"
     },
@@ -3099,7 +3389,7 @@
       "source_file": "apps/backend/src/guests/guests.controller.ts",
       "source_location": "L55",
       "_origin": "ast",
-      "community": 0,
+      "community": 81,
       "norm_label": ".listcursor()",
       "id": "apps_backend_src_guests_guests_controller_guestscontroller_listcursor"
     },
@@ -3359,7 +3649,7 @@
       "source_file": "apps/backend/src/guests/guests.service.ts",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 53,
+      "community": 13,
       "norm_label": ".constructor()",
       "id": "apps_backend_src_guests_guests_service_guestsservice_constructor"
     },
@@ -3639,7 +3929,7 @@
       "source_file": "apps/backend/src/guests/guests.service.ts",
       "source_location": "L1108",
       "_origin": "ast",
-      "community": 0,
+      "community": 95,
       "norm_label": ".bulkupdate()",
       "id": "apps_backend_src_guests_guests_service_guestsservice_bulkupdate"
     },
@@ -4079,7 +4369,7 @@
       "source_file": "apps/backend/src/prisma/prisma.service.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 80,
+      "community": 13,
       "norm_label": "prisma.service.ts",
       "id": "apps_backend_src_prisma_prisma_service"
     },
@@ -4089,7 +4379,7 @@
       "source_file": "apps/backend/src/prisma/prisma.service.ts",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 80,
+      "community": 13,
       "norm_label": "prismaservice",
       "id": "apps_backend_src_prisma_prisma_service_prismaservice"
     },
@@ -4099,7 +4389,7 @@
       "source_file": "apps/backend/src/prisma/prisma.service.ts",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 80,
+      "community": 13,
       "norm_label": ".constructor()",
       "id": "apps_backend_src_prisma_prisma_service_prismaservice_constructor"
     },
@@ -4109,7 +4399,7 @@
       "source_file": "apps/backend/src/prisma/prisma.service.ts",
       "source_location": "L29",
       "_origin": "ast",
-      "community": 80,
+      "community": 13,
       "norm_label": ".onmoduleinit()",
       "id": "apps_backend_src_prisma_prisma_service_prismaservice_onmoduleinit"
     },
@@ -4119,7 +4409,7 @@
       "source_file": "apps/backend/src/prisma/prisma.service.ts",
       "source_location": "L33",
       "_origin": "ast",
-      "community": 80,
+      "community": 13,
       "norm_label": ".onmoduledestroy()",
       "id": "apps_backend_src_prisma_prisma_service_prismaservice_onmoduledestroy"
     },
@@ -4129,7 +4419,7 @@
       "source_file": "apps/backend/src/prisma/prisma.service.ts",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 80,
+      "community": 13,
       "norm_label": ".healthcheck()",
       "id": "apps_backend_src_prisma_prisma_service_prismaservice_healthcheck"
     },
@@ -4139,7 +4429,7 @@
       "source_file": "apps/backend/src/prisma/prisma.service.ts",
       "source_location": "L62",
       "_origin": "ast",
-      "community": 80,
+      "community": 13,
       "norm_label": ".getconnectionstats()",
       "id": "apps_backend_src_prisma_prisma_service_prismaservice_getconnectionstats"
     },
@@ -4419,7 +4709,7 @@
       "source_file": "apps/backend/src/public/public.controller.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 46,
+      "community": 31,
       "norm_label": "public.controller.ts",
       "id": "apps_backend_src_public_public_controller"
     },
@@ -4429,7 +4719,7 @@
       "source_file": "apps/backend/src/public/public.controller.ts",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 46,
+      "community": 92,
       "norm_label": "publiccontroller",
       "id": "apps_backend_src_public_public_controller_publiccontroller"
     },
@@ -4439,7 +4729,7 @@
       "source_file": "apps/backend/src/public/public.controller.ts",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 46,
+      "community": 25,
       "norm_label": ".constructor()",
       "id": "apps_backend_src_public_public_controller_publiccontroller_constructor"
     },
@@ -4449,7 +4739,7 @@
       "source_file": "apps/backend/src/public/public.controller.ts",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 46,
+      "community": 92,
       "norm_label": ".extractuserfromtoken()",
       "id": "apps_backend_src_public_public_controller_publiccontroller_extractuserfromtoken"
     },
@@ -4459,7 +4749,7 @@
       "source_file": "apps/backend/src/public/public.controller.ts",
       "source_location": "L38",
       "_origin": "ast",
-      "community": 46,
+      "community": 92,
       "norm_label": ".search()",
       "id": "apps_backend_src_public_public_controller_publiccontroller_search"
     },
@@ -4469,7 +4759,7 @@
       "source_file": "apps/backend/src/public/public.controller.ts",
       "source_location": "L43",
       "_origin": "ast",
-      "community": 46,
+      "community": 92,
       "norm_label": ".checkin()",
       "id": "apps_backend_src_public_public_controller_publiccontroller_checkin"
     },
@@ -4479,7 +4769,7 @@
       "source_file": "apps/backend/src/public/public.controller.ts",
       "source_location": "L54",
       "_origin": "ast",
-      "community": 46,
+      "community": 92,
       "norm_label": ".checkinbyid()",
       "id": "apps_backend_src_public_public_controller_publiccontroller_checkinbyid"
     },
@@ -4489,7 +4779,7 @@
       "source_file": "apps/backend/src/public/public.controller.ts",
       "source_location": "L65",
       "_origin": "ast",
-      "community": 46,
+      "community": 92,
       "norm_label": ".checkinqr()",
       "id": "apps_backend_src_public_public_controller_publiccontroller_checkinqr"
     },
@@ -4499,7 +4789,7 @@
       "source_file": "apps/backend/src/public/public.controller.ts",
       "source_location": "L76",
       "_origin": "ast",
-      "community": 46,
+      "community": 92,
       "norm_label": ".createandcheckin()",
       "id": "apps_backend_src_public_public_controller_publiccontroller_createandcheckin"
     },
@@ -4509,7 +4799,7 @@
       "source_file": "apps/backend/src/public/public.controller.ts",
       "source_location": "L91",
       "_origin": "ast",
-      "community": 46,
+      "community": 92,
       "norm_label": ".checkinoffline()",
       "id": "apps_backend_src_public_public_controller_publiccontroller_checkinoffline"
     },
@@ -4519,7 +4809,7 @@
       "source_file": "apps/backend/src/public/public.controller.ts",
       "source_location": "L113",
       "_origin": "ast",
-      "community": 46,
+      "community": 92,
       "norm_label": ".syncbatch()",
       "id": "apps_backend_src_public_public_controller_publiccontroller_syncbatch"
     },
@@ -4529,7 +4819,7 @@
       "source_file": "apps/backend/src/public/public.controller.ts",
       "source_location": "L152",
       "_origin": "ast",
-      "community": 46,
+      "community": 92,
       "norm_label": ".syncsouvenirbatch()",
       "id": "apps_backend_src_public_public_controller_publiccontroller_syncsouvenirbatch"
     },
@@ -4539,7 +4829,7 @@
       "source_file": "apps/backend/src/public/public.controller.ts",
       "source_location": "L194",
       "_origin": "ast",
-      "community": 46,
+      "community": 92,
       "norm_label": ".history()",
       "id": "apps_backend_src_public_public_controller_publiccontroller_history"
     },
@@ -4549,7 +4839,7 @@
       "source_file": "apps/backend/src/public/public.controller.ts",
       "source_location": "L200",
       "_origin": "ast",
-      "community": 46,
+      "community": 31,
       "norm_label": ".stream()",
       "id": "apps_backend_src_public_public_controller_publiccontroller_stream"
     },
@@ -4559,7 +4849,7 @@
       "source_file": "apps/backend/src/public/public.controller.ts",
       "source_location": "L265",
       "_origin": "ast",
-      "community": 46,
+      "community": 92,
       "norm_label": ".health()",
       "id": "apps_backend_src_public_public_controller_publiccontroller_health"
     },
@@ -4569,7 +4859,7 @@
       "source_file": "apps/backend/src/public/public.controller.ts",
       "source_location": "L298",
       "_origin": "ast",
-      "community": 46,
+      "community": 31,
       "norm_label": "reqonclose()",
       "id": "apps_backend_src_public_public_controller_reqonclose"
     },
@@ -4769,7 +5059,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.controller.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 32,
+      "community": 53,
       "norm_label": "souvenirs.controller.ts",
       "id": "apps_backend_src_souvenirs_souvenirs_controller"
     },
@@ -4989,7 +5279,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.service.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 80,
+      "community": 34,
       "norm_label": ".constructor()",
       "id": "apps_backend_src_souvenirs_souvenirs_service_souvenirsservice_constructor"
     },
@@ -5439,7 +5729,7 @@
       "source_file": "apps/backend/src/tournaments/dto/create-team.dto.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 45,
+      "community": 14,
       "norm_label": "create-team.dto.ts",
       "id": "apps_backend_src_tournaments_dto_create_team_dto"
     },
@@ -5449,7 +5739,7 @@
       "source_file": "apps/backend/src/tournaments/dto/create-team.dto.ts",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 45,
+      "community": 14,
       "norm_label": "createteammemberdto",
       "id": "apps_backend_src_tournaments_dto_create_team_dto_createteammemberdto"
     },
@@ -5459,7 +5749,7 @@
       "source_file": "apps/backend/src/tournaments/dto/create-team.dto.ts",
       "source_location": "L36",
       "_origin": "ast",
-      "community": 45,
+      "community": 14,
       "norm_label": "createteamdto",
       "id": "apps_backend_src_tournaments_dto_create_team_dto_createteamdto"
     },
@@ -5469,7 +5759,7 @@
       "source_file": "apps/backend/src/tournaments/dto/create-tournament.dto.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 47,
+      "community": 14,
       "norm_label": "create-tournament.dto.ts",
       "id": "apps_backend_src_tournaments_dto_create_tournament_dto"
     },
@@ -5479,7 +5769,7 @@
       "source_file": "apps/backend/src/tournaments/dto/create-tournament.dto.ts",
       "source_location": "L21",
       "_origin": "ast",
-      "community": 47,
+      "community": 14,
       "norm_label": "createtournamentdto",
       "id": "apps_backend_src_tournaments_dto_create_tournament_dto_createtournamentdto"
     },
@@ -5489,7 +5779,7 @@
       "source_file": "apps/backend/src/tournaments/dto/import-teams.dto.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 83,
+      "community": 14,
       "norm_label": "import-teams.dto.ts",
       "id": "apps_backend_src_tournaments_dto_import_teams_dto"
     },
@@ -5499,7 +5789,7 @@
       "source_file": "apps/backend/src/tournaments/dto/import-teams.dto.ts",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 83,
+      "community": 14,
       "norm_label": "importteammemberdto",
       "id": "apps_backend_src_tournaments_dto_import_teams_dto_importteammemberdto"
     },
@@ -5509,7 +5799,7 @@
       "source_file": "apps/backend/src/tournaments/dto/import-teams.dto.ts",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 83,
+      "community": 14,
       "norm_label": "importteamdto",
       "id": "apps_backend_src_tournaments_dto_import_teams_dto_importteamdto"
     },
@@ -5529,7 +5819,7 @@
       "source_file": "apps/backend/src/tournaments/dto/update-score.dto.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 83,
+      "community": 80,
       "norm_label": "update-score.dto.ts",
       "id": "apps_backend_src_tournaments_dto_update_score_dto"
     },
@@ -5539,7 +5829,7 @@
       "source_file": "apps/backend/src/tournaments/dto/update-score.dto.ts",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 83,
+      "community": 80,
       "norm_label": "updatescoredto",
       "id": "apps_backend_src_tournaments_dto_update_score_dto_updatescoredto"
     },
@@ -5549,7 +5839,7 @@
       "source_file": "apps/backend/src/tournaments/dto/update-tournament.dto.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 47,
+      "community": 14,
       "norm_label": "update-tournament.dto.ts",
       "id": "apps_backend_src_tournaments_dto_update_tournament_dto"
     },
@@ -5559,7 +5849,7 @@
       "source_file": "apps/backend/src/tournaments/dto/update-tournament.dto.ts",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 47,
+      "community": 14,
       "norm_label": "updatetournamentdto",
       "id": "apps_backend_src_tournaments_dto_update_tournament_dto_updatetournamentdto"
     },
@@ -5569,7 +5859,7 @@
       "source_file": "apps/backend/src/tournaments/match-scoring.service.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 83,
+      "community": 80,
       "norm_label": "match-scoring.service.ts",
       "id": "apps_backend_src_tournaments_match_scoring_service"
     },
@@ -5674,256 +5964,6 @@
       "id": "apps_backend_src_tournaments_match_scoring_service_matchscoringservice_updateteamstats"
     },
     {
-      "label": "tournaments.controller.ts",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 83,
-      "norm_label": "tournaments.controller.ts",
-      "id": "apps_backend_src_tournaments_tournaments_controller"
-    },
-    {
-      "label": "TournamentsController",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L23",
-      "_origin": "ast",
-      "community": 15,
-      "norm_label": "tournamentscontroller",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller"
-    },
-    {
-      "label": ".constructor()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L24",
-      "_origin": "ast",
-      "community": 37,
-      "norm_label": ".constructor()",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_constructor"
-    },
-    {
-      "label": ".create()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L34",
-      "_origin": "ast",
-      "community": 15,
-      "norm_label": ".create()",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_create"
-    },
-    {
-      "label": ".findAll()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L39",
-      "_origin": "ast",
-      "community": 15,
-      "norm_label": ".findall()",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_findall"
-    },
-    {
-      "label": ".findOne()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L44",
-      "_origin": "ast",
-      "community": 15,
-      "norm_label": ".findone()",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_findone"
-    },
-    {
-      "label": ".update()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L49",
-      "_origin": "ast",
-      "community": 15,
-      "norm_label": ".update()",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_update"
-    },
-    {
-      "label": ".remove()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L57",
-      "_origin": "ast",
-      "community": 15,
-      "norm_label": ".remove()",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_remove"
-    },
-    {
-      "label": ".createTeam()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L66",
-      "_origin": "ast",
-      "community": 45,
-      "norm_label": ".createteam()",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_createteam"
-    },
-    {
-      "label": ".updateTeam()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L74",
-      "_origin": "ast",
-      "community": 45,
-      "norm_label": ".updateteam()",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_updateteam"
-    },
-    {
-      "label": ".removeTeam()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L82",
-      "_origin": "ast",
-      "community": 15,
-      "norm_label": ".removeteam()",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_removeteam"
-    },
-    {
-      "label": ".addTeamMember()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L91",
-      "_origin": "ast",
-      "community": 15,
-      "norm_label": ".addteammember()",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_addteammember"
-    },
-    {
-      "label": ".removeTeamMember()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L99",
-      "_origin": "ast",
-      "community": 15,
-      "norm_label": ".removeteammember()",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_removeteammember"
-    },
-    {
-      "label": ".importTeams()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L108",
-      "_origin": "ast",
-      "community": 14,
-      "norm_label": ".importteams()",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_importteams"
-    },
-    {
-      "label": ".generateBracket()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L120",
-      "_origin": "ast",
-      "community": 15,
-      "norm_label": ".generatebracket()",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_generatebracket"
-    },
-    {
-      "label": ".getBracketView()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L125",
-      "_origin": "ast",
-      "community": 15,
-      "norm_label": ".getbracketview()",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getbracketview"
-    },
-    {
-      "label": ".getMatches()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L134",
-      "_origin": "ast",
-      "community": 15,
-      "norm_label": ".getmatches()",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getmatches"
-    },
-    {
-      "label": ".getUpcomingMatches()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L142",
-      "_origin": "ast",
-      "community": 15,
-      "norm_label": ".getupcomingmatches()",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getupcomingmatches"
-    },
-    {
-      "label": ".getLiveMatches()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L147",
-      "_origin": "ast",
-      "community": 15,
-      "norm_label": ".getlivematches()",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getlivematches"
-    },
-    {
-      "label": ".getMatch()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L152",
-      "_origin": "ast",
-      "community": 15,
-      "norm_label": ".getmatch()",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getmatch"
-    },
-    {
-      "label": ".startMatch()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L157",
-      "_origin": "ast",
-      "community": 15,
-      "norm_label": ".startmatch()",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_startmatch"
-    },
-    {
-      "label": ".updateScore()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L162",
-      "_origin": "ast",
-      "community": 83,
-      "norm_label": ".updatescore()",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_updatescore"
-    },
-    {
-      "label": ".cancelMatch()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L170",
-      "_origin": "ast",
-      "community": 15,
-      "norm_label": ".cancelmatch()",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_cancelmatch"
-    },
-    {
-      "label": ".awardWalkover()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L175",
-      "_origin": "ast",
-      "community": 15,
-      "norm_label": ".awardwalkover()",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_awardwalkover"
-    },
-    {
-      "label": ".getStats()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L187",
-      "_origin": "ast",
-      "community": 15,
-      "norm_label": ".getstats()",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getstats"
-    },
-    {
       "label": "tournaments.module.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/tournaments/tournaments.module.ts",
@@ -5949,7 +5989,7 @@
       "source_file": "apps/backend/src/tournaments/tournaments.service.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 47,
+      "community": 14,
       "norm_label": "tournaments.service.ts",
       "id": "apps_backend_src_tournaments_tournaments_service"
     },
@@ -6059,7 +6099,7 @@
       "source_file": "apps/backend/src/tournaments/tournaments.service.ts",
       "source_location": "L216",
       "_origin": "ast",
-      "community": 45,
+      "community": 14,
       "norm_label": ".addteammember()",
       "id": "apps_backend_src_tournaments_tournaments_service_tournamentsservice_addteammember"
     },
@@ -6169,7 +6209,7 @@
       "source_file": "apps/backend/src/tournaments/types/tournament.types.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 47,
+      "community": 14,
       "norm_label": "tournament.types.ts",
       "id": "apps_backend_src_tournaments_types_tournament_types"
     },
@@ -6179,7 +6219,7 @@
       "source_file": "apps/backend/src/tournaments/types/tournament.types.ts",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 47,
+      "community": 14,
       "norm_label": "sporttype",
       "id": "apps_backend_src_tournaments_types_tournament_types_sporttype"
     },
@@ -6189,7 +6229,7 @@
       "source_file": "apps/backend/src/tournaments/types/tournament.types.ts",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 47,
+      "community": 14,
       "norm_label": "tournamentformat",
       "id": "apps_backend_src_tournaments_types_tournament_types_tournamentformat"
     },
@@ -6199,7 +6239,7 @@
       "source_file": "apps/backend/src/tournaments/types/tournament.types.ts",
       "source_location": "L21",
       "_origin": "ast",
-      "community": 47,
+      "community": 14,
       "norm_label": "participanttype",
       "id": "apps_backend_src_tournaments_types_tournament_types_participanttype"
     },
@@ -6209,7 +6249,7 @@
       "source_file": "apps/backend/src/tournaments/types/tournament.types.ts",
       "source_location": "L26",
       "_origin": "ast",
-      "community": 47,
+      "community": 14,
       "norm_label": "scoringmode",
       "id": "apps_backend_src_tournaments_types_tournament_types_scoringmode"
     },
@@ -6219,7 +6259,7 @@
       "source_file": "apps/backend/src/tournaments/types/tournament.types.ts",
       "source_location": "L32",
       "_origin": "ast",
-      "community": 47,
+      "community": 14,
       "norm_label": "schedulingmode",
       "id": "apps_backend_src_tournaments_types_tournament_types_schedulingmode"
     },
@@ -6229,7 +6269,7 @@
       "source_file": "apps/backend/src/tournaments/types/tournament.types.ts",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 47,
+      "community": 14,
       "norm_label": "tournamentstatus",
       "id": "apps_backend_src_tournaments_types_tournament_types_tournamentstatus"
     },
@@ -6249,7 +6289,7 @@
       "source_file": "apps/backend/src/tournaments/types/tournament.types.ts",
       "source_location": "L52",
       "_origin": "ast",
-      "community": 47,
+      "community": 14,
       "norm_label": "scoringconfig",
       "id": "apps_backend_src_tournaments_types_tournament_types_scoringconfig"
     },
@@ -6389,7 +6429,7 @@
       "source_file": "apps/backend/src/users/users.module.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 80,
+      "community": 11,
       "norm_label": "users.module.ts",
       "id": "apps_backend_src_users_users_module"
     },
@@ -6399,7 +6439,7 @@
       "source_file": "apps/backend/src/users/users.module.ts",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 80,
+      "community": 11,
       "norm_label": "usersmodule",
       "id": "apps_backend_src_users_users_module_usersmodule"
     },
@@ -6409,7 +6449,7 @@
       "source_file": "apps/backend/src/users/users.service.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 80,
+      "community": 11,
       "norm_label": "users.service.ts",
       "id": "apps_backend_src_users_users_service"
     },
@@ -6839,7 +6879,7 @@
       "source_file": "apps/frontend/app/(main)/admin/guests/[id]/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 193,
+      "community": 20,
       "norm_label": "page.tsx",
       "id": "apps_frontend_app_main_admin_guests_id_page"
     },
@@ -6849,7 +6889,7 @@
       "source_file": "apps/frontend/app/(main)/admin/guests/[id]/page.tsx",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 193,
+      "community": 20,
       "norm_label": "guestcategory",
       "id": "apps_frontend_app_main_admin_guests_id_page_guestcategory"
     },
@@ -6859,7 +6899,7 @@
       "source_file": "apps/frontend/app/(main)/admin/guests/[id]/page.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 193,
+      "community": 20,
       "norm_label": "category_options",
       "id": "apps_frontend_app_main_admin_guests_id_page_category_options"
     },
@@ -6869,7 +6909,7 @@
       "source_file": "apps/frontend/app/(main)/admin/guests/[id]/page.tsx",
       "source_location": "L25",
       "_origin": "ast",
-      "community": 193,
+      "community": 20,
       "norm_label": "guest",
       "id": "apps_frontend_app_main_admin_guests_id_page_guest"
     },
@@ -6879,7 +6919,7 @@
       "source_file": "apps/frontend/app/(main)/admin/guests/[id]/page.tsx",
       "source_location": "L42",
       "_origin": "ast",
-      "community": 193,
+      "community": 20,
       "norm_label": "editguestpage()",
       "id": "apps_frontend_app_main_admin_guests_id_page_editguestpage"
     },
@@ -6889,7 +6929,7 @@
       "source_file": "apps/frontend/app/(main)/admin/guests/new/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 193,
+      "community": 8,
       "norm_label": "page.tsx",
       "id": "apps_frontend_app_main_admin_guests_new_page"
     },
@@ -6899,7 +6939,7 @@
       "source_file": "apps/frontend/app/(main)/admin/guests/new/page.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 193,
+      "community": 8,
       "norm_label": "guestcategory",
       "id": "apps_frontend_app_main_admin_guests_new_page_guestcategory"
     },
@@ -6909,7 +6949,7 @@
       "source_file": "apps/frontend/app/(main)/admin/guests/new/page.tsx",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 193,
+      "community": 8,
       "norm_label": "category_options",
       "id": "apps_frontend_app_main_admin_guests_new_page_category_options"
     },
@@ -6919,7 +6959,7 @@
       "source_file": "apps/frontend/app/(main)/admin/guests/new/page.tsx",
       "source_location": "L27",
       "_origin": "ast",
-      "community": 193,
+      "community": 8,
       "norm_label": "newguestpage()",
       "id": "apps_frontend_app_main_admin_guests_new_page_newguestpage"
     },
@@ -7049,7 +7089,7 @@
       "source_file": "apps/frontend/app/(main)/admin/login/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 8,
+      "community": 12,
       "norm_label": "page.tsx",
       "id": "apps_frontend_app_main_admin_login_page"
     },
@@ -7059,7 +7099,7 @@
       "source_file": "apps/frontend/app/(main)/admin/login/page.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 8,
+      "community": 12,
       "norm_label": "eventconfig",
       "id": "apps_frontend_app_main_admin_login_page_eventconfig"
     },
@@ -7069,7 +7109,7 @@
       "source_file": "apps/frontend/app/(main)/admin/login/page.tsx",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 8,
+      "community": 12,
       "norm_label": "loginpage()",
       "id": "apps_frontend_app_main_admin_login_page_loginpage"
     },
@@ -7119,7 +7159,7 @@
       "source_file": "apps/frontend/app/(main)/admin/settings/email/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 193,
+      "community": 8,
       "norm_label": "page.tsx",
       "id": "apps_frontend_app_main_admin_settings_email_page"
     },
@@ -7129,7 +7169,7 @@
       "source_file": "apps/frontend/app/(main)/admin/settings/email/page.tsx",
       "source_location": "L27",
       "_origin": "ast",
-      "community": 193,
+      "community": 8,
       "norm_label": "emailsettings",
       "id": "apps_frontend_app_main_admin_settings_email_page_emailsettings"
     },
@@ -7139,7 +7179,7 @@
       "source_file": "apps/frontend/app/(main)/admin/settings/email/page.tsx",
       "source_location": "L130",
       "_origin": "ast",
-      "community": 193,
+      "community": 8,
       "norm_label": "emailsettingspage()",
       "id": "apps_frontend_app_main_admin_settings_email_page_emailsettingspage"
     },
@@ -7229,7 +7269,7 @@
       "source_file": "apps/frontend/app/(main)/admin/settings/users/page.tsx",
       "source_location": "L26",
       "_origin": "ast",
-      "community": 8,
+      "community": 76,
       "norm_label": "usersmanagementpage()",
       "id": "apps_frontend_app_main_admin_settings_users_page_usersmanagementpage"
     },
@@ -7549,7 +7589,7 @@
       "source_file": "apps/frontend/app/(main)/layout.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 76,
+      "community": 196,
       "norm_label": "layout.tsx",
       "id": "apps_frontend_app_main_layout"
     },
@@ -7559,7 +7599,7 @@
       "source_file": "apps/frontend/app/(main)/layout.tsx",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 76,
+      "community": 196,
       "norm_label": "mainlayout()",
       "id": "apps_frontend_app_main_layout_mainlayout"
     },
@@ -7919,7 +7959,7 @@
       "source_file": "apps/frontend/app/(main)/luckydraw/page.tsx",
       "source_location": "L109",
       "_origin": "ast",
-      "community": 76,
+      "community": 38,
       "norm_label": "luckydrawpage()",
       "id": "apps_frontend_app_main_luckydraw_page_luckydrawpage"
     },
@@ -8069,7 +8109,7 @@
       "source_file": "apps/frontend/app/(main)/souvenir/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 19,
+      "community": 76,
       "norm_label": "page.tsx",
       "id": "apps_frontend_app_main_souvenir_page"
     },
@@ -8079,7 +8119,7 @@
       "source_file": "apps/frontend/app/(main)/souvenir/page.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 19,
+      "community": 76,
       "norm_label": "eventconfig",
       "id": "apps_frontend_app_main_souvenir_page_eventconfig"
     },
@@ -8089,7 +8129,7 @@
       "source_file": "apps/frontend/app/(main)/souvenir/page.tsx",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 19,
+      "community": 76,
       "norm_label": "souvenirtakeinfo",
       "id": "apps_frontend_app_main_souvenir_page_souvenirtakeinfo"
     },
@@ -8099,7 +8139,7 @@
       "source_file": "apps/frontend/app/(main)/souvenir/page.tsx",
       "source_location": "L36",
       "_origin": "ast",
-      "community": 19,
+      "community": 76,
       "norm_label": "guest",
       "id": "apps_frontend_app_main_souvenir_page_guest"
     },
@@ -8109,7 +8149,7 @@
       "source_file": "apps/frontend/app/(main)/souvenir/page.tsx",
       "source_location": "L51",
       "_origin": "ast",
-      "community": 19,
+      "community": 76,
       "norm_label": "prizewin",
       "id": "apps_frontend_app_main_souvenir_page_prizewin"
     },
@@ -8119,7 +8159,7 @@
       "source_file": "apps/frontend/app/(main)/souvenir/page.tsx",
       "source_location": "L69",
       "_origin": "ast",
-      "community": 19,
+      "community": 76,
       "norm_label": "souvenir",
       "id": "apps_frontend_app_main_souvenir_page_souvenir"
     },
@@ -8139,7 +8179,7 @@
       "source_file": "apps/frontend/app/(main)/souvenir/page.tsx",
       "source_location": "L1675",
       "_origin": "ast",
-      "community": 19,
+      "community": 76,
       "norm_label": "html5qrcodeplugin()",
       "id": "apps_frontend_app_main_souvenir_page_html5qrcodeplugin"
     },
@@ -8149,7 +8189,7 @@
       "source_file": "apps/frontend/app/layout.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 196,
       "norm_label": "layout.tsx",
       "id": "apps_frontend_app_layout"
     },
@@ -8159,7 +8199,7 @@
       "source_file": "apps/frontend/app/layout.tsx",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 2,
+      "community": 196,
       "norm_label": "inter",
       "id": "apps_frontend_app_layout_inter"
     },
@@ -8169,7 +8209,7 @@
       "source_file": "apps/frontend/app/layout.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 2,
+      "community": 196,
       "norm_label": "jetbrainsmono",
       "id": "apps_frontend_app_layout_jetbrainsmono"
     },
@@ -8179,7 +8219,7 @@
       "source_file": "apps/frontend/app/layout.tsx",
       "source_location": "L20",
       "_origin": "ast",
-      "community": 2,
+      "community": 196,
       "norm_label": "cinzel",
       "id": "apps_frontend_app_layout_cinzel"
     },
@@ -8189,7 +8229,7 @@
       "source_file": "apps/frontend/app/layout.tsx",
       "source_location": "L25",
       "_origin": "ast",
-      "community": 2,
+      "community": 196,
       "norm_label": "metadata",
       "id": "apps_frontend_app_layout_metadata"
     },
@@ -8199,7 +8239,7 @@
       "source_file": "apps/frontend/app/layout.tsx",
       "source_location": "L29",
       "_origin": "ast",
-      "community": 2,
+      "community": 196,
       "norm_label": "rootlayout()",
       "id": "apps_frontend_app_layout_rootlayout"
     },
@@ -8349,7 +8389,7 @@
       "source_file": "apps/frontend/components/ErrorBoundary.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 198,
       "norm_label": "errorboundary.tsx",
       "id": "apps_frontend_components_errorboundary"
     },
@@ -8359,7 +8399,7 @@
       "source_file": "apps/frontend/components/ErrorBoundary.tsx",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 2,
+      "community": 198,
       "norm_label": "props",
       "id": "apps_frontend_components_errorboundary_props"
     },
@@ -8369,7 +8409,7 @@
       "source_file": "apps/frontend/components/ErrorBoundary.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 2,
+      "community": 198,
       "norm_label": "state",
       "id": "apps_frontend_components_errorboundary_state"
     },
@@ -8379,7 +8419,7 @@
       "source_file": "apps/frontend/components/ErrorBoundary.tsx",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 2,
+      "community": 197,
       "norm_label": "errorboundary",
       "id": "apps_frontend_components_errorboundary_errorboundary"
     },
@@ -8389,7 +8429,7 @@
       "source_file": "apps/frontend/components/ErrorBoundary.tsx",
       "source_location": "L20",
       "_origin": "ast",
-      "community": 2,
+      "community": 197,
       "norm_label": ".constructor()",
       "id": "apps_frontend_components_errorboundary_errorboundary_constructor"
     },
@@ -8399,7 +8439,7 @@
       "source_file": "apps/frontend/components/ErrorBoundary.tsx",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 2,
+      "community": 197,
       "norm_label": ".getderivedstatefromerror()",
       "id": "apps_frontend_components_errorboundary_errorboundary_getderivedstatefromerror"
     },
@@ -8409,7 +8449,7 @@
       "source_file": "apps/frontend/components/ErrorBoundary.tsx",
       "source_location": "L34",
       "_origin": "ast",
-      "community": 2,
+      "community": 197,
       "norm_label": ".componentdidcatch()",
       "id": "apps_frontend_components_errorboundary_errorboundary_componentdidcatch"
     },
@@ -8419,7 +8459,7 @@
       "source_file": "apps/frontend/components/ErrorBoundary.tsx",
       "source_location": "L44",
       "_origin": "ast",
-      "community": 2,
+      "community": 197,
       "norm_label": ".handleretry()",
       "id": "apps_frontend_components_errorboundary_errorboundary_handleretry"
     },
@@ -8429,7 +8469,7 @@
       "source_file": "apps/frontend/components/ErrorBoundary.tsx",
       "source_location": "L48",
       "_origin": "ast",
-      "community": 2,
+      "community": 197,
       "norm_label": ".handlegohome()",
       "id": "apps_frontend_components_errorboundary_errorboundary_handlegohome"
     },
@@ -8439,7 +8479,7 @@
       "source_file": "apps/frontend/components/ErrorBoundary.tsx",
       "source_location": "L52",
       "_origin": "ast",
-      "community": 2,
+      "community": 197,
       "norm_label": ".toggledetails()",
       "id": "apps_frontend_components_errorboundary_errorboundary_toggledetails"
     },
@@ -8449,7 +8489,7 @@
       "source_file": "apps/frontend/components/ErrorBoundary.tsx",
       "source_location": "L56",
       "_origin": "ast",
-      "community": 2,
+      "community": 197,
       "norm_label": ".render()",
       "id": "apps_frontend_components_errorboundary_errorboundary_render"
     },
@@ -8459,7 +8499,7 @@
       "source_file": "apps/frontend/components/ErrorBoundary.tsx",
       "source_location": "L134",
       "_origin": "ast",
-      "community": 2,
+      "community": 198,
       "norm_label": "witherrorboundary()",
       "id": "apps_frontend_components_errorboundary_witherrorboundary"
     },
@@ -8469,7 +8509,7 @@
       "source_file": "apps/frontend/components/ErrorBoundary.tsx",
       "source_location": "L149",
       "_origin": "ast",
-      "community": 2,
+      "community": 198,
       "norm_label": "errorfallback()",
       "id": "apps_frontend_components_errorboundary_errorfallback"
     },
@@ -8659,7 +8699,7 @@
       "source_file": "apps/frontend/components/PrizeReceiptModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 38,
+      "community": 77,
       "norm_label": "prizereceiptmodal.tsx",
       "id": "apps_frontend_components_prizereceiptmodal"
     },
@@ -8669,7 +8709,7 @@
       "source_file": "apps/frontend/components/PrizeReceiptModal.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 38,
+      "community": 77,
       "norm_label": "winner",
       "id": "apps_frontend_components_prizereceiptmodal_winner"
     },
@@ -8679,7 +8719,7 @@
       "source_file": "apps/frontend/components/PrizeReceiptModal.tsx",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 38,
+      "community": 77,
       "norm_label": "prize",
       "id": "apps_frontend_components_prizereceiptmodal_prize"
     },
@@ -8689,7 +8729,7 @@
       "source_file": "apps/frontend/components/PrizeReceiptModal.tsx",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 38,
+      "community": 77,
       "norm_label": "prizereceiptmodalprops",
       "id": "apps_frontend_components_prizereceiptmodal_prizereceiptmodalprops"
     },
@@ -8699,7 +8739,7 @@
       "source_file": "apps/frontend/components/PrizeReceiptModal.tsx",
       "source_location": "L32",
       "_origin": "ast",
-      "community": 38,
+      "community": 77,
       "norm_label": "prizereceiptmodal()",
       "id": "apps_frontend_components_prizereceiptmodal_prizereceiptmodal"
     },
@@ -8814,42 +8854,12 @@
       "id": "apps_frontend_components_themebackground_themebackground"
     },
     {
-      "label": "TopNav.tsx",
-      "file_type": "code",
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 76,
-      "norm_label": "topnav.tsx",
-      "id": "apps_frontend_components_topnav"
-    },
-    {
-      "label": "TopNav()",
-      "file_type": "code",
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L13",
-      "_origin": "ast",
-      "community": 76,
-      "norm_label": "topnav()",
-      "id": "apps_frontend_components_topnav_topnav"
-    },
-    {
-      "label": "cn()",
-      "file_type": "code",
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L228",
-      "_origin": "ast",
-      "community": 76,
-      "norm_label": "cn()",
-      "id": "apps_frontend_components_topnav_cn"
-    },
-    {
       "label": "WebcamCapture.tsx",
       "file_type": "code",
       "source_file": "apps/frontend/components/WebcamCapture.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 193,
+      "community": 20,
       "norm_label": "webcamcapture.tsx",
       "id": "apps_frontend_components_webcamcapture"
     },
@@ -8859,7 +8869,7 @@
       "source_file": "apps/frontend/components/WebcamCapture.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 193,
+      "community": 20,
       "norm_label": "props",
       "id": "apps_frontend_components_webcamcapture_props"
     },
@@ -8869,7 +8879,7 @@
       "source_file": "apps/frontend/components/WebcamCapture.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 193,
+      "community": 20,
       "norm_label": "webcamcapture()",
       "id": "apps_frontend_components_webcamcapture_webcamcapture"
     },
@@ -8879,7 +8889,7 @@
       "source_file": "apps/frontend/components/WinnerHistoryModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 38,
+      "community": 77,
       "norm_label": "winnerhistorymodal.tsx",
       "id": "apps_frontend_components_winnerhistorymodal"
     },
@@ -8889,7 +8899,7 @@
       "source_file": "apps/frontend/components/WinnerHistoryModal.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 38,
+      "community": 77,
       "norm_label": "winner",
       "id": "apps_frontend_components_winnerhistorymodal_winner"
     },
@@ -8899,7 +8909,7 @@
       "source_file": "apps/frontend/components/WinnerHistoryModal.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 38,
+      "community": 77,
       "norm_label": "prize",
       "id": "apps_frontend_components_winnerhistorymodal_prize"
     },
@@ -8909,7 +8919,7 @@
       "source_file": "apps/frontend/components/WinnerHistoryModal.tsx",
       "source_location": "L22",
       "_origin": "ast",
-      "community": 38,
+      "community": 77,
       "norm_label": "winnerhistorymodalprops",
       "id": "apps_frontend_components_winnerhistorymodal_winnerhistorymodalprops"
     },
@@ -8919,7 +8929,7 @@
       "source_file": "apps/frontend/components/WinnerHistoryModal.tsx",
       "source_location": "L31",
       "_origin": "ast",
-      "community": 38,
+      "community": 77,
       "norm_label": "winnerhistorymodal()",
       "id": "apps_frontend_components_winnerhistorymodal_winnerhistorymodal"
     },
@@ -9319,7 +9329,7 @@
       "source_file": "apps/frontend/components/landing/SortableImageList.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 8,
+      "community": 193,
       "norm_label": "sortableimagelist.tsx",
       "id": "apps_frontend_components_landing_sortableimagelist"
     },
@@ -9329,7 +9339,7 @@
       "source_file": "apps/frontend/components/landing/SortableImageList.tsx",
       "source_location": "L26",
       "_origin": "ast",
-      "community": 8,
+      "community": 193,
       "norm_label": "sortableimage",
       "id": "apps_frontend_components_landing_sortableimagelist_sortableimage"
     },
@@ -9339,7 +9349,7 @@
       "source_file": "apps/frontend/components/landing/SortableImageList.tsx",
       "source_location": "L34",
       "_origin": "ast",
-      "community": 8,
+      "community": 193,
       "norm_label": "sortableimagelistprops",
       "id": "apps_frontend_components_landing_sortableimagelist_sortableimagelistprops"
     },
@@ -9349,7 +9359,7 @@
       "source_file": "apps/frontend/components/landing/SortableImageList.tsx",
       "source_location": "L44",
       "_origin": "ast",
-      "community": 8,
+      "community": 193,
       "norm_label": "sortableitem()",
       "id": "apps_frontend_components_landing_sortableimagelist_sortableitem"
     },
@@ -9359,7 +9369,7 @@
       "source_file": "apps/frontend/components/landing/SortableImageList.tsx",
       "source_location": "L117",
       "_origin": "ast",
-      "community": 8,
+      "community": 193,
       "norm_label": "sortableimagelist()",
       "id": "apps_frontend_components_landing_sortableimagelist_sortableimagelist"
     },
@@ -9939,7 +9949,7 @@
       "source_file": "apps/frontend/components/ui/Button.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 8,
+      "community": 193,
       "norm_label": "button.tsx",
       "id": "apps_frontend_components_ui_button"
     },
@@ -9949,7 +9959,7 @@
       "source_file": "apps/frontend/components/ui/Button.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 8,
+      "community": 193,
       "norm_label": "variant",
       "id": "apps_frontend_components_ui_button_variant"
     },
@@ -9959,7 +9969,7 @@
       "source_file": "apps/frontend/components/ui/Button.tsx",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 8,
+      "community": 193,
       "norm_label": "size",
       "id": "apps_frontend_components_ui_button_size"
     },
@@ -9969,7 +9979,7 @@
       "source_file": "apps/frontend/components/ui/Button.tsx",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 8,
+      "community": 193,
       "norm_label": "props",
       "id": "apps_frontend_components_ui_button_props"
     },
@@ -9979,7 +9989,7 @@
       "source_file": "apps/frontend/components/ui/Button.tsx",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 8,
+      "community": 193,
       "norm_label": "variants",
       "id": "apps_frontend_components_ui_button_variants"
     },
@@ -9989,7 +9999,7 @@
       "source_file": "apps/frontend/components/ui/Button.tsx",
       "source_location": "L25",
       "_origin": "ast",
-      "community": 8,
+      "community": 193,
       "norm_label": "sizes",
       "id": "apps_frontend_components_ui_button_sizes"
     },
@@ -10009,7 +10019,7 @@
       "source_file": "apps/frontend/components/ui/Card.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 16,
+      "community": 8,
       "norm_label": "card.tsx",
       "id": "apps_frontend_components_ui_card"
     },
@@ -10019,7 +10029,7 @@
       "source_file": "apps/frontend/components/ui/Card.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 16,
+      "community": 8,
       "norm_label": "variant",
       "id": "apps_frontend_components_ui_card_variant"
     },
@@ -10029,7 +10039,7 @@
       "source_file": "apps/frontend/components/ui/Card.tsx",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 16,
+      "community": 8,
       "norm_label": "props",
       "id": "apps_frontend_components_ui_card_props"
     },
@@ -10039,7 +10049,7 @@
       "source_file": "apps/frontend/components/ui/Card.tsx",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 16,
+      "community": 8,
       "norm_label": "variants",
       "id": "apps_frontend_components_ui_card_variants"
     },
@@ -10049,7 +10059,7 @@
       "source_file": "apps/frontend/components/ui/Card.tsx",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 16,
+      "community": 8,
       "norm_label": "card()",
       "id": "apps_frontend_components_ui_card_card"
     },
@@ -10079,7 +10089,7 @@
       "source_file": "apps/frontend/components/ui/FormSection.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 16,
+      "community": 8,
       "norm_label": "formsection.tsx",
       "id": "apps_frontend_components_ui_formsection"
     },
@@ -10089,7 +10099,7 @@
       "source_file": "apps/frontend/components/ui/FormSection.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 16,
+      "community": 8,
       "norm_label": "props",
       "id": "apps_frontend_components_ui_formsection_props"
     },
@@ -10099,7 +10109,7 @@
       "source_file": "apps/frontend/components/ui/FormSection.tsx",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 16,
+      "community": 8,
       "norm_label": "formsection()",
       "id": "apps_frontend_components_ui_formsection_formsection"
     },
@@ -10219,7 +10229,7 @@
       "source_file": "apps/frontend/components/ui/Pagination.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 8,
+      "community": 193,
       "norm_label": "pagination.tsx",
       "id": "apps_frontend_components_ui_pagination"
     },
@@ -10229,7 +10239,7 @@
       "source_file": "apps/frontend/components/ui/Pagination.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 8,
+      "community": 193,
       "norm_label": "props",
       "id": "apps_frontend_components_ui_pagination_props"
     },
@@ -10239,7 +10249,7 @@
       "source_file": "apps/frontend/components/ui/Pagination.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 8,
+      "community": 193,
       "norm_label": "pagination()",
       "id": "apps_frontend_components_ui_pagination_pagination"
     },
@@ -10279,7 +10289,7 @@
       "source_file": "apps/frontend/components/ui/Skeleton.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 195,
       "norm_label": "skeleton.tsx",
       "id": "apps_frontend_components_ui_skeleton"
     },
@@ -10289,7 +10299,7 @@
       "source_file": "apps/frontend/components/ui/Skeleton.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 2,
+      "community": 195,
       "norm_label": "skeletonprops",
       "id": "apps_frontend_components_ui_skeleton_skeletonprops"
     },
@@ -10299,7 +10309,7 @@
       "source_file": "apps/frontend/components/ui/Skeleton.tsx",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 2,
+      "community": 195,
       "norm_label": "skeleton()",
       "id": "apps_frontend_components_ui_skeleton_skeleton"
     },
@@ -10309,7 +10319,7 @@
       "source_file": "apps/frontend/components/ui/Skeleton.tsx",
       "source_location": "L18",
       "_origin": "ast",
-      "community": 2,
+      "community": 195,
       "norm_label": "skeletoncard()",
       "id": "apps_frontend_components_ui_skeleton_skeletoncard"
     },
@@ -10329,7 +10339,7 @@
       "source_file": "apps/frontend/components/ui/Skeleton.tsx",
       "source_location": "L55",
       "_origin": "ast",
-      "community": 2,
+      "community": 195,
       "norm_label": "skeletonguestcard()",
       "id": "apps_frontend_components_ui_skeleton_skeletonguestcard"
     },
@@ -10349,7 +10359,7 @@
       "source_file": "apps/frontend/components/ui/Skeleton.tsx",
       "source_location": "L80",
       "_origin": "ast",
-      "community": 2,
+      "community": 195,
       "norm_label": "skeletonlist()",
       "id": "apps_frontend_components_ui_skeleton_skeletonlist"
     },
@@ -10359,7 +10369,7 @@
       "source_file": "apps/frontend/components/ui/Skeleton.tsx",
       "source_location": "L90",
       "_origin": "ast",
-      "community": 2,
+      "community": 195,
       "norm_label": "skeletonform()",
       "id": "apps_frontend_components_ui_skeleton_skeletonform"
     },
@@ -10369,7 +10379,7 @@
       "source_file": "apps/frontend/components/ui/Skeleton.tsx",
       "source_location": "L116",
       "_origin": "ast",
-      "community": 2,
+      "community": 195,
       "norm_label": "skeletondashboard()",
       "id": "apps_frontend_components_ui_skeleton_skeletondashboard"
     },
@@ -10379,7 +10389,7 @@
       "source_file": "apps/frontend/components/ui/Skeleton.tsx",
       "source_location": "L138",
       "_origin": "ast",
-      "community": 2,
+      "community": 195,
       "norm_label": "skeletonpage()",
       "id": "apps_frontend_components_ui_skeleton_skeletonpage"
     },
@@ -10389,7 +10399,7 @@
       "source_file": "apps/frontend/components/ui/Skeleton.tsx",
       "source_location": "L153",
       "_origin": "ast",
-      "community": 2,
+      "community": 195,
       "norm_label": "skeletonchart()",
       "id": "apps_frontend_components_ui_skeleton_skeletonchart"
     },
@@ -10399,7 +10409,7 @@
       "source_file": "apps/frontend/components/ui/Skeleton.tsx",
       "source_location": "L170",
       "_origin": "ast",
-      "community": 2,
+      "community": 195,
       "norm_label": "skeletondetail()",
       "id": "apps_frontend_components_ui_skeleton_skeletondetail"
     },
@@ -10459,7 +10469,7 @@
       "source_file": "apps/frontend/components/ui/Textarea.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 193,
+      "community": 20,
       "norm_label": "textarea.tsx",
       "id": "apps_frontend_components_ui_textarea"
     },
@@ -10469,7 +10479,7 @@
       "source_file": "apps/frontend/components/ui/Textarea.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 193,
+      "community": 20,
       "norm_label": "props",
       "id": "apps_frontend_components_ui_textarea_props"
     },
@@ -10479,7 +10489,7 @@
       "source_file": "apps/frontend/components/ui/Textarea.tsx",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 193,
+      "community": 20,
       "norm_label": "textarea",
       "id": "apps_frontend_components_ui_textarea_textarea"
     },
@@ -10539,7 +10549,7 @@
       "source_file": "apps/frontend/lib/api.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 76,
+      "community": 8,
       "norm_label": "api.ts",
       "id": "apps_frontend_lib_api"
     },
@@ -10559,7 +10569,7 @@
       "source_file": "apps/frontend/lib/api.ts",
       "source_location": "L24",
       "_origin": "ast",
-      "community": 33,
+      "community": 8,
       "norm_label": "gettoken()",
       "id": "apps_frontend_lib_api_gettoken"
     },
@@ -10569,7 +10579,7 @@
       "source_file": "apps/frontend/lib/api.ts",
       "source_location": "L29",
       "_origin": "ast",
-      "community": 33,
+      "community": 8,
       "norm_label": "apifetch()",
       "id": "apps_frontend_lib_api_apifetch"
     },
@@ -10989,7 +10999,7 @@
       "source_file": "apps/frontend/lib/indexeddb.ts",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 19,
+      "community": 10,
       "norm_label": "pendingcheckin",
       "id": "apps_frontend_lib_indexeddb_pendingcheckin"
     },
@@ -11719,7 +11729,7 @@
       "source_file": "apps/frontend/lib/query-provider.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 196,
       "norm_label": "query-provider.tsx",
       "id": "apps_frontend_lib_query_provider"
     },
@@ -11729,7 +11739,7 @@
       "source_file": "apps/frontend/lib/query-provider.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 2,
+      "community": 196,
       "norm_label": "queryprovider()",
       "id": "apps_frontend_lib_query_provider_queryprovider"
     },
@@ -11779,7 +11789,7 @@
       "source_file": "apps/frontend/lib/sse-context.tsx",
       "source_location": "L26",
       "_origin": "ast",
-      "community": 76,
+      "community": 196,
       "norm_label": "sseprovider()",
       "id": "apps_frontend_lib_sse_context_sseprovider"
     },
@@ -11869,7 +11879,7 @@
       "source_file": "apps/frontend/lib/utils.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 92,
+      "community": 19,
       "norm_label": "utils.ts",
       "id": "apps_frontend_lib_utils"
     },
@@ -11879,7 +11889,7 @@
       "source_file": "apps/frontend/lib/utils.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 2,
+      "community": 195,
       "norm_label": "cn()",
       "id": "apps_frontend_lib_utils_cn"
     },
@@ -11889,7 +11899,7 @@
       "source_file": "apps/frontend/lib/utils.ts",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 92,
+      "community": 19,
       "norm_label": "debounce()",
       "id": "apps_frontend_lib_utils_debounce"
     },
@@ -11899,7 +11909,7 @@
       "source_file": "apps/frontend/lib/utils.ts",
       "source_location": "L28",
       "_origin": "ast",
-      "community": 92,
+      "community": 19,
       "norm_label": "throttle()",
       "id": "apps_frontend_lib_utils_throttle"
     },
@@ -11909,7 +11919,7 @@
       "source_file": "apps/frontend/lib/utils.ts",
       "source_location": "L45",
       "_origin": "ast",
-      "community": 92,
+      "community": 19,
       "norm_label": "formatnumber()",
       "id": "apps_frontend_lib_utils_formatnumber"
     },
@@ -11919,7 +11929,7 @@
       "source_file": "apps/frontend/lib/utils.ts",
       "source_location": "L52",
       "_origin": "ast",
-      "community": 92,
+      "community": 19,
       "norm_label": "formatdate()",
       "id": "apps_frontend_lib_utils_formatdate"
     },
@@ -11929,7 +11939,7 @@
       "source_file": "apps/frontend/lib/utils.ts",
       "source_location": "L64",
       "_origin": "ast",
-      "community": 92,
+      "community": 19,
       "norm_label": "formattime()",
       "id": "apps_frontend_lib_utils_formattime"
     },
@@ -11939,7 +11949,7 @@
       "source_file": "apps/frontend/lib/utils.ts",
       "source_location": "L75",
       "_origin": "ast",
-      "community": 92,
+      "community": 19,
       "norm_label": "sleep()",
       "id": "apps_frontend_lib_utils_sleep"
     },
@@ -25704,12 +25714,326 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.module.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_module",
+      "target": "apps_backend_src_tournaments_tournaments_controller"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L91",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_addteammember",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L175",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_awardwalkover",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L170",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_cancelmatch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_create",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L66",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_createteam",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_findall",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_findone",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L120",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_generatebracket",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L125",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getbracketview",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L147",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getlivematches",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L152",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getmatch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L134",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getmatches",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L187",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getstats",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L142",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getupcomingmatches",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L108",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_importteams",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L57",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_remove",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L82",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_removeteam",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L99",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_removeteammember",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L157",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_startmatch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_update",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L162",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_updatescore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_updateteam",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.module.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_module",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/layout.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_layout",
+      "target": "apps_frontend_components_topnav"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/components/TopNav.tsx",
+      "source_location": "L30",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_components_topnav",
+      "target": "apps_frontend_components_topnav_adminlink"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/components/TopNav.tsx",
+      "source_location": "L346",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_components_topnav",
+      "target": "apps_frontend_components_topnav_cn"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/components/TopNav.tsx",
+      "source_location": "L36",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_components_topnav",
+      "target": "apps_frontend_components_topnav_topnav"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/components/TopNav.tsx",
+      "source_location": "L178",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_components_topnav_topnav",
+      "target": "apps_frontend_components_topnav_cn"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/edit/page.tsx",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_tournaments_id_edit_page",
-      "target": "apps_frontend_app_main_admin_tournaments_id_edit_page_edittournamentpage",
-      "confidence_score": 1.0
+      "target": "apps_frontend_app_main_admin_tournaments_id_edit_page_edittournamentpage"
     },
     {
       "relation": "imports_from",
@@ -25718,9 +26042,9 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/edit/page.tsx",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_tournaments_id_edit_page",
-      "target": "apps_frontend_components_tournament_tournamentform",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_tournamentform"
     },
     {
       "relation": "imports",
@@ -25729,9 +26053,9 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/edit/page.tsx",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_tournaments_id_edit_page",
-      "target": "apps_frontend_components_tournament_tournamentform_tournamentform",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_tournamentform_tournamentform"
     },
     {
       "relation": "contains",
@@ -25739,9 +26063,9 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/page.tsx",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_tournaments_id_page",
-      "target": "apps_frontend_app_main_admin_tournaments_id_page_tabid",
-      "confidence_score": 1.0
+      "target": "apps_frontend_app_main_admin_tournaments_id_page_tabid"
     },
     {
       "relation": "contains",
@@ -25749,9 +26073,9 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/page.tsx",
       "source_location": "L21",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_tournaments_id_page",
-      "target": "apps_frontend_app_main_admin_tournaments_id_page_tournamentdetailpage",
-      "confidence_score": 1.0
+      "target": "apps_frontend_app_main_admin_tournaments_id_page_tournamentdetailpage"
     },
     {
       "relation": "imports_from",
@@ -25760,9 +26084,9 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/page.tsx",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_tournaments_id_page",
-      "target": "apps_frontend_components_tournament_match_index",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_match_index"
     },
     {
       "relation": "imports",
@@ -25771,9 +26095,9 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/page.tsx",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_tournaments_id_page",
-      "target": "apps_frontend_components_tournament_match_matchcard_matchcard",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_match_matchcard_matchcard"
     },
     {
       "relation": "imports_from",
@@ -25782,9 +26106,9 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/page.tsx",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_tournaments_id_page",
-      "target": "apps_frontend_hooks_usetournamentsse",
-      "confidence_score": 1.0
+      "target": "apps_frontend_hooks_usetournamentsse"
     },
     {
       "relation": "imports",
@@ -25793,9 +26117,9 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/page.tsx",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_tournaments_id_page",
-      "target": "apps_frontend_hooks_usetournamentsse_usetournamentsse",
-      "confidence_score": 1.0
+      "target": "apps_frontend_hooks_usetournamentsse_usetournamentsse"
     },
     {
       "relation": "calls",
@@ -25814,9 +26138,9 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/new/page.tsx",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_tournaments_new_page",
-      "target": "apps_frontend_app_main_admin_tournaments_new_page_newtournamentpage",
-      "confidence_score": 1.0
+      "target": "apps_frontend_app_main_admin_tournaments_new_page_newtournamentpage"
     },
     {
       "relation": "imports_from",
@@ -25825,9 +26149,9 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/new/page.tsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_tournaments_new_page",
-      "target": "apps_frontend_components_tournament_tournamentform",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_tournamentform"
     },
     {
       "relation": "imports",
@@ -25836,9 +26160,9 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/new/page.tsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_tournaments_new_page",
-      "target": "apps_frontend_components_tournament_tournamentform_tournamentform",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_tournamentform_tournamentform"
     },
     {
       "relation": "contains",
@@ -25846,9 +26170,9 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/page.tsx",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_tournaments_page",
-      "target": "apps_frontend_app_main_admin_tournaments_page_admintournamentspage",
-      "confidence_score": 1.0
+      "target": "apps_frontend_app_main_admin_tournaments_page_admintournamentspage"
     },
     {
       "relation": "imports_from",
@@ -25857,9 +26181,9 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/page.tsx",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_tournaments_page",
-      "target": "apps_frontend_components_tournament_tournamentform",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_tournamentform"
     },
     {
       "relation": "imports",
@@ -25868,9 +26192,9 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/page.tsx",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_tournaments_page",
-      "target": "apps_frontend_components_tournament_tournamentform_tournamentform",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_tournamentform_tournamentform"
     },
     {
       "relation": "contains",
@@ -25878,9 +26202,9 @@
       "source_file": "apps/frontend/app/(main)/live/page.tsx",
       "source_location": "L15",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_live_page",
-      "target": "apps_frontend_app_main_live_page_livepage",
-      "confidence_score": 1.0
+      "target": "apps_frontend_app_main_live_page_livepage"
     },
     {
       "relation": "contains",
@@ -25888,9 +26212,9 @@
       "source_file": "apps/frontend/app/(main)/live/page.tsx",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_live_page",
-      "target": "apps_frontend_app_main_live_page_livetournamentinfo",
-      "confidence_score": 1.0
+      "target": "apps_frontend_app_main_live_page_livetournamentinfo"
     },
     {
       "relation": "imports_from",
@@ -25899,9 +26223,9 @@
       "source_file": "apps/frontend/app/(main)/live/page.tsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_live_page",
-      "target": "apps_frontend_components_tournament_match_livematchcard",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_match_livematchcard"
     },
     {
       "relation": "imports",
@@ -25910,9 +26234,9 @@
       "source_file": "apps/frontend/app/(main)/live/page.tsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_live_page",
-      "target": "apps_frontend_components_tournament_match_livematchcard_livematchcard",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_match_livematchcard_livematchcard"
     },
     {
       "relation": "contains",
@@ -25920,9 +26244,9 @@
       "source_file": "apps/frontend/app/(main)/tournament/bracket/[id]/page.tsx",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_tournament_bracket_id_page",
-      "target": "apps_frontend_app_main_tournament_bracket_id_page_publicbracketviewerpage",
-      "confidence_score": 1.0
+      "target": "apps_frontend_app_main_tournament_bracket_id_page_publicbracketviewerpage"
     },
     {
       "relation": "imports_from",
@@ -25931,9 +26255,9 @@
       "source_file": "apps/frontend/app/(main)/tournament/bracket/[id]/page.tsx",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_tournament_bracket_id_page",
-      "target": "apps_frontend_hooks_usetournamentsse",
-      "confidence_score": 1.0
+      "target": "apps_frontend_hooks_usetournamentsse"
     },
     {
       "relation": "imports",
@@ -25942,9 +26266,9 @@
       "source_file": "apps/frontend/app/(main)/tournament/bracket/[id]/page.tsx",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_tournament_bracket_id_page",
-      "target": "apps_frontend_hooks_usetournamentsse_usetournamentsse",
-      "confidence_score": 1.0
+      "target": "apps_frontend_hooks_usetournamentsse_usetournamentsse"
     },
     {
       "relation": "calls",
@@ -25963,9 +26287,9 @@
       "source_file": "apps/frontend/app/(main)/tournament/bracket/page.tsx",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_tournament_bracket_page",
-      "target": "apps_frontend_app_main_tournament_bracket_page_tournamentbracketspage",
-      "confidence_score": 1.0
+      "target": "apps_frontend_app_main_tournament_bracket_page_tournamentbracketspage"
     },
     {
       "relation": "contains",
@@ -25973,9 +26297,9 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L33",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_tournament_tournamentform",
-      "target": "apps_frontend_components_tournament_tournamentform_formatoptions",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_tournamentform_formatoptions"
     },
     {
       "relation": "contains",
@@ -25983,9 +26307,9 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L52",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_tournament_tournamentform",
-      "target": "apps_frontend_components_tournament_tournamentform_inputclasses",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_tournamentform_inputclasses"
     },
     {
       "relation": "contains",
@@ -25993,9 +26317,9 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L60",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_tournament_tournamentform",
-      "target": "apps_frontend_components_tournament_tournamentform_labelclasses",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_tournamentform_labelclasses"
     },
     {
       "relation": "contains",
@@ -26003,9 +26327,9 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L41",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_tournament_tournamentform",
-      "target": "apps_frontend_components_tournament_tournamentform_participantoptions",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_tournamentform_participantoptions"
     },
     {
       "relation": "contains",
@@ -26013,9 +26337,9 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L46",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_tournament_tournamentform",
-      "target": "apps_frontend_components_tournament_tournamentform_scoringoptions",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_tournamentform_scoringoptions"
     },
     {
       "relation": "contains",
@@ -26023,9 +26347,9 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L23",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_tournament_tournamentform",
-      "target": "apps_frontend_components_tournament_tournamentform_sportoptions",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_tournamentform_sportoptions"
     },
     {
       "relation": "contains",
@@ -26033,9 +26357,9 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L65",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_tournament_tournamentform",
-      "target": "apps_frontend_components_tournament_tournamentform_tournamentform",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_tournamentform_tournamentform"
     },
     {
       "relation": "contains",
@@ -26043,9 +26367,9 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L15",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_tournament_tournamentform",
-      "target": "apps_frontend_components_tournament_tournamentform_tournamentformprops",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_tournamentform_tournamentformprops"
     },
     {
       "relation": "calls",
@@ -26054,9 +26378,9 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L153",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_tournament_tournamentform_tournamentform",
-      "target": "apps_frontend_components_tournament_tournamentform_inputclasses",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_tournamentform_inputclasses"
     },
     {
       "relation": "calls",
@@ -26065,9 +26389,9 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L144",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_tournament_tournamentform_tournamentform",
-      "target": "apps_frontend_components_tournament_tournamentform_labelclasses",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_tournamentform_labelclasses"
     },
     {
       "relation": "re_exports",
@@ -26076,9 +26400,9 @@
       "source_file": "apps/frontend/components/tournament/match/index.ts",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_tournament_match_index",
-      "target": "apps_frontend_components_tournament_match_livematchcard",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_match_livematchcard"
     },
     {
       "relation": "contains",
@@ -26086,9 +26410,9 @@
       "source_file": "apps/frontend/components/tournament/match/LiveMatchCard.tsx",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_tournament_match_livematchcard",
-      "target": "apps_frontend_components_tournament_match_livematchcard_livematchcard",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_match_livematchcard_livematchcard"
     },
     {
       "relation": "contains",
@@ -26096,9 +26420,9 @@
       "source_file": "apps/frontend/components/tournament/match/LiveMatchCard.tsx",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_tournament_match_livematchcard",
-      "target": "apps_frontend_components_tournament_match_livematchcard_livematchcardprops",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_match_livematchcard_livematchcardprops"
     },
     {
       "relation": "re_exports",
@@ -26107,9 +26431,9 @@
       "source_file": "apps/frontend/components/tournament/match/index.ts",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_tournament_match_index",
-      "target": "apps_frontend_components_tournament_match_livematchcard_livematchcard",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_match_livematchcard_livematchcard"
     },
     {
       "relation": "re_exports",
@@ -26118,9 +26442,9 @@
       "source_file": "apps/frontend/components/tournament/match/index.ts",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_tournament_match_index",
-      "target": "apps_frontend_components_tournament_match_matchcard",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_match_matchcard"
     },
     {
       "relation": "contains",
@@ -26128,9 +26452,9 @@
       "source_file": "apps/frontend/components/tournament/match/MatchCard.tsx",
       "source_location": "L16",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_tournament_match_matchcard",
-      "target": "apps_frontend_components_tournament_match_matchcard_matchcard",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_match_matchcard_matchcard"
     },
     {
       "relation": "contains",
@@ -26138,9 +26462,9 @@
       "source_file": "apps/frontend/components/tournament/match/MatchCard.tsx",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_tournament_match_matchcard",
-      "target": "apps_frontend_components_tournament_match_matchcard_matchcardprops",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_match_matchcard_matchcardprops"
     },
     {
       "relation": "re_exports",
@@ -26149,9 +26473,9 @@
       "source_file": "apps/frontend/components/tournament/match/index.ts",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_tournament_match_index",
-      "target": "apps_frontend_components_tournament_match_matchcard_matchcard",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_tournament_match_matchcard_matchcard"
     },
     {
       "relation": "contains",
@@ -26159,9 +26483,9 @@
       "source_file": "apps/frontend/hooks/useTournamentSSE.ts",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_hooks_usetournamentsse",
-      "target": "apps_frontend_hooks_usetournamentsse_tournamenteventhandler",
-      "confidence_score": 1.0
+      "target": "apps_frontend_hooks_usetournamentsse_tournamenteventhandler"
     },
     {
       "relation": "contains",
@@ -26169,9 +26493,9 @@
       "source_file": "apps/frontend/hooks/useTournamentSSE.ts",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_hooks_usetournamentsse",
-      "target": "apps_frontend_hooks_usetournamentsse_tournamentssehandlers",
-      "confidence_score": 1.0
+      "target": "apps_frontend_hooks_usetournamentsse_tournamentssehandlers"
     },
     {
       "relation": "contains",
@@ -26179,9 +26503,9 @@
       "source_file": "apps/frontend/hooks/useTournamentSSE.ts",
       "source_location": "L173",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_hooks_usetournamentsse",
-      "target": "apps_frontend_hooks_usetournamentsse_usealltournamentsse",
-      "confidence_score": 1.0
+      "target": "apps_frontend_hooks_usetournamentsse_usealltournamentsse"
     },
     {
       "relation": "contains",
@@ -26189,9 +26513,9 @@
       "source_file": "apps/frontend/hooks/useTournamentSSE.ts",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_hooks_usetournamentsse",
-      "target": "apps_frontend_hooks_usetournamentsse_usetournamentsse",
-      "confidence_score": 1.0
+      "target": "apps_frontend_hooks_usetournamentsse_usetournamentsse"
     },
     {
       "relation": "contains",
@@ -26199,9 +26523,9 @@
       "source_file": "apps/frontend/next.config.mjs",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_next_config",
-      "target": "apps_frontend_next_config_nextconfig",
-      "confidence_score": 1.0
+      "target": "apps_frontend_next_config_nextconfig"
     },
     {
       "relation": "contains",
@@ -26209,9 +26533,9 @@
       "source_file": "apps/frontend/next.config.mjs",
       "source_location": "L34",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_next_config",
-      "target": "apps_frontend_next_config_withpwa",
-      "confidence_score": 1.0
+      "target": "apps_frontend_next_config_withpwa"
     },
     {
       "relation": "imports_from",
@@ -28324,17 +28648,6 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L14",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller",
-      "target": "apps_backend_src_auth_jwt_auth_guard"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "apps/backend/src/users/users.controller.ts",
       "source_location": "L4",
       "weight": 1.0,
@@ -28439,17 +28752,6 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "apps_backend_src_souvenirs_souvenirs_controller",
-      "target": "apps_backend_src_auth_jwt_auth_guard_jwtauthguard"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L14",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller",
       "target": "apps_backend_src_auth_jwt_auth_guard_jwtauthguard"
     },
     {
@@ -36052,17 +36354,6 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L17",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller",
-      "target": "apps_backend_src_tournaments_dto_create_team_dto"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "apps/backend/src/tournaments/tournaments.service.ts",
       "source_location": "L5",
       "weight": 1.0,
@@ -36091,39 +36382,6 @@
       "confidence_score": 1.0,
       "source": "apps_backend_src_tournaments_tournaments_service_tournamentsservice_addteammember",
       "target": "apps_backend_src_tournaments_dto_create_team_dto_createteammemberdto"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L17",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller",
-      "target": "apps_backend_src_tournaments_dto_create_team_dto_createteamdto"
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L66",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_createteam",
-      "target": "apps_backend_src_tournaments_dto_create_team_dto_createteamdto"
-    },
-    {
-      "relation": "references",
-      "context": "generic_arg",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L74",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_updateteam",
-      "target": "apps_backend_src_tournaments_dto_create_team_dto_createteamdto"
     },
     {
       "relation": "imports",
@@ -36260,17 +36518,6 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L15",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller",
-      "target": "apps_backend_src_tournaments_dto_create_tournament_dto"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "apps/backend/src/tournaments/tournaments.service.ts",
       "source_location": "L3",
       "weight": 1.0,
@@ -36359,28 +36606,6 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L15",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller",
-      "target": "apps_backend_src_tournaments_dto_create_tournament_dto_createtournamentdto"
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L34",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_create",
-      "target": "apps_backend_src_tournaments_dto_create_tournament_dto_createtournamentdto"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "apps/backend/src/tournaments/tournaments.service.ts",
       "source_location": "L3",
       "weight": 1.0,
@@ -36433,17 +36658,6 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L19",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller",
-      "target": "apps_backend_src_tournaments_dto_import_teams_dto"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "apps/backend/src/tournaments/tournaments.service.ts",
       "source_location": "L6",
       "weight": 1.0,
@@ -36461,28 +36675,6 @@
       "confidence_score": 1.0,
       "source": "apps_backend_src_tournaments_tournaments_service",
       "target": "apps_backend_src_tournaments_dto_import_teams_dto_importteamdto"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L19",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller",
-      "target": "apps_backend_src_tournaments_dto_import_teams_dto_importteamsdto"
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L108",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_importteams",
-      "target": "apps_backend_src_tournaments_dto_import_teams_dto_importteamsdto"
     },
     {
       "relation": "imports",
@@ -36528,17 +36720,6 @@
       "target": "apps_backend_src_tournaments_dto_update_score_dto"
     },
     {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L18",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller",
-      "target": "apps_backend_src_tournaments_dto_update_score_dto"
-    },
-    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -36558,28 +36739,6 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "apps_backend_src_tournaments_match_scoring_service_matchscoringservice_updatescore",
-      "target": "apps_backend_src_tournaments_dto_update_score_dto_updatescoredto"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L18",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller",
-      "target": "apps_backend_src_tournaments_dto_update_score_dto_updatescoredto"
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L162",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_updatescore",
       "target": "apps_backend_src_tournaments_dto_update_score_dto_updatescoredto"
     },
     {
@@ -36618,17 +36777,6 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L16",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller",
-      "target": "apps_backend_src_tournaments_dto_update_tournament_dto"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "apps/backend/src/tournaments/tournaments.service.ts",
       "source_location": "L4",
       "weight": 1.0,
@@ -36646,28 +36794,6 @@
       "confidence_score": 1.0,
       "source": "apps_backend_src_tournaments_dto_update_tournament_dto_updatetournamentdto",
       "target": "apps_backend_src_tournaments_types_tournament_types_tournamentstatus"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L16",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller",
-      "target": "apps_backend_src_tournaments_dto_update_tournament_dto_updatetournamentdto"
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L49",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_update",
-      "target": "apps_backend_src_tournaments_dto_update_tournament_dto_updatetournamentdto"
     },
     {
       "relation": "imports",
@@ -36722,17 +36848,6 @@
       "confidence_score": 1.0,
       "source": "apps_backend_src_tournaments_match_scoring_service",
       "target": "apps_backend_src_tournaments_types_tournament_types_matchstatus"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L13",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller",
-      "target": "apps_backend_src_tournaments_match_scoring_service"
     },
     {
       "relation": "imports_from",
@@ -36850,28 +36965,6 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L13",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller",
-      "target": "apps_backend_src_tournaments_match_scoring_service_matchscoringservice"
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L24",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_constructor",
-      "target": "apps_backend_src_tournaments_match_scoring_service_matchscoringservice"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "apps/backend/src/tournaments/tournaments.module.ts",
       "source_location": "L4",
       "weight": 1.0,
@@ -36944,301 +37037,6 @@
       "confidence_score": 1.0,
       "source": "apps_backend_src_tournaments_match_scoring_service_matchscoringservice_awardwalkover",
       "target": "apps_backend_src_tournaments_match_scoring_service_matchscoringservice_advancewinner"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L23",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L12",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller",
-      "target": "apps_backend_src_tournaments_tournaments_service"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L12",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller",
-      "target": "apps_backend_src_tournaments_tournaments_service_tournamentsservice"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.module.ts",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_module",
-      "target": "apps_backend_src_tournaments_tournaments_controller"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L91",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_addteammember"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L175",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_awardwalkover"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L170",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_cancelmatch"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L24",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_constructor"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L34",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_create"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L66",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_createteam"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L39",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_findall"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L44",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_findone"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L120",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_generatebracket"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L125",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getbracketview"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L147",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getlivematches"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L152",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getmatch"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L134",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getmatches"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L187",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getstats"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L142",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getupcomingmatches"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L108",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_importteams"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L57",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_remove"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L82",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_removeteam"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L99",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_removeteammember"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L157",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_startmatch"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L49",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_update"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L162",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_updatescore"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L74",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_updateteam"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.module.ts",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_module",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller"
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L24",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_constructor",
-      "target": "apps_backend_src_tournaments_tournaments_service_tournamentsservice"
     },
     {
       "relation": "contains",
@@ -41540,17 +41338,6 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "apps/frontend/app/(main)/layout.tsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_layout",
-      "target": "apps_frontend_components_topnav"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/layout.tsx",
       "source_location": "L6",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -43589,17 +43376,6 @@
       "target": "apps_frontend_lib_sse_context_usesse"
     },
     {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_components_topnav",
-      "target": "apps_frontend_components_eventselector"
-    },
-    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -44146,136 +43922,6 @@
       "source_location": "L19",
       "weight": 1.0,
       "source": "apps_frontend_components_themebackground_themebackground",
-      "target": "apps_frontend_lib_sse_context_usesse"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L228",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_components_topnav",
-      "target": "apps_frontend_components_topnav_cn"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L13",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_components_topnav",
-      "target": "apps_frontend_components_topnav_topnav"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L11",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_components_topnav",
-      "target": "apps_frontend_components_ui_button"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L11",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_components_topnav",
-      "target": "apps_frontend_components_ui_button_button"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L10",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_components_topnav",
-      "target": "apps_frontend_components_ui_iconbutton"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L10",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_components_topnav",
-      "target": "apps_frontend_components_ui_iconbutton_iconbutton"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L9",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_components_topnav",
-      "target": "apps_frontend_components_ui_statusbadge"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_components_topnav",
-      "target": "apps_frontend_lib_api"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_components_topnav",
-      "target": "apps_frontend_lib_api_apibase"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L7",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_components_topnav",
-      "target": "apps_frontend_lib_sse_context"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L7",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_components_topnav",
-      "target": "apps_frontend_lib_sse_context_usesse"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L19",
-      "weight": 1.0,
-      "source": "apps_frontend_components_topnav_topnav",
       "target": "apps_frontend_lib_sse_context_usesse"
     },
     {
@@ -63554,5 +63200,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "4230cc7f9ad804244a7c8a408531e84b9013c272"
+  "built_at_commit": "6748d347de1ab8a88b9aa88611f837730a16d4d6"
 }

@@ -3,15 +3,20 @@
 import React from "react";
 import type { TournamentTeam } from "@/types/tournament.types";
 import { TeamLogo } from "./TeamLogo";
+import { Edit, Trash2, Users } from "lucide-react";
+import Button from "@/components/ui/Button";
 import { TeamMemberList } from "./TeamMemberList";
 
 interface TeamCardProps {
   team: TournamentTeam;
   onClick?: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
+  onManageMembers?: () => void;
   showDetails?: boolean;
 }
 
-export function TeamCard({ team, onClick, showDetails = false }: TeamCardProps) {
+export function TeamCard({ team, onClick, onEdit, onDelete, onManageMembers, showDetails = false }: TeamCardProps) {
   return (
     <div
       className={cn(
@@ -21,16 +26,46 @@ export function TeamCard({ team, onClick, showDetails = false }: TeamCardProps) 
       onClick={onClick}
     >
       <div className="p-5">
-        <div className="flex items-center gap-4">
-          <TeamLogo src={team.logoUrl} name={team.name} size="lg" />
-          <div className="flex-1 min-w-0">
-            <h3 className="font-bold text-lg text-brand-text truncate">
-              {team.name}
-            </h3>
-            {team.seed && (
-              <p className="text-sm font-medium text-brand-textMuted">
-                Seed #{team.seed}
-              </p>
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-4 min-w-0">
+            <TeamLogo src={team.logoUrl} name={team.name} size="lg" />
+            <div className="flex-1 min-w-0">
+              <h3 className="font-bold text-lg text-brand-text truncate">
+                {team.name}
+              </h3>
+              {team.seed && (
+                <p className="text-sm font-medium text-brand-textMuted">
+                  Seed #{team.seed}
+                </p>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center gap-1 shrink-0">
+            {onEdit && (
+              <button
+                type="button"
+                className="p-1.5 rounded-md text-brand-textMuted hover:text-brand-text hover:bg-white/[0.05]"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit();
+                }}
+                aria-label="Edit team"
+              >
+                <Edit size={16} />
+              </button>
+            )}
+            {onDelete && (
+              <button
+                type="button"
+                className="p-1.5 rounded-md text-brand-danger hover:bg-brand-danger/10"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete();
+                }}
+                aria-label="Delete team"
+              >
+                <Trash2 size={16} />
+              </button>
             )}
           </div>
         </div>
@@ -57,9 +92,15 @@ export function TeamCard({ team, onClick, showDetails = false }: TeamCardProps) 
           </div>
         </div>
 
+        {onManageMembers && (
+          <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onManageMembers(); }} className="mt-4 w-full">
+            <Users size={14} className="mr-2" /> Manage Members
+          </Button>
+        )}
+
         {/* Members */}
         {showDetails && team.members && team.members.length > 0 && (
-          <div className="mt-6 pt-5 border-t border-brand-border">
+          <div className="mt-4 pt-4 border-t border-brand-border">
             <h4 className="text-sm font-semibold mb-3 text-brand-text">
               Members ({team.members.length})
             </h4>

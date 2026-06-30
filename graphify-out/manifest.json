@@ -200,14 +200,14 @@
     "semantic_hash": "57a7d7552d7f7b8268403426be0df033"
   },
   "apps/backend/src/landing-page/dto/update-landing-config.dto.ts": {
-    "mtime": 1782736719.298407,
-    "ast_hash": "9ff342a8710265c519b00071f735ffa5",
-    "semantic_hash": "9ff342a8710265c519b00071f735ffa5"
+    "mtime": 1782793443.2402256,
+    "ast_hash": "36c0f440b4ee65a5cfb16af415bb583b",
+    "semantic_hash": ""
   },
   "apps/backend/src/landing-page/landing-page.controller.ts": {
-    "mtime": 1782736719.2994068,
-    "ast_hash": "77120e58a5ac3df2a2c79e9946b0c4fa",
-    "semantic_hash": "77120e58a5ac3df2a2c79e9946b0c4fa"
+    "mtime": 1782793119.587016,
+    "ast_hash": "3498f6df65ae2494edb7656a8e69578f",
+    "semantic_hash": ""
   },
   "apps/backend/src/landing-page/landing-page.module.ts": {
     "mtime": 1782736719.2994068,
@@ -215,8 +215,8 @@
     "semantic_hash": "bba8ae23e73cb5dd67b1f090166d44fd"
   },
   "apps/backend/src/landing-page/landing-page.service.ts": {
-    "mtime": 1782786474.0139914,
-    "ast_hash": "aa946339ea724d4b8be2377498af9431",
+    "mtime": 1782793468.9324417,
+    "ast_hash": "c0c02011ca0a912bde3c122e39c652c2",
     "semantic_hash": ""
   },
   "apps/backend/src/main.ts": {
@@ -390,8 +390,8 @@
     "semantic_hash": "4c7c026af47b8fe9b3c783bf13dd7197"
   },
   "apps/frontend/app/(main)/admin/settings/landing-page/page.tsx": {
-    "mtime": 1782786534.424091,
-    "ast_hash": "3af174d3af5e8201a8d672e3f1d7a342",
+    "mtime": 1782793521.516241,
+    "ast_hash": "c789a508e2a745adf697996d858df43e",
     "semantic_hash": ""
   },
   "apps/frontend/app/(main)/admin/settings/users/page.tsx": {
@@ -465,9 +465,9 @@
     "semantic_hash": "0fafad2fc1c7fa2e8121e704914b0148"
   },
   "apps/frontend/app/page.tsx": {
-    "mtime": 1782736719.3019722,
-    "ast_hash": "88d5fd316f9aa60d5bcd42c9436e8692",
-    "semantic_hash": "88d5fd316f9aa60d5bcd42c9436e8692"
+    "mtime": 1782793486.2562592,
+    "ast_hash": "4993a07c5411ad6d1aa594b2a0714647",
+    "semantic_hash": ""
   },
   "apps/frontend/components/CompanyStatsChart.tsx": {
     "mtime": 1782437799.4873855,
@@ -530,9 +530,9 @@
     "semantic_hash": "4deaa0e9060ee75b9cbb33388730abf9"
   },
   "apps/frontend/components/TopNav.tsx": {
-    "mtime": 1782736719.3019722,
-    "ast_hash": "e42fe5343559b8fb72fe32a439ece175",
-    "semantic_hash": "e42fe5343559b8fb72fe32a439ece175"
+    "mtime": 1782794258.9502752,
+    "ast_hash": "6c5343f2531cde4a533a088660fc1113",
+    "semantic_hash": ""
   },
   "apps/frontend/components/WebcamCapture.tsx": {
     "mtime": 1782356315.4399872,
@@ -550,9 +550,9 @@
     "semantic_hash": "4922c9c6b7096632fa1e273ccd741e88"
   },
   "apps/frontend/components/landing/Features.tsx": {
-    "mtime": 1782736719.3029757,
-    "ast_hash": "d3c8d0942b1671f4c935cfe3954d5dcf",
-    "semantic_hash": "d3c8d0942b1671f4c935cfe3954d5dcf"
+    "mtime": 1782793495.593788,
+    "ast_hash": "97703d239d9a6daaf7f0afbfbaf58a6d",
+    "semantic_hash": ""
   },
   "apps/frontend/components/landing/Footer.tsx": {
     "mtime": 1782736719.3029757,
@@ -590,9 +590,9 @@
     "semantic_hash": "0c4c9cc5492329c5e3cc1f2eaa9b4063"
   },
   "apps/frontend/components/landing/SortableImageList.tsx": {
-    "mtime": 1782736719.3049788,
-    "ast_hash": "e6ca25cb1fee01dc7c4ec84f0cf11675",
-    "semantic_hash": "e6ca25cb1fee01dc7c4ec84f0cf11675"
+    "mtime": 1782793168.8982306,
+    "ast_hash": "02badd0868617019e652e7bace9a2328",
+    "semantic_hash": ""
   },
   "apps/frontend/components/landing/TrustStrip.tsx": {
     "mtime": 1782477882.9597478,
@@ -1210,8 +1210,8 @@
     "semantic_hash": ""
   },
   "apps/backend/src/tournaments/tournaments.controller.ts": {
-    "mtime": 1782781480.77817,
-    "ast_hash": "dacbf3123a94644fc0cd311cf18e8051",
+    "mtime": 1782798802.8596334,
+    "ast_hash": "633128236a516659a2c9470546408fe5",
     "semantic_hash": ""
   },
   "apps/backend/src/tournaments/dto/import-teams.dto.ts": {
@@ -1352,6 +1352,16 @@
   "apps/frontend/components/tournament/match/LiveMatchCard.tsx": {
     "mtime": 1782789445.9879107,
     "ast_hash": "441b6ecc97fe918b6415f57f7a28fbd5",
+    "semantic_hash": ""
+  },
+  "apps/backend/test/landing-page/landing-page.service.spec.ts": {
+    "mtime": 1782793029.631987,
+    "ast_hash": "800e107e21816170b788601edf8358a3",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-06-30-landing-page-end-to-end-fix.md": {
+    "mtime": 1782792759.1933267,
+    "ast_hash": "5d552002d87d5a0b22afd4d52176a206",
     "semantic_hash": ""
   }
 }

@@ -4,20 +4,23 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import type { Tournament, TournamentTeam, Match } from "@/types/tournament.types";
-import { tournamentApi, matchApi, bracketApi } from "@/lib/tournament-api";
+import { TournamentStatus, ScoringMode } from "@/types/tournament.types";
+import { tournamentApi, matchApi, bracketApi, teamApi } from "@/lib/tournament-api";
 import { TournamentTabs, TabPanel } from "@/components/tournament/TournamentTabs";
 import { StatusPill } from "@/components/tournament/StatusPill";
-import { TeamCard } from "@/components/tournament/team";
-import { MatchCard } from "@/components/tournament/match";
+import { TeamCard, TeamFormModal, TeamMemberFormModal } from "@/components/tournament/team";
+import { MatchCard, MatchScoringModal } from "@/components/tournament/match";
 import { BracketView } from "@/components/tournament/bracket";
 import { useTournamentSSE } from "@/hooks/useTournamentSSE";
 import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
 import {
   Trophy, Users, Calendar, MapPin, DollarSign, Clock,
-  ChevronLeft, Edit, Play, Plus, BarChart3, Settings
+  ChevronLeft, Edit, Play, Plus, BarChart3, Settings,
+  CheckCircle, XCircle, Trash2
 } from "lucide-react";
 
-type TabId = "overview" | "teams" | "matches" | "brackets";
+type TabId = "overview" | "teams" | "matches" | "brackets" | "settings";
 
 export default function TournamentDetailPage() {
   const params = useParams();
@@ -31,7 +34,33 @@ export default function TournamentDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Match Scoring Modal state
+  const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
+  const [matchModalOpen, setMatchModalOpen] = useState(false);
+
+  // Team Form Modal state
+  const [teamModalOpen, setTeamModalOpen] = useState(false);
+  const [editingTeam, setEditingTeam] = useState<TournamentTeam | null>(null);
+
+  // Team Member Modal state
+  const [memberModalOpen, setMemberModalOpen] = useState(false);
+  const [memberTeam, setMemberTeam] = useState<TournamentTeam | null>(null);
+
   const sse = useTournamentSSE(tournamentId);
+
+  const refreshTournament = async () => {
+    if (!tournamentId) return;
+    const t = await tournamentApi.getById(tournamentId);
+    setTournament(t);
+    setTeams(t.teams || []);
+  };
+
+  const refreshMatches = async () => {
+    if (!tournamentId) return;
+    const data = await matchApi.getByTournament(tournamentId);
+    setMatches(data);
+    await refreshTournament();
+  };
 
   useEffect(() => {
     const unsubTournament = sse.onTournamentUpdated((event) => {
@@ -69,8 +98,7 @@ export default function TournamentDetailPage() {
     }
     try {
       await bracketApi.generate(tournamentId);
-      const data = await tournamentApi.getById(tournamentId);
-      setTournament(data);
+      await refreshTournament();
       setActiveTab("brackets");
     } catch (err: any) {
       alert(err.message || "Failed to generate bracket");
@@ -82,8 +110,8 @@ export default function TournamentDetailPage() {
       return;
     }
     try {
-      const updated = await tournamentApi.update(tournamentId, { status: "IN_PROGRESS" as any });
-      setTournament(updated);
+      await tournamentApi.update(tournamentId, { status: TournamentStatus.IN_PROGRESS });
+      await refreshTournament();
     } catch (err: any) {
       alert(err.message || "Failed to start tournament");
     }
@@ -236,14 +264,14 @@ export default function TournamentDetailPage() {
           </div>
 
           <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Link
-              href={"/admin/tournaments/" + tournamentId + "/matches"}
-              className="group p-6 bg-brand-surface rounded-2xl border border-brand-border hover:border-brand-primary/50 hover:shadow-md transition-all"
+            <button
+              onClick={() => setActiveTab("matches")}
+              className="text-left group p-6 bg-brand-surface rounded-2xl border border-brand-border hover:border-brand-primary/50 hover:shadow-md transition-all"
             >
               <BarChart3 className="w-8 h-8 text-brand-primary mb-3 group-hover:scale-110 transition-transform" />
               <p className="font-bold text-brand-text text-lg mb-1">Manage Matches</p>
               <p className="text-sm font-medium text-brand-textMuted">View and edit match scores</p>
-            </Link>
+            </button>
             <Link
               href={"/tournament/bracket/" + tournamentId}
               target="_blank"
@@ -253,14 +281,14 @@ export default function TournamentDetailPage() {
               <p className="font-bold text-brand-text text-lg mb-1">Public Bracket</p>
               <p className="text-sm font-medium text-brand-textMuted">View bracket display</p>
             </Link>
-            <Link
-              href={"/admin/tournaments/" + tournamentId + "/teams"}
-              className="group p-6 bg-brand-surface rounded-2xl border border-brand-border hover:border-brand-success/50 hover:shadow-md transition-all"
+            <button
+              onClick={() => setActiveTab("teams")}
+              className="text-left group p-6 bg-brand-surface rounded-2xl border border-brand-border hover:border-brand-success/50 hover:shadow-md transition-all"
             >
               <Users className="w-8 h-8 text-brand-success mb-3 group-hover:scale-110 transition-transform" />
               <p className="font-bold text-brand-text text-lg mb-1">Team Management</p>
               <p className="text-sm font-medium text-brand-textMuted">Add and edit teams</p>
-            </Link>
+            </button>
           </div>
         </TabPanel>
 
@@ -269,7 +297,13 @@ export default function TournamentDetailPage() {
             <h2 className="text-xl font-bold text-brand-text">
               Registered Teams ({teams.length})
             </h2>
-            <Button className="gap-2">
+            <Button
+              className="gap-2"
+              onClick={() => {
+                setEditingTeam(null);
+                setTeamModalOpen(true);
+              }}
+            >
               <Plus className="w-4 h-4" />
               Add Team
             </Button>
@@ -286,7 +320,28 @@ export default function TournamentDetailPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {teams.map((team) => (
-                <TeamCard key={team.id} team={team} showDetails />
+                <TeamCard
+                  key={team.id}
+                  team={team}
+                  showDetails
+                  onEdit={() => {
+                    setEditingTeam(team);
+                    setTeamModalOpen(true);
+                  }}
+                  onDelete={async () => {
+                    if (!confirm(`Delete team ${team.name}?`)) return;
+                    await teamApi.delete(team.id);
+                    refreshTournament();
+                  }}
+                  onManageMembers={() => {
+                    setMemberTeam(team);
+                    setMemberModalOpen(true);
+                  }}
+                  onClick={() => {
+                    setEditingTeam(team);
+                    setTeamModalOpen(true);
+                  }}
+                />
               ))}
             </div>
           )}
@@ -304,7 +359,15 @@ export default function TournamentDetailPage() {
               </h3>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {liveMatches.map((match) => (
-                  <MatchCard key={match.id} match={match} isLive />
+                  <MatchCard
+                    key={match.id}
+                    match={match}
+                    isLive
+                    onClick={() => {
+                      setSelectedMatch(match);
+                      setMatchModalOpen(true);
+                    }}
+                  />
                 ))}
               </div>
             </div>
@@ -317,7 +380,14 @@ export default function TournamentDetailPage() {
               </h3>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {upcomingMatches.map((match) => (
-                  <MatchCard key={match.id} match={match} />
+                  <MatchCard
+                    key={match.id}
+                    match={match}
+                    onClick={() => {
+                      setSelectedMatch(match);
+                      setMatchModalOpen(true);
+                    }}
+                  />
                 ))}
               </div>
             </div>
@@ -330,7 +400,14 @@ export default function TournamentDetailPage() {
               </h3>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {completedMatches.map((match) => (
-                  <MatchCard key={match.id} match={match} />
+                  <MatchCard
+                    key={match.id}
+                    match={match}
+                    onClick={() => {
+                      setSelectedMatch(match);
+                      setMatchModalOpen(true);
+                    }}
+                  />
                 ))}
               </div>
             </div>
@@ -362,7 +439,132 @@ export default function TournamentDetailPage() {
             )}
           </div>
         </TabPanel>
+
+        <TabPanel id="settings" activeTab={activeTab}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <h3 className="text-heading-3 text-brand-text mb-4">Tournament Status</h3>
+              <div className="flex items-center gap-3 mb-4">
+                <StatusPill status={tournament.status} />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {tournament.status === TournamentStatus.DRAFT && (
+                  <Button onClick={handleStartTournament}>
+                    <Play size={16} /> Start Tournament
+                  </Button>
+                )}
+                {tournament.status === TournamentStatus.IN_PROGRESS && (
+                  <Button
+                    onClick={async () => {
+                      if (!confirm("Mark tournament as completed?")) return;
+                      await tournamentApi.update(tournamentId, { status: TournamentStatus.COMPLETED });
+                      await refreshTournament();
+                    }}
+                  >
+                    <CheckCircle size={16} /> Complete
+                  </Button>
+                )}
+                {(tournament.status === TournamentStatus.DRAFT || tournament.status === TournamentStatus.IN_PROGRESS) && (
+                  <Button
+                    variant="danger"
+                    onClick={async () => {
+                      if (!confirm("Cancel this tournament?")) return;
+                      await tournamentApi.update(tournamentId, { status: TournamentStatus.CANCELLED });
+                      await refreshTournament();
+                    }}
+                  >
+                    <XCircle size={16} /> Cancel
+                  </Button>
+                )}
+              </div>
+            </Card>
+
+            <Card>
+              <h3 className="text-heading-3 text-brand-text mb-4">Bracket</h3>
+              <p className="text-body-sm text-brand-textMuted mb-4">
+                {tournament.brackets && tournament.brackets.length > 0
+                  ? "Bracket has been generated."
+                  : "No bracket generated yet."}
+              </p>
+              {tournament.status === TournamentStatus.DRAFT && teams.length >= 2 && (
+                <Button onClick={handleGenerateBracket}>
+                  <BarChart3 size={16} /> Generate Bracket
+                </Button>
+              )}
+            </Card>
+
+            <Card>
+              <h3 className="text-heading-3 text-brand-text mb-4">Actions</h3>
+              <div className="flex flex-wrap gap-2">
+                <Button variant="secondary" asChild>
+                  <Link href={`/admin/tournaments/${tournamentId}/edit`}>
+                    <Edit size={16} /> Edit Tournament
+                  </Link>
+                </Button>
+                <Button variant="secondary" asChild>
+                  <Link href={`/tournament/bracket/${tournamentId}`} target="_blank">
+                    <Trophy size={16} /> Public Bracket
+                  </Link>
+                </Button>
+              </div>
+            </Card>
+
+            <Card className="border-brand-danger/30">
+              <h3 className="text-heading-3 text-brand-danger mb-4">Danger Zone</h3>
+              <p className="text-body-sm text-brand-textMuted mb-4">
+                Deleting a tournament cannot be undone.
+              </p>
+              <Button
+                variant="danger"
+                onClick={async () => {
+                  if (!confirm("Permanently delete this tournament?")) return;
+                  await tournamentApi.delete(tournamentId);
+                  router.push("/admin/tournaments");
+                }}
+              >
+                <Trash2 size={16} /> Delete Tournament
+              </Button>
+            </Card>
+          </div>
+        </TabPanel>
       </div>
+
+      <MatchScoringModal
+        match={selectedMatch}
+        scoringMode={tournament.scoringMode || ScoringMode.SIMPLE}
+        maxSets={tournament.scoringConfig?.maxSets || 3}
+        open={matchModalOpen}
+        onClose={() => {
+          setMatchModalOpen(false);
+          setSelectedMatch(null);
+        }}
+        onUpdate={refreshMatches}
+      />
+
+      <TeamFormModal
+        tournamentId={tournamentId}
+        team={editingTeam}
+        open={teamModalOpen}
+        onClose={() => {
+          setTeamModalOpen(false);
+          setEditingTeam(null);
+        }}
+        onSuccess={refreshTournament}
+      />
+
+      {memberTeam && (
+        <TeamMemberFormModal
+          teamId={memberTeam.id}
+          teamName={memberTeam.name}
+          members={memberTeam.members || []}
+          open={memberModalOpen}
+          onClose={() => {
+            setMemberModalOpen(false);
+            setMemberTeam(null);
+          }}
+          onSuccess={refreshTournament}
+        />
+      )}
     </div>
   );
 }
