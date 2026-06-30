@@ -1,22 +1,23 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import type { Tournament } from '@/types/tournament.types';
-import { tournamentApi } from '@/lib/tournament-api';
-import { StatusPill } from '@/components/tournament/StatusPill';
-import { TournamentForm } from '@/components/tournament/TournamentForm';
-import { Trophy, Plus, Calendar, Users, Search, Filter, MoreVertical, Edit, Trash2, Eye } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import type { Tournament } from "@/types/tournament.types";
+import { tournamentApi } from "@/lib/tournament-api";
+import { StatusPill } from "@/components/tournament/StatusPill";
+import { TournamentForm } from "@/components/tournament/TournamentForm";
+import { Trophy, Plus, Calendar, Users, Search, Filter, Eye, Edit, Trash2 } from "lucide-react";
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Input";
 
 export default function AdminTournamentsPage() {
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
-  // Fetch tournaments
   useEffect(() => {
     async function fetchTournaments() {
       setIsLoading(true);
@@ -24,7 +25,7 @@ export default function AdminTournamentsPage() {
         const data = await tournamentApi.getAll();
         setTournaments(data);
       } catch (err: any) {
-        setError(err.message || 'Failed to load tournaments');
+        setError(err.message || "Failed to load tournaments");
       } finally {
         setIsLoading(false);
       }
@@ -40,20 +41,20 @@ export default function AdminTournamentsPage() {
       setTournaments((prev) => [...prev, newTournament]);
       setShowCreateModal(false);
     } catch (err: any) {
-      throw new Error(err.message || 'Failed to create tournament');
+      throw new Error(err.message || "Failed to create tournament");
     } finally {
       setIsCreating(false);
     }
   };
 
   const handleDeleteTournament = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this tournament?')) return;
+    if (!confirm("Are you sure you want to delete this tournament?")) return;
 
     try {
       await tournamentApi.delete(id);
       setTournaments((prev) => prev.filter((t) => t.id !== id));
     } catch (err: any) {
-      alert(err.message || 'Failed to delete tournament');
+      alert(err.message || "Failed to delete tournament");
     }
   };
 
@@ -62,115 +63,89 @@ export default function AdminTournamentsPage() {
   );
 
   return (
-    <div className="p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-6 max-w-7xl mx-auto">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Tournaments
-          </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Manage your tournament events
-          </p>
+          <h1 className="text-3xl font-bold text-brand-text mb-2">Tournaments</h1>
+          <p className="text-brand-textMuted font-medium">Manage your tournament events</p>
         </div>
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
+        <Button onClick={() => setShowCreateModal(true)} className="gap-2">
           <Plus className="w-4 h-4" />
           New Tournament
-        </button>
+        </Button>
       </div>
 
-      {/* Filters */}
-      <div className="flex items-center gap-4 mb-6">
+      <div className="flex items-center gap-4 mb-8">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-textMuted z-10">
+            <Search className="w-5 h-5" />
+          </div>
+          <Input
             type="text"
             placeholder="Search tournaments..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+            className="pl-11"
           />
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300">
+        <Button variant="secondary" className="gap-2">
           <Filter className="w-4 h-4" />
           Filters
-        </button>
+        </Button>
       </div>
 
-      {/* Loading State */}
       {isLoading && (
-        <div className="flex items-center justify-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent" />
+        <div className="flex items-center justify-center py-20">
+          <div className="animate-spin rounded-full h-10 w-10 border-4 border-brand-primary border-t-transparent" />
         </div>
       )}
 
-      {/* Error State */}
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 p-4 rounded-lg">
+        <div className="bg-brand-danger/10 text-brand-danger p-4 rounded-xl border border-brand-danger/20 font-medium mb-8">
           {error}
         </div>
       )}
 
-      {/* Tournament List */}
       {!isLoading && !error && (
         <>
           {filteredTournaments.length === 0 ? (
-            <div className="text-center py-12">
-              <Trophy className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-              <p className="text-gray-500 dark:text-gray-400">
-                {searchQuery ? 'No tournaments found matching your search' : 'No tournaments yet'}
+            <div className="text-center py-20 bg-brand-surface border border-brand-border rounded-xl shadow-sm">
+              <Trophy className="w-16 h-16 mx-auto text-brand-textMuted/50 mb-4" />
+              <p className="text-brand-textMuted font-medium text-lg">
+                {searchQuery ? "No tournaments found matching your search" : "No tournaments yet"}
               </p>
               {!searchQuery && (
-                <button
-                  onClick={() => setShowCreateModal(true)}
-                  className="mt-4 text-blue-600 hover:text-blue-700"
-                >
+                <Button variant="outline" onClick={() => setShowCreateModal(true)} className="mt-6">
                   Create your first tournament
-                </button>
+                </Button>
               )}
             </div>
           ) : (
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-              <table className="w-full">
-                <thead className="bg-gray-50 dark:bg-gray-900/50">
+            <div className="bg-brand-surface rounded-xl border border-brand-border shadow-sm overflow-hidden">
+              <table className="w-full text-left">
+                <thead className="bg-black/20 text-brand-textMuted text-xs uppercase tracking-wider font-semibold border-b border-brand-border">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Tournament
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Teams
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Start Date
-                    </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Actions
-                    </th>
+                    <th className="px-6 py-4">Tournament</th>
+                    <th className="px-6 py-4">Status</th>
+                    <th className="px-6 py-4">Teams</th>
+                    <th className="px-6 py-4">Start Date</th>
+                    <th className="px-6 py-4 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                <tbody className="divide-y divide-brand-border">
                   {filteredTournaments.map((tournament) => (
-                    <tr
-                      key={tournament.id}
-                      className="hover:bg-gray-50 dark:hover:bg-gray-900/50"
-                    >
+                    <tr key={tournament.id} className="hover:bg-white/[0.02] transition-colors">
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
-                            <Trophy className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
+                        <div className="flex items-center gap-4">
+                          <div className="p-3 bg-brand-warning/10 rounded-xl">
+                            <Trophy className="w-5 h-5 text-brand-warning" />
                           </div>
                           <div>
-                            <p className="font-medium text-gray-900 dark:text-white">
+                            <p className="font-bold text-brand-text text-base mb-0.5">
                               {tournament.name}
                             </p>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 capitalize">
-                              {tournament.sportType?.toLowerCase().replace('_', ' ')}
+                            <p className="text-sm font-medium text-brand-textMuted capitalize">
+                              {tournament.sportType?.toLowerCase().replace("_", " ")}
                             </p>
                           </div>
                         </div>
@@ -179,40 +154,40 @@ export default function AdminTournamentsPage() {
                         <StatusPill status={tournament.status} size="sm" />
                       </td>
                       <td className="px-6 py-4">
-                        <span className="flex items-center gap-1 text-gray-600 dark:text-gray-300">
-                          <Users className="w-4 h-4" />
+                        <span className="flex items-center gap-2 text-brand-text font-medium">
+                          <Users className="w-4 h-4 text-brand-textMuted" />
                           {tournament.teams?.length || 0}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-gray-600 dark:text-gray-300">
+                      <td className="px-6 py-4">
                         {tournament.startDate ? (
-                          <span className="flex items-center gap-1">
-                            <Calendar className="w-4 h-4" />
+                          <span className="flex items-center gap-2 text-brand-text font-medium">
+                            <Calendar className="w-4 h-4 text-brand-textMuted" />
                             {new Date(tournament.startDate).toLocaleDateString()}
                           </span>
                         ) : (
-                          <span className="text-gray-400">Not scheduled</span>
+                          <span className="text-brand-textMuted font-medium">Not scheduled</span>
                         )}
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center justify-end gap-2">
+                        <div className="flex items-center justify-end gap-1">
                           <Link
-                            href={'/admin/tournaments/' + tournament.id}
-                            className="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400"
+                            href={"/admin/tournaments/" + tournament.id}
+                            className="p-2 text-brand-textMuted hover:text-brand-primary transition-colors rounded-lg hover:bg-white/[0.04]"
                             title="Manage"
                           >
                             <Eye className="w-4 h-4" />
                           </Link>
                           <Link
-                            href={'/admin/tournaments/' + tournament.id + '/edit'}
-                            className="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400"
+                            href={"/admin/tournaments/" + tournament.id + "/edit"}
+                            className="p-2 text-brand-textMuted hover:text-brand-primary transition-colors rounded-lg hover:bg-white/[0.04]"
                             title="Edit"
                           >
                             <Edit className="w-4 h-4" />
                           </Link>
                           <button
                             onClick={() => handleDeleteTournament(tournament.id)}
-                            className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400"
+                            className="p-2 text-brand-textMuted hover:text-brand-danger transition-colors rounded-lg hover:bg-brand-danger/10"
                             title="Delete"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -228,17 +203,14 @@ export default function AdminTournamentsPage() {
         </>
       )}
 
-      {/* Create Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4">
-            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Create Tournament
-              </h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-brand-surface rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-brand-border">
+            <div className="flex items-center justify-between p-6 border-b border-brand-border sticky top-0 bg-brand-surface/90 backdrop-blur z-10">
+              <h2 className="text-2xl font-bold text-brand-text">Create Tournament</h2>
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                className="text-brand-textMuted hover:text-brand-text p-2 hover:bg-white/[0.04] rounded-lg transition-colors"
               >
                 ×
               </button>

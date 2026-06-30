@@ -1,22 +1,23 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
-import type { Tournament, TournamentTeam, Match } from '@/types/tournament.types';
-import { tournamentApi, matchApi, bracketApi } from '@/lib/tournament-api';
-import { TournamentTabs, TabPanel } from '@/components/tournament/TournamentTabs';
-import { StatusPill } from '@/components/tournament/StatusPill';
-import { TeamCard } from '@/components/tournament/team';
-import { MatchCard } from '@/components/tournament/match';
-import { BracketView } from '@/components/tournament/bracket';
-import { useTournamentSSE } from '@/hooks/useTournamentSSE';
+import React, { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import type { Tournament, TournamentTeam, Match } from "@/types/tournament.types";
+import { tournamentApi, matchApi, bracketApi } from "@/lib/tournament-api";
+import { TournamentTabs, TabPanel } from "@/components/tournament/TournamentTabs";
+import { StatusPill } from "@/components/tournament/StatusPill";
+import { TeamCard } from "@/components/tournament/team";
+import { MatchCard } from "@/components/tournament/match";
+import { BracketView } from "@/components/tournament/bracket";
+import { useTournamentSSE } from "@/hooks/useTournamentSSE";
+import Button from "@/components/ui/Button";
 import {
   Trophy, Users, Calendar, MapPin, DollarSign, Clock,
   ChevronLeft, Edit, Play, Plus, BarChart3, Settings
-} from 'lucide-react';
+} from "lucide-react";
 
-type TabId = 'overview' | 'teams' | 'matches' | 'brackets';
+type TabId = "overview" | "teams" | "matches" | "brackets";
 
 export default function TournamentDetailPage() {
   const params = useParams();
@@ -26,138 +27,124 @@ export default function TournamentDetailPage() {
   const [tournament, setTournament] = useState<Tournament | null>(null);
   const [teams, setTeams] = useState<TournamentTeam[]>([]);
   const [matches, setMatches] = useState<Match[]>([]);
-  const [activeTab, setActiveTab] = useState<TabId>('overview');
+  const [activeTab, setActiveTab] = useState<TabId>("overview");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // SSE subscription
   const sse = useTournamentSSE(tournamentId);
 
   useEffect(() => {
     const unsubTournament = sse.onTournamentUpdated((event) => {
       setTournament(event.data as Tournament);
     });
-
-    return () => {
-      unsubTournament();
-    };
+    return () => unsubTournament();
   }, [sse]);
 
-  // Fetch data
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
       setError(null);
-
       try {
         const data = await tournamentApi.getById(tournamentId);
         setTournament(data);
         setTeams(data.teams || []);
       } catch (err: any) {
-        setError(err.message || 'Failed to load tournament');
+        setError(err.message || "Failed to load tournament");
       } finally {
         setIsLoading(false);
       }
     }
-
-    if (tournamentId) {
-      fetchData();
-    }
+    if (tournamentId) fetchData();
   }, [tournamentId]);
 
-  // Fetch matches when matches tab is active
   useEffect(() => {
-    if (activeTab === 'matches' && tournamentId) {
+    if (activeTab === "matches" && tournamentId) {
       matchApi.getByTournament(tournamentId).then(setMatches).catch(console.error);
     }
   }, [activeTab, tournamentId]);
 
   const handleGenerateBracket = async () => {
-    if (!confirm('Generate bracket now? This will assign match positions for all registered teams.')) {
+    if (!confirm("Generate bracket now? This will assign match positions for all registered teams.")) {
       return;
     }
-
     try {
       await bracketApi.generate(tournamentId);
-      // Refresh tournament data
       const data = await tournamentApi.getById(tournamentId);
       setTournament(data);
-      setActiveTab('brackets');
+      setActiveTab("brackets");
     } catch (err: any) {
-      alert(err.message || 'Failed to generate bracket');
+      alert(err.message || "Failed to generate bracket");
     }
   };
 
   const handleStartTournament = async () => {
-    if (!confirm('Start tournament? This will set the status to In Progress.')) {
+    if (!confirm("Start tournament? This will set the status to In Progress.")) {
       return;
     }
-
     try {
-      const updated = await tournamentApi.update(tournamentId, { status: 'IN_PROGRESS' as any });
+      const updated = await tournamentApi.update(tournamentId, { status: "IN_PROGRESS" as any });
       setTournament(updated);
     } catch (err: any) {
-      alert(err.message || 'Failed to start tournament');
+      alert(err.message || "Failed to start tournament");
     }
   };
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent" />
+      <div className="flex items-center justify-center py-20">
+        <div className="animate-spin rounded-full h-10 w-10 border-4 border-brand-primary border-t-transparent" />
       </div>
     );
   }
 
   if (error || !tournament) {
     return (
-      <div className="p-6">
-        <div className="bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 p-4 rounded-lg">
-          {error || 'Tournament not found'}
+      <div className="p-6 max-w-7xl mx-auto">
+        <div className="bg-brand-danger/10 text-brand-danger p-4 rounded-xl border border-brand-danger/20 font-medium mb-4">
+          {error || "Tournament not found"}
         </div>
-        <Link href="/admin/tournaments" className="mt-4 text-blue-600 hover:underline">
+        <Link href="/admin/tournaments" className="text-brand-primary hover:underline font-medium">
           Back to Tournaments
         </Link>
       </div>
     );
   }
 
-  const liveMatches = matches.filter((m) => m.status === 'ONGOING');
-  const upcomingMatches = matches.filter((m) => m.status === 'SCHEDULED');
-  const completedMatches = matches.filter((m) => m.status === 'COMPLETED');
+  const liveMatches = matches.filter((m) => m.status === "ONGOING");
+  const upcomingMatches = matches.filter((m) => m.status === "SCHEDULED");
+  const completedMatches = matches.filter((m) => m.status === "COMPLETED");
 
   return (
-    <div className="p-6">
-      {/* Header */}
-      <div className="flex items-start justify-between mb-6">
+    <div className="p-6 max-w-7xl mx-auto">
+      <div className="flex items-start justify-between mb-8">
         <div className="flex items-start gap-4">
           <Link
             href="/admin/tournaments"
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+            className="p-2 hover:bg-white/[0.04] text-brand-textMuted hover:text-brand-text transition-colors rounded-lg"
           >
-            <ChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+            <ChevronLeft className="w-5 h-5" />
           </Link>
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-xl">
-              <Trophy className="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
+          <div className="flex items-center gap-4">
+            <div className="p-4 bg-brand-warning/10 rounded-2xl">
+              <Trophy className="w-8 h-8 text-brand-warning" />
             </div>
             <div>
-              <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              <div className="flex items-center gap-3 mb-1">
+                <h1 className="text-3xl font-bold text-brand-text">
                   {tournament.name}
                 </h1>
                 <StatusPill status={tournament.status} />
               </div>
-              <div className="flex items-center gap-4 mt-1 text-sm text-gray-500 dark:text-gray-400">
+              <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-brand-textMuted">
                 <span className="capitalize">
-                  {tournament.sportType?.toLowerCase().replace('_', ' ')}
+                  {tournament.sportType?.toLowerCase().replace("_", " ")}
                 </span>
-                <span className="flex items-center gap-1">
+                <span className="flex items-center gap-1.5">
                   <Users className="w-4 h-4" />
                   {teams.length} teams
                 </span>
                 {tournament.startDate && (
-                  <span className="flex items-center gap-1">
+                  <span className="flex items-center gap-1.5">
                     <Calendar className="w-4 h-4" />
                     {new Date(tournament.startDate).toLocaleDateString()}
                   </span>
@@ -168,34 +155,33 @@ export default function TournamentDetailPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          {tournament.status === 'DRAFT' && teams.length >= 2 && (
-            <button
+          {tournament.status === "DRAFT" && teams.length >= 2 && (
+            <Button
               onClick={handleGenerateBracket}
-              className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+              className="gap-2 bg-brand-accent hover:bg-brand-accent/90 text-brand-surface"
             >
               <BarChart3 className="w-4 h-4" />
               Generate Bracket
-            </button>
+            </Button>
           )}
-          {tournament.status === 'DRAFT' && (
-            <button
+          {tournament.status === "DRAFT" && (
+            <Button
               onClick={handleStartTournament}
-              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+              className="gap-2 bg-brand-success hover:bg-brand-success/90 text-white"
             >
               <Play className="w-4 h-4" />
               Start Tournament
-            </button>
+            </Button>
           )}
           <Link
-            href={'/admin/tournaments/' + tournamentId + '/edit'}
-            className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
+            href={"/admin/tournaments/" + tournamentId + "/edit"}
+            className="p-2 border border-brand-border rounded-lg hover:bg-white/[0.04] text-brand-textMuted hover:text-brand-primary transition-colors"
           >
-            <Edit className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+            <Edit className="w-4 h-4" />
           </Link>
         </div>
       </div>
 
-      {/* Tabs */}
       <TournamentTabs
         activeTab={activeTab}
         onTabChange={(tab) => setActiveTab(tab as TabId)}
@@ -203,107 +189,102 @@ export default function TournamentDetailPage() {
         isAdmin={true}
       />
 
-      {/* Tab Content */}
-      <div className="mt-6">
-        {/* Overview Tab */}
+      <div className="mt-8">
         <TabPanel id="overview" activeTab={activeTab}>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Stats Cards */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-brand-surface rounded-2xl border border-brand-border p-6 shadow-sm">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                  <Users className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                <div className="p-4 bg-brand-primary/10 rounded-xl">
+                  <Users className="w-7 h-7 text-brand-primary" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                  <p className="text-3xl font-bold text-brand-text leading-none mb-1">
                     {teams.length}
                   </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Registered Teams</p>
+                  <p className="text-sm font-medium text-brand-textMuted">Registered Teams</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+            <div className="bg-brand-surface rounded-2xl border border-brand-border p-6 shadow-sm">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
-                  <Play className="w-6 h-6 text-green-600 dark:text-green-400" />
+                <div className="p-4 bg-brand-success/10 rounded-xl">
+                  <Play className="w-7 h-7 text-brand-success" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                  <p className="text-3xl font-bold text-brand-text leading-none mb-1">
                     {liveMatches.length}
                   </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Live Matches</p>
+                  <p className="text-sm font-medium text-brand-textMuted">Live Matches</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+            <div className="bg-brand-surface rounded-2xl border border-brand-border p-6 shadow-sm">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                  <Clock className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                <div className="p-4 bg-brand-accent/10 rounded-xl">
+                  <Clock className="w-7 h-7 text-brand-accent" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                  <p className="text-3xl font-bold text-brand-text leading-none mb-1">
                     {upcomingMatches.length}
                   </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Upcoming Matches</p>
+                  <p className="text-sm font-medium text-brand-textMuted">Upcoming Matches</p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
             <Link
-              href={'/admin/tournaments/' + tournamentId + '/matches'}
-              className="p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-500 transition-colors"
+              href={"/admin/tournaments/" + tournamentId + "/matches"}
+              className="group p-6 bg-brand-surface rounded-2xl border border-brand-border hover:border-brand-primary/50 hover:shadow-md transition-all"
             >
-              <BarChart3 className="w-6 h-6 text-blue-600 dark:text-blue-400 mb-2" />
-              <p className="font-medium text-gray-900 dark:text-white">Manage Matches</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">View and edit match scores</p>
+              <BarChart3 className="w-8 h-8 text-brand-primary mb-3 group-hover:scale-110 transition-transform" />
+              <p className="font-bold text-brand-text text-lg mb-1">Manage Matches</p>
+              <p className="text-sm font-medium text-brand-textMuted">View and edit match scores</p>
             </Link>
             <Link
-              href={'/tournament/bracket/' + tournamentId}
+              href={"/tournament/bracket/" + tournamentId}
               target="_blank"
-              className="p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-purple-500 dark:hover:border-purple-500 transition-colors"
+              className="group p-6 bg-brand-surface rounded-2xl border border-brand-border hover:border-brand-accent/50 hover:shadow-md transition-all"
             >
-              <Trophy className="w-6 h-6 text-purple-600 dark:text-purple-400 mb-2" />
-              <p className="font-medium text-gray-900 dark:text-white">Public Bracket</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">View bracket display</p>
+              <Trophy className="w-8 h-8 text-brand-accent mb-3 group-hover:scale-110 transition-transform" />
+              <p className="font-bold text-brand-text text-lg mb-1">Public Bracket</p>
+              <p className="text-sm font-medium text-brand-textMuted">View bracket display</p>
             </Link>
             <Link
-              href={'/admin/tournaments/' + tournamentId + '/teams'}
-              className="p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-green-500 dark:hover:border-green-500 transition-colors"
+              href={"/admin/tournaments/" + tournamentId + "/teams"}
+              className="group p-6 bg-brand-surface rounded-2xl border border-brand-border hover:border-brand-success/50 hover:shadow-md transition-all"
             >
-              <Users className="w-6 h-6 text-green-600 dark:text-green-400 mb-2" />
-              <p className="font-medium text-gray-900 dark:text-white">Team Management</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Add and edit teams</p>
+              <Users className="w-8 h-8 text-brand-success mb-3 group-hover:scale-110 transition-transform" />
+              <p className="font-bold text-brand-text text-lg mb-1">Team Management</p>
+              <p className="text-sm font-medium text-brand-textMuted">Add and edit teams</p>
             </Link>
           </div>
         </TabPanel>
 
-        {/* Teams Tab */}
         <TabPanel id="teams" activeTab={activeTab}>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-brand-text">
               Registered Teams ({teams.length})
             </h2>
-            <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+            <Button className="gap-2">
               <Plus className="w-4 h-4" />
               Add Team
-            </button>
+            </Button>
           </div>
 
           {teams.length === 0 ? (
-            <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-              <Users className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-              <p className="text-gray-500 dark:text-gray-400">No teams registered yet</p>
-              <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
+            <div className="text-center py-20 bg-brand-surface rounded-2xl border border-brand-border shadow-sm">
+              <Users className="w-16 h-16 mx-auto text-brand-textMuted/50 mb-4" />
+              <p className="text-brand-textMuted font-medium text-lg">No teams registered yet</p>
+              <p className="text-sm text-brand-textMuted mt-1">
                 Add teams or import from CSV to get started
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {teams.map((team) => (
                 <TeamCard key={team.id} team={team} showDetails />
               ))}
@@ -311,18 +292,17 @@ export default function TournamentDetailPage() {
           )}
         </TabPanel>
 
-        {/* Matches Tab */}
         <TabPanel id="matches" activeTab={activeTab}>
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-bold text-brand-text mb-6">
             Matches
           </h2>
 
           {liveMatches.length > 0 && (
-            <div className="mb-6">
-              <h3 className="text-sm font-medium text-red-600 dark:text-red-400 mb-2">
+            <div className="mb-8">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-brand-danger mb-3">
                 Live Now ({liveMatches.length})
               </h3>
-              <div className="space-y-2">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {liveMatches.map((match) => (
                   <MatchCard key={match.id} match={match} isLive />
                 ))}
@@ -331,11 +311,11 @@ export default function TournamentDetailPage() {
           )}
 
           {upcomingMatches.length > 0 && (
-            <div className="mb-6">
-              <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
+            <div className="mb-8">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-brand-textMuted mb-3">
                 Upcoming ({upcomingMatches.length})
               </h3>
-              <div className="space-y-2">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {upcomingMatches.map((match) => (
                   <MatchCard key={match.id} match={match} />
                 ))}
@@ -345,10 +325,10 @@ export default function TournamentDetailPage() {
 
           {completedMatches.length > 0 && (
             <div>
-              <h3 className="text-sm font-medium text-green-600 dark:text-green-400 mb-2">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-brand-success mb-3">
                 Completed ({completedMatches.length})
               </h3>
-              <div className="space-y-2">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {completedMatches.map((match) => (
                   <MatchCard key={match.id} match={match} />
                 ))}
@@ -357,29 +337,26 @@ export default function TournamentDetailPage() {
           )}
         </TabPanel>
 
-        {/* Brackets Tab */}
         <TabPanel id="brackets" activeTab={activeTab}>
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-bold text-brand-text mb-6">
             Tournament Bracket
           </h2>
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 overflow-x-auto">
+          <div className="bg-brand-surface rounded-2xl border border-brand-border p-6 shadow-sm overflow-x-auto min-h-[400px]">
             {tournament.brackets && tournament.brackets.length > 0 ? (
-              <BracketView
-                bracket={tournament.brackets[0] as any}
-              />
+              <BracketView bracket={tournament.brackets[0] as any} />
             ) : (
-              <div className="text-center py-12">
-                <BarChart3 className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-                <p className="text-gray-500 dark:text-gray-400">
+              <div className="text-center py-20">
+                <BarChart3 className="w-16 h-16 mx-auto text-brand-textMuted/50 mb-4" />
+                <p className="text-brand-textMuted font-medium text-lg">
                   Bracket not generated yet
                 </p>
-                {tournament.status === 'DRAFT' && teams.length >= 2 && (
-                  <button
+                {tournament.status === "DRAFT" && teams.length >= 2 && (
+                  <Button
                     onClick={handleGenerateBracket}
-                    className="mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                    className="mt-6 bg-brand-accent hover:bg-brand-accent/90 text-brand-surface"
                   >
                     Generate Bracket
-                  </button>
+                  </Button>
                 )}
               </div>
             )}

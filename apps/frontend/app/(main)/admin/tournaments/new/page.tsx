@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import type { CreateTournamentDto } from '@/types/tournament.types';
-import { tournamentApi } from '@/lib/tournament-api';
-import { TournamentForm } from '@/components/tournament/TournamentForm';
-import { ChevronLeft, Trophy } from 'lucide-react';
-import Link from 'next/link';
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import type { CreateTournamentDto } from "@/types/tournament.types";
+import { tournamentApi } from "@/lib/tournament-api";
+import { TournamentForm } from "@/components/tournament/TournamentForm";
+import { ChevronLeft, Trophy } from "lucide-react";
+import Link from "next/link";
 
 export default function NewTournamentPage() {
   const router = useRouter();
@@ -19,9 +19,9 @@ export default function NewTournamentPage() {
 
     try {
       const newTournament = await tournamentApi.create(data as CreateTournamentDto);
-      router.push('/admin/tournaments/' + newTournament.id);
+      router.push("/admin/tournaments/" + newTournament.id);
     } catch (err: any) {
-      setError(err.message || 'Failed to create tournament');
+      setError(err.message || "Failed to create tournament");
       throw err;
     } finally {
       setIsSubmitting(false);
@@ -30,41 +30,34 @@ export default function NewTournamentPage() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      {/* Header */}
-      <div className="flex items-center gap-4 mb-6">
+      <div className="flex items-center gap-4 mb-8">
         <Link
           href="/admin/tournaments"
-          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+          className="p-2 hover:bg-white/[0.04] text-brand-textMuted hover:text-brand-text transition-colors rounded-lg"
         >
-          <ChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+          <ChevronLeft className="w-5 h-5" />
         </Link>
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
-            <Trophy className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
+        <div className="flex items-center gap-4">
+          <div className="p-3 bg-brand-warning/10 rounded-xl">
+            <Trophy className="w-6 h-6 text-brand-warning" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Create Tournament
-            </h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Set up a new tournament event
-            </p>
+            <h1 className="text-3xl font-bold text-brand-text mb-1">Create Tournament</h1>
+            <p className="text-brand-textMuted font-medium">Set up a new tournament event</p>
           </div>
         </div>
       </div>
 
-      {/* Error Alert */}
       {error && (
-        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-lg">
+        <div className="mb-8 p-4 bg-brand-danger/10 text-brand-danger font-medium border border-brand-danger/20 rounded-xl shadow-sm">
           {error}
         </div>
       )}
 
-      {/* Form */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+      <div className="bg-brand-surface rounded-2xl border border-brand-border p-8 shadow-sm">
         <TournamentForm
           onSubmit={handleSubmit}
-          onCancel={() => router.push('/admin/tournaments')}
+          onCancel={() => router.push("/admin/tournaments")}
           isLoading={isSubmitting}
         />
       </div>
