@@ -18,7 +18,7 @@ import { CreateTeamDto } from './dto/create-team.dto';
 import { UpdateScoreDto } from './dto/update-score.dto';
 import { ImportTeamsDto } from './dto/import-teams.dto';
 
-@Controller('api/tournaments')
+@Controller('tournaments')
 @UseGuards(JwtAuthGuard)
 export class TournamentsController {
   constructor(
