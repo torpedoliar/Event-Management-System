@@ -8,7 +8,10 @@ import {
   Param,
   Query,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { TournamentsService } from './tournaments.service';
 import { MatchScoringService } from './match-scoring.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -17,6 +20,7 @@ import { UpdateTournamentDto } from './dto/update-tournament.dto';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UpdateScoreDto } from './dto/update-score.dto';
 import { ImportTeamsDto } from './dto/import-teams.dto';
+import { photosStorage } from '../common/storage';
 
 @Controller('tournaments')
 @UseGuards(JwtAuthGuard)
@@ -45,6 +49,14 @@ export class TournamentsController {
     return this.tournaments.findOne(id);
   }
 
+  @Get(':id/eligible-guests')
+  getEligibleGuests(
+    @Param('id') tournamentId: string,
+    @Query('q') search?: string,
+  ) {
+    return this.tournaments.getEligibleGuests(tournamentId, search);
+  }
+
   @Put(':id')
   update(
     @Param('id') id: string,
@@ -63,18 +75,28 @@ export class TournamentsController {
   // ============================================
 
   @Post(':id/teams')
+  @UseInterceptors(FileInterceptor('logo', { storage: photosStorage() }))
   createTeam(
     @Param('id') tournamentId: string,
     @Body() dto: CreateTeamDto,
+    @UploadedFile() file?: Express.Multer.File,
   ) {
+    if (file) {
+      dto.logoUrl = `/api/uploads/photos/${file.filename}`;
+    }
     return this.tournaments.createTeam(tournamentId, dto);
   }
 
   @Put('teams/:teamId')
+  @UseInterceptors(FileInterceptor('logo', { storage: photosStorage() }))
   updateTeam(
     @Param('teamId') teamId: string,
     @Body() dto: Partial<CreateTeamDto>,
+    @UploadedFile() file?: Express.Multer.File,
   ) {
+    if (file) {
+      dto.logoUrl = `/api/uploads/photos/${file.filename}`;
+    }
     return this.tournaments.updateTeam(teamId, dto);
   }
 

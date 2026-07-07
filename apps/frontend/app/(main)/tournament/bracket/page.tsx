@@ -13,6 +13,14 @@ export default function TournamentBracketsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [eventCfg, setEventCfg] = useState<any>(null);
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/config/event`)
+      .then(r => r.json())
+      .then(data => setEventCfg(data))
+      .catch(console.error);
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -54,12 +62,27 @@ export default function TournamentBracketsPage() {
     setFilteredTournaments(filtered);
   }, [searchQuery, statusFilter, tournaments]);
 
-  if (isLoading) {
+  if (isLoading || !eventCfg) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent mx-auto mb-4" />
-          <p className="text-white">Loading tournaments...</p>
+          <p className="text-white">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!eventCfg.enableTournament) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="text-center p-8 bg-slate-800/50 rounded-2xl border border-slate-700">
+          <Trophy className="w-16 h-16 text-slate-600 mx-auto mb-4" />
+          <h2 className="text-2xl text-white font-bold mb-2">Tournaments Not Enabled</h2>
+          <p className="text-slate-400">Tournament feature is currently disabled for this event.</p>
+          <Link href="/" className="inline-block mt-6 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+            Return Home
+          </Link>
         </div>
       </div>
     );

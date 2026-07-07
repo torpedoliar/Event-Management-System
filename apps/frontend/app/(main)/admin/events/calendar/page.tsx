@@ -16,7 +16,8 @@ import {
   Check, 
   Loader2,
   Users,
-  List
+  List,
+  Trophy
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -26,6 +27,7 @@ interface Event {
   date?: string | null;
   location?: string | null;
   isActive: boolean;
+  enableTournament?: boolean;
   createdAt: string;
 }
 
@@ -413,7 +415,7 @@ export default function EventCalendarPage() {
                             <div
                               key={event.id}
                               className={`
-                                text-[10px] md:text-xs px-1 py-0.5 rounded truncate
+                                flex items-center justify-between gap-1 text-[10px] md:text-xs px-1 py-0.5 rounded
                                 ${event.isActive 
                                   ? 'bg-brand-success/30 text-brand-success border border-brand-success/30' 
                                   : isEventPast(event.date)
@@ -422,7 +424,8 @@ export default function EventCalendarPage() {
                                 }
                               `}
                             >
-                              {event.name}
+                              <span className="truncate">{event.name}</span>
+                              {event.enableTournament && <Trophy size={10} className="flex-shrink-0 opacity-70" />}
                             </div>
                           ))}
                           {day.events.length > 3 && (

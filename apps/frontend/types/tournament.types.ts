@@ -59,6 +59,17 @@ export enum MatchStatus {
 // Core Types
 // ============================================
 
+export interface EligibleGuest {
+  id: string;
+  guestId: string;
+  name: string;
+  company?: string | null;
+  department?: string | null;
+  division?: string | null;
+  category?: string | null;
+  checkedIn: boolean;
+}
+
 export interface ScoringConfig {
   maxSets?: number;
   targetPoints?: number;

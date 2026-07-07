@@ -1,15 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import type { TeamMember } from "@/types/tournament.types";
+import type { TeamMember, EligibleGuest } from "@/types/tournament.types";
 import { Modal } from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import Label from "@/components/ui/Label";
 import { teamApi } from "@/lib/tournament-api";
 import { UserPlus, Trash2 } from "lucide-react";
+import { GuestPicker } from "./GuestPicker";
 
 interface TeamMemberFormModalProps {
+  tournamentId: string;
   teamId: string;
   teamName: string;
   members: TeamMember[];
@@ -19,6 +21,7 @@ interface TeamMemberFormModalProps {
 }
 
 export function TeamMemberFormModal({
+  tournamentId,
   teamId,
   teamName,
   members,
@@ -29,6 +32,7 @@ export function TeamMemberFormModal({
   const [name, setName] = useState("");
   const [jerseyNumber, setJerseyNumber] = useState("");
   const [role, setRole] = useState("");
+  const [selectedGuest, setSelectedGuest] = useState<EligibleGuest | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -47,10 +51,12 @@ export function TeamMemberFormModal({
         name: name.trim(),
         jerseyNumber: jerseyNumber.trim() || undefined,
         role: role.trim() || undefined,
+        guestId: selectedGuest?.id,
       });
       setName("");
       setJerseyNumber("");
       setRole("");
+      setSelectedGuest(null);
       onSuccess();
     } catch (err: any) {
       setError(err.message || "Failed to add member");
@@ -111,6 +117,17 @@ export function TeamMemberFormModal({
 
         <form onSubmit={handleSubmit} className="border-t border-brand-border pt-4 space-y-3">
           <p className="text-sm font-medium text-brand-text">Add Member</p>
+          <div>
+            <Label htmlFor="member-guest">Ambil dari Data Tamu (opsional)</Label>
+            <GuestPicker
+              tournamentId={tournamentId}
+              value={selectedGuest}
+              onChange={(g) => {
+                setSelectedGuest(g);
+                if (g) setName(g.name);
+              }}
+            />
+          </div>
           <div>
             <Label htmlFor="member-name">Name *</Label>
             <Input

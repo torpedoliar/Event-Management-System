@@ -147,6 +147,7 @@ export class EventsService {
         enablePhotoCapture: source.enablePhotoCapture,
         enableLuckyDraw: source.enableLuckyDraw,
         enableSouvenir: source.enableSouvenir,
+        enableTournament: source.enableTournament,
         allowDuplicateGuestId: source.allowDuplicateGuestId,
         allowMultipleCheckinPerCounter: source.allowMultipleCheckinPerCounter,
         requireCheckinForSouvenir: source.requireCheckinForSouvenir,
@@ -191,14 +192,15 @@ export class EventsService {
     const event = await this.prisma.event.findUnique({ where: { id } });
     if (!event) throw new NotFoundException('Event not found');
 
-    const [totalGuests, checkedIn, souvenirs, prizes] = await Promise.all([
+    const [totalGuests, checkedIn, souvenirs, prizes, tournaments] = await Promise.all([
       this.prisma.guest.count({ where: { eventId: id } }),
       this.prisma.guest.count({ where: { eventId: id, checkedIn: true } }),
       this.prisma.souvenir.count({ where: { eventId: id } }),
       this.prisma.prize.count({ where: { eventId: id } }),
+      this.prisma.tournament.count({ where: { eventId: id } }),
     ]);
 
-    return { totalGuests, checkedIn, souvenirs, prizes };
+    return { totalGuests, checkedIn, souvenirs, prizes, tournaments };
   }
 
   async setActiveConfig(input: {
@@ -215,6 +217,7 @@ export class EventsService {
     enablePhotoCapture?: boolean;
     enableLuckyDraw?: boolean;
     enableSouvenir?: boolean;
+    enableTournament?: boolean;
     allowDuplicateGuestId?: boolean;
     allowMultipleCheckinPerCounter?: boolean;
     requireCheckinForSouvenir?: boolean;

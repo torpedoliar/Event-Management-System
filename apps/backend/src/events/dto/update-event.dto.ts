@@ -72,6 +72,10 @@ export class UpdateEventDto {
 
   @IsOptional()
   @IsBoolean()
+  enableTournament?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
   allowDuplicateGuestId?: boolean;
 
   @IsOptional()

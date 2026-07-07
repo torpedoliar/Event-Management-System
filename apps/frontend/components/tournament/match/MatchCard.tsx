@@ -4,6 +4,7 @@ import React from "react";
 import type { Match, MatchStatus } from "@/types/tournament.types";
 import { MatchStatusLabels } from "@/types/tournament.types";
 import { TeamLogo } from "../team/TeamLogo";
+import { Monitor } from "lucide-react";
 
 interface MatchCardProps {
   match: Match;
@@ -36,8 +37,19 @@ export function MatchCard({ match, onClick, compact = false, isLive: isLiveProp 
       onClick={onClick}
     >
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-medium text-brand-textMuted">
-          Match #{match.matchNumber}
+        <span className="text-xs font-medium text-brand-textMuted flex items-center gap-3">
+          <span>Match #{match.matchNumber}</span>
+          <a
+            href={`/tournament/live/${match.id}`}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-1 text-brand-primary hover:text-brand-primaryHover transition-colors hover:underline"
+            onClick={(e) => e.stopPropagation()}
+            title="Open Live Display (New Tab)"
+          >
+            <Monitor size={12} />
+            <span>Live Display</span>
+          </a>
         </span>
         <span className={cn("text-xs px-2 py-0.5 rounded-full font-medium", statusColors[match.status])}>
           {MatchStatusLabels[match.status]}

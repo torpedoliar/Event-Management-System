@@ -21,6 +21,7 @@ export function TeamFormModal({ tournamentId, team, open, onClose, onSuccess }: 
   const [name, setName] = useState("");
   const [seed, setSeed] = useState<string>("");
   const [logoUrl, setLogoUrl] = useState("");
+  const [logoFile, setLogoFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,6 +30,7 @@ export function TeamFormModal({ tournamentId, team, open, onClose, onSuccess }: 
       setName(team?.name || "");
       setSeed(team?.seed?.toString() || "");
       setLogoUrl(team?.logoUrl || "");
+      setLogoFile(null);
       setError(null);
     }
   }, [open, team]);
@@ -43,17 +45,27 @@ export function TeamFormModal({ tournamentId, team, open, onClose, onSuccess }: 
     setIsSubmitting(true);
     setError(null);
 
-    const data: CreateTeamDto = {
-      name: name.trim(),
-      seed: seed ? parseInt(seed, 10) : undefined,
-      logoUrl: logoUrl.trim() || undefined,
-    };
+    let payload: CreateTeamDto | FormData;
+
+    if (logoFile) {
+      const fd = new FormData();
+      fd.append("name", name.trim());
+      if (seed) fd.append("seed", seed);
+      fd.append("logo", logoFile);
+      payload = fd as any;
+    } else {
+      payload = {
+        name: name.trim(),
+        seed: seed ? parseInt(seed, 10) : undefined,
+        logoUrl: logoUrl.trim() || undefined,
+      };
+    }
 
     try {
       if (team) {
-        await teamApi.update(team.id, data);
+        await teamApi.update(team.id, payload);
       } else {
-        await teamApi.create(tournamentId, data);
+        await teamApi.create(tournamentId, payload);
       }
       onSuccess();
       onClose();
@@ -116,13 +128,30 @@ export function TeamFormModal({ tournamentId, team, open, onClose, onSuccess }: 
             />
           </div>
           <div>
-            <Label htmlFor="team-logo">Logo URL</Label>
-            <Input
-              id="team-logo"
-              value={logoUrl}
-              onChange={(e) => setLogoUrl(e.target.value)}
-              placeholder="https://..."
-            />
+            <Label htmlFor="team-logo">Logo (URL or File)</Label>
+            <div className="space-y-2">
+              <Input
+                id="team-logo"
+                value={logoUrl}
+                onChange={(e) => {
+                  setLogoUrl(e.target.value);
+                  setLogoFile(null);
+                }}
+                placeholder="https://..."
+                disabled={!!logoFile}
+              />
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setLogoFile(file);
+                    setLogoUrl("");
+                  }
+                }}
+              />
+            </div>
           </div>
         </div>
 

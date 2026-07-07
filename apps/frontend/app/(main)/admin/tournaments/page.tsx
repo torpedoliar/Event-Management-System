@@ -17,6 +17,14 @@ export default function AdminTournamentsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const [eventCfg, setEventCfg] = useState<any>(null);
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/config/event`)
+      .then(r => r.json())
+      .then(data => setEventCfg(data))
+      .catch(console.error);
+  }, []);
 
   useEffect(() => {
     async function fetchTournaments() {
@@ -217,6 +225,9 @@ export default function AdminTournamentsPage() {
             </div>
             <div className="p-6">
               <TournamentForm
+                initialData={{
+                  startDate: eventCfg?.date ? new Date(eventCfg.date).toISOString() : undefined
+                }}
                 onSubmit={handleCreateTournament}
                 onCancel={() => setShowCreateModal(false)}
                 isLoading={isCreating}

@@ -15,9 +15,20 @@ import type {
   UpdateScoreDto,
   ImportTeamsDto,
   ImportTeamsResult,
+  EligibleGuest,
 } from '../types/tournament.types';
 
 const BASE = '/tournaments';
+
+/**
+ * Guest Picker
+ */
+export const eligibleGuestApi = {
+  async getEligible(tournamentId: string, search?: string): Promise<EligibleGuest[]> {
+    const query = search ? `?q=${encodeURIComponent(search)}` : '';
+    return apiFetch<EligibleGuest[]>(`${BASE}/${tournamentId}/eligible-guests${query}`);
+  },
+};
 
 /**
  * Tournament CRUD
@@ -55,17 +66,22 @@ export const tournamentApi = {
  * Team Management
  */
 export const teamApi = {
-  async create(tournamentId: string, data: CreateTeamDto): Promise<TournamentTeam> {
+  async create(tournamentId: string, data: CreateTeamDto | FormData): Promise<TournamentTeam> {
+    const isFormData = data instanceof FormData;
     return apiFetch<TournamentTeam>(`${BASE}/${tournamentId}/teams`, {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: isFormData ? data : JSON.stringify(data),
+      // If it's FormData, apiFetch shouldn't stringify it, but we also shouldn't set Content-Type to application/json.
+      // Wait, apiFetch might automatically set Content-Type to application/json if body is string.
+      // We will handle it in the fetch call directly.
     });
   },
 
-  async update(teamId: string, data: Partial<CreateTeamDto>): Promise<TournamentTeam> {
+  async update(teamId: string, data: Partial<CreateTeamDto> | FormData): Promise<TournamentTeam> {
+    const isFormData = data instanceof FormData;
     return apiFetch<TournamentTeam>(`${BASE}/teams/${teamId}`, {
       method: 'PUT',
-      body: JSON.stringify(data),
+      body: isFormData ? data : JSON.stringify(data),
     });
   },
 

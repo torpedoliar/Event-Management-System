@@ -554,6 +554,7 @@ export default function TournamentDetailPage() {
 
       {memberTeam && (
         <TeamMemberFormModal
+          tournamentId={tournamentId}
           teamId={memberTeam.id}
           teamName={memberTeam.name}
           members={memberTeam.members || []}

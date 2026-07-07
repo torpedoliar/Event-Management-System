@@ -1,9 +1,22 @@
 {
   "name": "Guest Registration & Check-in System",
-  "version": "1.5.0",
-  "versionCode": 150,
-  "releaseDate": "2026-04-18",
+  "version": "1.6.0",
+  "versionCode": 160,
+  "releaseDate": "2026-07-07",
   "changelog": {
+    "v1.6.0": {
+      "date": "2026-07-07",
+      "type": "feature",
+      "title": "Tournament Core Integration",
+      "features": [
+        "Tournament Scoped by Event: tournaments are automatically scoped to the active event",
+        "Event Settings Toggle: enable/disable tournament feature per event via Event Settings",
+        "Guest Picker for Team Members: select existing guests from the event to join tournament teams",
+        "Tournament Stats & Calendar: tournaments count and badges now appear in the event calendar and dashboard",
+        "Team Logo Upload: support file uploads for team logos",
+        "Live Match Display: dedicated live route for displaying ongoing matches"
+      ]
+    },
     "v1.5.0": {
       "date": "2026-04-18",
       "type": "feature",

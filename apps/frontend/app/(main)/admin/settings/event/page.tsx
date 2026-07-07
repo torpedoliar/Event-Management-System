@@ -51,6 +51,7 @@ interface EventConfig {
   enablePhotoCapture: boolean;
   enableLuckyDraw: boolean;
   enableSouvenir: boolean;
+  enableTournament: boolean;
   allowDuplicateGuestId: boolean;
   allowMultipleCheckinPerCounter?: boolean;
   customCategories?: CustomCategory[];
@@ -128,6 +129,7 @@ export default function EventSettingsPage() {
             enablePhotoCapture: false,
             enableLuckyDraw: false,
             enableSouvenir: false,
+            enableTournament: false,
             allowDuplicateGuestId: false,
             allowMultipleCheckinPerCounter: false,
             checkinPopupTimeoutMs: 5000
@@ -204,6 +206,9 @@ export default function EventSettingsPage() {
           overlayOpacity: cfg.overlayOpacity,
           checkinPopupTimeoutMs: cfg.checkinPopupTimeoutMs ?? 5000,
           enablePhotoCapture: cfg.enablePhotoCapture ?? false,
+          enableLuckyDraw: cfg.enableLuckyDraw ?? false,
+          enableSouvenir: cfg.enableSouvenir ?? false,
+          enableTournament: cfg.enableTournament ?? false,
           allowDuplicateGuestId: cfg.allowDuplicateGuestId ?? false,
           allowMultipleCheckinPerCounter: cfg.allowMultipleCheckinPerCounter ?? false,
           customCategories: cfg.customCategories || null,
@@ -567,6 +572,25 @@ export default function EventSettingsPage() {
                       className="hidden"
                       checked={cfg.allowMultipleCheckinPerCounter ?? false}
                       onChange={(e) => setCfg({ ...cfg, allowMultipleCheckinPerCounter: e.target.checked })}
+                    />
+                  </div>
+                </label>
+
+                <label className="flex items-center justify-between p-3 rounded-lg border border-white/10 bg-white/5 cursor-pointer hover:bg-white/10 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <Trophy size={20} className="text-brand-warning" />
+                    <div>
+                      <div className="font-medium text-white">Enable Tournament</div>
+                      <div className="text-sm text-white/60">Aktifkan fitur manajemen turnamen pada event ini</div>
+                    </div>
+                  </div>
+                  <div className={`w-12 h-7 rounded-full transition-colors relative ${cfg.enableTournament ? 'bg-brand-warning' : 'bg-white/20'}`}>
+                    <div className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transform ${cfg.enableTournament ? 'translate-x-5' : 'translate-x-0'}`} />
+                    <input
+                      type="checkbox"
+                      className="hidden"
+                      checked={cfg.enableTournament ?? false}
+                      onChange={(e) => setCfg({ ...cfg, enableTournament: e.target.checked })}
                     />
                   </div>
                 </label>

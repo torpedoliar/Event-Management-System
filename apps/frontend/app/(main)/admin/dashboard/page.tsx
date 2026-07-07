@@ -11,7 +11,7 @@ import Modal from '@/components/ui/Modal';
 import Alert from '@/components/ui/Alert';
 import StatusBadge from '@/components/ui/StatusBadge';
 import { SkeletonCard } from '@/components/ui/Skeleton';
-import { TrendingUp, Radio, BarChart3, Users, Dices, ExternalLink, UserPlus, Save, CheckCircle, XCircle, Activity } from 'lucide-react';
+import { TrendingUp, Radio, BarChart3, Users, Dices, ExternalLink, UserPlus, Save, CheckCircle, XCircle, Activity, Trophy } from 'lucide-react';
 import { useSSE } from '@/lib/sse-context';
 
 const GuestStatsChart = lazy(() => import('@/components/GuestStatsChart'));
@@ -239,6 +239,9 @@ export default function DashboardPage() {
                   <QuickLink href="/admin/guests" icon={<Users size={18} />}>Tamu</QuickLink>
                   <QuickLink href="/luckydraw" icon={<Dices size={18} />}>Lucky Draw</QuickLink>
                   <QuickLink href="/checkin" external icon={<ExternalLink size={18} />}>Kiosk</QuickLink>
+                  {event?.enableTournament && (
+                    <QuickLink href="/admin/tournaments" icon={<Trophy size={18} />}>Tournament</QuickLink>
+                  )}
                 </div>
               </Card>
 

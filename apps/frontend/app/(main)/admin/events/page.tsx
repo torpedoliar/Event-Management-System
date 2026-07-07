@@ -6,7 +6,7 @@ import Card from '@/components/ui/Card';
 import Input from '@/components/ui/Input';
 import Label from '@/components/ui/Label';
 import Button from '@/components/ui/Button';
-import { Calendar, CalendarDays, MapPin, Plus, Copy, Trash2, Check, Users, Gift, Package, Loader2, Edit2, X, ChevronRight, List, LayoutGrid, GripVertical, Clock, CheckCircle, History } from 'lucide-react';
+import { Calendar, CalendarDays, MapPin, Plus, Copy, Trash2, Check, Users, Gift, Package, Loader2, Edit2, X, ChevronRight, List, LayoutGrid, GripVertical, Clock, CheckCircle, History, Trophy } from 'lucide-react';
 import Link from 'next/link';
 
 interface EventStats {
@@ -14,6 +14,7 @@ interface EventStats {
   checkedIn: number;
   souvenirs: number;
   prizes: number;
+  tournaments?: number;
 }
 
 interface Event {
@@ -363,6 +364,12 @@ export default function EventsPage() {
                 <Gift size={10} />
                 {event.stats.prizes}
               </span>
+              {(event.stats.tournaments ?? 0) > 0 && (
+                <span className="flex items-center gap-1 text-brand-success">
+                  <Trophy size={10} />
+                  {event.stats.tournaments}
+                </span>
+              )}
             </div>
           )}
         </div>
@@ -728,6 +735,12 @@ export default function EventsPage() {
                               <Gift size={14} />
                               {event.stats.prizes} hadiah
                             </span>
+                            {(event.stats.tournaments ?? 0) > 0 && (
+                              <span className="flex items-center gap-1.5 text-brand-success">
+                                <Trophy size={14} />
+                                {event.stats.tournaments} turnamen
+                              </span>
+                            )}
                           </div>
                         )}
                       </div>

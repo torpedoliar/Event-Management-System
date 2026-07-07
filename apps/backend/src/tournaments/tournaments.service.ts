@@ -6,19 +6,30 @@ import { CreateTeamDto, CreateTeamMemberDto } from './dto/create-team.dto';
 import { ImportTeamsDto, ImportTeamDto } from './dto/import-teams.dto';
 import { TournamentStatus } from './types/tournament.types';
 import { BracketEngineService } from './bracket-engine.service';
+import { EventsService } from '../events/events.service';
 
 @Injectable()
 export class TournamentsService {
   constructor(
     private prisma: PrismaService,
     private bracketEngine: BracketEngineService,
+    private events: EventsService,
   ) {}
+
+  private async getActiveEventId(): Promise<string | null> {
+    const active = await this.events.getActive();
+    return active ? active.id : null;
+  }
 
   // ============================================
   // Tournament CRUD
   // ============================================
 
   async create(createTournamentDto: CreateTournamentDto) {
+    let eventId = createTournamentDto.eventId;
+    if (!eventId) {
+      eventId = (await this.getActiveEventId()) ?? undefined;
+    }
     return this.prisma.tournament.create({
       data: {
         name: createTournamentDto.name,
@@ -35,7 +46,7 @@ export class TournamentsService {
         endDate: createTournamentDto.endDate
           ? new Date(createTournamentDto.endDate)
           : null,
-        eventId: createTournamentDto.eventId,
+        eventId: eventId || null,
       },
       include: {
         teams: {
@@ -62,6 +73,10 @@ export class TournamentsService {
   }
 
   async findAll(eventId?: string) {
+    if (!eventId) {
+      const activeId = await this.getActiveEventId();
+      if (activeId) eventId = activeId;
+    }
     return this.prisma.tournament.findMany({
       where: eventId ? { eventId } : undefined,
       include: {
@@ -244,6 +259,67 @@ export class TournamentsService {
     }
 
     return this.prisma.teamMember.delete({ where: { id: memberId } });
+  }
+
+  // ============================================
+  // Guest Picker
+  // ============================================
+
+  /**
+   * Fetch guests from the tournament's event that are NOT yet members
+   * of any team in this tournament. Used by the guest picker UI.
+   */
+  async getEligibleGuests(tournamentId: string, search?: string) {
+    const tournament = await this.prisma.tournament.findUnique({
+      where: { id: tournamentId },
+      select: { eventId: true },
+    });
+
+    if (!tournament) {
+      throw new NotFoundException('Tournament not found');
+    }
+
+    // Standalone tournament (no event) — no guests to pick from
+    if (!tournament.eventId) {
+      return [];
+    }
+
+    // Collect all guestIds already assigned to teams in this tournament
+    const assignedMembers = await this.prisma.teamMember.findMany({
+      where: { team: { tournamentId } },
+      select: { guestId: true },
+    });
+    const assignedGuestIds = assignedMembers
+      .map((m) => m.guestId)
+      .filter((id): id is string => !!id);
+
+    const where: any = { eventId: tournament.eventId };
+    if (assignedGuestIds.length > 0) {
+      where.id = { notIn: assignedGuestIds };
+    }
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { guestId: { contains: search, mode: 'insensitive' } },
+        { company: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
+    return this.prisma.guest.findMany({
+      where,
+      select: {
+        id: true,
+        guestId: true,
+        name: true,
+        company: true,
+        department: true,
+        division: true,
+        category: true,
+        checkedIn: true,
+      },
+      orderBy: { name: 'asc' },
+      take: 50, // limit for picker performance
+    });
   }
 
   // ============================================
