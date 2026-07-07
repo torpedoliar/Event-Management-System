@@ -12,6 +12,7 @@ type Event = {
   backgroundImageUrl?: string | null;
   backgroundVideoUrl?: string | null;
   overlayOpacity?: number;
+  enableTournament?: boolean;
 };
 
 type Guest = {
