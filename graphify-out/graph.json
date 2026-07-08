@@ -4,14 +4,234 @@
   "graph": {},
   "nodes": [
     {
+      "label": "sw.js",
+      "file_type": "code",
+      "source_file": "apps/frontend/public/sw.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_frontend_public_sw",
+      "community": 69,
+      "norm_label": "sw.js"
+    },
+    {
+      "label": "2026-07-08-tournament-bugfix.md",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_08_tournament_bugfix",
+      "community": 81,
+      "norm_label": "2026-07-08-tournament-bugfix.md"
+    },
+    {
+      "label": "Tournament Bugfix Implementation Plan",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_08_tournament_bugfix_tournament_bugfix_implementation_plan",
+      "community": 81,
+      "norm_label": "tournament bugfix implementation plan"
+    },
+    {
+      "label": "Bug Summary",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_08_tournament_bugfix_bug_summary",
+      "community": 81,
+      "norm_label": "bug summary"
+    },
+    {
+      "label": "Global Constraints",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_08_tournament_bugfix_global_constraints",
+      "community": 81,
+      "norm_label": "global constraints"
+    },
+    {
+      "label": "Phase 1: Bracket BYE Auto-Advance (Bug #3 \u2014 Critical)",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L33",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_08_tournament_bugfix_phase_1_bracket_bye_auto_advance_bug_3_critical",
+      "community": 81,
+      "norm_label": "phase 1: bracket bye auto-advance (bug #3 \u2014 critical)"
+    },
+    {
+      "label": "Task 1.1: Add BYE auto-advance logic to BracketEngineService",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L35",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_08_tournament_bugfix_task_1_1_add_bye_auto_advance_logic_to_bracketengineservice",
+      "community": 81,
+      "norm_label": "task 1.1: add bye auto-advance logic to bracketengineservice"
+    },
+    {
+      "label": "Phase 2: Match Management UI (Bug #2 \u2014 Critical)",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L118",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_08_tournament_bugfix_phase_2_match_management_ui_bug_2_critical",
+      "community": 81,
+      "norm_label": "phase 2: match management ui (bug #2 \u2014 critical)"
+    },
+    {
+      "label": "Task 2.1: Backend \u2014 Add match update endpoint",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L120",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_08_tournament_bugfix_task_2_1_backend_add_match_update_endpoint",
+      "community": 81,
+      "norm_label": "task 2.1: backend \u2014 add match update endpoint"
+    },
+    {
+      "label": "Task 2.2: Frontend API \u2014 Add match update method",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L228",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_08_tournament_bugfix_task_2_2_frontend_api_add_match_update_method",
+      "community": 81,
+      "norm_label": "task 2.2: frontend api \u2014 add match update method"
+    },
+    {
+      "label": "Task 2.3: Frontend \u2014 Enhance MatchScoringModal with match editing",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L258",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_08_tournament_bugfix_task_2_3_frontend_enhance_matchscoringmodal_with_match_editing",
+      "community": 81,
+      "norm_label": "task 2.3: frontend \u2014 enhance matchscoringmodal with match editing"
+    },
+    {
+      "label": "Task 2.4: Auto-load matches on tournament detail page load",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L391",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_08_tournament_bugfix_task_2_4_auto_load_matches_on_tournament_detail_page_load",
+      "community": 81,
+      "norm_label": "task 2.4: auto-load matches on tournament detail page load"
+    },
+    {
+      "label": "Phase 3: Calendar Integration (Bug #4)",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L433",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_08_tournament_bugfix_phase_3_calendar_integration_bug_4",
+      "community": 81,
+      "norm_label": "phase 3: calendar integration (bug #4)"
+    },
+    {
+      "label": "Task 3.1: Show tournament dates on Events Calendar",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L435",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_08_tournament_bugfix_task_3_1_show_tournament_dates_on_events_calendar",
+      "community": 81,
+      "norm_label": "task 3.1: show tournament dates on events calendar"
+    },
+    {
+      "label": "Phase 4: Tournament Menu Visibility (Bug #1)",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L551",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_08_tournament_bugfix_phase_4_tournament_menu_visibility_bug_1",
+      "community": 81,
+      "norm_label": "phase 4: tournament menu visibility (bug #1)"
+    },
+    {
+      "label": "Task 4.1: Ensure cache invalidation on config update",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L553",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_08_tournament_bugfix_task_4_1_ensure_cache_invalidation_on_config_update",
+      "community": 81,
+      "norm_label": "task 4.1: ensure cache invalidation on config update"
+    },
+    {
+      "label": "Phase 5: Auth Persistence (Bug #5)",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L599",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_08_tournament_bugfix_phase_5_auth_persistence_bug_5",
+      "community": 81,
+      "norm_label": "phase 5: auth persistence (bug #5)"
+    },
+    {
+      "label": "Task 5.1: Fix RequireAuth hydration race condition",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L601",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_08_tournament_bugfix_task_5_1_fix_requireauth_hydration_race_condition",
+      "community": 81,
+      "norm_label": "task 5.1: fix requireauth hydration race condition"
+    },
+    {
+      "label": "Execution Order",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L694",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_08_tournament_bugfix_execution_order",
+      "community": 81,
+      "norm_label": "execution order"
+    },
+    {
+      "label": "Verification Plan",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L702",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_08_tournament_bugfix_verification_plan",
+      "community": 81,
+      "norm_label": "verification plan"
+    },
+    {
+      "label": "Build Verification",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L704",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_08_tournament_bugfix_build_verification",
+      "community": 81,
+      "norm_label": "build verification"
+    },
+    {
+      "label": "Manual Verification Checklist",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L710",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_08_tournament_bugfix_manual_verification_checklist",
+      "community": 81,
+      "norm_label": "manual verification checklist"
+    },
+    {
       "label": "RequireAuth.tsx",
       "file_type": "code",
       "source_file": "apps/frontend/components/RequireAuth.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_frontend_components_requireauth",
       "community": 8,
-      "norm_label": "requireauth.tsx"
+      "norm_label": "requireauth.tsx",
+      "id": "apps_frontend_components_requireauth"
     },
     {
       "label": "RequireAuth()",
@@ -19,9 +239,9 @@
       "source_file": "apps/frontend/components/RequireAuth.tsx",
       "source_location": "L6",
       "_origin": "ast",
-      "id": "apps_frontend_components_requireauth_requireauth",
       "community": 8,
-      "norm_label": "requireauth()"
+      "norm_label": "requireauth()",
+      "id": "apps_frontend_components_requireauth_requireauth"
     },
     {
       "label": "TopNav.tsx",
@@ -29,9 +249,9 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_frontend_components_topnav",
       "community": 199,
-      "norm_label": "topnav.tsx"
+      "norm_label": "topnav.tsx",
+      "id": "apps_frontend_components_topnav"
     },
     {
       "label": "AdminLink",
@@ -39,9 +259,9 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L31",
       "_origin": "ast",
-      "id": "apps_frontend_components_topnav_adminlink",
       "community": 199,
-      "norm_label": "adminlink"
+      "norm_label": "adminlink",
+      "id": "apps_frontend_components_topnav_adminlink"
     },
     {
       "label": "TopNav()",
@@ -49,9 +269,9 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L37",
       "_origin": "ast",
-      "id": "apps_frontend_components_topnav_topnav",
       "community": 199,
-      "norm_label": "topnav()"
+      "norm_label": "topnav()",
+      "id": "apps_frontend_components_topnav_topnav"
     },
     {
       "label": "cn()",
@@ -59,9 +279,9 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L359",
       "_origin": "ast",
-      "id": "apps_frontend_components_topnav_cn",
       "community": 199,
-      "norm_label": "cn()"
+      "norm_label": "cn()",
+      "id": "apps_frontend_components_topnav_cn"
     },
     {
       "label": "page.tsx",
@@ -1302,16 +1522,6 @@
       "community": 103,
       "norm_label": "index.ts",
       "id": "apps_frontend_components_tournament_team_index"
-    },
-    {
-      "label": "sw.js",
-      "file_type": "code",
-      "source_file": "apps/frontend/public/sw.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 69,
-      "norm_label": "sw.js",
-      "id": "apps_frontend_public_sw"
     },
     {
       "label": "2026-06-30-tournament-detail-features.md",
@@ -2959,7 +3169,7 @@
       "source_file": "apps/backend/src/app.module.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 53,
+      "community": 75,
       "norm_label": "app.module.ts",
       "id": "apps_backend_src_app_module"
     },
@@ -2969,7 +3179,7 @@
       "source_file": "apps/backend/src/app.module.ts",
       "source_location": "L55",
       "_origin": "ast",
-      "community": 53,
+      "community": 75,
       "norm_label": "appmodule",
       "id": "apps_backend_src_app_module_appmodule"
     },
@@ -3029,7 +3239,7 @@
       "source_file": "apps/backend/src/auth/auth.module.ts",
       "source_location": "L20",
       "_origin": "ast",
-      "community": 53,
+      "community": 79,
       "norm_label": "authmodule",
       "id": "apps_backend_src_auth_auth_module_authmodule"
     },
@@ -3039,7 +3249,7 @@
       "source_file": "apps/backend/src/auth/auth.service.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 79,
+      "community": 53,
       "norm_label": "auth.service.ts",
       "id": "apps_backend_src_auth_auth_service"
     },
@@ -3119,7 +3329,7 @@
       "source_file": "apps/backend/src/auth/jwt-auth.guard.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 32,
+      "community": 18,
       "norm_label": "jwt-auth.guard.ts",
       "id": "apps_backend_src_auth_jwt_auth_guard"
     },
@@ -3129,7 +3339,7 @@
       "source_file": "apps/backend/src/auth/jwt-auth.guard.ts",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 32,
+      "community": 18,
       "norm_label": "jwtauthguard",
       "id": "apps_backend_src_auth_jwt_auth_guard_jwtauthguard"
     },
@@ -3179,7 +3389,7 @@
       "source_file": "apps/backend/src/common/audit/audit.controller.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 32,
+      "community": 18,
       "norm_label": "audit.controller.ts",
       "id": "apps_backend_src_common_audit_audit_controller"
     },
@@ -3189,7 +3399,7 @@
       "source_file": "apps/backend/src/common/audit/audit.controller.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 81,
+      "community": 53,
       "norm_label": "auditcontroller",
       "id": "apps_backend_src_common_audit_audit_controller_auditcontroller"
     },
@@ -3199,7 +3409,7 @@
       "source_file": "apps/backend/src/common/audit/audit.controller.ts",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 81,
+      "community": 53,
       "norm_label": ".constructor()",
       "id": "apps_backend_src_common_audit_audit_controller_auditcontroller_constructor"
     },
@@ -3209,7 +3419,7 @@
       "source_file": "apps/backend/src/common/audit/audit.controller.ts",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 81,
+      "community": 53,
       "norm_label": ".getlogs()",
       "id": "apps_backend_src_common_audit_audit_controller_auditcontroller_getlogs"
     },
@@ -3219,7 +3429,7 @@
       "source_file": "apps/backend/src/common/audit/audit.controller.ts",
       "source_location": "L32",
       "_origin": "ast",
-      "community": 81,
+      "community": 53,
       "norm_label": ".getactions()",
       "id": "apps_backend_src_common_audit_audit_controller_auditcontroller_getactions"
     },
@@ -3229,7 +3439,7 @@
       "source_file": "apps/backend/src/common/audit/audit.controller.ts",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 81,
+      "community": 53,
       "norm_label": ".getstats()",
       "id": "apps_backend_src_common_audit_audit_controller_auditcontroller_getstats"
     },
@@ -3259,7 +3469,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 79,
+      "community": 53,
       "norm_label": "audit.service.ts",
       "id": "apps_backend_src_common_audit_audit_service"
     },
@@ -3269,7 +3479,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 79,
+      "community": 53,
       "norm_label": "auditaction",
       "id": "apps_backend_src_common_audit_audit_service_auditaction"
     },
@@ -3279,7 +3489,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L49",
       "_origin": "ast",
-      "community": 79,
+      "community": 53,
       "norm_label": "auditloginput",
       "id": "apps_backend_src_common_audit_audit_service_auditloginput"
     },
@@ -3289,7 +3499,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L63",
       "_origin": "ast",
-      "community": 79,
+      "community": 53,
       "norm_label": "auditservice",
       "id": "apps_backend_src_common_audit_audit_service_auditservice"
     },
@@ -3299,7 +3509,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L64",
       "_origin": "ast",
-      "community": 79,
+      "community": 53,
       "norm_label": ".constructor()",
       "id": "apps_backend_src_common_audit_audit_service_auditservice_constructor"
     },
@@ -3309,7 +3519,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L69",
       "_origin": "ast",
-      "community": 79,
+      "community": 53,
       "norm_label": ".log()",
       "id": "apps_backend_src_common_audit_audit_service_auditservice_log"
     },
@@ -3319,7 +3529,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L95",
       "_origin": "ast",
-      "community": 79,
+      "community": 53,
       "norm_label": ".getauditlogs()",
       "id": "apps_backend_src_common_audit_audit_service_auditservice_getauditlogs"
     },
@@ -3329,7 +3539,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L145",
       "_origin": "ast",
-      "community": 79,
+      "community": 53,
       "norm_label": ".getauditactions()",
       "id": "apps_backend_src_common_audit_audit_service_auditservice_getauditactions"
     },
@@ -3339,7 +3549,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L149",
       "_origin": "ast",
-      "community": 79,
+      "community": 53,
       "norm_label": ".getauditstats()",
       "id": "apps_backend_src_common_audit_audit_service_auditservice_getauditstats"
     },
@@ -3589,7 +3799,7 @@
       "source_file": "apps/backend/src/common/redis/redis.module.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 53,
+      "community": 75,
       "norm_label": "redis.module.ts",
       "id": "apps_backend_src_common_redis_redis_module"
     },
@@ -3599,7 +3809,7 @@
       "source_file": "apps/backend/src/common/redis/redis.module.ts",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 53,
+      "community": 75,
       "norm_label": "rediscachemodule",
       "id": "apps_backend_src_common_redis_redis_module_rediscachemodule"
     },
@@ -3689,7 +3899,7 @@
       "source_file": "apps/backend/src/common/throttler/throttler.config.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 53,
+      "community": 75,
       "norm_label": "throttler.config.ts",
       "id": "apps_backend_src_common_throttler_throttler_config"
     },
@@ -3699,7 +3909,7 @@
       "source_file": "apps/backend/src/common/throttler/throttler.config.ts",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 53,
+      "community": 75,
       "norm_label": "throttlerconfig",
       "id": "apps_backend_src_common_throttler_throttler_config_throttlerconfig"
     },
@@ -3709,7 +3919,7 @@
       "source_file": "apps/backend/src/email/email.controller.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 32,
+      "community": 18,
       "norm_label": "email.controller.ts",
       "id": "apps_backend_src_email_email_controller"
     },
@@ -3819,7 +4029,7 @@
       "source_file": "apps/backend/src/email/email.module.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 53,
+      "community": 75,
       "norm_label": "email.module.ts",
       "id": "apps_backend_src_email_email_module"
     },
@@ -3829,7 +4039,7 @@
       "source_file": "apps/backend/src/email/email.module.ts",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 53,
+      "community": 75,
       "norm_label": "emailmodule",
       "id": "apps_backend_src_email_email_module_emailmodule"
     },
@@ -4279,7 +4489,7 @@
       "source_file": "apps/backend/src/events/events.module.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 53,
+      "community": 13,
       "norm_label": "events.module.ts",
       "id": "apps_backend_src_events_events_module"
     },
@@ -4289,7 +4499,7 @@
       "source_file": "apps/backend/src/events/events.module.ts",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 53,
+      "community": 13,
       "norm_label": "eventsmodule",
       "id": "apps_backend_src_events_events_module_eventsmodule"
     },
@@ -4879,7 +5089,7 @@
       "source_file": "apps/backend/src/guests/guests.service.ts",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 79,
+      "community": 53,
       "norm_label": ".constructor()",
       "id": "apps_backend_src_guests_guests_service_guestsservice_constructor"
     },
@@ -5199,7 +5409,7 @@
       "source_file": "apps/backend/src/health.controller.ts",
       "source_location": "L26",
       "_origin": "ast",
-      "community": 13,
+      "community": 216,
       "norm_label": "healthcontroller",
       "id": "apps_backend_src_health_controller_healthcontroller"
     },
@@ -5209,7 +5419,7 @@
       "source_file": "apps/backend/src/health.controller.ts",
       "source_location": "L29",
       "_origin": "ast",
-      "community": 13,
+      "community": 216,
       "norm_label": ".constructor()",
       "id": "apps_backend_src_health_controller_healthcontroller_constructor"
     },
@@ -5219,7 +5429,7 @@
       "source_file": "apps/backend/src/health.controller.ts",
       "source_location": "L32",
       "_origin": "ast",
-      "community": 13,
+      "community": 216,
       "norm_label": ".check()",
       "id": "apps_backend_src_health_controller_healthcontroller_check"
     },
@@ -5229,7 +5439,7 @@
       "source_file": "apps/backend/src/health.controller.ts",
       "source_location": "L65",
       "_origin": "ast",
-      "community": 13,
+      "community": 216,
       "norm_label": ".liveness()",
       "id": "apps_backend_src_health_controller_healthcontroller_liveness"
     },
@@ -5239,7 +5449,7 @@
       "source_file": "apps/backend/src/health.controller.ts",
       "source_location": "L70",
       "_origin": "ast",
-      "community": 13,
+      "community": 216,
       "norm_label": ".readiness()",
       "id": "apps_backend_src_health_controller_healthcontroller_readiness"
     },
@@ -5249,7 +5459,7 @@
       "source_file": "apps/backend/src/health.controller.ts",
       "source_location": "L79",
       "_origin": "ast",
-      "community": 13,
+      "community": 216,
       "norm_label": ".dbstats()",
       "id": "apps_backend_src_health_controller_healthcontroller_dbstats"
     },
@@ -5549,7 +5759,7 @@
       "source_file": "apps/backend/src/main.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 53,
+      "community": 75,
       "norm_label": "main.ts",
       "id": "apps_backend_src_main"
     },
@@ -5559,7 +5769,7 @@
       "source_file": "apps/backend/src/main.ts",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 53,
+      "community": 75,
       "norm_label": "compression",
       "id": "apps_backend_src_main_compression"
     },
@@ -5569,7 +5779,7 @@
       "source_file": "apps/backend/src/main.ts",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 53,
+      "community": 75,
       "norm_label": "bootstrap()",
       "id": "apps_backend_src_main_bootstrap"
     },
@@ -5669,7 +5879,7 @@
       "source_file": "apps/backend/src/prizes/prizes.controller.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 13,
+      "community": 18,
       "norm_label": "prizes.controller.ts",
       "id": "apps_backend_src_prizes_prizes_controller"
     },
@@ -5689,7 +5899,7 @@
       "source_file": "apps/backend/src/prizes/prizes.controller.ts",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 73,
+      "community": 44,
       "norm_label": ".constructor()",
       "id": "apps_backend_src_prizes_prizes_controller_prizescontroller_constructor"
     },
@@ -5799,7 +6009,7 @@
       "source_file": "apps/backend/src/prizes/prizes.module.ts",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 13,
+      "community": 75,
       "norm_label": "prizesmodule",
       "id": "apps_backend_src_prizes_prizes_module_prizesmodule"
     },
@@ -6289,7 +6499,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.controller.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 32,
+      "community": 18,
       "norm_label": "souvenirs.controller.ts",
       "id": "apps_backend_src_souvenirs_souvenirs_controller"
     },
@@ -6469,7 +6679,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.module.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 53,
+      "community": 13,
       "norm_label": "souvenirs.module.ts",
       "id": "apps_backend_src_souvenirs_souvenirs_module"
     },
@@ -7259,7 +7469,7 @@
       "source_file": "apps/backend/src/users/users.module.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 11,
+      "community": 75,
       "norm_label": "users.module.ts",
       "id": "apps_backend_src_users_users_module"
     },
@@ -7269,7 +7479,7 @@
       "source_file": "apps/backend/src/users/users.module.ts",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 11,
+      "community": 75,
       "norm_label": "usersmodule",
       "id": "apps_backend_src_users_users_module_usersmodule"
     },
@@ -7279,7 +7489,7 @@
       "source_file": "apps/backend/src/users/users.service.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 11,
+      "community": 13,
       "norm_label": "users.service.ts",
       "id": "apps_backend_src_users_users_service"
     },
@@ -26242,6 +26452,206 @@
   ],
   "links": [
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_08_tournament_bugfix",
+      "target": "docs_superpowers_plans_2026_07_08_tournament_bugfix_tournament_bugfix_implementation_plan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_08_tournament_bugfix_tournament_bugfix_implementation_plan",
+      "target": "docs_superpowers_plans_2026_07_08_tournament_bugfix_bug_summary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L694",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_08_tournament_bugfix_tournament_bugfix_implementation_plan",
+      "target": "docs_superpowers_plans_2026_07_08_tournament_bugfix_execution_order",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_08_tournament_bugfix_tournament_bugfix_implementation_plan",
+      "target": "docs_superpowers_plans_2026_07_08_tournament_bugfix_global_constraints",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_08_tournament_bugfix_tournament_bugfix_implementation_plan",
+      "target": "docs_superpowers_plans_2026_07_08_tournament_bugfix_phase_1_bracket_bye_auto_advance_bug_3_critical",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L118",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_08_tournament_bugfix_tournament_bugfix_implementation_plan",
+      "target": "docs_superpowers_plans_2026_07_08_tournament_bugfix_phase_2_match_management_ui_bug_2_critical",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L433",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_08_tournament_bugfix_tournament_bugfix_implementation_plan",
+      "target": "docs_superpowers_plans_2026_07_08_tournament_bugfix_phase_3_calendar_integration_bug_4",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L551",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_08_tournament_bugfix_tournament_bugfix_implementation_plan",
+      "target": "docs_superpowers_plans_2026_07_08_tournament_bugfix_phase_4_tournament_menu_visibility_bug_1",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L599",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_08_tournament_bugfix_tournament_bugfix_implementation_plan",
+      "target": "docs_superpowers_plans_2026_07_08_tournament_bugfix_phase_5_auth_persistence_bug_5",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L702",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_08_tournament_bugfix_tournament_bugfix_implementation_plan",
+      "target": "docs_superpowers_plans_2026_07_08_tournament_bugfix_verification_plan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_08_tournament_bugfix_phase_1_bracket_bye_auto_advance_bug_3_critical",
+      "target": "docs_superpowers_plans_2026_07_08_tournament_bugfix_task_1_1_add_bye_auto_advance_logic_to_bracketengineservice",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L120",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_08_tournament_bugfix_phase_2_match_management_ui_bug_2_critical",
+      "target": "docs_superpowers_plans_2026_07_08_tournament_bugfix_task_2_1_backend_add_match_update_endpoint",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L228",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_08_tournament_bugfix_phase_2_match_management_ui_bug_2_critical",
+      "target": "docs_superpowers_plans_2026_07_08_tournament_bugfix_task_2_2_frontend_api_add_match_update_method",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L258",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_08_tournament_bugfix_phase_2_match_management_ui_bug_2_critical",
+      "target": "docs_superpowers_plans_2026_07_08_tournament_bugfix_task_2_3_frontend_enhance_matchscoringmodal_with_match_editing",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L391",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_08_tournament_bugfix_phase_2_match_management_ui_bug_2_critical",
+      "target": "docs_superpowers_plans_2026_07_08_tournament_bugfix_task_2_4_auto_load_matches_on_tournament_detail_page_load",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L435",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_08_tournament_bugfix_phase_3_calendar_integration_bug_4",
+      "target": "docs_superpowers_plans_2026_07_08_tournament_bugfix_task_3_1_show_tournament_dates_on_events_calendar",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L553",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_08_tournament_bugfix_phase_4_tournament_menu_visibility_bug_1",
+      "target": "docs_superpowers_plans_2026_07_08_tournament_bugfix_task_4_1_ensure_cache_invalidation_on_config_update",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L601",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_08_tournament_bugfix_phase_5_auth_persistence_bug_5",
+      "target": "docs_superpowers_plans_2026_07_08_tournament_bugfix_task_5_1_fix_requireauth_hydration_race_condition",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L704",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_08_tournament_bugfix_verification_plan",
+      "target": "docs_superpowers_plans_2026_07_08_tournament_bugfix_build_verification",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-08-tournament-bugfix.md",
+      "source_location": "L710",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_08_tournament_bugfix_verification_plan",
+      "target": "docs_superpowers_plans_2026_07_08_tournament_bugfix_manual_verification_checklist",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -26368,9 +26778,9 @@
       "source_file": "apps/frontend/components/RequireAuth.tsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_requireauth",
-      "target": "apps_frontend_components_requireauth_requireauth",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_requireauth_requireauth"
     },
     {
       "relation": "imports",
@@ -26510,9 +26920,9 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L31",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_topnav",
-      "target": "apps_frontend_components_topnav_adminlink",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_topnav_adminlink"
     },
     {
       "relation": "contains",
@@ -26520,9 +26930,9 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L359",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_topnav",
-      "target": "apps_frontend_components_topnav_cn",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_topnav_cn"
     },
     {
       "relation": "contains",
@@ -26530,9 +26940,9 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L37",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_topnav",
-      "target": "apps_frontend_components_topnav_topnav",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_topnav_topnav"
     },
     {
       "relation": "calls",
@@ -26541,9 +26951,9 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L191",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_topnav_topnav",
-      "target": "apps_frontend_components_topnav_cn",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_topnav_cn"
     },
     {
       "relation": "contains",
@@ -63385,5 +63795,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "159d1994a8dee6b9d5679814bbf8222f0a6085b6"
+  "built_at_commit": "86069a4812f5462e0f3f747f77893e4ca1dd6ff2"
 }

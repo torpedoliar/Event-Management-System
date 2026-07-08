@@ -755,12 +755,12 @@
     "semantic_hash": "8640f9b2e6475cc3f5b1ff4548925765"
   },
   "apps/frontend/public/sw.js": {
-    "mtime": 1783517402.0962806,
-    "ast_hash": "f45ddab127469e10f410a1b6e09968ed",
+    "mtime": 1783517711.944324,
+    "ast_hash": "0045a25ab3d2d661ec18f488bdce3716",
     "semantic_hash": ""
   },
   "apps/frontend/public/workbox-c2c0676f.js": {
-    "mtime": 1783517402.0962806,
+    "mtime": 1783517711.944324,
     "ast_hash": "80e63d1bc987fbb9f079f9d6a8c9a60e",
     "semantic_hash": "80e63d1bc987fbb9f079f9d6a8c9a60e"
   },
@@ -1427,6 +1427,11 @@
   ".superpowers/sdd/task-2-brief.md": {
     "mtime": 1783517246.7823322,
     "ast_hash": "e7c46b512d27db3b63761ef10faa5c89",
+    "semantic_hash": ""
+  },
+  ".superpowers/sdd/progress.md": {
+    "mtime": 1783517734.2681952,
+    "ast_hash": "9f985d824c6455a1d4cf4a66c7596f46",
     "semantic_hash": ""
   }
 }

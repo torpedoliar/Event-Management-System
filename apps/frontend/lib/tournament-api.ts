@@ -126,6 +126,12 @@ export const bracketApi = {
     });
   },
 
+  async regenerate(tournamentId: string): Promise<Tournament> {
+    return apiFetch<Tournament>(`${BASE}/${tournamentId}/regenerate-bracket`, {
+      method: 'POST',
+    });
+  },
+
   async getView(tournamentId: string): Promise<BracketView | null> {
     return apiFetch<BracketView | null>(`${BASE}/${tournamentId}/bracket`);
   },
@@ -185,6 +191,25 @@ export const matchApi = {
     return apiFetch<Match>(`${BASE}/matches/${matchId}/walkover`, {
       method: 'POST',
       body: JSON.stringify({ winnerId }),
+    });
+  },
+
+  async create(tournamentId: string, data: { teamAId?: string; teamBId?: string; roundId?: string; court?: string; scheduledAt?: string }): Promise<Match> {
+    return apiFetch<Match>(`${BASE}/${tournamentId}/matches`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+
+  async delete(matchId: string): Promise<void> {
+    return apiFetch<void>(`${BASE}/matches/${matchId}`, {
+      method: 'DELETE',
+    });
+  },
+
+  async reset(matchId: string): Promise<Match> {
+    return apiFetch<Match>(`${BASE}/matches/${matchId}/reset`, {
+      method: 'POST',
     });
   },
 };

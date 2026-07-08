@@ -179,6 +179,51 @@ export class BracketEngineService {
     });
   }
 
+  async clearBracket(tournamentId: string): Promise<void> {
+    // Find all brackets for this tournament
+    const brackets = await this.prisma.tournamentBracket.findMany({
+      where: { tournamentId },
+      include: {
+        rounds: {
+          include: { matches: true },
+        },
+      },
+    });
+
+    // Delete all matches first (foreign key constraint)
+    for (const bracket of brackets) {
+      for (const round of bracket.rounds) {
+        if (round.matches.length > 0) {
+          await this.prisma.match.deleteMany({
+            where: { id: { in: round.matches.map((m) => m.id) } },
+          });
+        }
+      }
+    }
+
+    // Delete all rounds
+    for (const bracket of brackets) {
+      await this.prisma.bracketRound.deleteMany({
+        where: { bracketId: bracket.id },
+      });
+    }
+
+    // Delete all brackets
+    await this.prisma.tournamentBracket.deleteMany({
+      where: { tournamentId },
+    });
+
+    // Reset team stats
+    await this.prisma.tournamentTeam.updateMany({
+      where: { tournamentId },
+      data: {
+        wins: 0,
+        losses: 0,
+        draws: 0,
+      },
+    });
+  }
+
   private getRoundName(roundNumber: number, totalRounds: number): string {
     if (roundNumber === totalRounds) return 'Final';
     if (roundNumber === totalRounds - 1) return 'Semi-Final';

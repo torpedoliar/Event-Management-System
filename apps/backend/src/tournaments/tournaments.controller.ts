@@ -20,6 +20,7 @@ import { UpdateTournamentDto } from './dto/update-tournament.dto';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UpdateScoreDto } from './dto/update-score.dto';
 import { ImportTeamsDto } from './dto/import-teams.dto';
+import { CreateMatchDto } from './dto/create-match.dto';
 import { photosStorage } from '../common/storage';
 
 @Controller('tournaments')
@@ -143,6 +144,11 @@ export class TournamentsController {
     return this.tournaments.generateBracket(id);
   }
 
+  @Post(':id/regenerate-bracket')
+  regenerateBracket(@Param('id') id: string) {
+    return this.tournaments.regenerateBracket(id);
+  }
+
   @Get(':id/bracket')
   getBracketView(@Param('id') id: string) {
     return this.tournaments.getBracketView(id);
@@ -151,6 +157,24 @@ export class TournamentsController {
   // ============================================
   // Match Endpoints
   // ============================================
+
+  @Post(':id/matches')
+  createMatch(
+    @Param('id') id: string,
+    @Body() dto: CreateMatchDto,
+  ) {
+    return this.tournaments.createMatch(id, dto);
+  }
+
+  @Delete('matches/:matchId')
+  deleteMatch(@Param('matchId') matchId: string) {
+    return this.tournaments.deleteMatch(matchId);
+  }
+
+  @Post('matches/:matchId/reset')
+  resetMatch(@Param('matchId') matchId: string) {
+    return this.tournaments.resetMatch(matchId);
+  }
 
   @Put('matches/:matchId')
   updateMatch(

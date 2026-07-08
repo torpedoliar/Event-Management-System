@@ -9,7 +9,7 @@ import { tournamentApi, matchApi, bracketApi, teamApi } from "@/lib/tournament-a
 import { TournamentTabs, TabPanel } from "@/components/tournament/TournamentTabs";
 import { StatusPill } from "@/components/tournament/StatusPill";
 import { TeamCard, TeamFormModal, TeamMemberFormModal } from "@/components/tournament/team";
-import { MatchCard, MatchScoringModal } from "@/components/tournament/match";
+import { MatchCard, MatchScoringModal, CreateMatchModal } from "@/components/tournament/match";
 import { BracketView } from "@/components/tournament/bracket";
 import { useTournamentSSE } from "@/hooks/useTournamentSSE";
 import Button from "@/components/ui/Button";
@@ -17,7 +17,7 @@ import Card from "@/components/ui/Card";
 import {
   Trophy, Users, Calendar, MapPin, DollarSign, Clock,
   ChevronLeft, Edit, Play, Plus, BarChart3, Settings,
-  CheckCircle, XCircle, Trash2
+  CheckCircle, XCircle, Trash2, RotateCcw
 } from "lucide-react";
 
 type TabId = "overview" | "teams" | "matches" | "brackets" | "settings";
@@ -37,6 +37,7 @@ export default function TournamentDetailPage() {
   // Match Scoring Modal state
   const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
   const [matchModalOpen, setMatchModalOpen] = useState(false);
+  const [createMatchModalOpen, setCreateMatchModalOpen] = useState(false);
 
   // Team Form Modal state
   const [teamModalOpen, setTeamModalOpen] = useState(false);
@@ -386,9 +387,14 @@ export default function TournamentDetailPage() {
         </TabPanel>
 
         <TabPanel id="matches" activeTab={activeTab}>
-          <h2 className="text-xl font-bold text-brand-text mb-6">
-            Matches
-          </h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-brand-text">
+              Matches
+            </h2>
+            <Button size="sm" onClick={() => setCreateMatchModalOpen(true)}>
+              <Plus size={16} className="mr-1" /> Add Match
+            </Button>
+          </div>
 
           {liveMatches.length > 0 && (
             <div className="mb-8">
@@ -453,9 +459,30 @@ export default function TournamentDetailPage() {
         </TabPanel>
 
         <TabPanel id="brackets" activeTab={activeTab}>
-          <h2 className="text-xl font-bold text-brand-text mb-6">
-            Tournament Bracket
-          </h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-brand-text">
+              Tournament Bracket
+            </h2>
+            {bracketView && (
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={async () => {
+                  if (!confirm("Regenerate bracket? All existing matches and scores will be deleted and a new bracket will be created.")) return;
+                  try {
+                    await bracketApi.regenerate(tournamentId);
+                    await refreshMatches();
+                    const bv = await bracketApi.getView(tournamentId);
+                    setBracketView(bv);
+                  } catch (err: any) {
+                    alert(err.message || "Failed to regenerate bracket");
+                  }
+                }}
+              >
+                <RotateCcw size={16} className="mr-1" /> Regenerate
+              </Button>
+            )}
+          </div>
           <div className="bg-brand-surface rounded-2xl border border-brand-border p-6 shadow-sm overflow-x-auto min-h-[400px]">
             {bracketLoading ? (
               <div className="flex items-center justify-center py-20">
@@ -582,6 +609,17 @@ export default function TournamentDetailPage() {
         }}
         onUpdate={refreshMatches}
         teams={teams}
+      />
+
+      <CreateMatchModal
+        open={createMatchModalOpen}
+        onClose={() => setCreateMatchModalOpen(false)}
+        onCreate={async (data) => {
+          await matchApi.create(tournamentId, data);
+          await refreshMatches();
+        }}
+        teams={teams}
+        rounds={bracketView?.rounds?.map((r: any) => ({ id: r.id, name: r.name, roundNumber: r.roundNumber, bracketId: '', createdAt: '', updatedAt: '' }))}
       />
 
       <TeamFormModal

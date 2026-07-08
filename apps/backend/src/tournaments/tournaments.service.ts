@@ -4,7 +4,7 @@ import { CreateTournamentDto } from './dto/create-tournament.dto';
 import { UpdateTournamentDto } from './dto/update-tournament.dto';
 import { CreateTeamDto, CreateTeamMemberDto } from './dto/create-team.dto';
 import { ImportTeamsDto, ImportTeamDto } from './dto/import-teams.dto';
-import { TournamentStatus } from './types/tournament.types';
+import { TournamentStatus, MatchStatus } from './types/tournament.types';
 import { BracketEngineService } from './bracket-engine.service';
 import { EventsService } from '../events/events.service';
 
@@ -606,6 +606,200 @@ export class TournamentsService {
       type: 'bracket_updated',
       data: { tournamentId: match.tournamentId },
     });
+
+    return updated;
+  }
+
+  // ============================================
+  // Manual Match Management
+  // ============================================
+
+  async createMatch(
+    tournamentId: string,
+    data: {
+      teamAId?: string;
+      teamBId?: string;
+      roundId?: string;
+      court?: string;
+      scheduledAt?: string;
+    },
+  ) {
+    // Auto-increment match number
+    const lastMatch = await this.prisma.match.findFirst({
+      where: { tournamentId },
+      orderBy: { matchNumber: 'desc' },
+    });
+    const matchNumber = (lastMatch?.matchNumber ?? 0) + 1;
+
+    const created = await this.prisma.match.create({
+      data: {
+        tournamentId,
+        roundId: data.roundId || null,
+        matchNumber,
+        teamAId: data.teamAId || null,
+        teamBId: data.teamBId || null,
+        court: data.court || null,
+        scheduledAt: data.scheduledAt ? new Date(data.scheduledAt) : null,
+        status: MatchStatus.SCHEDULED,
+      },
+      include: {
+        teamA: true,
+        teamB: true,
+        winner: true,
+        round: true,
+      },
+    });
+
+    const { emitEvent } = await import('../common/sse');
+    emitEvent({ type: 'match_updated', data: created });
+    emitEvent({ type: 'bracket_updated', data: { tournamentId } });
+
+    return created;
+  }
+
+  async deleteMatch(matchId: string) {
+    const match = await this.prisma.match.findUnique({
+      where: { id: matchId },
+    });
+
+    if (!match) {
+      throw new NotFoundException('Match not found');
+    }
+
+    // Clear next match slot if this match was linked
+    if (match.nextMatchId && match.nextMatchSlot) {
+      const slotData =
+        match.nextMatchSlot === 'A'
+          ? { teamAId: null }
+          : { teamBId: null };
+      await this.prisma.match.update({
+        where: { id: match.nextMatchId },
+        data: slotData,
+      });
+    }
+
+    await this.prisma.match.delete({ where: { id: matchId } });
+
+    const { emitEvent } = await import('../common/sse');
+    emitEvent({ type: 'match_updated', data: { id: matchId, deleted: true } });
+    emitEvent({ type: 'bracket_updated', data: { tournamentId: match.tournamentId } });
+
+    return { success: true };
+  }
+
+  async resetMatch(matchId: string) {
+    const match = await this.prisma.match.findUnique({
+      where: { id: matchId },
+      include: { winner: true },
+    });
+
+    if (!match) {
+      throw new NotFoundException('Match not found');
+    }
+
+    // Undo winner advancement in next match
+    if (match.nextMatchId && match.nextMatchSlot && match.winnerId) {
+      const slotData =
+        match.nextMatchSlot === 'A'
+          ? { teamAId: null }
+          : { teamBId: null };
+      await this.prisma.match.update({
+        where: { id: match.nextMatchId },
+        data: slotData,
+      });
+    }
+
+    // Revert team stats if match was completed
+    if (match.status === MatchStatus.COMPLETED && match.winnerId) {
+      const loserId =
+        match.winnerId === match.teamAId ? match.teamBId : match.teamAId;
+
+      // Winner: decrement wins
+      if (match.winnerId) {
+        await this.prisma.tournamentTeam.updateMany({
+          where: { id: match.winnerId },
+          data: { wins: { decrement: 1 } },
+        });
+      }
+      // Loser: decrement losses
+      if (loserId) {
+        await this.prisma.tournamentTeam.updateMany({
+          where: { id: loserId },
+          data: { losses: { decrement: 1 } },
+        });
+      }
+    }
+
+    // Reset match
+    const updated = await this.prisma.match.update({
+      where: { id: matchId },
+      data: {
+        status: MatchStatus.SCHEDULED,
+        winnerId: null,
+        scoreA: null,
+        scoreB: null,
+        completedAt: null,
+        startedAt: null,
+      },
+      include: {
+        teamA: true,
+        teamB: true,
+        winner: true,
+        round: true,
+      },
+    });
+
+    const { emitEvent } = await import('../common/sse');
+    emitEvent({ type: 'match_updated', data: updated });
+    emitEvent({ type: 'bracket_updated', data: { tournamentId: match.tournamentId } });
+
+    return updated;
+  }
+
+  async regenerateBracket(tournamentId: string) {
+    // Clear existing bracket
+    await this.bracketEngine.clearBracket(tournamentId);
+
+    // Re-fetch tournament with teams
+    const tournament = await this.findOne(tournamentId);
+
+    if (tournament.teams.length < 2) {
+      throw new Error('Minimum 2 teams required to generate bracket');
+    }
+
+    const teams = tournament.teams.map((t) => ({
+      id: t.id,
+      name: t.name,
+      seed: t.seed ?? t.name.length,
+    }));
+
+    // Generate new bracket
+    await this.bracketEngine.generateSingleElimination(tournamentId, teams);
+
+    // Update tournament status
+    const updated = await this.prisma.tournament.update({
+      where: { id: tournamentId },
+      data: { status: TournamentStatus.IN_PROGRESS },
+      include: {
+        teams: { include: { members: true } },
+        brackets: {
+          include: {
+            rounds: {
+              include: {
+                matches: {
+                  include: { teamA: true, teamB: true, winner: true },
+                },
+              },
+              orderBy: { roundNumber: 'asc' },
+            },
+          },
+        },
+      },
+    });
+
+    const { emitEvent } = await import('../common/sse');
+    emitEvent({ type: 'tournament_updated', data: updated });
+    emitEvent({ type: 'bracket_updated', data: { tournamentId } });
 
     return updated;
   }

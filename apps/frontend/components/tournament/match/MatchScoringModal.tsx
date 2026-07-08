@@ -7,7 +7,7 @@ import { Modal } from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import { ScoreInput } from "./ScoreInput";
 import { StatusPill } from "../StatusPill";
-import { Play, XCircle, Flag, Swords, Square } from "lucide-react";
+import { Play, XCircle, Flag, Swords, Square, RotateCcw, Trash2, Save } from "lucide-react";
 
 interface MatchScoringModalProps {
   match: Match | null;
@@ -26,18 +26,26 @@ export function MatchScoringModal({
   open,
   onClose,
   onUpdate,
+  teams,
 }: MatchScoringModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [scheduledAt, setScheduledAt] = useState('');
   const [court, setCourt] = useState('');
   const [savingDetails, setSavingDetails] = useState(false);
+  const [selectedTeamA, setSelectedTeamA] = useState('');
+  const [selectedTeamB, setSelectedTeamB] = useState('');
+  const [reassigning, setReassigning] = useState(false);
+  const [resetting, setResetting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   // Initialize state from match when modal opens
   useEffect(() => {
     if (match) {
       setScheduledAt(match.scheduledAt ? new Date(match.scheduledAt).toISOString().slice(0, 16) : '');
       setCourt(match.court || '');
+      setSelectedTeamA(match.teamAId || '');
+      setSelectedTeamB(match.teamBId || '');
     }
   }, [match]);
 
@@ -139,10 +147,64 @@ export function MatchScoringModal({
     }
   };
 
+  const handleReassign = async () => {
+    if (!match || !teams || teams.length === 0) return;
+    setReassigning(true);
+    setError(null);
+    try {
+      const { matchApi } = await import("@/lib/tournament-api");
+      await matchApi.update(match.id, {
+        teamAId: selectedTeamA || null,
+        teamBId: selectedTeamB || null,
+      });
+      onUpdate();
+    } catch (err: any) {
+      setError(err.message || "Failed to reassign teams");
+    } finally {
+      setReassigning(false);
+    }
+  };
+
+  const handleReset = async () => {
+    if (!match) return;
+    if (!confirm("Reset this match to SCHEDULED? Scores, winner, and advancement will be undone.")) return;
+    setResetting(true);
+    setError(null);
+    try {
+      const { matchApi } = await import("@/lib/tournament-api");
+      await matchApi.reset(match.id);
+      onUpdate();
+      onClose();
+    } catch (err: any) {
+      setError(err.message || "Failed to reset match");
+    } finally {
+      setResetting(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!match) return;
+    if (!confirm("Delete this match permanently? This cannot be undone.")) return;
+    setDeleting(true);
+    setError(null);
+    try {
+      const { matchApi } = await import("@/lib/tournament-api");
+      await matchApi.delete(match.id);
+      onUpdate();
+      onClose();
+    } catch (err: any) {
+      setError(err.message || "Failed to delete match");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   const canStart = match.status === MatchStatus.SCHEDULED;
   const canScore = match.status === MatchStatus.ONGOING;
   const canCancel = match.status === MatchStatus.SCHEDULED || match.status === MatchStatus.ONGOING;
   const canWalkover = match.status === MatchStatus.SCHEDULED;
+  const canReset = match.status === MatchStatus.COMPLETED || match.status === MatchStatus.WALKOVER;
+  const canReassign = match.status === MatchStatus.SCHEDULED && teams && teams.length > 0;
 
   return (
     <Modal
@@ -195,6 +257,50 @@ export function MatchScoringModal({
           </div>
         )}
 
+        {/* Team Reassign — editable when SCHEDULED */}
+        {canReassign && (
+          <div className="space-y-4 rounded-xl border border-brand-border bg-brand-surface p-4">
+            <h4 className="text-sm font-semibold text-brand-text">Reassign Teams</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs text-brand-textMuted mb-1">Team A</label>
+                <select
+                  value={selectedTeamA}
+                  onChange={(e) => setSelectedTeamA(e.target.value)}
+                  className="w-full px-3 py-2 bg-brand-bg border border-brand-border rounded-lg text-brand-text text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                >
+                  <option value="">Kosong</option>
+                  {teams!.map((t) => (
+                    <option key={t.id} value={t.id}>
+                      {t.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs text-brand-textMuted mb-1">Team B</label>
+                <select
+                  value={selectedTeamB}
+                  onChange={(e) => setSelectedTeamB(e.target.value)}
+                  className="w-full px-3 py-2 bg-brand-bg border border-brand-border rounded-lg text-brand-text text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                >
+                  <option value="">Kosong</option>
+                  {teams!
+                    .filter((t) => t.id !== selectedTeamA)
+                    .map((t) => (
+                      <option key={t.id} value={t.id}>
+                        {t.name}
+                      </option>
+                    ))}
+                </select>
+              </div>
+            </div>
+            <Button size="sm" variant="secondary" onClick={handleReassign} loading={reassigning}>
+              <Save size={14} className="mr-1" /> Reassign
+            </Button>
+          </div>
+        )}
+
         {/* Action bar */}
         <div className="flex flex-wrap gap-2">
           {canStart && (
@@ -210,6 +316,11 @@ export function MatchScoringModal({
           {canCancel && (
             <Button variant="danger" onClick={handleCancel} loading={isSubmitting}>
               <XCircle size={16} /> Cancel
+            </Button>
+          )}
+          {canReset && (
+            <Button variant="secondary" onClick={handleReset} loading={resetting}>
+              <RotateCcw size={16} /> Reset Match
             </Button>
           )}
           {canWalkover && (
@@ -246,6 +357,24 @@ export function MatchScoringModal({
             This match is {match.status.toLowerCase().replace("_", " ")}.
           </div>
         )}
+
+        {/* Danger Zone */}
+        <div className="border-t border-brand-border pt-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-brand-text">Danger Zone</p>
+              <p className="text-xs text-brand-textMuted">Irreversible actions</p>
+            </div>
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={handleDelete}
+              loading={deleting}
+            >
+              <Trash2 size={14} className="mr-1" /> Delete Match
+            </Button>
+          </div>
+        </div>
       </div>
     </Modal>
   );
