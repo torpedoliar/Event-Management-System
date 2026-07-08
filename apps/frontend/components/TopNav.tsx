@@ -73,6 +73,17 @@ export default function TopNav() {
     };
   }, [pathname, addEventListener, removeEventListener]);
 
+  // Cross-tab auth sync: listen for token changes in other tabs
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === 'token') {
+        setIsAuth(!!e.newValue);
+      }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
+
   useEffect(() => {
     setMobileMenuOpen(false);
     setAdminMenuOpen(false);
