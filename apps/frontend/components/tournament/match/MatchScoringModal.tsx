@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import type { Match, UpdateScoreDto, TournamentTeam } from "@/types/tournament.types";
+import { useState, useEffect } from "react";
+import type { Match, TournamentTeam, UpdateScoreDto } from "@/types/tournament.types";
 import { MatchStatus, ScoringMode } from "@/types/tournament.types";
 import { Modal } from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
@@ -16,6 +16,7 @@ interface MatchScoringModalProps {
   open: boolean;
   onClose: () => void;
   onUpdate: () => void;
+  teams?: TournamentTeam[];
 }
 
 export function MatchScoringModal({
@@ -28,6 +29,35 @@ export function MatchScoringModal({
 }: MatchScoringModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [scheduledAt, setScheduledAt] = useState('');
+  const [court, setCourt] = useState('');
+  const [savingDetails, setSavingDetails] = useState(false);
+
+  // Initialize state from match when modal opens
+  useEffect(() => {
+    if (match) {
+      setScheduledAt(match.scheduledAt ? new Date(match.scheduledAt).toISOString().slice(0, 16) : '');
+      setCourt(match.court || '');
+    }
+  }, [match]);
+
+  const handleSaveDetails = async () => {
+    if (!match) return;
+    setSavingDetails(true);
+    setError(null);
+    try {
+      const { matchApi } = await import("@/lib/tournament-api");
+      await matchApi.update(match.id, {
+        scheduledAt: scheduledAt || null,
+        court: court || null,
+      });
+      onUpdate();
+    } catch (err: any) {
+      setError(err.message || "Failed to save match details");
+    } finally {
+      setSavingDetails(false);
+    }
+  };
 
   if (!match) return null;
 
@@ -131,6 +161,37 @@ export function MatchScoringModal({
         {error && (
           <div className="p-3 rounded-xl bg-brand-danger/10 text-brand-danger border border-brand-danger/20 text-sm">
             {error}
+          </div>
+        )}
+
+        {/* Match Details — editable when SCHEDULED */}
+        {match.status === MatchStatus.SCHEDULED && (
+          <div className="space-y-4 rounded-xl border border-brand-border bg-brand-surface p-4">
+            <h4 className="text-sm font-semibold text-brand-text">Match Details</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs text-brand-textMuted mb-1">Jadwal Pertandingan</label>
+                <input
+                  type="datetime-local"
+                  value={scheduledAt}
+                  onChange={(e) => setScheduledAt(e.target.value)}
+                  className="w-full px-3 py-2 bg-brand-bg border border-brand-border rounded-lg text-brand-text text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-brand-textMuted mb-1">Court / Lapangan</label>
+                <input
+                  type="text"
+                  value={court}
+                  onChange={(e) => setCourt(e.target.value)}
+                  placeholder="Contoh: Court A"
+                  className="w-full px-3 py-2 bg-brand-bg border border-brand-border rounded-lg text-brand-text text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                />
+              </div>
+            </div>
+            <Button size="sm" onClick={handleSaveDetails} loading={savingDetails}>
+              Save Details
+            </Button>
           </div>
         )}
 

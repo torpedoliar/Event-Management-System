@@ -584,6 +584,7 @@ export default function TournamentDetailPage() {
           setSelectedMatch(null);
         }}
         onUpdate={refreshMatches}
+        teams={teams}
       />
 
       <TeamFormModal
