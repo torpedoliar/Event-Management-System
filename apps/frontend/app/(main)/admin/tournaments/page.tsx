@@ -226,7 +226,8 @@ export default function AdminTournamentsPage() {
             <div className="p-6">
               <TournamentForm
                 initialData={{
-                  startDate: eventCfg?.date ? new Date(eventCfg.date).toISOString() : undefined
+                  startDate: eventCfg?.date ? new Date(eventCfg.date).toISOString() : undefined,
+                  eventId: eventCfg?.id || undefined,
                 }}
                 onSubmit={handleCreateTournament}
                 onCancel={() => setShowCreateModal(false)}

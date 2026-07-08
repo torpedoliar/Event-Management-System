@@ -32,8 +32,10 @@ export default function PublicBracketViewerPage() {
   useEffect(() => {
     if (!isAuth) return;
     const unsubBracket = sse.onBracketUpdated((event) => {
-      if (event.data && typeof event.data === "object" && "rounds" in event.data) {
-        setBracket(event.data as unknown as BracketViewType);
+      const data = event.data as { tournamentId: string };
+      if (data.tournamentId === tournamentId) {
+        // bracket_updated only sends tournamentId, so we re-fetch
+        bracketApi.getView(tournamentId).then(setBracket).catch(console.error);
       }
     });
 
@@ -47,7 +49,7 @@ export default function PublicBracketViewerPage() {
       unsubBracket();
       unsubTournament();
     };
-  }, [sse, isAuth]);
+  }, [sse, isAuth, tournamentId]);
 
   useEffect(() => {
     if (isAuth) return;

@@ -1,24 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { MatchStatus } from './types/tournament.types';
-import { BracketRound } from '@prisma/client';
+import { BracketRound, Match } from '@prisma/client';
 
 interface TeamSeed {
   id: string;
   name: string;
   seed: number;
-}
-
-interface GeneratedMatch {
-  id: string;
-  tournamentId: string;
-  roundId: string;
-  matchNumber: number;
-  teamAId?: string | null;
-  teamBId?: string | null;
-  status: MatchStatus;
-  nextMatchId?: string | null;
-  nextMatchSlot?: string | null;
 }
 
 @Injectable()
@@ -28,7 +16,7 @@ export class BracketEngineService {
   async generateSingleElimination(
     tournamentId: string,
     teams: TeamSeed[],
-  ): Promise<GeneratedMatch[]> {
+  ): Promise<Match[]> {
     if (teams.length < 2) {
       throw new Error('Minimum 2 teams required');
     }
@@ -63,105 +51,92 @@ export class BracketEngineService {
       rounds.push(round);
     }
 
-    // Generate matches
-    const matches: GeneratedMatch[] = [];
+    // ── Phase 1: Create all matches WITHOUT nextMatchId ──
+    // We need the real DB-generated UUIDs before we can wire up references.
     let matchNumber = 1;
 
     // First round: pair teams with byes for extra slots
     const firstRoundMatches = bracketSize / 2;
+    const firstRoundCreated: Match[] = [];
     for (let i = 0; i < firstRoundMatches; i++) {
-      // Standard seeding: position i pairs with position (bracketSize - 1 - i)
       const teamA = sortedTeams[i] || null;
       const teamB = sortedTeams[bracketSize - 1 - i] || null;
 
-      const match: GeneratedMatch = {
-        id: `match-${Date.now()}-${matchNumber}`,
-        tournamentId,
-        roundId: rounds[0].id,
-        matchNumber,
-        teamAId: teamA?.id,
-        teamBId: teamB?.id,
-        status: MatchStatus.SCHEDULED,
-      };
-
-      matches.push(match);
+      const created = await this.prisma.match.create({
+        data: {
+          tournamentId,
+          roundId: rounds[0].id,
+          matchNumber,
+          teamAId: teamA?.id ?? null,
+          teamBId: teamB?.id ?? null,
+          status: MatchStatus.SCHEDULED,
+        },
+      });
+      firstRoundCreated.push(created);
       matchNumber++;
     }
 
-    // Subsequent rounds: create placeholder matches
+    // Subsequent rounds: create placeholder matches (no teams yet)
+    const laterRoundCreated: Match[] = [];
     for (let round = 1; round < numRounds; round++) {
       const matchesInRound = bracketSize / Math.pow(2, round + 1);
       for (let i = 0; i < matchesInRound; i++) {
-        const match: GeneratedMatch = {
-          id: `match-${Date.now()}-${matchNumber}`,
-          tournamentId,
-          roundId: rounds[round].id,
-          matchNumber,
-          status: MatchStatus.SCHEDULED,
-        };
-
-        matches.push(match);
+        const created = await this.prisma.match.create({
+          data: {
+            tournamentId,
+            roundId: rounds[round].id,
+            matchNumber,
+            status: MatchStatus.SCHEDULED,
+          },
+        });
+        laterRoundCreated.push(created);
         matchNumber++;
       }
     }
 
-    // Set nextMatchId and nextMatchSlot
-    for (let i = 0; i < matches.length; i++) {
-      const match = matches[i];
-      const roundIndex = rounds.findIndex((r) => r.id === match.roundId);
+    // ── Phase 2: Wire up nextMatchId + nextMatchSlot ──
+    // Group matches by round for easy index lookup.
+    const allCreated = [...firstRoundCreated, ...laterRoundCreated];
+    const matchesByRound: Match[][] = [];
+    for (let r = 0; r < numRounds; r++) {
+      matchesByRound.push(
+        allCreated.filter((m) => m.roundId === rounds[r].id),
+      );
+    }
 
-      if (roundIndex < numRounds - 1) {
-        // Not the final
-        const nextRoundStartIndex = matches.findIndex(
-          (m) => m.roundId === rounds[roundIndex + 1].id,
-        );
-        const matchesInCurrentRound = matches.filter(
-          (m) => m.roundId === match.roundId,
-        );
-        const matchIndexInRound = matchesInCurrentRound.findIndex(
-          (m) => m.id === match.id,
-        );
-        const nextMatchIndex =
-          nextRoundStartIndex + Math.floor(matchIndexInRound / 2);
-        const nextMatch = matches[nextMatchIndex];
+    const updatePromises: Promise<Match>[] = [];
+    for (let r = 0; r < numRounds - 1; r++) {
+      const currentRoundMatches = matchesByRound[r];
+      const nextRoundMatches = matchesByRound[r + 1];
+
+      for (let i = 0; i < currentRoundMatches.length; i++) {
+        const match = currentRoundMatches[i];
+        const nextMatchIndex = Math.floor(i / 2);
+        const slot = i % 2 === 0 ? 'A' : 'B';
+        const nextMatch = nextRoundMatches[nextMatchIndex];
 
         if (nextMatch) {
-          match.nextMatchId = nextMatch.id;
-          match.nextMatchSlot = matchIndexInRound % 2 === 0 ? 'A' : 'B';
+          updatePromises.push(
+            this.prisma.match.update({
+              where: { id: match.id },
+              data: {
+                nextMatchId: nextMatch.id,
+                nextMatchSlot: slot,
+              },
+            }),
+          );
         }
       }
     }
 
-    // Save to database
-    const savedMatches = await Promise.all(
-      matches.map((m) =>
-        this.prisma.match.create({
-          data: {
-            tournamentId: m.tournamentId,
-            roundId: m.roundId,
-            matchNumber: m.matchNumber,
-            teamAId: m.teamAId,
-            teamBId: m.teamBId,
-            status: m.status,
-            nextMatchId: m.nextMatchId,
-            nextMatchSlot: m.nextMatchSlot,
-          },
-        }),
-      ),
-    );
+    await Promise.all(updatePromises);
 
-    // Map to GeneratedMatch interface (Prisma returns full model)
-    return savedMatches.map((m) => ({
-      id: m.id,
-      tournamentId: m.tournamentId,
-      roundId: m.roundId!,
-      matchNumber: m.matchNumber,
-      teamAId: m.teamAId,
-      teamBId: m.teamBId,
-      status: m.status as MatchStatus,
-      nextMatchId: m.nextMatchId,
-      nextMatchSlot: m.nextMatchSlot,
-    }));
+    // Return all matches (with final UUIDs and nextMatchId wired up)
+    return this.prisma.match.findMany({
+      where: { tournamentId, roundId: { in: rounds.map((r) => r.id) } },
+      include: { teamA: true, teamB: true },
+      orderBy: { matchNumber: 'asc' },
+    });
   }
 
   private getRoundName(roundNumber: number, totalRounds: number): string {

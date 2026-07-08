@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes, Children, cloneElement, forwardRef, isValidElemen
 import { cn } from './utils';
 import { Loader2 } from 'lucide-react';
 
-type Variant = 'primary' | 'secondary' | 'outline' | 'danger' | 'ghost';
+type Variant = 'primary' | 'secondary' | 'outline' | 'danger' | 'ghost' | 'success';
 type Size = 'sm' | 'md' | 'lg';
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -20,6 +20,7 @@ const variants: Record<Variant, string> = {
   outline: 'border border-brand-border bg-transparent text-brand-text hover:bg-brand-surfaceMuted/50 hover:border-brand-primary/40',
   danger: 'bg-brand-danger text-white hover:bg-red-400',
   ghost: 'bg-transparent text-brand-textMuted hover:text-brand-text hover:bg-white/[0.04]',
+  success: 'bg-brand-success text-white hover:bg-emerald-500',
 };
 
 const sizes: Record<Size, string> = {

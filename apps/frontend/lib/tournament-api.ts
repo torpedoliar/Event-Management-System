@@ -156,6 +156,10 @@ export const matchApi = {
     return apiFetch<Match>(`${BASE}/matches/${matchId}/start`, { method: 'POST' });
   },
 
+  async finish(matchId: string): Promise<Match> {
+    return apiFetch<Match>(`${BASE}/matches/${matchId}/finish`, { method: 'POST' });
+  },
+
   async updateScore(matchId: string, score: UpdateScoreDto): Promise<Match> {
     return apiFetch<Match>(`${BASE}/matches/${matchId}/score`, {
       method: 'POST',

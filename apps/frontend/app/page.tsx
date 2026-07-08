@@ -11,6 +11,8 @@ import { apiFetch } from '@/lib/api';
 interface EventConfig {
   name?: string;
   logoUrl?: string;
+  enableTournament?: boolean;
+  enableLuckyDraw?: boolean;
 }
 
 interface LandingPageData {
@@ -111,3 +113,4 @@ export default async function LandingPage() {
     </div>
   );
 }
+

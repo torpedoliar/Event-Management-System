@@ -90,6 +90,10 @@ export class MatchScoringService {
       throw new NotFoundException('Match not found');
     }
 
+    if (match.status !== MatchStatus.SCHEDULED) {
+      throw new Error('Only scheduled matches can be started');
+    }
+
     const updatedMatch = await this.prisma.match.update({
       where: { id: matchId },
       data: {
@@ -102,6 +106,81 @@ export class MatchScoringService {
     emitEvent({
       type: 'match_started',
       data: updatedMatch,
+    });
+
+    return updatedMatch;
+  }
+
+  /**
+   * Finish an ongoing match with the current score.
+   * Determines the winner, marks the match as COMPLETED,
+   * advances the winner to the next round, and updates team stats.
+   */
+  async finishMatch(matchId: string) {
+    const match = await this.prisma.match.findUnique({
+      where: { id: matchId },
+      include: { tournament: true },
+    });
+
+    if (!match) {
+      throw new NotFoundException('Match not found');
+    }
+
+    if (match.status !== MatchStatus.ONGOING) {
+      throw new Error('Only ongoing matches can be finished');
+    }
+
+    const scoreA = match.scoreA ?? 0;
+    const scoreB = match.scoreB ?? 0;
+
+    // Determine winner
+    let winnerId: string | null = null;
+    if (match.tournament.scoringMode === 'SETS' && match.setsA != null && match.setsB != null) {
+      winnerId = this.determineWinnerBySets(
+        match.teamAId,
+        match.teamBId,
+        match.setsA,
+        match.setsB,
+      );
+    } else {
+      winnerId = this.determineWinner(
+        match.teamAId,
+        match.teamBId,
+        scoreA,
+        scoreB,
+        match.setsA,
+        match.setsB,
+      );
+    }
+
+    const updatedMatch = await this.prisma.match.update({
+      where: { id: matchId },
+      data: {
+        status: MatchStatus.COMPLETED,
+        winnerId,
+        completedAt: new Date(),
+      },
+    });
+
+    // Advance winner to next match
+    if (winnerId && match.nextMatchId && match.nextMatchSlot) {
+      await this.advanceWinner(match.nextMatchId, match.nextMatchSlot, winnerId);
+    }
+
+    // Update team stats
+    if (winnerId && match.teamAId && match.teamBId) {
+      await this.updateTeamStats(match.teamAId, match.teamBId, winnerId);
+    }
+
+    // Emit SSE events
+    emitEvent({
+      type: 'match_completed',
+      data: updatedMatch,
+    });
+
+    emitEvent({
+      type: 'bracket_updated',
+      data: { tournamentId: match.tournamentId },
     });
 
     return updatedMatch;

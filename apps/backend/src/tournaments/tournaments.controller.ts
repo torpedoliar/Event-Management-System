@@ -180,6 +180,11 @@ export class TournamentsController {
     return this.scoring.startMatch(matchId);
   }
 
+  @Post('matches/:matchId/finish')
+  finishMatch(@Param('matchId') matchId: string) {
+    return this.scoring.finishMatch(matchId);
+  }
+
   @Post('matches/:matchId/score')
   updateScore(
     @Param('matchId') matchId: string,

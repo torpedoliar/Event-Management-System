@@ -137,7 +137,7 @@ export class TournamentsService {
   async update(id: string, updateTournamentDto: UpdateTournamentDto) {
     await this.findOne(id); // Verify exists
 
-    return this.prisma.tournament.update({
+    const updated = await this.prisma.tournament.update({
       where: { id },
       data: {
         name: updateTournamentDto.name,
@@ -156,7 +156,34 @@ export class TournamentsService {
           ? new Date(updateTournamentDto.endDate)
           : undefined,
       },
+      include: {
+        teams: {
+          include: { members: true },
+          orderBy: { seed: 'asc' },
+        },
+        brackets: {
+          include: {
+            rounds: {
+              include: {
+                matches: {
+                  include: { teamA: true, teamB: true, winner: true },
+                },
+              },
+              orderBy: { roundNumber: 'asc' },
+            },
+          },
+        },
+      },
     });
+
+    // Emit SSE event so frontend refreshes automatically
+    const { emitEvent } = await import('../common/sse');
+    emitEvent({
+      type: 'tournament_updated',
+      data: updated,
+    });
+
+    return updated;
   }
 
   async remove(id: string) {
@@ -405,18 +432,44 @@ export class TournamentsService {
       seed: t.seed ?? t.name.length,
     }));
 
-    const matches = await this.bracketEngine.generateSingleElimination(
+    await this.bracketEngine.generateSingleElimination(
       tournamentId,
       teams,
     );
 
     // Update tournament status to IN_PROGRESS
-    await this.prisma.tournament.update({
+    const updated = await this.prisma.tournament.update({
       where: { id: tournamentId },
       data: { status: TournamentStatus.IN_PROGRESS },
+      include: {
+        teams: { include: { members: true } },
+        brackets: {
+          include: {
+            rounds: {
+              include: {
+                matches: {
+                  include: { teamA: true, teamB: true, winner: true },
+                },
+              },
+              orderBy: { roundNumber: 'asc' },
+            },
+          },
+        },
+      },
     });
 
-    return this.findOne(tournamentId);
+    // Emit SSE events for real-time updates
+    const { emitEvent } = await import('../common/sse');
+    emitEvent({
+      type: 'tournament_updated',
+      data: updated,
+    });
+    emitEvent({
+      type: 'bracket_updated',
+      data: { tournamentId },
+    });
+
+    return updated;
   }
 
   // ============================================

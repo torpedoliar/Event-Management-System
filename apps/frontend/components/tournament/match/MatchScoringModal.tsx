@@ -7,7 +7,7 @@ import { Modal } from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import { ScoreInput } from "./ScoreInput";
 import { StatusPill } from "../StatusPill";
-import { Play, XCircle, Flag, Swords } from "lucide-react";
+import { Play, XCircle, Flag, Swords, Square } from "lucide-react";
 
 interface MatchScoringModalProps {
   match: Match | null;
@@ -59,6 +59,21 @@ export function MatchScoringModal({
       onClose();
     } catch (err: any) {
       setError(err.message || "Failed to update score");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleFinish = async () => {
+    if (!confirm("Finish this match with current score? The winner will be determined automatically.")) return;
+    setIsSubmitting(true);
+    setError(null);
+    try {
+      await import("@/lib/tournament-api").then((m) => m.matchApi.finish(match.id));
+      onUpdate();
+      onClose();
+    } catch (err: any) {
+      setError(err.message || "Failed to finish match");
     } finally {
       setIsSubmitting(false);
     }
@@ -124,6 +139,11 @@ export function MatchScoringModal({
           {canStart && (
             <Button onClick={handleStart} loading={isSubmitting}>
               <Play size={16} /> Start Match
+            </Button>
+          )}
+          {canScore && (
+            <Button variant="success" onClick={handleFinish} loading={isSubmitting}>
+              <Square size={16} /> Finish Match
             </Button>
           )}
           {canCancel && (

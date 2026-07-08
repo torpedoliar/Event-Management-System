@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import type { Tournament, TournamentTeam, Match } from "@/types/tournament.types";
+import type { Tournament, TournamentTeam, Match, BracketView as BracketViewType } from "@/types/tournament.types";
 import { TournamentStatus, ScoringMode } from "@/types/tournament.types";
 import { tournamentApi, matchApi, bracketApi, teamApi } from "@/lib/tournament-api";
 import { TournamentTabs, TabPanel } from "@/components/tournament/TournamentTabs";
@@ -46,6 +46,10 @@ export default function TournamentDetailPage() {
   const [memberModalOpen, setMemberModalOpen] = useState(false);
   const [memberTeam, setMemberTeam] = useState<TournamentTeam | null>(null);
 
+  // Bracket view state
+  const [bracketView, setBracketView] = useState<BracketViewType | null>(null);
+  const [bracketLoading, setBracketLoading] = useState(false);
+
   const sse = useTournamentSSE(tournamentId);
 
   const refreshTournament = async () => {
@@ -67,6 +71,37 @@ export default function TournamentDetailPage() {
       setTournament(event.data as Tournament);
     });
     return () => unsubTournament();
+  }, [sse]);
+
+  // SSE: Auto-refresh matches on any match event
+  useEffect(() => {
+    const unsubs: (() => void)[] = [];
+    unsubs.push(sse.onMatchScoreUpdate(() => { refreshMatches(); }));
+    unsubs.push(sse.onMatchStarted(() => { refreshMatches(); }));
+    unsubs.push(sse.onMatchCompleted(() => { refreshMatches(); }));
+    unsubs.push(sse.onMatchCancelled(() => { refreshMatches(); }));
+    return () => unsubs.forEach(u => u());
+  }, [sse]);
+
+  // Fetch bracket view when brackets tab is active or after bracket generation
+  useEffect(() => {
+    if (activeTab === "brackets" && tournamentId) {
+      setBracketLoading(true);
+      bracketApi.getView(tournamentId)
+        .then(setBracketView)
+        .catch(console.error)
+        .finally(() => setBracketLoading(false));
+    }
+  }, [activeTab, tournamentId]);
+
+  // SSE: Refresh bracket when bracket_updated event fires
+  useEffect(() => {
+    const unsub = sse.onBracketUpdated(() => {
+      // Refresh bracket view and matches
+      bracketApi.getView(tournamentId).then(setBracketView).catch(console.error);
+      refreshMatches();
+    });
+    return () => unsub();
   }, [sse]);
 
   useEffect(() => {
@@ -99,6 +134,11 @@ export default function TournamentDetailPage() {
     try {
       await bracketApi.generate(tournamentId);
       await refreshTournament();
+      // Fetch bracket view immediately
+      const bv = await bracketApi.getView(tournamentId);
+      setBracketView(bv);
+      // Also load matches
+      await refreshMatches();
       setActiveTab("brackets");
     } catch (err: any) {
       alert(err.message || "Failed to generate bracket");
@@ -112,6 +152,7 @@ export default function TournamentDetailPage() {
     try {
       await tournamentApi.update(tournamentId, { status: TournamentStatus.IN_PROGRESS });
       await refreshTournament();
+      await refreshMatches();
     } catch (err: any) {
       alert(err.message || "Failed to start tournament");
     }
@@ -419,8 +460,12 @@ export default function TournamentDetailPage() {
             Tournament Bracket
           </h2>
           <div className="bg-brand-surface rounded-2xl border border-brand-border p-6 shadow-sm overflow-x-auto min-h-[400px]">
-            {tournament.brackets && tournament.brackets.length > 0 ? (
-              <BracketView bracket={tournament.brackets[0] as any} />
+            {bracketLoading ? (
+              <div className="flex items-center justify-center py-20">
+                <div className="animate-spin rounded-full h-8 w-8 border-4 border-brand-primary border-t-transparent" />
+              </div>
+            ) : bracketView ? (
+              <BracketView bracket={bracketView} />
             ) : (
               <div className="text-center py-20">
                 <BarChart3 className="w-16 h-16 mx-auto text-brand-textMuted/50 mb-4" />
