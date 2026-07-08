@@ -4,74 +4,14 @@
   "graph": {},
   "nodes": [
     {
-      "label": "RequireAuth.tsx",
-      "file_type": "code",
-      "source_file": "apps/frontend/components/RequireAuth.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_frontend_components_requireauth",
-      "community": 8,
-      "norm_label": "requireauth.tsx"
-    },
-    {
-      "label": "RequireAuth()",
-      "file_type": "code",
-      "source_file": "apps/frontend/components/RequireAuth.tsx",
-      "source_location": "L6",
-      "_origin": "ast",
-      "id": "apps_frontend_components_requireauth_requireauth",
-      "community": 8,
-      "norm_label": "requireauth()"
-    },
-    {
-      "label": "TopNav.tsx",
-      "file_type": "code",
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_frontend_components_topnav",
-      "community": 199,
-      "norm_label": "topnav.tsx"
-    },
-    {
-      "label": "AdminLink",
-      "file_type": "code",
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L31",
-      "_origin": "ast",
-      "id": "apps_frontend_components_topnav_adminlink",
-      "community": 199,
-      "norm_label": "adminlink"
-    },
-    {
-      "label": "TopNav()",
-      "file_type": "code",
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L37",
-      "_origin": "ast",
-      "id": "apps_frontend_components_topnav_topnav",
-      "community": 199,
-      "norm_label": "topnav()"
-    },
-    {
-      "label": "cn()",
-      "file_type": "code",
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L359",
-      "_origin": "ast",
-      "id": "apps_frontend_components_topnav_cn",
-      "community": 199,
-      "norm_label": "cn()"
-    },
-    {
       "label": "page.tsx",
       "file_type": "code",
       "source_file": "apps/frontend/app/(main)/admin/events/calendar/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "apps_frontend_app_main_admin_events_calendar_page",
       "community": 215,
-      "norm_label": "page.tsx",
-      "id": "apps_frontend_app_main_admin_events_calendar_page"
+      "norm_label": "page.tsx"
     },
     {
       "label": "Event",
@@ -79,9 +19,9 @@
       "source_file": "apps/frontend/app/(main)/admin/events/calendar/page.tsx",
       "source_location": "L24",
       "_origin": "ast",
+      "id": "apps_frontend_app_main_admin_events_calendar_page_event",
       "community": 215,
-      "norm_label": "event",
-      "id": "apps_frontend_app_main_admin_events_calendar_page_event"
+      "norm_label": "event"
     },
     {
       "label": "TournamentCalendarItem",
@@ -89,9 +29,9 @@
       "source_file": "apps/frontend/app/(main)/admin/events/calendar/page.tsx",
       "source_location": "L34",
       "_origin": "ast",
+      "id": "apps_frontend_app_main_admin_events_calendar_page_tournamentcalendaritem",
       "community": 215,
-      "norm_label": "tournamentcalendaritem",
-      "id": "apps_frontend_app_main_admin_events_calendar_page_tournamentcalendaritem"
+      "norm_label": "tournamentcalendaritem"
     },
     {
       "label": "CalendarDay",
@@ -99,9 +39,9 @@
       "source_file": "apps/frontend/app/(main)/admin/events/calendar/page.tsx",
       "source_location": "L43",
       "_origin": "ast",
+      "id": "apps_frontend_app_main_admin_events_calendar_page_calendarday",
       "community": 215,
-      "norm_label": "calendarday",
-      "id": "apps_frontend_app_main_admin_events_calendar_page_calendarday"
+      "norm_label": "calendarday"
     },
     {
       "label": "EventCalendarPage()",
@@ -109,9 +49,9 @@
       "source_file": "apps/frontend/app/(main)/admin/events/calendar/page.tsx",
       "source_location": "L51",
       "_origin": "ast",
+      "id": "apps_frontend_app_main_admin_events_calendar_page_eventcalendarpage",
       "community": 215,
-      "norm_label": "eventcalendarpage()",
-      "id": "apps_frontend_app_main_admin_events_calendar_page_eventcalendarpage"
+      "norm_label": "eventcalendarpage()"
     },
     {
       "label": "page.tsx",
@@ -1179,7 +1119,7 @@
       "source_file": "apps/frontend/components/ui/Button.tsx",
       "source_location": "L32",
       "_origin": "ast",
-      "community": 214,
+      "community": 8,
       "norm_label": "button",
       "id": "apps_frontend_components_ui_button_button"
     },
@@ -1662,6 +1602,46 @@
       "community": 45,
       "norm_label": "execution handoff",
       "id": "docs_superpowers_plans_2026_06_30_tournament_frontend_theme_and_landing_spacing_execution_handoff"
+    },
+    {
+      "label": "TopNav.tsx",
+      "file_type": "code",
+      "source_file": "apps/frontend/components/TopNav.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 199,
+      "norm_label": "topnav.tsx",
+      "id": "apps_frontend_components_topnav"
+    },
+    {
+      "label": "AdminLink",
+      "file_type": "code",
+      "source_file": "apps/frontend/components/TopNav.tsx",
+      "source_location": "L30",
+      "_origin": "ast",
+      "community": 199,
+      "norm_label": "adminlink",
+      "id": "apps_frontend_components_topnav_adminlink"
+    },
+    {
+      "label": "TopNav()",
+      "file_type": "code",
+      "source_file": "apps/frontend/components/TopNav.tsx",
+      "source_location": "L36",
+      "_origin": "ast",
+      "community": 199,
+      "norm_label": "topnav()",
+      "id": "apps_frontend_components_topnav_topnav"
+    },
+    {
+      "label": "cn()",
+      "file_type": "code",
+      "source_file": "apps/frontend/components/TopNav.tsx",
+      "source_location": "L346",
+      "_origin": "ast",
+      "community": 199,
+      "norm_label": "cn()",
+      "id": "apps_frontend_components_topnav_cn"
     },
     {
       "label": "page.tsx",
@@ -3679,7 +3659,7 @@
       "source_file": "apps/backend/src/common/storage.ts",
       "source_location": "L75",
       "_origin": "ast",
-      "community": 31,
+      "community": 1,
       "norm_label": "landingpagestorage()",
       "id": "apps_backend_src_common_storage_landingpagestorage"
     },
@@ -4589,7 +4569,7 @@
       "source_file": "apps/backend/src/guests/guests.controller.ts",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 20,
+      "community": 92,
       "norm_label": "guestscontroller",
       "id": "apps_backend_src_guests_guests_controller_guestscontroller"
     },
@@ -4609,7 +4589,7 @@
       "source_file": "apps/backend/src/guests/guests.controller.ts",
       "source_location": "L48",
       "_origin": "ast",
-      "community": 20,
+      "community": 0,
       "norm_label": ".list()",
       "id": "apps_backend_src_guests_guests_controller_guestscontroller_list"
     },
@@ -4619,7 +4599,7 @@
       "source_file": "apps/backend/src/guests/guests.controller.ts",
       "source_location": "L55",
       "_origin": "ast",
-      "community": 20,
+      "community": 0,
       "norm_label": ".listcursor()",
       "id": "apps_backend_src_guests_guests_controller_guestscontroller_listcursor"
     },
@@ -4629,7 +4609,7 @@
       "source_file": "apps/backend/src/guests/guests.controller.ts",
       "source_location": "L61",
       "_origin": "ast",
-      "community": 20,
+      "community": 92,
       "norm_label": ".stats()",
       "id": "apps_backend_src_guests_guests_controller_guestscontroller_stats"
     },
@@ -4639,7 +4619,7 @@
       "source_file": "apps/backend/src/guests/guests.controller.ts",
       "source_location": "L67",
       "_origin": "ast",
-      "community": 20,
+      "community": 92,
       "norm_label": ".companystats()",
       "id": "apps_backend_src_guests_guests_controller_guestscontroller_companystats"
     },
@@ -4649,7 +4629,7 @@
       "source_file": "apps/backend/src/guests/guests.controller.ts",
       "source_location": "L73",
       "_origin": "ast",
-      "community": 20,
+      "community": 92,
       "norm_label": ".downloadtemplate()",
       "id": "apps_backend_src_guests_guests_controller_guestscontroller_downloadtemplate"
     },
@@ -4659,7 +4639,7 @@
       "source_file": "apps/backend/src/guests/guests.controller.ts",
       "source_location": "L106",
       "_origin": "ast",
-      "community": 20,
+      "community": 92,
       "norm_label": ".exportxlsx()",
       "id": "apps_backend_src_guests_guests_controller_guestscontroller_exportxlsx"
     },
@@ -4669,7 +4649,7 @@
       "source_file": "apps/backend/src/guests/guests.controller.ts",
       "source_location": "L182",
       "_origin": "ast",
-      "community": 20,
+      "community": 92,
       "norm_label": ".exportfullxlsx()",
       "id": "apps_backend_src_guests_guests_controller_guestscontroller_exportfullxlsx"
     },
@@ -4689,7 +4669,7 @@
       "source_file": "apps/backend/src/guests/guests.controller.ts",
       "source_location": "L693",
       "_origin": "ast",
-      "community": 20,
+      "community": 92,
       "norm_label": ".getduplicates()",
       "id": "apps_backend_src_guests_guests_controller_guestscontroller_getduplicates"
     },
@@ -4699,7 +4679,7 @@
       "source_file": "apps/backend/src/guests/guests.controller.ts",
       "source_location": "L699",
       "_origin": "ast",
-      "community": 20,
+      "community": 92,
       "norm_label": ".get()",
       "id": "apps_backend_src_guests_guests_controller_guestscontroller_get"
     },
@@ -4709,7 +4689,7 @@
       "source_file": "apps/backend/src/guests/guests.controller.ts",
       "source_location": "L706",
       "_origin": "ast",
-      "community": 20,
+      "community": 92,
       "norm_label": ".create()",
       "id": "apps_backend_src_guests_guests_controller_guestscontroller_create"
     },
@@ -4719,7 +4699,7 @@
       "source_file": "apps/backend/src/guests/guests.controller.ts",
       "source_location": "L716",
       "_origin": "ast",
-      "community": 20,
+      "community": 92,
       "norm_label": ".update()",
       "id": "apps_backend_src_guests_guests_controller_guestscontroller_update"
     },
@@ -4729,7 +4709,7 @@
       "source_file": "apps/backend/src/guests/guests.controller.ts",
       "source_location": "L729",
       "_origin": "ast",
-      "community": 20,
+      "community": 92,
       "norm_label": ".updatepartial()",
       "id": "apps_backend_src_guests_guests_controller_guestscontroller_updatepartial"
     },
@@ -4739,7 +4719,7 @@
       "source_file": "apps/backend/src/guests/guests.controller.ts",
       "source_location": "L740",
       "_origin": "ast",
-      "community": 20,
+      "community": 92,
       "norm_label": ".remove()",
       "id": "apps_backend_src_guests_guests_controller_guestscontroller_remove"
     },
@@ -4749,7 +4729,7 @@
       "source_file": "apps/backend/src/guests/guests.controller.ts",
       "source_location": "L748",
       "_origin": "ast",
-      "community": 20,
+      "community": 92,
       "norm_label": ".bulkdelete()",
       "id": "apps_backend_src_guests_guests_controller_guestscontroller_bulkdelete"
     },
@@ -4759,7 +4739,7 @@
       "source_file": "apps/backend/src/guests/guests.controller.ts",
       "source_location": "L758",
       "_origin": "ast",
-      "community": 20,
+      "community": 92,
       "norm_label": ".bulkupdate()",
       "id": "apps_backend_src_guests_guests_controller_guestscontroller_bulkupdate"
     },
@@ -4769,7 +4749,7 @@
       "source_file": "apps/backend/src/guests/guests.controller.ts",
       "source_location": "L768",
       "_origin": "ast",
-      "community": 20,
+      "community": 92,
       "norm_label": ".checkin()",
       "id": "apps_backend_src_guests_guests_controller_guestscontroller_checkin"
     },
@@ -4779,7 +4759,7 @@
       "source_file": "apps/backend/src/guests/guests.controller.ts",
       "source_location": "L778",
       "_origin": "ast",
-      "community": 20,
+      "community": 92,
       "norm_label": ".uncheckin()",
       "id": "apps_backend_src_guests_guests_controller_guestscontroller_uncheckin"
     },
@@ -4789,7 +4769,7 @@
       "source_file": "apps/backend/src/guests/guests.controller.ts",
       "source_location": "L826",
       "_origin": "ast",
-      "community": 20,
+      "community": 92,
       "norm_label": ".importxlsx()",
       "id": "apps_backend_src_guests_guests_controller_guestscontroller_importxlsx"
     },
@@ -4799,7 +4779,7 @@
       "source_file": "apps/backend/src/guests/guests.controller.ts",
       "source_location": "L997",
       "_origin": "ast",
-      "community": 20,
+      "community": 92,
       "norm_label": ".checkimportduplicates()",
       "id": "apps_backend_src_guests_guests_controller_guestscontroller_checkimportduplicates"
     },
@@ -6299,7 +6279,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.controller.ts",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 92,
+      "community": 26,
       "norm_label": "souvenirscontroller",
       "id": "apps_backend_src_souvenirs_souvenirs_controller_souvenirscontroller"
     },
@@ -6319,7 +6299,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.controller.ts",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 92,
+      "community": 26,
       "norm_label": ".list()",
       "id": "apps_backend_src_souvenirs_souvenirs_controller_souvenirscontroller_list"
     },
@@ -6329,7 +6309,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.controller.ts",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 92,
+      "community": 26,
       "norm_label": ".getstats()",
       "id": "apps_backend_src_souvenirs_souvenirs_controller_souvenirscontroller_getstats"
     },
@@ -6339,7 +6319,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.controller.ts",
       "source_location": "L25",
       "_origin": "ast",
-      "community": 92,
+      "community": 26,
       "norm_label": ".create()",
       "id": "apps_backend_src_souvenirs_souvenirs_controller_souvenirscontroller_create"
     },
@@ -6349,7 +6329,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.controller.ts",
       "source_location": "L36",
       "_origin": "ast",
-      "community": 92,
+      "community": 26,
       "norm_label": ".update()",
       "id": "apps_backend_src_souvenirs_souvenirs_controller_souvenirscontroller_update"
     },
@@ -6359,7 +6339,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.controller.ts",
       "source_location": "L47",
       "_origin": "ast",
-      "community": 92,
+      "community": 26,
       "norm_label": ".delete()",
       "id": "apps_backend_src_souvenirs_souvenirs_controller_souvenirscontroller_delete"
     },
@@ -6369,7 +6349,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.controller.ts",
       "source_location": "L53",
       "_origin": "ast",
-      "community": 92,
+      "community": 26,
       "norm_label": ".reset()",
       "id": "apps_backend_src_souvenirs_souvenirs_controller_souvenirscontroller_reset"
     },
@@ -6379,7 +6359,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.controller.ts",
       "source_location": "L63",
       "_origin": "ast",
-      "community": 92,
+      "community": 26,
       "norm_label": ".givesouvenir()",
       "id": "apps_backend_src_souvenirs_souvenirs_controller_souvenirscontroller_givesouvenir"
     },
@@ -6389,7 +6369,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.controller.ts",
       "source_location": "L75",
       "_origin": "ast",
-      "community": 92,
+      "community": 26,
       "norm_label": ".createandgivesouvenir()",
       "id": "apps_backend_src_souvenirs_souvenirs_controller_souvenirscontroller_createandgivesouvenir"
     },
@@ -6399,7 +6379,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.controller.ts",
       "source_location": "L91",
       "_origin": "ast",
-      "community": 92,
+      "community": 26,
       "norm_label": ".removetake()",
       "id": "apps_backend_src_souvenirs_souvenirs_controller_souvenirscontroller_removetake"
     },
@@ -6409,7 +6389,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.controller.ts",
       "source_location": "L100",
       "_origin": "ast",
-      "community": 92,
+      "community": 26,
       "norm_label": ".getguesttakes()",
       "id": "apps_backend_src_souvenirs_souvenirs_controller_souvenirscontroller_getguesttakes"
     },
@@ -6419,7 +6399,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.controller.ts",
       "source_location": "L107",
       "_origin": "ast",
-      "community": 92,
+      "community": 26,
       "norm_label": ".getallprizewinners()",
       "id": "apps_backend_src_souvenirs_souvenirs_controller_souvenirscontroller_getallprizewinners"
     },
@@ -6429,7 +6409,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.controller.ts",
       "source_location": "L113",
       "_origin": "ast",
-      "community": 92,
+      "community": 26,
       "norm_label": ".getuncollectedprizes()",
       "id": "apps_backend_src_souvenirs_souvenirs_controller_souvenirscontroller_getuncollectedprizes"
     },
@@ -6439,7 +6419,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.controller.ts",
       "source_location": "L119",
       "_origin": "ast",
-      "community": 92,
+      "community": 26,
       "norm_label": ".getguestprizewins()",
       "id": "apps_backend_src_souvenirs_souvenirs_controller_souvenirscontroller_getguestprizewins"
     },
@@ -6449,7 +6429,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.controller.ts",
       "source_location": "L125",
       "_origin": "ast",
-      "community": 92,
+      "community": 26,
       "norm_label": ".collectprize()",
       "id": "apps_backend_src_souvenirs_souvenirs_controller_souvenirscontroller_collectprize"
     },
@@ -6459,7 +6439,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.controller.ts",
       "source_location": "L139",
       "_origin": "ast",
-      "community": 92,
+      "community": 26,
       "norm_label": ".uncollectprize()",
       "id": "apps_backend_src_souvenirs_souvenirs_controller_souvenirscontroller_uncollectprize"
     },
@@ -7759,7 +7739,7 @@
       "source_file": "apps/frontend/app/(main)/admin/guests/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 214,
+      "community": 20,
       "norm_label": "page.tsx",
       "id": "apps_frontend_app_main_admin_guests_page"
     },
@@ -7769,7 +7749,7 @@
       "source_file": "apps/frontend/app/(main)/admin/guests/page.tsx",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 214,
+      "community": 20,
       "norm_label": "guestcategory",
       "id": "apps_frontend_app_main_admin_guests_page_guestcategory"
     },
@@ -7779,7 +7759,7 @@
       "source_file": "apps/frontend/app/(main)/admin/guests/page.tsx",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 214,
+      "community": 20,
       "norm_label": "registrationsource",
       "id": "apps_frontend_app_main_admin_guests_page_registrationsource"
     },
@@ -7789,7 +7769,7 @@
       "source_file": "apps/frontend/app/(main)/admin/guests/page.tsx",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 214,
+      "community": 20,
       "norm_label": "category_config",
       "id": "apps_frontend_app_main_admin_guests_page_category_config"
     },
@@ -7799,7 +7779,7 @@
       "source_file": "apps/frontend/app/(main)/admin/guests/page.tsx",
       "source_location": "L26",
       "_origin": "ast",
-      "community": 214,
+      "community": 20,
       "norm_label": "source_config",
       "id": "apps_frontend_app_main_admin_guests_page_source_config"
     },
@@ -7809,7 +7789,7 @@
       "source_file": "apps/frontend/app/(main)/admin/guests/page.tsx",
       "source_location": "L32",
       "_origin": "ast",
-      "community": 214,
+      "community": 20,
       "norm_label": "prizewin",
       "id": "apps_frontend_app_main_admin_guests_page_prizewin"
     },
@@ -7819,7 +7799,7 @@
       "source_file": "apps/frontend/app/(main)/admin/guests/page.tsx",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 214,
+      "community": 20,
       "norm_label": "souvenirtake",
       "id": "apps_frontend_app_main_admin_guests_page_souvenirtake"
     },
@@ -7829,7 +7809,7 @@
       "source_file": "apps/frontend/app/(main)/admin/guests/page.tsx",
       "source_location": "L46",
       "_origin": "ast",
-      "community": 214,
+      "community": 20,
       "norm_label": "guestcheckin",
       "id": "apps_frontend_app_main_admin_guests_page_guestcheckin"
     },
@@ -7839,7 +7819,7 @@
       "source_file": "apps/frontend/app/(main)/admin/guests/page.tsx",
       "source_location": "L53",
       "_origin": "ast",
-      "community": 214,
+      "community": 20,
       "norm_label": "guest",
       "id": "apps_frontend_app_main_admin_guests_page_guest"
     },
@@ -7849,7 +7829,7 @@
       "source_file": "apps/frontend/app/(main)/admin/guests/page.tsx",
       "source_location": "L79",
       "_origin": "ast",
-      "community": 214,
+      "community": 20,
       "norm_label": "guestsresponse",
       "id": "apps_frontend_app_main_admin_guests_page_guestsresponse"
     },
@@ -7859,7 +7839,7 @@
       "source_file": "apps/frontend/app/(main)/admin/guests/page.tsx",
       "source_location": "L81",
       "_origin": "ast",
-      "community": 214,
+      "community": 20,
       "norm_label": "importresult",
       "id": "apps_frontend_app_main_admin_guests_page_importresult"
     },
@@ -7869,7 +7849,7 @@
       "source_file": "apps/frontend/app/(main)/admin/guests/page.tsx",
       "source_location": "L88",
       "_origin": "ast",
-      "community": 214,
+      "community": 20,
       "norm_label": "guestslistpage()",
       "id": "apps_frontend_app_main_admin_guests_page_guestslistpage"
     },
@@ -7879,7 +7859,7 @@
       "source_file": "apps/frontend/app/(main)/admin/login/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 26,
+      "community": 8,
       "norm_label": "page.tsx",
       "id": "apps_frontend_app_main_admin_login_page"
     },
@@ -7889,7 +7869,7 @@
       "source_file": "apps/frontend/app/(main)/admin/login/page.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 26,
+      "community": 8,
       "norm_label": "eventconfig",
       "id": "apps_frontend_app_main_admin_login_page_eventconfig"
     },
@@ -7909,7 +7889,7 @@
       "source_file": "apps/frontend/app/(main)/admin/prizes/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 26,
+      "community": 8,
       "norm_label": "page.tsx",
       "id": "apps_frontend_app_main_admin_prizes_page"
     },
@@ -7919,7 +7899,7 @@
       "source_file": "apps/frontend/app/(main)/admin/prizes/page.tsx",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 26,
+      "community": 8,
       "norm_label": "prize_categories",
       "id": "apps_frontend_app_main_admin_prizes_page_prize_categories"
     },
@@ -7929,7 +7909,7 @@
       "source_file": "apps/frontend/app/(main)/admin/prizes/page.tsx",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 26,
+      "community": 8,
       "norm_label": "prize",
       "id": "apps_frontend_app_main_admin_prizes_page_prize"
     },
@@ -7939,7 +7919,7 @@
       "source_file": "apps/frontend/app/(main)/admin/prizes/page.tsx",
       "source_location": "L29",
       "_origin": "ast",
-      "community": 26,
+      "community": 8,
       "norm_label": "prizespage()",
       "id": "apps_frontend_app_main_admin_prizes_page_prizespage"
     },
@@ -8749,7 +8729,7 @@
       "source_file": "apps/frontend/app/(main)/luckydraw/page.tsx",
       "source_location": "L109",
       "_origin": "ast",
-      "community": 76,
+      "community": 38,
       "norm_label": "luckydrawpage()",
       "id": "apps_frontend_app_main_luckydraw_page_luckydrawpage"
     },
@@ -9429,7 +9409,7 @@
       "source_file": "apps/frontend/components/PrizeReceiptModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 26,
+      "community": 77,
       "norm_label": "prizereceiptmodal.tsx",
       "id": "apps_frontend_components_prizereceiptmodal"
     },
@@ -9439,7 +9419,7 @@
       "source_file": "apps/frontend/components/PrizeReceiptModal.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 26,
+      "community": 77,
       "norm_label": "winner",
       "id": "apps_frontend_components_prizereceiptmodal_winner"
     },
@@ -9449,7 +9429,7 @@
       "source_file": "apps/frontend/components/PrizeReceiptModal.tsx",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 26,
+      "community": 77,
       "norm_label": "prize",
       "id": "apps_frontend_components_prizereceiptmodal_prize"
     },
@@ -9459,7 +9439,7 @@
       "source_file": "apps/frontend/components/PrizeReceiptModal.tsx",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 26,
+      "community": 77,
       "norm_label": "prizereceiptmodalprops",
       "id": "apps_frontend_components_prizereceiptmodal_prizereceiptmodalprops"
     },
@@ -9469,7 +9449,7 @@
       "source_file": "apps/frontend/components/PrizeReceiptModal.tsx",
       "source_location": "L32",
       "_origin": "ast",
-      "community": 26,
+      "community": 77,
       "norm_label": "prizereceiptmodal()",
       "id": "apps_frontend_components_prizereceiptmodal_prizereceiptmodal"
     },
@@ -9502,6 +9482,26 @@
       "community": 19,
       "norm_label": "queuemanagementpanel()",
       "id": "apps_frontend_components_queuemanagementpanel_queuemanagementpanel"
+    },
+    {
+      "label": "RequireAuth.tsx",
+      "file_type": "code",
+      "source_file": "apps/frontend/components/RequireAuth.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 8,
+      "norm_label": "requireauth.tsx",
+      "id": "apps_frontend_components_requireauth"
+    },
+    {
+      "label": "RequireAuth()",
+      "file_type": "code",
+      "source_file": "apps/frontend/components/RequireAuth.tsx",
+      "source_location": "L6",
+      "_origin": "ast",
+      "community": 8,
+      "norm_label": "requireauth()",
+      "id": "apps_frontend_components_requireauth_requireauth"
     },
     {
       "label": "StationSetupModal.tsx",
@@ -9569,7 +9569,7 @@
       "source_file": "apps/frontend/components/WebcamCapture.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 8,
+      "community": 216,
       "norm_label": "webcamcapture.tsx",
       "id": "apps_frontend_components_webcamcapture"
     },
@@ -9579,7 +9579,7 @@
       "source_file": "apps/frontend/components/WebcamCapture.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 8,
+      "community": 216,
       "norm_label": "props",
       "id": "apps_frontend_components_webcamcapture_props"
     },
@@ -9589,7 +9589,7 @@
       "source_file": "apps/frontend/components/WebcamCapture.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 8,
+      "community": 216,
       "norm_label": "webcamcapture()",
       "id": "apps_frontend_components_webcamcapture_webcamcapture"
     },
@@ -10619,7 +10619,7 @@
       "source_file": "apps/frontend/components/ui/Card.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 8,
+      "community": 16,
       "norm_label": "card.tsx",
       "id": "apps_frontend_components_ui_card"
     },
@@ -10629,7 +10629,7 @@
       "source_file": "apps/frontend/components/ui/Card.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 8,
+      "community": 16,
       "norm_label": "variant",
       "id": "apps_frontend_components_ui_card_variant"
     },
@@ -10639,7 +10639,7 @@
       "source_file": "apps/frontend/components/ui/Card.tsx",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 8,
+      "community": 16,
       "norm_label": "props",
       "id": "apps_frontend_components_ui_card_props"
     },
@@ -10649,7 +10649,7 @@
       "source_file": "apps/frontend/components/ui/Card.tsx",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 8,
+      "community": 16,
       "norm_label": "variants",
       "id": "apps_frontend_components_ui_card_variants"
     },
@@ -10689,7 +10689,7 @@
       "source_file": "apps/frontend/components/ui/FormSection.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 8,
+      "community": 16,
       "norm_label": "formsection.tsx",
       "id": "apps_frontend_components_ui_formsection"
     },
@@ -10699,7 +10699,7 @@
       "source_file": "apps/frontend/components/ui/FormSection.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 8,
+      "community": 16,
       "norm_label": "props",
       "id": "apps_frontend_components_ui_formsection_props"
     },
@@ -10709,7 +10709,7 @@
       "source_file": "apps/frontend/components/ui/FormSection.tsx",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 8,
+      "community": 16,
       "norm_label": "formsection()",
       "id": "apps_frontend_components_ui_formsection_formsection"
     },
@@ -11149,7 +11149,7 @@
       "source_file": "apps/frontend/lib/api.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 26,
+      "community": 8,
       "norm_label": "api.ts",
       "id": "apps_frontend_lib_api"
     },
@@ -11159,7 +11159,7 @@
       "source_file": "apps/frontend/lib/api.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 26,
+      "community": 76,
       "norm_label": "apibase()",
       "id": "apps_frontend_lib_api_apibase"
     },
@@ -11169,7 +11169,7 @@
       "source_file": "apps/frontend/lib/api.ts",
       "source_location": "L24",
       "_origin": "ast",
-      "community": 26,
+      "community": 8,
       "norm_label": "gettoken()",
       "id": "apps_frontend_lib_api_gettoken"
     },
@@ -11179,7 +11179,7 @@
       "source_file": "apps/frontend/lib/api.ts",
       "source_location": "L29",
       "_origin": "ast",
-      "community": 26,
+      "community": 8,
       "norm_label": "apifetch()",
       "id": "apps_frontend_lib_api_apifetch"
     },
@@ -11199,7 +11199,7 @@
       "source_file": "apps/frontend/lib/api.ts",
       "source_location": "L82",
       "_origin": "ast",
-      "community": 26,
+      "community": 8,
       "norm_label": "parseerrormessage()",
       "id": "apps_frontend_lib_api_parseerrormessage"
     },
@@ -26242,318 +26242,14 @@
   ],
   "links": [
     {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/dashboard/page.tsx",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_dashboard_page",
-      "target": "apps_frontend_components_requireauth"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/events/page.tsx",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_events_page",
-      "target": "apps_frontend_components_requireauth"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/guests/[id]/page.tsx",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_guests_id_page",
-      "target": "apps_frontend_components_requireauth"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/guests/new/page.tsx",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_guests_new_page",
-      "target": "apps_frontend_components_requireauth"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/guests/page.tsx",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_guests_page",
-      "target": "apps_frontend_components_requireauth"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/prizes/page.tsx",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_prizes_page",
-      "target": "apps_frontend_components_requireauth"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/settings/event/page.tsx",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_settings_event_page",
-      "target": "apps_frontend_components_requireauth"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/settings/users/page.tsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_settings_users_page",
-      "target": "apps_frontend_components_requireauth"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/souvenirs/page.tsx",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_souvenirs_page",
-      "target": "apps_frontend_components_requireauth"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/statistics/page.tsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_statistics_page",
-      "target": "apps_frontend_components_requireauth"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/checkin/page.tsx",
-      "source_location": "L84",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_checkin_page",
-      "target": "apps_frontend_components_requireauth"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/components/RequireAuth.tsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "source": "apps_frontend_components_requireauth",
-      "target": "apps_frontend_components_requireauth_requireauth",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/dashboard/page.tsx",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_dashboard_page",
-      "target": "apps_frontend_components_requireauth_requireauth"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/events/page.tsx",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_events_page",
-      "target": "apps_frontend_components_requireauth_requireauth"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/guests/[id]/page.tsx",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_guests_id_page",
-      "target": "apps_frontend_components_requireauth_requireauth"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/guests/new/page.tsx",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_guests_new_page",
-      "target": "apps_frontend_components_requireauth_requireauth"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/guests/page.tsx",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_guests_page",
-      "target": "apps_frontend_components_requireauth_requireauth"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/prizes/page.tsx",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_prizes_page",
-      "target": "apps_frontend_components_requireauth_requireauth"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/settings/event/page.tsx",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_settings_event_page",
-      "target": "apps_frontend_components_requireauth_requireauth"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/settings/users/page.tsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_settings_users_page",
-      "target": "apps_frontend_components_requireauth_requireauth"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/souvenirs/page.tsx",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_souvenirs_page",
-      "target": "apps_frontend_components_requireauth_requireauth"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/statistics/page.tsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_statistics_page",
-      "target": "apps_frontend_components_requireauth_requireauth"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/checkin/page.tsx",
-      "source_location": "L84",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_checkin_page",
-      "target": "apps_frontend_components_requireauth_requireauth"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/layout.tsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_layout",
-      "target": "apps_frontend_components_topnav"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L31",
-      "weight": 1.0,
-      "source": "apps_frontend_components_topnav",
-      "target": "apps_frontend_components_topnav_adminlink",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L359",
-      "weight": 1.0,
-      "source": "apps_frontend_components_topnav",
-      "target": "apps_frontend_components_topnav_cn",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L37",
-      "weight": 1.0,
-      "source": "apps_frontend_components_topnav",
-      "target": "apps_frontend_components_topnav_topnav",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/components/TopNav.tsx",
-      "source_location": "L191",
-      "weight": 1.0,
-      "source": "apps_frontend_components_topnav_topnav",
-      "target": "apps_frontend_components_topnav_cn",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/frontend/app/(main)/admin/events/calendar/page.tsx",
       "source_location": "L43",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_events_calendar_page",
-      "target": "apps_frontend_app_main_admin_events_calendar_page_calendarday"
+      "target": "apps_frontend_app_main_admin_events_calendar_page_calendarday",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -26561,9 +26257,9 @@
       "source_file": "apps/frontend/app/(main)/admin/events/calendar/page.tsx",
       "source_location": "L24",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_events_calendar_page",
-      "target": "apps_frontend_app_main_admin_events_calendar_page_event"
+      "target": "apps_frontend_app_main_admin_events_calendar_page_event",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -26571,9 +26267,9 @@
       "source_file": "apps/frontend/app/(main)/admin/events/calendar/page.tsx",
       "source_location": "L51",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_events_calendar_page",
-      "target": "apps_frontend_app_main_admin_events_calendar_page_eventcalendarpage"
+      "target": "apps_frontend_app_main_admin_events_calendar_page_eventcalendarpage",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -26581,9 +26277,9 @@
       "source_file": "apps/frontend/app/(main)/admin/events/calendar/page.tsx",
       "source_location": "L34",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_events_calendar_page",
-      "target": "apps_frontend_app_main_admin_events_calendar_page_tournamentcalendaritem"
+      "target": "apps_frontend_app_main_admin_events_calendar_page_tournamentcalendaritem",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -29529,6 +29225,58 @@
       "confidence_score": 1.0,
       "source": "docs_superpowers_plans_2026_06_30_tournament_frontend_theme_and_landing_spacing_file_structure",
       "target": "docs_superpowers_plans_2026_06_30_tournament_frontend_theme_and_landing_spacing_modified_tournament_files"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/layout.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_layout",
+      "target": "apps_frontend_components_topnav"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/components/TopNav.tsx",
+      "source_location": "L30",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_components_topnav",
+      "target": "apps_frontend_components_topnav_adminlink"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/components/TopNav.tsx",
+      "source_location": "L346",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_components_topnav",
+      "target": "apps_frontend_components_topnav_cn"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/components/TopNav.tsx",
+      "source_location": "L36",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_components_topnav",
+      "target": "apps_frontend_components_topnav_topnav"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/components/TopNav.tsx",
+      "source_location": "L178",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_components_topnav_topnav",
+      "target": "apps_frontend_components_topnav_cn"
     },
     {
       "relation": "contains",
@@ -39643,6 +39391,28 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "apps/frontend/app/(main)/admin/dashboard/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_admin_dashboard_page",
+      "target": "apps_frontend_components_requireauth"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/admin/dashboard/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_admin_dashboard_page",
+      "target": "apps_frontend_components_requireauth_requireauth"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/admin/dashboard/page.tsx",
       "source_location": "L11",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -39968,6 +39738,28 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "apps/frontend/app/(main)/admin/events/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_admin_events_page",
+      "target": "apps_frontend_components_requireauth"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/admin/events/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_admin_events_page",
+      "target": "apps_frontend_components_requireauth_requireauth"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/admin/events/page.tsx",
       "source_location": "L5",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -40101,6 +39893,28 @@
       "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_guests_id_page",
       "target": "apps_frontend_app_main_admin_guests_id_page_guestcategory"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/admin/guests/[id]/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_admin_guests_id_page",
+      "target": "apps_frontend_components_requireauth"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/admin/guests/[id]/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_admin_guests_id_page",
+      "target": "apps_frontend_components_requireauth_requireauth"
     },
     {
       "relation": "imports_from",
@@ -40285,6 +40099,28 @@
       "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_guests_new_page",
       "target": "apps_frontend_app_main_admin_guests_new_page_newguestpage"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/admin/guests/new/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_admin_guests_new_page",
+      "target": "apps_frontend_components_requireauth"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/admin/guests/new/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_admin_guests_new_page",
+      "target": "apps_frontend_components_requireauth_requireauth"
     },
     {
       "relation": "imports_from",
@@ -40538,6 +40374,28 @@
       "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_guests_page",
       "target": "apps_frontend_app_main_admin_guests_page_souvenirtake"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/admin/guests/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_admin_guests_page",
+      "target": "apps_frontend_components_requireauth"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/admin/guests/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_admin_guests_page",
+      "target": "apps_frontend_components_requireauth_requireauth"
     },
     {
       "relation": "imports_from",
@@ -40858,6 +40716,28 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "apps/frontend/app/(main)/admin/prizes/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_admin_prizes_page",
+      "target": "apps_frontend_components_requireauth"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/admin/prizes/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_admin_prizes_page",
+      "target": "apps_frontend_components_requireauth_requireauth"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/admin/prizes/page.tsx",
       "source_location": "L5",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -41126,6 +41006,28 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "apps/frontend/app/(main)/admin/settings/event/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_admin_settings_event_page",
+      "target": "apps_frontend_components_requireauth"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/admin/settings/event/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_admin_settings_event_page",
+      "target": "apps_frontend_components_requireauth_requireauth"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/admin/settings/event/page.tsx",
       "source_location": "L5",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -41261,6 +41163,28 @@
       "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_settings_users_page",
       "target": "apps_frontend_app_main_admin_settings_users_page_usersmanagementpage"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/admin/settings/users/page.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_admin_settings_users_page",
+      "target": "apps_frontend_components_requireauth"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/admin/settings/users/page.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_admin_settings_users_page",
+      "target": "apps_frontend_components_requireauth_requireauth"
     },
     {
       "relation": "imports_from",
@@ -41412,6 +41336,28 @@
       "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_souvenirs_page",
       "target": "apps_frontend_app_main_admin_souvenirs_page_souvenirtake"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/admin/souvenirs/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_admin_souvenirs_page",
+      "target": "apps_frontend_components_requireauth"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/admin/souvenirs/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_admin_souvenirs_page",
+      "target": "apps_frontend_components_requireauth_requireauth"
     },
     {
       "relation": "imports_from",
@@ -41581,6 +41527,28 @@
       "confidence_score": 1.0,
       "source": "apps_frontend_app_main_admin_statistics_page",
       "target": "apps_frontend_components_gueststatschart"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/admin/statistics/page.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_admin_statistics_page",
+      "target": "apps_frontend_components_requireauth"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/admin/statistics/page.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_admin_statistics_page",
+      "target": "apps_frontend_components_requireauth_requireauth"
     },
     {
       "relation": "imports_from",
@@ -41971,6 +41939,28 @@
       "confidence_score": 1.0,
       "source": "apps_frontend_app_main_checkin_page",
       "target": "apps_frontend_components_queuemanagementpanel"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/checkin/page.tsx",
+      "source_location": "L84",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_checkin_page",
+      "target": "apps_frontend_components_requireauth"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/checkin/page.tsx",
+      "source_location": "L84",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_app_main_checkin_page",
+      "target": "apps_frontend_components_requireauth_requireauth"
     },
     {
       "relation": "imports_from",
@@ -44428,6 +44418,38 @@
       "confidence_score": 1.0,
       "source": "apps_frontend_components_queuemanagementpanel",
       "target": "apps_frontend_lib_offline_sync_service_offlinesyncservice"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/components/RequireAuth.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_components_requireauth",
+      "target": "apps_frontend_components_requireauth_requireauth"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/components/RequireAuth.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_components_requireauth",
+      "target": "apps_frontend_lib_api"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/components/RequireAuth.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_frontend_components_requireauth",
+      "target": "apps_frontend_lib_api_gettoken"
     },
     {
       "relation": "contains",
@@ -63385,5 +63407,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "159d1994a8dee6b9d5679814bbf8222f0a6085b6"
+  "built_at_commit": "059569e8a989cfbb38271611778b0bc60a82c168"
 }

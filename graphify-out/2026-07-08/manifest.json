@@ -515,9 +515,9 @@
     "semantic_hash": "7b77465cc9839417aeb56a34311acf50"
   },
   "apps/frontend/components/RequireAuth.tsx": {
-    "mtime": 1783517627.7231588,
-    "ast_hash": "c8ae5f42cd0a387686f37d9c53543c8c",
-    "semantic_hash": ""
+    "mtime": 1763110397.2970786,
+    "ast_hash": "432262d3223536fa6f395796aca2acc2",
+    "semantic_hash": "432262d3223536fa6f395796aca2acc2"
   },
   "apps/frontend/components/StationSetupModal.tsx": {
     "mtime": 1782356479.0962214,
@@ -530,8 +530,8 @@
     "semantic_hash": "4deaa0e9060ee75b9cbb33388730abf9"
   },
   "apps/frontend/components/TopNav.tsx": {
-    "mtime": 1783517640.4851384,
-    "ast_hash": "04164ba8462f718302eb215316e9b061",
+    "mtime": 1783415261.2939253,
+    "ast_hash": "2d8332b732f0a7f390bf680edc7f7914",
     "semantic_hash": ""
   },
   "apps/frontend/components/WebcamCapture.tsx": {
