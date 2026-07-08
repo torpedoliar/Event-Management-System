@@ -31,15 +31,26 @@ interface Event {
   createdAt: string;
 }
 
+interface TournamentCalendarItem {
+  id: string;
+  name: string;
+  startDate?: string | null;
+  endDate?: string | null;
+  status: string;
+  sportType?: string;
+}
+
 interface CalendarDay {
   date: Date;
   isCurrentMonth: boolean;
   isToday: boolean;
   events: Event[];
+  tournaments: TournamentCalendarItem[];
 }
 
 export default function EventCalendarPage() {
   const [events, setEvents] = useState<Event[]>([]);
+  const [tournaments, setTournaments] = useState<TournamentCalendarItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -74,8 +85,19 @@ export default function EventCalendarPage() {
     }
   };
 
+  const fetchTournaments = async () => {
+    try {
+      const res = await fetch(`${apiBase()}/tournaments`, { headers: tokenHeader() });
+      if (res.ok) {
+        const data = await res.json();
+        setTournaments(data);
+      }
+    } catch { /* silently fail — tournaments are optional decoration */ }
+  };
+
   useEffect(() => {
     fetchEvents();
+    fetchTournaments();
   }, []);
 
   // Calendar helpers
@@ -103,6 +125,7 @@ export default function EventCalendarPage() {
         isCurrentMonth: false,
         isToday: d.getTime() === today.getTime(),
         events: getEventsForDate(d),
+        tournaments: getTournamentsForDate(d),
       });
     }
 
@@ -114,6 +137,7 @@ export default function EventCalendarPage() {
         isCurrentMonth: true,
         isToday: d.getTime() === today.getTime(),
         events: getEventsForDate(d),
+        tournaments: getTournamentsForDate(d),
       });
     }
 
@@ -126,6 +150,7 @@ export default function EventCalendarPage() {
         isCurrentMonth: false,
         isToday: d.getTime() === today.getTime(),
         events: getEventsForDate(d),
+        tournaments: getTournamentsForDate(d),
       });
     }
 
@@ -141,6 +166,18 @@ export default function EventCalendarPage() {
         eventDate.getMonth() === date.getMonth() &&
         eventDate.getFullYear() === date.getFullYear()
       );
+    });
+  };
+
+  const getTournamentsForDate = (date: Date): TournamentCalendarItem[] => {
+    return tournaments.filter((t) => {
+      if (!t.startDate) return false;
+      const start = new Date(t.startDate);
+      const end = t.endDate ? new Date(t.endDate) : start;
+      const dayStart = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      const startDay = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+      const endDay = new Date(end.getFullYear(), end.getMonth(), end.getDate());
+      return dayStart >= startDay && dayStart <= endDay;
     });
   };
 
@@ -416,8 +453,8 @@ export default function EventCalendarPage() {
                               key={event.id}
                               className={`
                                 flex items-center justify-between gap-1 text-[10px] md:text-xs px-1 py-0.5 rounded
-                                ${event.isActive 
-                                  ? 'bg-brand-success/30 text-brand-success border border-brand-success/30' 
+                                ${event.isActive
+                                  ? 'bg-brand-success/30 text-brand-success border border-brand-success/30'
                                   : isEventPast(event.date)
                                     ? 'bg-gray-500/20 text-gray-400'
                                     : 'bg-brand-primary/20 text-brand-primarySoft'
@@ -427,6 +464,18 @@ export default function EventCalendarPage() {
                               <span className="truncate">{event.name}</span>
                               {event.enableTournament && <Trophy size={10} className="flex-shrink-0 opacity-70" />}
                             </div>
+                          ))}
+                          {day.tournaments.length > 0 && day.tournaments.map((t) => (
+                            <Link
+                              key={t.id}
+                              href={`/admin/tournaments/${t.id}` as any}
+                              className="block text-[10px] md:text-xs px-1 py-0.5 rounded bg-brand-warning/10 text-brand-warning truncate hover:bg-brand-warning/20 transition-colors"
+                            >
+                              <span className="inline-flex items-center gap-1">
+                                <Trophy size={10} />
+                                {t.name}
+                              </span>
+                            </Link>
                           ))}
                           {day.events.length > 3 && (
                             <div className="text-[10px] text-white/50">
