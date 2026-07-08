@@ -20,7 +20,7 @@ const EVENT_TYPES = [
     'event_change',
     // Tournament events
     'match_score_update', 'match_started', 'match_completed', 'match_cancelled',
-    'bracket_updated', 'tournament_updated'
+    'match_updated', 'bracket_updated', 'tournament_updated'
 ] as const;
 
 export function SSEProvider({ children }: { children: ReactNode }) {

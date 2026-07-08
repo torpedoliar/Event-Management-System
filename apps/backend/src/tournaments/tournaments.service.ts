@@ -710,22 +710,32 @@ export class TournamentsService {
     }
 
     // Revert team stats if match was completed
-    if (match.status === MatchStatus.COMPLETED && match.winnerId) {
-      const loserId =
-        match.winnerId === match.teamAId ? match.teamBId : match.teamAId;
-
-      // Winner: decrement wins
+    if (match.status === MatchStatus.COMPLETED) {
       if (match.winnerId) {
+        const loserId =
+          match.winnerId === match.teamAId ? match.teamBId : match.teamAId;
+
+        // Winner: decrement wins
         await this.prisma.tournamentTeam.updateMany({
           where: { id: match.winnerId },
           data: { wins: { decrement: 1 } },
         });
-      }
-      // Loser: decrement losses
-      if (loserId) {
+        // Loser: decrement losses
+        if (loserId) {
+          await this.prisma.tournamentTeam.updateMany({
+            where: { id: loserId },
+            data: { losses: { decrement: 1 } },
+          });
+        }
+      } else if (match.teamAId && match.teamBId) {
+        // Draw — decrement draws for both teams
         await this.prisma.tournamentTeam.updateMany({
-          where: { id: loserId },
-          data: { losses: { decrement: 1 } },
+          where: { id: match.teamAId },
+          data: { draws: { decrement: 1 } },
+        });
+        await this.prisma.tournamentTeam.updateMany({
+          where: { id: match.teamBId },
+          data: { draws: { decrement: 1 } },
         });
       }
     }

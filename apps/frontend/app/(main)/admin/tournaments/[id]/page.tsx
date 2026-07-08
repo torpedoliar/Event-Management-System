@@ -3,12 +3,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import type { Tournament, TournamentTeam, Match, BracketView as BracketViewType } from "@/types/tournament.types";
+import type { Tournament, TournamentTeam, Match, BracketView as BracketViewType, TournamentStats } from "@/types/tournament.types";
 import { TournamentStatus, ScoringMode } from "@/types/tournament.types";
-import { tournamentApi, matchApi, bracketApi, teamApi } from "@/lib/tournament-api";
+import { tournamentApi, matchApi, bracketApi, teamApi, statsApi } from "@/lib/tournament-api";
 import { TournamentTabs, TabPanel } from "@/components/tournament/TournamentTabs";
 import { StatusPill } from "@/components/tournament/StatusPill";
-import { TeamCard, TeamFormModal, TeamMemberFormModal } from "@/components/tournament/team";
+import { TeamCard, TeamFormModal, TeamMemberFormModal, ImportTeamsModal } from "@/components/tournament/team";
 import { MatchCard, MatchScoringModal, CreateMatchModal } from "@/components/tournament/match";
 import { BracketView } from "@/components/tournament/bracket";
 import { useTournamentSSE } from "@/hooks/useTournamentSSE";
@@ -17,7 +17,7 @@ import Card from "@/components/ui/Card";
 import {
   Trophy, Users, Calendar, MapPin, DollarSign, Clock,
   ChevronLeft, Edit, Play, Plus, BarChart3, Settings,
-  CheckCircle, XCircle, Trash2, RotateCcw
+  CheckCircle, XCircle, Trash2, RotateCcw, Upload
 } from "lucide-react";
 
 type TabId = "overview" | "teams" | "matches" | "brackets" | "settings";
@@ -38,6 +38,7 @@ export default function TournamentDetailPage() {
   const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
   const [matchModalOpen, setMatchModalOpen] = useState(false);
   const [createMatchModalOpen, setCreateMatchModalOpen] = useState(false);
+  const [importModalOpen, setImportModalOpen] = useState(false);
 
   // Team Form Modal state
   const [teamModalOpen, setTeamModalOpen] = useState(false);
@@ -50,6 +51,7 @@ export default function TournamentDetailPage() {
   // Bracket view state
   const [bracketView, setBracketView] = useState<BracketViewType | null>(null);
   const [bracketLoading, setBracketLoading] = useState(false);
+  const [stats, setStats] = useState<TournamentStats | null>(null);
 
   const sse = useTournamentSSE(tournamentId);
 
@@ -81,6 +83,7 @@ export default function TournamentDetailPage() {
     unsubs.push(sse.onMatchStarted(() => { refreshMatches(); }));
     unsubs.push(sse.onMatchCompleted(() => { refreshMatches(); }));
     unsubs.push(sse.onMatchCancelled(() => { refreshMatches(); }));
+    unsubs.push(sse.onMatchUpdated(() => { refreshMatches(); }));
     return () => unsubs.forEach(u => u());
   }, [sse]);
 
@@ -116,6 +119,8 @@ export default function TournamentDetailPage() {
         // Also load matches immediately for overview stats
         const matchData = await matchApi.getByTournament(tournamentId);
         setMatches(matchData);
+        // Load tournament stats for standings
+        statsApi.getTournamentStats(tournamentId).then(setStats).catch(console.error);
       } catch (err: any) {
         setError(err.message || "Failed to load tournament");
       } finally {
@@ -302,6 +307,42 @@ export default function TournamentDetailPage() {
             </div>
           </div>
 
+          {/* Standings */}
+          {stats && stats.teams.length > 0 && (
+            <div className="mt-8 bg-brand-surface rounded-2xl border border-brand-border p-6 shadow-sm">
+              <h3 className="text-lg font-bold text-brand-text mb-4 flex items-center gap-2">
+                <BarChart3 className="w-5 h-5 text-brand-primary" />
+                Standings
+              </h3>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-brand-border">
+                      <th className="text-left py-2 px-3 text-brand-textMuted font-medium">#</th>
+                      <th className="text-left py-2 px-3 text-brand-textMuted font-medium">Team</th>
+                      <th className="text-center py-2 px-3 text-brand-textMuted font-medium">W</th>
+                      <th className="text-center py-2 px-3 text-brand-textMuted font-medium">L</th>
+                      <th className="text-center py-2 px-3 text-brand-textMuted font-medium">D</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[...stats.teams]
+                      .sort((a, b) => b.wins - a.wins || a.losses - b.losses)
+                      .map((team, idx) => (
+                        <tr key={team.id} className="border-b border-brand-border/50 last:border-0 hover:bg-white/[0.02]">
+                          <td className="py-2 px-3 text-brand-textMuted">{idx + 1}</td>
+                          <td className="py-2 px-3 text-brand-text font-medium">{team.name}</td>
+                          <td className="py-2 px-3 text-center text-brand-success">{team.wins}</td>
+                          <td className="py-2 px-3 text-center text-brand-danger">{team.losses}</td>
+                          <td className="py-2 px-3 text-center text-brand-textMuted">{team.draws}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
           <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
             <button
               onClick={() => setActiveTab("matches")}
@@ -336,16 +377,26 @@ export default function TournamentDetailPage() {
             <h2 className="text-xl font-bold text-brand-text">
               Registered Teams ({teams.length})
             </h2>
-            <Button
-              className="gap-2"
-              onClick={() => {
-                setEditingTeam(null);
-                setTeamModalOpen(true);
-              }}
-            >
-              <Plus className="w-4 h-4" />
-              Add Team
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="secondary"
+                className="gap-2"
+                onClick={() => setImportModalOpen(true)}
+              >
+                <Upload className="w-4 h-4" />
+                Import
+              </Button>
+              <Button
+                className="gap-2"
+                onClick={() => {
+                  setEditingTeam(null);
+                  setTeamModalOpen(true);
+                }}
+              >
+                <Plus className="w-4 h-4" />
+                Add Team
+              </Button>
+            </div>
           </div>
 
           {teams.length === 0 ? (
@@ -454,6 +505,16 @@ export default function TournamentDetailPage() {
                   />
                 ))}
               </div>
+            </div>
+          )}
+
+          {liveMatches.length === 0 && upcomingMatches.length === 0 && completedMatches.length === 0 && (
+            <div className="text-center py-20 bg-brand-surface rounded-2xl border border-brand-border shadow-sm">
+              <BarChart3 className="w-16 h-16 mx-auto text-brand-textMuted/50 mb-4" />
+              <p className="text-brand-textMuted font-medium text-lg">No matches yet</p>
+              <p className="text-sm text-brand-textMuted mt-1">
+                Generate a bracket or add matches manually to get started
+              </p>
             </div>
           )}
         </TabPanel>
@@ -620,6 +681,13 @@ export default function TournamentDetailPage() {
         }}
         teams={teams}
         rounds={bracketView?.rounds?.map((r: any) => ({ id: r.id, name: r.name, roundNumber: r.roundNumber, bracketId: '', createdAt: '', updatedAt: '' }))}
+      />
+
+      <ImportTeamsModal
+        tournamentId={tournamentId}
+        open={importModalOpen}
+        onClose={() => setImportModalOpen(false)}
+        onImported={refreshTournament}
       />
 
       <TeamFormModal

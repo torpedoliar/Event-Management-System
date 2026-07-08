@@ -11,6 +11,7 @@ interface TournamentSSEHandlers {
   onMatchStarted: TournamentEventHandler | null;
   onMatchCompleted: TournamentEventHandler | null;
   onMatchCancelled: TournamentEventHandler | null;
+  onMatchUpdated: TournamentEventHandler | null;
   onBracketUpdated: TournamentEventHandler | null;
   onTournamentUpdated: TournamentEventHandler | null;
 }
@@ -28,6 +29,7 @@ export function useTournamentSSE(tournamentId: string) {
     onMatchStarted: null,
     onMatchCompleted: null,
     onMatchCancelled: null,
+    onMatchUpdated: null,
     onBracketUpdated: null,
     onTournamentUpdated: null,
   });
@@ -134,6 +136,18 @@ export function useTournamentSSE(tournamentId: string) {
   }, [subscribe]);
 
   /**
+   * Subscribe to match updated events (create, delete, reset, etc.)
+   */
+  const onMatchUpdated = useCallback((handler: TournamentEventHandler) => {
+    handlersRef.current.onMatchUpdated = handler;
+    const unsub = subscribe('match_updated', handler);
+    return () => {
+      handlersRef.current.onMatchUpdated = null;
+      unsub();
+    };
+  }, [subscribe]);
+
+  /**
    * Subscribe to bracket updates (filtered by tournamentId)
    * Note: Already subscribed in main effect, this just registers the callback
    */
@@ -161,6 +175,7 @@ export function useTournamentSSE(tournamentId: string) {
     onMatchStarted,
     onMatchCompleted,
     onMatchCancelled,
+    onMatchUpdated,
     onBracketUpdated,
     onTournamentUpdated,
   };

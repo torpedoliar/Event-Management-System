@@ -309,6 +309,7 @@ export type TournamentEvent =
   | { type: 'match_started'; data: Match }
   | { type: 'match_completed'; data: Match }
   | { type: 'match_cancelled'; data: Match }
+  | { type: 'match_updated'; data: Match }
   | { type: 'bracket_updated'; data: { tournamentId: string } }
   | { type: 'tournament_updated'; data: Tournament };
 

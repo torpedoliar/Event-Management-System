@@ -62,8 +62,20 @@ export class MatchScoringService {
     }
 
     // Update team stats
-    if (winnerId && match.teamAId && match.teamBId) {
-      await this.updateTeamStats(match.teamAId, match.teamBId, winnerId);
+    if (match.teamAId && match.teamBId) {
+      if (winnerId) {
+        await this.updateTeamStats(match.teamAId, match.teamBId, winnerId);
+      } else {
+        // Draw — both teams get a draw
+        await this.prisma.tournamentTeam.update({
+          where: { id: match.teamAId },
+          data: { draws: { increment: 1 } },
+        });
+        await this.prisma.tournamentTeam.update({
+          where: { id: match.teamBId },
+          data: { draws: { increment: 1 } },
+        });
+      }
     }
 
     // Emit SSE event
@@ -168,8 +180,20 @@ export class MatchScoringService {
     }
 
     // Update team stats
-    if (winnerId && match.teamAId && match.teamBId) {
-      await this.updateTeamStats(match.teamAId, match.teamBId, winnerId);
+    if (match.teamAId && match.teamBId) {
+      if (winnerId) {
+        await this.updateTeamStats(match.teamAId, match.teamBId, winnerId);
+      } else {
+        // Draw — both teams get a draw
+        await this.prisma.tournamentTeam.update({
+          where: { id: match.teamAId },
+          data: { draws: { increment: 1 } },
+        });
+        await this.prisma.tournamentTeam.update({
+          where: { id: match.teamBId },
+          data: { draws: { increment: 1 } },
+        });
+      }
     }
 
     // Emit SSE events
