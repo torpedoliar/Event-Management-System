@@ -131,6 +131,46 @@ export class BracketEngineService {
 
     await Promise.all(updatePromises);
 
+    // ── Phase 3: Auto-advance BYE matches ──
+    // Any first-round match with only one team is a BYE.
+    // Auto-complete as WALKOVER and advance the real team.
+    for (const match of firstRoundCreated) {
+      const hasTeamA = match.teamAId !== null;
+      const hasTeamB = match.teamBId !== null;
+
+      // Both teams exist or both missing → skip
+      if ((hasTeamA && hasTeamB) || (!hasTeamA && !hasTeamB)) continue;
+
+      const winnerId = hasTeamA ? match.teamAId! : match.teamBId!;
+
+      // Mark match as WALKOVER
+      await this.prisma.match.update({
+        where: { id: match.id },
+        data: {
+          winnerId,
+          status: MatchStatus.WALKOVER,
+          completedAt: new Date(),
+        },
+      });
+
+      // Advance winner to next match (re-fetch to get wired nextMatchId)
+      const wired = await this.prisma.match.findUnique({
+        where: { id: match.id },
+        select: { nextMatchId: true, nextMatchSlot: true },
+      });
+
+      if (wired?.nextMatchId && wired?.nextMatchSlot) {
+        const slotData =
+          wired.nextMatchSlot === 'A'
+            ? { teamAId: winnerId }
+            : { teamBId: winnerId };
+        await this.prisma.match.update({
+          where: { id: wired.nextMatchId },
+          data: slotData,
+        });
+      }
+    }
+
     // Return all matches (with final UUIDs and nextMatchId wired up)
     return this.prisma.match.findMany({
       where: { tournamentId, roundId: { in: rounds.map((r) => r.id) } },
