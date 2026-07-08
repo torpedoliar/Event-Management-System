@@ -171,6 +171,16 @@ export const matchApi = {
     return apiFetch<Match>(`${BASE}/matches/${matchId}/cancel`, { method: 'POST' });
   },
 
+  async update(
+    matchId: string,
+    data: { scheduledAt?: string | null; court?: string | null; teamAId?: string | null; teamBId?: string | null }
+  ): Promise<Match> {
+    return apiFetch<Match>(`${BASE}/matches/${matchId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  },
+
   async awardWalkover(matchId: string, winnerId: string): Promise<Match> {
     return apiFetch<Match>(`${BASE}/matches/${matchId}/walkover`, {
       method: 'POST',
