@@ -152,6 +152,14 @@ export class TournamentsController {
   // Match Endpoints
   // ============================================
 
+  @Put('matches/:matchId')
+  updateMatch(
+    @Param('matchId') matchId: string,
+    @Body() body: { scheduledAt?: string; court?: string; teamAId?: string; teamBId?: string },
+  ) {
+    return this.tournaments.updateMatch(matchId, body);
+  }
+
   @Get(':id/matches')
   getMatches(
     @Param('id') id: string,

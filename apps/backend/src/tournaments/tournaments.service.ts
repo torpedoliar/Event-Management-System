@@ -554,6 +554,62 @@ export class TournamentsService {
     });
   }
 
+  async updateMatch(
+    matchId: string,
+    data: {
+      scheduledAt?: string | null;
+      court?: string | null;
+      teamAId?: string | null;
+      teamBId?: string | null;
+    },
+  ) {
+    const match = await this.prisma.match.findUnique({
+      where: { id: matchId },
+    });
+
+    if (!match) {
+      throw new NotFoundException('Match not found');
+    }
+
+    const updateData: any = {};
+    if (data.scheduledAt !== undefined) {
+      updateData.scheduledAt = data.scheduledAt ? new Date(data.scheduledAt) : null;
+    }
+    if (data.court !== undefined) {
+      updateData.court = data.court;
+    }
+    if (data.teamAId !== undefined) {
+      updateData.teamAId = data.teamAId || null;
+    }
+    if (data.teamBId !== undefined) {
+      updateData.teamBId = data.teamBId || null;
+    }
+
+    const updated = await this.prisma.match.update({
+      where: { id: matchId },
+      data: updateData,
+      include: {
+        teamA: true,
+        teamB: true,
+        winner: true,
+        round: true,
+      },
+    });
+
+    // Emit SSE event
+    const { emitEvent } = await import('../common/sse');
+    emitEvent({
+      type: 'match_updated',
+      data: updated,
+    });
+    emitEvent({
+      type: 'bracket_updated',
+      data: { tournamentId: match.tournamentId },
+    });
+
+    return updated;
+  }
+
   // ============================================
   // Statistics
   // ============================================

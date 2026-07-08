@@ -22,6 +22,7 @@ export type ServerEvent =
   | { type: 'match_completed'; data: any }
   | { type: 'match_cancelled'; data: any }
   | { type: 'bracket_updated'; data: any }
+  | { type: 'match_updated'; data: any }
   | { type: 'tournament_updated'; data: any };
 
 const emitter = new EventEmitter();
