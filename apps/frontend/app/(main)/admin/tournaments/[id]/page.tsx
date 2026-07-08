@@ -112,6 +112,9 @@ export default function TournamentDetailPage() {
         const data = await tournamentApi.getById(tournamentId);
         setTournament(data);
         setTeams(data.teams || []);
+        // Also load matches immediately for overview stats
+        const matchData = await matchApi.getByTournament(tournamentId);
+        setMatches(matchData);
       } catch (err: any) {
         setError(err.message || "Failed to load tournament");
       } finally {
@@ -120,12 +123,6 @@ export default function TournamentDetailPage() {
     }
     if (tournamentId) fetchData();
   }, [tournamentId]);
-
-  useEffect(() => {
-    if (activeTab === "matches" && tournamentId) {
-      matchApi.getByTournament(tournamentId).then(setMatches).catch(console.error);
-    }
-  }, [activeTab, tournamentId]);
 
   const handleGenerateBracket = async () => {
     if (!confirm("Generate bracket now? This will assign match positions for all registered teams.")) {
