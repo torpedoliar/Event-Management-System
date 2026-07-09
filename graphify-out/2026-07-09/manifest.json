@@ -755,12 +755,12 @@
     "semantic_hash": "8640f9b2e6475cc3f5b1ff4548925765"
   },
   "apps/frontend/public/sw.js": {
-    "mtime": 1783587128.868472,
-    "ast_hash": "d54c3958ebbc25266b13001a271a9bc0",
+    "mtime": 1783587527.465261,
+    "ast_hash": "b1ebac17f76ec7816fc64b1b90ad6b8f",
     "semantic_hash": ""
   },
   "apps/frontend/public/workbox-c2c0676f.js": {
-    "mtime": 1783587128.868472,
+    "mtime": 1783587527.465261,
     "ast_hash": "80e63d1bc987fbb9f079f9d6a8c9a60e",
     "semantic_hash": "80e63d1bc987fbb9f079f9d6a8c9a60e"
   },
@@ -1465,8 +1465,8 @@
     "semantic_hash": ""
   },
   "apps/frontend/app/(main)/tournament-checkin/page.tsx": {
-    "mtime": 1783586890.1506498,
-    "ast_hash": "1293642e6021c21146e9f8b10af2b361",
+    "mtime": 1783587501.3574848,
+    "ast_hash": "d67d4e52feb1af3fa23ebef4c9d95991",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-07-09-tournament-match-checkin.md": {

@@ -326,6 +326,7 @@ export default function TournamentCheckinPage() {
           { success: false, alreadyCheckedIn: false, reasons: reasons.length > 0 ? reasons : [msg] },
           "reject"
         );
+        setSearchQuery("");
       } finally {
         setSearching(false);
         focusSearch();

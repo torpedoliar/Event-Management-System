@@ -1,7 +1,7 @@
 # Graph Report - Registrasi Tamu  (2026-07-09)
 
 ## Corpus Check
-- 289 files · ~229,697 words
+- 289 files · ~229,726 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f1898765`
+- Built from commit: `6728dbdd`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
