@@ -17,7 +17,7 @@ import Card from "@/components/ui/Card";
 import {
   Trophy, Users, Calendar, MapPin, DollarSign, Clock,
   ChevronLeft, Edit, Play, Plus, BarChart3, Settings,
-  CheckCircle, XCircle, Trash2, RotateCcw, Upload
+  CheckCircle, XCircle, Trash2, RotateCcw, Upload, QrCode
 } from "lucide-react";
 
 type TabId = "overview" | "teams" | "matches" | "brackets" | "settings";
@@ -632,6 +632,50 @@ export default function TournamentDetailPage() {
                 <Button onClick={handleGenerateBracket}>
                   <BarChart3 size={16} /> Generate Bracket
                 </Button>
+              )}
+            </Card>
+
+            <Card>
+              <h3 className="text-heading-3 text-brand-text mb-4 flex items-center gap-2">
+                <QrCode size={18} /> Match Check-in
+              </h3>
+              {tournament.enableMatchCheckin ? (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-brand-success" />
+                    <span className="text-sm text-brand-success font-medium">Enabled</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div>
+                      <p className="text-brand-textMuted">Window Before</p>
+                      <p className="text-brand-text font-medium">{tournament.checkinWindowMinutes || 30} min</p>
+                    </div>
+                    <div>
+                      <p className="text-brand-textMuted">Tolerance After</p>
+                      <p className="text-brand-text font-medium">{tournament.checkinCloseMinutes || 15} min</p>
+                    </div>
+                  </div>
+                  <Button variant="secondary" size="sm" asChild>
+                    <Link href="/tournament-checkin" target="_blank">
+                      <QrCode size={14} className="mr-1" /> Open Kiosk
+                    </Link>
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-brand-textMuted" />
+                    <span className="text-sm text-brand-textMuted">Disabled</span>
+                  </div>
+                  <p className="text-body-sm text-brand-textMuted">
+                    Enable match check-in in tournament settings to allow per-match check-in via kiosk.
+                  </p>
+                  <Button variant="secondary" size="sm" asChild>
+                    <Link href={`/admin/tournaments/${tournamentId}/edit`}>
+                      <Settings size={14} className="mr-1" /> Configure
+                    </Link>
+                  </Button>
+                </div>
               )}
             </Card>
 

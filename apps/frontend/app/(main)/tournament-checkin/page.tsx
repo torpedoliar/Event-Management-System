@@ -5,7 +5,8 @@ import { apiBase, parseErrorMessage } from "@/lib/api";
 import { Html5Qrcode } from "html5-qrcode";
 import {
   Search, QrCode, Loader2, CheckCircle, XCircle, AlertCircle,
-  Settings, Camera, Wifi, WifiOff, Trophy, Users, Clock, X
+  Settings, Camera, Wifi, WifiOff, Trophy, Users, Clock, X,
+  RefreshCw, Trash2
 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
@@ -41,46 +42,104 @@ export default function TournamentCheckinPage() {
   const [scanning, setScanning] = useState(false);
   const [online, setOnline] = useState(true);
   const [pendingCount, setPendingCount] = useState(0);
+  const [showQueue, setShowQueue] = useState(false);
+  const [pendingItems, setPendingItems] = useState<any[]>([]);
+  const [syncing, setSyncing] = useState(false);
+  const [lastCheck, setLastCheck] = useState<string | null>(null);
 
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const resultTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const healthCheckRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Connection status + auto-sync on reconnect
-  useEffect(() => {
-    const handleOnline = async () => {
-      setOnline(true);
-      // Auto-sync tournament pending checkins
-      try {
-        const { indexedDBService } = await import("@/lib/indexeddb");
-        const pending = await indexedDBService.getTournamentPendingCheckins();
-        if (pending.length > 0 && station) {
-          const { checkinApi } = await import("@/lib/tournament-api");
-          const result = await checkinApi.batchSync(pending);
-          // Mark synced items
-          for (const r of result.results) {
-            if (r.success || r.isDuplicate) {
-              const item = pending.find((p) => p.guestId === r.guestId);
-              if (item) {
-                await indexedDBService.updateTournamentPendingCheckin(item.id, { status: "synced" });
-              }
+  // Load pending count from IndexedDB
+  const loadPendingCount = useCallback(async () => {
+    try {
+      const { indexedDBService } = await import("@/lib/indexeddb");
+      const count = await indexedDBService.getTournamentPendingCount();
+      setPendingCount(count);
+    } catch {}
+  }, []);
+
+  // Load pending items for queue view
+  const loadPendingItems = useCallback(async () => {
+    try {
+      const { indexedDBService } = await import("@/lib/indexeddb");
+      const items = await indexedDBService.getTournamentPendingCheckins();
+      setPendingItems(items);
+    } catch {}
+  }, []);
+
+  // Sync pending checkins
+  const syncPending = useCallback(async () => {
+    if (syncing || !online) return;
+    setSyncing(true);
+    try {
+      const { indexedDBService } = await import("@/lib/indexeddb");
+      const pending = await indexedDBService.getTournamentPendingCheckins();
+      if (pending.length > 0) {
+        const res = await checkinApi.batchSync(pending);
+        for (const r of res.results) {
+          if (r.success || r.isDuplicate) {
+            const item = pending.find((p) => p.guestId === r.guestId);
+            if (item) {
+              await indexedDBService.updateTournamentPendingCheckin(item.id, { status: "synced" });
             }
           }
-          await indexedDBService.clearSyncedTournamentCheckins();
-          setPendingCount(await indexedDBService.getTournamentPendingCount());
         }
-      } catch (err) {
-        console.error("Failed to sync tournament checkins:", err);
+        await indexedDBService.clearSyncedTournamentCheckins();
+        await loadPendingCount();
+        await loadPendingItems();
       }
+    } catch (err) {
+      console.error("Sync failed:", err);
+    } finally {
+      setSyncing(false);
+    }
+  }, [syncing, online, loadPendingCount, loadPendingItems]);
+
+  // Health check (ping server periodically)
+  const checkHealth = useCallback(async () => {
+    try {
+      const res = await fetch(`${apiBase()}/public/health`, {
+        method: 'HEAD',
+        signal: AbortSignal.timeout(5000),
+      });
+      const isOnline = res.ok;
+      setOnline(isOnline);
+      setLastCheck(new Date().toISOString());
+      if (isOnline && pendingCount > 0) {
+        syncPending();
+      }
+    } catch {
+      setOnline(false);
+      setLastCheck(new Date().toISOString());
+    }
+  }, [pendingCount, syncPending]);
+
+  // Connection monitoring with health checks
+  useEffect(() => {
+    // Initial health check
+    checkHealth();
+
+    // Periodic health check every 3 seconds
+    healthCheckRef.current = setInterval(checkHealth, 3000);
+
+    // Also listen to browser online/offline events
+    const handleOnline = () => {
+      setOnline(true);
+      checkHealth();
     };
     const handleOffline = () => setOnline(false);
+
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
-    setOnline(navigator.onLine);
+
     return () => {
+      if (healthCheckRef.current) clearInterval(healthCheckRef.current);
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
     };
-  }, [station]);
+  }, [checkHealth]);
 
   // Load station config from localStorage
   useEffect(() => {
@@ -93,6 +152,11 @@ export default function TournamentCheckinPage() {
       } catch {}
     }
   }, []);
+
+  // Load pending count on mount and when station changes
+  useEffect(() => {
+    loadPendingCount();
+  }, [station, loadPendingCount]);
 
   const saveStation = (config: StationConfig) => {
     localStorage.setItem("tournament_checkin_station", JSON.stringify(config));
@@ -142,7 +206,7 @@ export default function TournamentCheckinPage() {
               isOffline: true,
               clientTimestamp: new Date().toISOString(),
             });
-            setPendingCount((c) => c + 1);
+            await loadPendingCount();
             showResult(
               { success: true, alreadyCheckedIn: false, message: "Queued for sync (offline)" },
               "info"
@@ -153,7 +217,6 @@ export default function TournamentCheckinPage() {
         }
       } catch (err: any) {
         const msg = parseErrorMessage(err);
-        // Extract reasons from conflict error
         const reasons = err?.response?.data?.reasons || [];
         showResult(
           { success: false, alreadyCheckedIn: false, reasons: reasons.length > 0 ? reasons : [msg] },
@@ -163,7 +226,7 @@ export default function TournamentCheckinPage() {
         setSearching(false);
       }
     },
-    [station, online]
+    [station, online, loadPendingCount]
   );
 
   // QR Scanner
@@ -208,6 +271,7 @@ export default function TournamentCheckinPage() {
     return () => {
       stopScanner();
       if (resultTimeoutRef.current) clearTimeout(resultTimeoutRef.current);
+      if (healthCheckRef.current) clearInterval(healthCheckRef.current);
     };
   }, []);
 
@@ -218,8 +282,8 @@ export default function TournamentCheckinPage() {
 
   return (
     <div className="min-h-screen bg-brand-bg p-4 md:p-6">
-      {/* Header */}
       <div className="max-w-2xl mx-auto">
+        {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <Trophy className="w-8 h-8 text-brand-accent" />
@@ -229,20 +293,40 @@ export default function TournamentCheckinPage() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            {online ? (
-              <span className="flex items-center gap-1 text-sm text-brand-success">
-                <Wifi size={16} /> Online
+            {/* Connection Status */}
+            <button
+              onClick={() => {
+                if (pendingCount > 0) {
+                  setShowQueue(!showQueue);
+                  if (!showQueue) loadPendingItems();
+                }
+              }}
+              className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg border transition-all ${
+                online
+                  ? pendingCount > 0
+                    ? "bg-brand-warning/10 border-brand-warning/30"
+                    : "bg-brand-success/10 border-brand-success/30"
+                  : "bg-brand-danger/10 border-brand-danger/30"
+              }`}
+            >
+              {online ? (
+                <Wifi size={16} className="text-brand-success" />
+              ) : (
+                <WifiOff size={16} className="text-brand-danger animate-pulse" />
+              )}
+              <span className="text-sm font-medium text-brand-text">
+                {online
+                  ? pendingCount > 0
+                    ? `${pendingCount} pending`
+                    : "Online"
+                  : "Offline"}
               </span>
-            ) : (
-              <span className="flex items-center gap-1 text-sm text-brand-danger">
-                <WifiOff size={16} /> Offline
-                {pendingCount > 0 && (
-                  <span className="ml-1 px-1.5 py-0.5 bg-brand-danger/20 rounded text-xs">
-                    {pendingCount} queued
-                  </span>
-                )}
-              </span>
-            )}
+              {pendingCount > 0 && (
+                <span className="inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold leading-none text-brand-bg bg-brand-warning rounded-full">
+                  {pendingCount}
+                </span>
+              )}
+            </button>
             <button
               onClick={() => setShowSetup(true)}
               className="p-2 rounded-lg hover:bg-white/10 text-brand-textMuted"
@@ -251,6 +335,48 @@ export default function TournamentCheckinPage() {
             </button>
           </div>
         </div>
+
+        {/* Queue Panel */}
+        {showQueue && (
+          <div className="mb-6 bg-brand-surface rounded-2xl border border-brand-border p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold text-brand-text">Pending Sync Queue</h3>
+              <div className="flex items-center gap-2">
+                {online && pendingItems.length > 0 && (
+                  <Button size="sm" onClick={syncPending} loading={syncing}>
+                    <RefreshCw size={14} className="mr-1" /> Sync Now
+                  </Button>
+                )}
+                <button onClick={() => setShowQueue(false)} className="text-brand-textMuted hover:text-brand-text">
+                  <X size={16} />
+                </button>
+              </div>
+            </div>
+            {pendingItems.length === 0 ? (
+              <p className="text-sm text-brand-textMuted text-center py-4">No pending check-ins</p>
+            ) : (
+              <div className="space-y-2 max-h-[200px] overflow-y-auto">
+                {pendingItems.map((item) => (
+                  <div key={item.id} className="flex items-center justify-between p-2 bg-brand-bg rounded-lg text-sm">
+                    <div>
+                      <p className="text-brand-text font-medium">{item.guestId}</p>
+                      <p className="text-xs text-brand-textMuted">
+                        {new Date(item.clientTimestamp).toLocaleTimeString("id-ID")}
+                      </p>
+                    </div>
+                    <span className={`px-2 py-0.5 rounded text-xs ${
+                      item.status === "pending"
+                        ? "bg-brand-warning/20 text-brand-warning"
+                        : "bg-brand-danger/20 text-brand-danger"
+                    }`}>
+                      {item.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Error */}
         {error && (
@@ -362,11 +488,11 @@ export default function TournamentCheckinPage() {
           )}
         </div>
 
-        {/* Pending sync info */}
-        {!online && pendingCount > 0 && (
+        {/* Offline notice */}
+        {!online && (
           <div className="mt-4 p-3 rounded-xl bg-brand-warning/10 border border-brand-warning/20 text-sm text-center">
             <Clock size={16} className="inline mr-1" />
-            {pendingCount} check-in(s) queued. Will sync when online.
+            Offline mode — check-ins will be queued and synced when connection is restored.
           </div>
         )}
       </div>
