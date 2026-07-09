@@ -229,6 +229,17 @@ export const statsApi = {
  * Tournament Check-in
  */
 export const checkinApi = {
+  async getTodayMatches(): Promise<any[]> {
+    const { apiBase } = await import('./api');
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    const headers: Record<string, string> = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const res = await fetch(`${apiBase()}${BASE}/checkin/today-matches`, { headers });
+    if (!res.ok) throw new Error('Failed to fetch today matches');
+    return res.json();
+  },
+
   async checkIn(data: { guestId: string; adminId?: string; adminName?: string; counterName?: string }): Promise<CheckinResult> {
     // Use direct fetch to preserve error structure (reasons array)
     const { apiBase } = await import('./api');

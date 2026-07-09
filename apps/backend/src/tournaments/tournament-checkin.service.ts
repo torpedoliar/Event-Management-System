@@ -7,6 +7,112 @@ import { TournamentCheckinDto, TournamentCheckinBatchSyncDto } from './dto/tourn
 export class TournamentCheckinService {
   constructor(private prisma: PrismaService) {}
 
+  /**
+   * Get start and end of today in local timezone
+   */
+  private getTodayRange(): { startOfDay: Date; endOfDay: Date } {
+    const now = new Date();
+    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+    const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+    return { startOfDay, endOfDay };
+  }
+
+  /**
+   * Get all matches scheduled today across all active tournaments with check-in enabled.
+   * Returns matches grouped by tournament with check-in counts.
+   */
+  async getTodayMatches() {
+    const { startOfDay, endOfDay } = this.getTodayRange();
+
+    const matches = await this.prisma.match.findMany({
+      where: {
+        scheduledAt: {
+          gte: startOfDay,
+          lte: endOfDay,
+        },
+        tournament: {
+          enableMatchCheckin: true,
+          status: 'IN_PROGRESS',
+        },
+      },
+      include: {
+        teamA: {
+          include: { members: true },
+        },
+        teamB: {
+          include: { members: true },
+        },
+        tournament: true,
+        round: true,
+        checkins: true,
+      },
+      orderBy: [
+        { tournament: { name: 'asc' } },
+        { scheduledAt: 'asc' },
+      ],
+    });
+
+    // Group by tournament
+    const grouped: Record<string, {
+      tournament: any;
+      matches: Array<{
+        id: string;
+        matchNumber: number;
+        scheduledAt: Date | null;
+        court: string | null;
+        status: string;
+        round: string | null;
+        teamA: { id: string; name: string; isEliminated: boolean; memberCount: number } | null;
+        teamB: { id: string; name: string; isEliminated: boolean; memberCount: number } | null;
+        checkinCount: number;
+        totalMembers: number;
+      }>;
+    }> = {};
+
+    for (const match of matches) {
+      const tId = match.tournamentId;
+      if (!grouped[tId]) {
+        grouped[tId] = {
+          tournament: {
+            id: match.tournament.id,
+            name: match.tournament.name,
+            sportType: match.tournament.sportType,
+          },
+          matches: [],
+        };
+      }
+
+      const totalMembers =
+        (match.teamA?.members?.length || 0) +
+        (match.teamB?.members?.length || 0);
+
+      grouped[tId].matches.push({
+        id: match.id,
+        matchNumber: match.matchNumber,
+        scheduledAt: match.scheduledAt,
+        court: match.court,
+        status: match.status,
+        round: match.round?.name || null,
+        teamA: match.teamA ? {
+          id: match.teamA.id,
+          name: match.teamA.name,
+          isEliminated: match.teamA.isEliminated,
+          memberCount: match.teamA.members?.length || 0,
+        } : null,
+        teamB: match.teamB ? {
+          id: match.teamB.id,
+          name: match.teamB.name,
+          isEliminated: match.teamB.isEliminated,
+          memberCount: match.teamB.members?.length || 0,
+        } : null,
+        checkinCount: match.checkins?.length || 0,
+        totalMembers,
+      });
+    }
+
+    return Object.values(grouped);
+  }
+
   async checkInMember(dto: TournamentCheckinDto) {
     // 1. Find Guest by guestId
     const guest = await this.prisma.guest.findFirst({
@@ -44,6 +150,7 @@ export class TournamentCheckinService {
       });
     }
 
+    const { startOfDay, endOfDay } = this.getTodayRange();
     const reasons: string[] = [];
     let candidate: { memberId: string; teamId: string; tournamentId: string; matchId: string; match: any } | null = null;
 
@@ -58,19 +165,14 @@ export class TournamentCheckinService {
         continue;
       }
 
-      // Find eligible match: team is in match, SCHEDULED, scheduledAt not null, within window
-      const now = new Date();
-      const windowStart = new Date(now.getTime() - (tournament.checkinWindowMinutes || 30) * 60 * 1000);
-      const windowEnd = new Date(now.getTime() + (tournament.checkinCloseMinutes || 15) * 60 * 1000);
-
+      // Find eligible match: team is in match, SCHEDULED, scheduled today
       const eligibleMatch = await this.prisma.match.findFirst({
         where: {
           tournamentId: tournament.id,
           status: 'SCHEDULED',
           scheduledAt: {
-            not: null,
-            gte: windowStart,
-            lte: windowEnd,
+            gte: startOfDay,
+            lte: endOfDay,
           },
           OR: [
             { teamAId: team.id },
@@ -80,6 +182,7 @@ export class TournamentCheckinService {
         include: {
           teamA: true,
           teamB: true,
+          round: true,
         },
         orderBy: {
           scheduledAt: 'asc',
@@ -87,7 +190,30 @@ export class TournamentCheckinService {
       });
 
       if (!eligibleMatch) {
-        reasons.push(`Tidak sesuai jadwal pertandingan untuk tim ${team.name}`);
+        // Check if team has a future match (not today) — give helpful message
+        const futureMatch = await this.prisma.match.findFirst({
+          where: {
+            tournamentId: tournament.id,
+            status: 'SCHEDULED',
+            scheduledAt: {
+              gt: endOfDay,
+            },
+            OR: [
+              { teamAId: team.id },
+              { teamBId: team.id },
+            ],
+          },
+          orderBy: { scheduledAt: 'asc' },
+        });
+
+        if (futureMatch) {
+          const matchDate = new Date(futureMatch.scheduledAt!).toLocaleDateString('id-ID', {
+            weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+          });
+          reasons.push(`Jadwal pertandingan ${team.name} berikutnya: ${matchDate}`);
+        } else {
+          reasons.push(`Tidak ada jadwal pertandingan hari ini untuk tim ${team.name}`);
+        }
         continue;
       }
 
@@ -158,6 +284,8 @@ export class TournamentCheckinService {
           id: candidate.match.id,
           teamA: candidate.match.teamA?.name,
           teamB: candidate.match.teamB?.name,
+          round: candidate.match.round?.name || null,
+          tournament: candidate.match.tournament?.name || null,
         },
       };
     } catch (err: any) {

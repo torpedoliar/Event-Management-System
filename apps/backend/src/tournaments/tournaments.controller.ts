@@ -52,6 +52,11 @@ export class TournamentsController {
   // Check-in Endpoints (before :id to avoid param conflict)
   // ============================================
 
+  @Get('checkin/today-matches')
+  getTodayMatches() {
+    return this.checkin.getTodayMatches();
+  }
+
   @Post('checkin')
   checkInMember(@Body() dto: TournamentCheckinDto) {
     return this.checkin.checkInMember(dto);

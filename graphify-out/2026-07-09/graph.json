@@ -47,7 +47,7 @@
       "label": "StationSetup()",
       "file_type": "code",
       "source_file": "apps/frontend/app/(main)/tournament-checkin/page.tsx",
-      "source_location": "L701",
+      "source_location": "L713",
       "_origin": "ast",
       "id": "apps_frontend_app_main_tournament_checkin_page_stationsetup",
       "community": 202,
@@ -27455,7 +27455,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/frontend/app/(main)/tournament-checkin/page.tsx",
-      "source_location": "L701",
+      "source_location": "L713",
       "weight": 1.0,
       "source": "apps_frontend_app_main_tournament_checkin_page",
       "target": "apps_frontend_app_main_tournament_checkin_page_stationsetup",
@@ -65742,5 +65742,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "f1898765ec9343091a3636db13488158b909b477"
+  "built_at_commit": "6728dbdd4370f7488881fd5cc654bf10f0c4d877"
 }

@@ -47,11 +47,251 @@
       "label": "StationSetup()",
       "file_type": "code",
       "source_file": "apps/frontend/app/(main)/tournament-checkin/page.tsx",
-      "source_location": "L713",
+      "source_location": "L714",
       "_origin": "ast",
       "id": "apps_frontend_app_main_tournament_checkin_page_stationsetup",
       "community": 202,
       "norm_label": "stationsetup()"
+    },
+    {
+      "label": "2026-07-09-public-registration-page.md",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page",
+      "community": 216,
+      "norm_label": "2026-07-09-public-registration-page.md"
+    },
+    {
+      "label": "Public Registration Page Implementation Plan",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page_public_registration_page_implementation_plan",
+      "community": 216,
+      "norm_label": "public registration page implementation plan"
+    },
+    {
+      "label": "Codebase Context (READ THIS FIRST)",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page_codebase_context_read_this_first",
+      "community": 216,
+      "norm_label": "codebase context (read this first)"
+    },
+    {
+      "label": "Project Structure",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page_project_structure",
+      "community": 216,
+      "norm_label": "project structure"
+    },
+    {
+      "label": "Phase 2: Backend Module",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L201",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page_phase_2_backend_module",
+      "community": 216,
+      "norm_label": "phase 2: backend module"
+    },
+    {
+      "label": "Task 2.1: Create DTO files",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L203",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page_task_2_1_create_dto_files",
+      "community": 216,
+      "norm_label": "task 2.1: create dto files"
+    },
+    {
+      "label": "Phase 5: Frontend \u2014 Admin Settings (Field Builder)",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L845",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page_phase_5_frontend_admin_settings_field_builder",
+      "community": 216,
+      "norm_label": "phase 5: frontend \u2014 admin settings (field builder)"
+    },
+    {
+      "label": "Task 5.1: Create admin settings page for public registration",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L847",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page_task_5_1_create_admin_settings_page_for_public_registration",
+      "community": 216,
+      "norm_label": "task 5.1: create admin settings page for public registration"
+    },
+    {
+      "label": "Phase 6: Frontend Integration & Navigation",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1116",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page_phase_6_frontend_integration_navigation",
+      "community": 216,
+      "norm_label": "phase 6: frontend integration & navigation"
+    },
+    {
+      "label": "Task 6.1: Add PUBLIC to guest list SOURCE_CONFIG",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1118",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page_task_6_1_add_public_to_guest_list_source_config",
+      "community": 216,
+      "norm_label": "task 6.1: add public to guest list source_config"
+    },
+    {
+      "label": "Task 6.2: Add toggle + link card to event settings",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1150",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page_task_6_2_add_toggle_link_card_to_event_settings",
+      "community": 216,
+      "norm_label": "task 6.2: add toggle + link card to event settings"
+    },
+    {
+      "label": "Task 6.3: Add /register link to TopNav",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1200",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page_task_6_3_add_register_link_to_topnav",
+      "community": 216,
+      "norm_label": "task 6.3: add /register link to topnav"
+    },
+    {
+      "label": "Task 6.4: Add enablePublicRegistration to events DTO + service (REQUIRED)",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1227",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page_task_6_4_add_enablepublicregistration_to_events_dto_service_required",
+      "community": 216,
+      "norm_label": "task 6.4: add enablepublicregistration to events dto + service (required)"
+    },
+    {
+      "label": "Phase 7: Verification & Testing",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1257",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page_phase_7_verification_testing",
+      "community": 216,
+      "norm_label": "phase 7: verification & testing"
+    },
+    {
+      "label": "Task 7.1: Build verification",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1259",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page_task_7_1_build_verification",
+      "community": 216,
+      "norm_label": "task 7.1: build verification"
+    },
+    {
+      "label": "Task 7.2: Database migration verification",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1277",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page_task_7_2_database_migration_verification",
+      "community": 216,
+      "norm_label": "task 7.2: database migration verification"
+    },
+    {
+      "label": "Task 7.3: Manual end-to-end test",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1295",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page_task_7_3_manual_end_to_end_test",
+      "community": 216,
+      "norm_label": "task 7.3: manual end-to-end test"
+    },
+    {
+      "label": "Task 7.4: Update documentation (optional)",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1307",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page_task_7_4_update_documentation_optional",
+      "community": 216,
+      "norm_label": "task 7.4: update documentation (optional)"
+    },
+    {
+      "label": "Summary of All Files",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1325",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page_summary_of_all_files",
+      "community": 216,
+      "norm_label": "summary of all files"
+    },
+    {
+      "label": "New Files (CREATE)",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1327",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page_new_files_create",
+      "community": 216,
+      "norm_label": "new files (create)"
+    },
+    {
+      "label": "Modified Files (MODIFY)",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1338",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page_modified_files_modify",
+      "community": 216,
+      "norm_label": "modified files (modify)"
+    },
+    {
+      "label": "Migration (AUTO-GENERATED)",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1351",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page_migration_auto_generated",
+      "community": 216,
+      "norm_label": "migration (auto-generated)"
+    },
+    {
+      "label": "Implementation Order (Recommended)",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1358",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page_implementation_order_recommended",
+      "community": 216,
+      "norm_label": "implementation order (recommended)"
+    },
+    {
+      "label": "Task 3.4: Build backend to verify",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1470",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_07_09_public_registration_page_task_3_4_build_backend_to_verify",
+      "community": 216,
+      "norm_label": "task 3.4: build backend to verify"
     },
     {
       "label": "sw.js",
@@ -59,9 +299,9 @@
       "source_file": "apps/frontend/public/sw.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_frontend_public_sw",
       "community": 69,
-      "norm_label": "sw.js"
+      "norm_label": "sw.js",
+      "id": "apps_frontend_public_sw"
     },
     {
       "label": "tournament-api.ts",
@@ -639,7 +879,7 @@
       "source_file": "apps/backend/src/common/sse.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 31,
+      "community": 200,
       "norm_label": "sse.ts",
       "id": "apps_backend_src_common_sse"
     },
@@ -649,7 +889,7 @@
       "source_file": "apps/backend/src/common/sse.ts",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 31,
+      "community": 200,
       "norm_label": "serverevent",
       "id": "apps_backend_src_common_sse_serverevent"
     },
@@ -659,7 +899,7 @@
       "source_file": "apps/backend/src/common/sse.ts",
       "source_location": "L29",
       "_origin": "ast",
-      "community": 31,
+      "community": 200,
       "norm_label": "emitter",
       "id": "apps_backend_src_common_sse_emitter"
     },
@@ -769,7 +1009,7 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 77,
+      "community": 196,
       "norm_label": "topnav.tsx",
       "id": "apps_frontend_components_topnav"
     },
@@ -779,7 +1019,7 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L32",
       "_origin": "ast",
-      "community": 77,
+      "community": 196,
       "norm_label": "adminlink",
       "id": "apps_frontend_components_topnav_adminlink"
     },
@@ -789,7 +1029,7 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L38",
       "_origin": "ast",
-      "community": 77,
+      "community": 196,
       "norm_label": "topnav()",
       "id": "apps_frontend_components_topnav_topnav"
     },
@@ -799,7 +1039,7 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L361",
       "_origin": "ast",
-      "community": 77,
+      "community": 196,
       "norm_label": "cn()",
       "id": "apps_frontend_components_topnav_cn"
     },
@@ -959,7 +1199,7 @@
       "source_file": "apps/frontend/hooks/useTournamentSSE.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 77,
+      "community": 219,
       "norm_label": "usetournamentsse.ts",
       "id": "apps_frontend_hooks_usetournamentsse"
     },
@@ -969,7 +1209,7 @@
       "source_file": "apps/frontend/hooks/useTournamentSSE.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 77,
+      "community": 219,
       "norm_label": "tournamenteventhandler",
       "id": "apps_frontend_hooks_usetournamentsse_tournamenteventhandler"
     },
@@ -979,7 +1219,7 @@
       "source_file": "apps/frontend/hooks/useTournamentSSE.ts",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 77,
+      "community": 219,
       "norm_label": "tournamentssehandlers",
       "id": "apps_frontend_hooks_usetournamentsse_tournamentssehandlers"
     },
@@ -989,7 +1229,7 @@
       "source_file": "apps/frontend/hooks/useTournamentSSE.ts",
       "source_location": "L24",
       "_origin": "ast",
-      "community": 77,
+      "community": 219,
       "norm_label": "usetournamentsse()",
       "id": "apps_frontend_hooks_usetournamentsse_usetournamentsse"
     },
@@ -999,7 +1239,7 @@
       "source_file": "apps/frontend/hooks/useTournamentSSE.ts",
       "source_location": "L203",
       "_origin": "ast",
-      "community": 77,
+      "community": 219,
       "norm_label": "usealltournamentsse()",
       "id": "apps_frontend_hooks_usetournamentsse_usealltournamentsse"
     },
@@ -1019,7 +1259,7 @@
       "source_file": "apps/frontend/lib/indexeddb.ts",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 10,
+      "community": 19,
       "norm_label": "pendingcheckin",
       "id": "apps_frontend_lib_indexeddb_pendingcheckin"
     },
@@ -1029,7 +1269,7 @@
       "source_file": "apps/frontend/lib/indexeddb.ts",
       "source_location": "L21",
       "_origin": "ast",
-      "community": 10,
+      "community": 19,
       "norm_label": "pendingsouvenir",
       "id": "apps_frontend_lib_indexeddb_pendingsouvenir"
     },
@@ -1039,7 +1279,7 @@
       "source_file": "apps/frontend/lib/indexeddb.ts",
       "source_location": "L33",
       "_origin": "ast",
-      "community": 19,
+      "community": 218,
       "norm_label": "stationconfig",
       "id": "apps_frontend_lib_indexeddb_stationconfig"
     },
@@ -1479,7 +1719,7 @@
       "source_file": "apps/frontend/lib/sse-context.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 77,
+      "community": 196,
       "norm_label": "sse-context.tsx",
       "id": "apps_frontend_lib_sse_context"
     },
@@ -1489,7 +1729,7 @@
       "source_file": "apps/frontend/lib/sse-context.tsx",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 77,
+      "community": 196,
       "norm_label": "ssecontexttype",
       "id": "apps_frontend_lib_sse_context_ssecontexttype"
     },
@@ -1499,7 +1739,7 @@
       "source_file": "apps/frontend/lib/sse-context.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 77,
+      "community": 196,
       "norm_label": "ssecontext",
       "id": "apps_frontend_lib_sse_context_ssecontext"
     },
@@ -1509,7 +1749,7 @@
       "source_file": "apps/frontend/lib/sse-context.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 77,
+      "community": 196,
       "norm_label": "event_types",
       "id": "apps_frontend_lib_sse_context_event_types"
     },
@@ -1529,7 +1769,7 @@
       "source_file": "apps/frontend/lib/sse-context.tsx",
       "source_location": "L147",
       "_origin": "ast",
-      "community": 77,
+      "community": 76,
       "norm_label": "usesse()",
       "id": "apps_frontend_lib_sse_context_usesse"
     },
@@ -1609,7 +1849,7 @@
       "source_file": "apps/frontend/types/tournament.types.ts",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 88,
+      "community": 28,
       "norm_label": "matchstatus",
       "id": "apps_frontend_types_tournament_types_matchstatus"
     },
@@ -1709,7 +1949,7 @@
       "source_file": "apps/frontend/types/tournament.types.ts",
       "source_location": "L140",
       "_origin": "ast",
-      "community": 77,
+      "community": 219,
       "norm_label": "tournament",
       "id": "apps_frontend_types_tournament_types_tournament"
     },
@@ -1879,7 +2119,7 @@
       "source_file": "apps/frontend/types/tournament.types.ts",
       "source_location": "L345",
       "_origin": "ast",
-      "community": 77,
+      "community": 219,
       "norm_label": "tournamentevent",
       "id": "apps_frontend_types_tournament_types_tournamentevent"
     },
@@ -5119,7 +5359,7 @@
       "source_file": "apps/backend/src/auth/auth.service.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 13,
+      "community": 217,
       "norm_label": "auth.service.ts",
       "id": "apps_backend_src_auth_auth_service"
     },
@@ -5199,7 +5439,7 @@
       "source_file": "apps/backend/src/auth/jwt-auth.guard.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 31,
+      "community": 32,
       "norm_label": "jwt-auth.guard.ts",
       "id": "apps_backend_src_auth_jwt_auth_guard"
     },
@@ -5209,7 +5449,7 @@
       "source_file": "apps/backend/src/auth/jwt-auth.guard.ts",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 31,
+      "community": 32,
       "norm_label": "jwtauthguard",
       "id": "apps_backend_src_auth_jwt_auth_guard_jwtauthguard"
     },
@@ -5259,7 +5499,7 @@
       "source_file": "apps/backend/src/common/audit/audit.controller.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 31,
+      "community": 217,
       "norm_label": "audit.controller.ts",
       "id": "apps_backend_src_common_audit_audit_controller"
     },
@@ -5269,7 +5509,7 @@
       "source_file": "apps/backend/src/common/audit/audit.controller.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 31,
+      "community": 217,
       "norm_label": "auditcontroller",
       "id": "apps_backend_src_common_audit_audit_controller_auditcontroller"
     },
@@ -5279,7 +5519,7 @@
       "source_file": "apps/backend/src/common/audit/audit.controller.ts",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 31,
+      "community": 217,
       "norm_label": ".constructor()",
       "id": "apps_backend_src_common_audit_audit_controller_auditcontroller_constructor"
     },
@@ -5289,7 +5529,7 @@
       "source_file": "apps/backend/src/common/audit/audit.controller.ts",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 31,
+      "community": 217,
       "norm_label": ".getlogs()",
       "id": "apps_backend_src_common_audit_audit_controller_auditcontroller_getlogs"
     },
@@ -5299,7 +5539,7 @@
       "source_file": "apps/backend/src/common/audit/audit.controller.ts",
       "source_location": "L32",
       "_origin": "ast",
-      "community": 31,
+      "community": 217,
       "norm_label": ".getactions()",
       "id": "apps_backend_src_common_audit_audit_controller_auditcontroller_getactions"
     },
@@ -5309,7 +5549,7 @@
       "source_file": "apps/backend/src/common/audit/audit.controller.ts",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 31,
+      "community": 217,
       "norm_label": ".getstats()",
       "id": "apps_backend_src_common_audit_audit_controller_auditcontroller_getstats"
     },
@@ -5319,7 +5559,7 @@
       "source_file": "apps/backend/src/common/audit/audit.module.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 75,
+      "community": 217,
       "norm_label": "audit.module.ts",
       "id": "apps_backend_src_common_audit_audit_module"
     },
@@ -5339,7 +5579,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 13,
+      "community": 217,
       "norm_label": "audit.service.ts",
       "id": "apps_backend_src_common_audit_audit_service"
     },
@@ -5349,7 +5589,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 13,
+      "community": 217,
       "norm_label": "auditaction",
       "id": "apps_backend_src_common_audit_audit_service_auditaction"
     },
@@ -5359,7 +5599,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L49",
       "_origin": "ast",
-      "community": 13,
+      "community": 217,
       "norm_label": "auditloginput",
       "id": "apps_backend_src_common_audit_audit_service_auditloginput"
     },
@@ -5369,7 +5609,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L63",
       "_origin": "ast",
-      "community": 13,
+      "community": 217,
       "norm_label": "auditservice",
       "id": "apps_backend_src_common_audit_audit_service_auditservice"
     },
@@ -5379,7 +5619,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L64",
       "_origin": "ast",
-      "community": 13,
+      "community": 217,
       "norm_label": ".constructor()",
       "id": "apps_backend_src_common_audit_audit_service_auditservice_constructor"
     },
@@ -5389,7 +5629,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L69",
       "_origin": "ast",
-      "community": 13,
+      "community": 217,
       "norm_label": ".log()",
       "id": "apps_backend_src_common_audit_audit_service_auditservice_log"
     },
@@ -5399,7 +5639,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L95",
       "_origin": "ast",
-      "community": 13,
+      "community": 217,
       "norm_label": ".getauditlogs()",
       "id": "apps_backend_src_common_audit_audit_service_auditservice_getauditlogs"
     },
@@ -5409,7 +5649,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L145",
       "_origin": "ast",
-      "community": 13,
+      "community": 217,
       "norm_label": ".getauditactions()",
       "id": "apps_backend_src_common_audit_audit_service_auditservice_getauditactions"
     },
@@ -5419,7 +5659,7 @@
       "source_file": "apps/backend/src/common/audit/audit.service.ts",
       "source_location": "L149",
       "_origin": "ast",
-      "community": 13,
+      "community": 217,
       "norm_label": ".getauditstats()",
       "id": "apps_backend_src_common_audit_audit_service_auditservice_getauditstats"
     },
@@ -5429,7 +5669,7 @@
       "source_file": "apps/backend/src/common/audit/index.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 75,
+      "community": 217,
       "norm_label": "index.ts",
       "id": "apps_backend_src_common_audit_index"
     },
@@ -5759,7 +5999,7 @@
       "source_file": "apps/backend/src/common/storage.ts",
       "source_location": "L75",
       "_origin": "ast",
-      "community": 31,
+      "community": 1,
       "norm_label": "landingpagestorage()",
       "id": "apps_backend_src_common_storage_landingpagestorage"
     },
@@ -5789,7 +6029,7 @@
       "source_file": "apps/backend/src/email/email.controller.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 31,
+      "community": 32,
       "norm_label": "email.controller.ts",
       "id": "apps_backend_src_email_email_controller"
     },
@@ -6129,7 +6369,7 @@
       "source_file": "apps/backend/src/events/dto/update-event.dto.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 92,
+      "community": 31,
       "norm_label": "update-event.dto.ts",
       "id": "apps_backend_src_events_dto_update_event_dto"
     },
@@ -6139,7 +6379,7 @@
       "source_file": "apps/backend/src/events/dto/update-event.dto.ts",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 92,
+      "community": 31,
       "norm_label": "customcategory",
       "id": "apps_backend_src_events_dto_update_event_dto_customcategory"
     },
@@ -6379,7 +6619,7 @@
       "source_file": "apps/backend/src/events/events.service.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 31,
+      "community": 13,
       "norm_label": "events.service.ts",
       "id": "apps_backend_src_events_events_service"
     },
@@ -6959,7 +7199,7 @@
       "source_file": "apps/backend/src/guests/guests.service.ts",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 13,
+      "community": 217,
       "norm_label": ".constructor()",
       "id": "apps_backend_src_guests_guests_service_guestsservice_constructor"
     },
@@ -7609,7 +7849,7 @@
       "source_file": "apps/backend/src/landing-page/landing-page.module.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 1,
+      "community": 75,
       "norm_label": "landing-page.module.ts",
       "id": "apps_backend_src_landing_page_landing_page_module"
     },
@@ -7619,7 +7859,7 @@
       "source_file": "apps/backend/src/landing-page/landing-page.module.ts",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 1,
+      "community": 75,
       "norm_label": "landingpagemodule",
       "id": "apps_backend_src_landing_page_landing_page_module_landingpagemodule"
     },
@@ -7749,7 +7989,7 @@
       "source_file": "apps/backend/src/prizes/prizes.controller.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 44,
+      "community": 32,
       "norm_label": "prizes.controller.ts",
       "id": "apps_backend_src_prizes_prizes_controller"
     },
@@ -7869,7 +8109,7 @@
       "source_file": "apps/backend/src/prizes/prizes.module.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 44,
+      "community": 75,
       "norm_label": "prizes.module.ts",
       "id": "apps_backend_src_prizes_prizes_module"
     },
@@ -7879,7 +8119,7 @@
       "source_file": "apps/backend/src/prizes/prizes.module.ts",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 44,
+      "community": 75,
       "norm_label": "prizesmodule",
       "id": "apps_backend_src_prizes_prizes_module_prizesmodule"
     },
@@ -7889,7 +8129,7 @@
       "source_file": "apps/backend/src/prizes/prizes.service.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 44,
+      "community": 13,
       "norm_label": "prizes.service.ts",
       "id": "apps_backend_src_prizes_prizes_service"
     },
@@ -8279,7 +8519,7 @@
       "source_file": "apps/backend/src/reports/reports.service.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 32,
+      "community": 13,
       "norm_label": "reports.service.ts",
       "id": "apps_backend_src_reports_reports_service"
     },
@@ -8289,7 +8529,7 @@
       "source_file": "apps/backend/src/reports/reports.service.ts",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 32,
+      "community": 13,
       "norm_label": "reportoptions",
       "id": "apps_backend_src_reports_reports_service_reportoptions"
     },
@@ -8369,7 +8609,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.controller.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 31,
+      "community": 32,
       "norm_label": "souvenirs.controller.ts",
       "id": "apps_backend_src_souvenirs_souvenirs_controller"
     },
@@ -8569,7 +8809,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.service.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 31,
+      "community": 13,
       "norm_label": "souvenirs.service.ts",
       "id": "apps_backend_src_souvenirs_souvenirs_service"
     },
@@ -9299,7 +9539,7 @@
       "source_file": "apps/backend/src/users/users.module.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 11,
+      "community": 192,
       "norm_label": "users.module.ts",
       "id": "apps_backend_src_users_users_module"
     },
@@ -9309,7 +9549,7 @@
       "source_file": "apps/backend/src/users/users.module.ts",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 11,
+      "community": 192,
       "norm_label": "usersmodule",
       "id": "apps_backend_src_users_users_module_usersmodule"
     },
@@ -9319,7 +9559,7 @@
       "source_file": "apps/backend/src/users/users.service.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 11,
+      "community": 13,
       "norm_label": "users.service.ts",
       "id": "apps_backend_src_users_users_service"
     },
@@ -9919,7 +10159,7 @@
       "source_file": "apps/frontend/app/(main)/admin/login/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 76,
+      "community": 8,
       "norm_label": "page.tsx",
       "id": "apps_frontend_app_main_admin_login_page"
     },
@@ -9929,7 +10169,7 @@
       "source_file": "apps/frontend/app/(main)/admin/login/page.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 76,
+      "community": 8,
       "norm_label": "eventconfig",
       "id": "apps_frontend_app_main_admin_login_page_eventconfig"
     },
@@ -9939,7 +10179,7 @@
       "source_file": "apps/frontend/app/(main)/admin/login/page.tsx",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 76,
+      "community": 8,
       "norm_label": "loginpage()",
       "id": "apps_frontend_app_main_admin_login_page_loginpage"
     },
@@ -10339,7 +10579,7 @@
       "source_file": "apps/frontend/app/(main)/checkin/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 76,
+      "community": 8,
       "norm_label": "page.tsx",
       "id": "apps_frontend_app_main_checkin_page"
     },
@@ -10349,7 +10589,7 @@
       "source_file": "apps/frontend/app/(main)/checkin/page.tsx",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 76,
+      "community": 8,
       "norm_label": "eventconfig",
       "id": "apps_frontend_app_main_checkin_page_eventconfig"
     },
@@ -10359,7 +10599,7 @@
       "source_file": "apps/frontend/app/(main)/checkin/page.tsx",
       "source_location": "L38",
       "_origin": "ast",
-      "community": 76,
+      "community": 8,
       "norm_label": "guestcheckin",
       "id": "apps_frontend_app_main_checkin_page_guestcheckin"
     },
@@ -10369,7 +10609,7 @@
       "source_file": "apps/frontend/app/(main)/checkin/page.tsx",
       "source_location": "L45",
       "_origin": "ast",
-      "community": 76,
+      "community": 8,
       "norm_label": "guest",
       "id": "apps_frontend_app_main_checkin_page_guest"
     },
@@ -10379,7 +10619,7 @@
       "source_file": "apps/frontend/app/(main)/checkin/page.tsx",
       "source_location": "L66",
       "_origin": "ast",
-      "community": 76,
+      "community": 8,
       "norm_label": "cleanqrcontent()",
       "id": "apps_frontend_app_main_checkin_page_cleanqrcontent"
     },
@@ -10389,7 +10629,7 @@
       "source_file": "apps/frontend/app/(main)/checkin/page.tsx",
       "source_location": "L86",
       "_origin": "ast",
-      "community": 76,
+      "community": 8,
       "norm_label": "scanlogitem",
       "id": "apps_frontend_app_main_checkin_page_scanlogitem"
     },
@@ -10409,7 +10649,7 @@
       "source_file": "apps/frontend/app/(main)/checkin/page.tsx",
       "source_location": "L2054",
       "_origin": "ast",
-      "community": 76,
+      "community": 8,
       "norm_label": "html5qrcodeplugin()",
       "id": "apps_frontend_app_main_checkin_page_html5qrcodeplugin"
     },
@@ -10519,7 +10759,7 @@
       "source_file": "apps/frontend/app/(main)/luckydraw/carousel/page.tsx",
       "source_location": "L29",
       "_origin": "ast",
-      "community": 87,
+      "community": 76,
       "norm_label": "carouseldrawpage()",
       "id": "apps_frontend_app_main_luckydraw_carousel_page_carouseldrawpage"
     },
@@ -10649,7 +10889,7 @@
       "source_file": "apps/frontend/app/(main)/luckydraw/display/page.tsx",
       "source_location": "L172",
       "_origin": "ast",
-      "community": 77,
+      "community": 76,
       "norm_label": "livedisplaypage()",
       "id": "apps_frontend_app_main_luckydraw_display_page_livedisplaypage"
     },
@@ -10789,7 +11029,7 @@
       "source_file": "apps/frontend/app/(main)/luckydraw/page.tsx",
       "source_location": "L109",
       "_origin": "ast",
-      "community": 38,
+      "community": 76,
       "norm_label": "luckydrawpage()",
       "id": "apps_frontend_app_main_luckydraw_page_luckydrawpage"
     },
@@ -11289,7 +11529,7 @@
       "source_file": "apps/frontend/components/EventSelector.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 77,
+      "community": 76,
       "norm_label": "eventselector.tsx",
       "id": "apps_frontend_components_eventselector"
     },
@@ -11299,7 +11539,7 @@
       "source_file": "apps/frontend/components/EventSelector.tsx",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 77,
+      "community": 76,
       "norm_label": "event",
       "id": "apps_frontend_components_eventselector_event"
     },
@@ -11309,7 +11549,7 @@
       "source_file": "apps/frontend/components/EventSelector.tsx",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 77,
+      "community": 76,
       "norm_label": "eventselector()",
       "id": "apps_frontend_components_eventselector_eventselector"
     },
@@ -11469,7 +11709,7 @@
       "source_file": "apps/frontend/components/PrizeReceiptModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 38,
+      "community": 77,
       "norm_label": "prizereceiptmodal.tsx",
       "id": "apps_frontend_components_prizereceiptmodal"
     },
@@ -11479,7 +11719,7 @@
       "source_file": "apps/frontend/components/PrizeReceiptModal.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 38,
+      "community": 77,
       "norm_label": "winner",
       "id": "apps_frontend_components_prizereceiptmodal_winner"
     },
@@ -11489,7 +11729,7 @@
       "source_file": "apps/frontend/components/PrizeReceiptModal.tsx",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 38,
+      "community": 77,
       "norm_label": "prize",
       "id": "apps_frontend_components_prizereceiptmodal_prize"
     },
@@ -11499,7 +11739,7 @@
       "source_file": "apps/frontend/components/PrizeReceiptModal.tsx",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 38,
+      "community": 77,
       "norm_label": "prizereceiptmodalprops",
       "id": "apps_frontend_components_prizereceiptmodal_prizereceiptmodalprops"
     },
@@ -11509,7 +11749,7 @@
       "source_file": "apps/frontend/components/PrizeReceiptModal.tsx",
       "source_location": "L32",
       "_origin": "ast",
-      "community": 38,
+      "community": 77,
       "norm_label": "prizereceiptmodal()",
       "id": "apps_frontend_components_prizereceiptmodal_prizereceiptmodal"
     },
@@ -11549,7 +11789,7 @@
       "source_file": "apps/frontend/components/StationSetupModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 19,
+      "community": 218,
       "norm_label": "stationsetupmodal.tsx",
       "id": "apps_frontend_components_stationsetupmodal"
     },
@@ -11559,7 +11799,7 @@
       "source_file": "apps/frontend/components/StationSetupModal.tsx",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 19,
+      "community": 218,
       "norm_label": "stationsetupmodalprops",
       "id": "apps_frontend_components_stationsetupmodal_stationsetupmodalprops"
     },
@@ -11569,7 +11809,7 @@
       "source_file": "apps/frontend/components/StationSetupModal.tsx",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 19,
+      "community": 218,
       "norm_label": "stationsetupmodal()",
       "id": "apps_frontend_components_stationsetupmodal_stationsetupmodal"
     },
@@ -11639,7 +11879,7 @@
       "source_file": "apps/frontend/components/WinnerHistoryModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 38,
+      "community": 77,
       "norm_label": "winnerhistorymodal.tsx",
       "id": "apps_frontend_components_winnerhistorymodal"
     },
@@ -11649,7 +11889,7 @@
       "source_file": "apps/frontend/components/WinnerHistoryModal.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 38,
+      "community": 77,
       "norm_label": "winner",
       "id": "apps_frontend_components_winnerhistorymodal_winner"
     },
@@ -11659,7 +11899,7 @@
       "source_file": "apps/frontend/components/WinnerHistoryModal.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 38,
+      "community": 77,
       "norm_label": "prize",
       "id": "apps_frontend_components_winnerhistorymodal_prize"
     },
@@ -11669,7 +11909,7 @@
       "source_file": "apps/frontend/components/WinnerHistoryModal.tsx",
       "source_location": "L22",
       "_origin": "ast",
-      "community": 38,
+      "community": 77,
       "norm_label": "winnerhistorymodalprops",
       "id": "apps_frontend_components_winnerhistorymodal_winnerhistorymodalprops"
     },
@@ -11679,7 +11919,7 @@
       "source_file": "apps/frontend/components/WinnerHistoryModal.tsx",
       "source_location": "L31",
       "_origin": "ast",
-      "community": 38,
+      "community": 77,
       "norm_label": "winnerhistorymodal()",
       "id": "apps_frontend_components_winnerhistorymodal_winnerhistorymodal"
     },
@@ -13079,7 +13319,7 @@
       "source_file": "apps/frontend/components/ui/Textarea.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 12,
+      "community": 8,
       "norm_label": "textarea.tsx",
       "id": "apps_frontend_components_ui_textarea"
     },
@@ -13089,7 +13329,7 @@
       "source_file": "apps/frontend/components/ui/Textarea.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 12,
+      "community": 8,
       "norm_label": "props",
       "id": "apps_frontend_components_ui_textarea_props"
     },
@@ -13209,7 +13449,7 @@
       "source_file": "apps/frontend/lib/api.ts",
       "source_location": "L82",
       "_origin": "ast",
-      "community": 76,
+      "community": 8,
       "norm_label": "parseerrormessage()",
       "id": "apps_frontend_lib_api_parseerrormessage"
     },
@@ -13949,7 +14189,7 @@
       "source_file": "apps/frontend/lib/utils.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 218,
       "norm_label": "utils.ts",
       "id": "apps_frontend_lib_utils"
     },
@@ -13969,7 +14209,7 @@
       "source_file": "apps/frontend/lib/utils.ts",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 2,
+      "community": 218,
       "norm_label": "debounce()",
       "id": "apps_frontend_lib_utils_debounce"
     },
@@ -13979,7 +14219,7 @@
       "source_file": "apps/frontend/lib/utils.ts",
       "source_location": "L28",
       "_origin": "ast",
-      "community": 2,
+      "community": 218,
       "norm_label": "throttle()",
       "id": "apps_frontend_lib_utils_throttle"
     },
@@ -13989,7 +14229,7 @@
       "source_file": "apps/frontend/lib/utils.ts",
       "source_location": "L45",
       "_origin": "ast",
-      "community": 2,
+      "community": 218,
       "norm_label": "formatnumber()",
       "id": "apps_frontend_lib_utils_formatnumber"
     },
@@ -13999,7 +14239,7 @@
       "source_file": "apps/frontend/lib/utils.ts",
       "source_location": "L52",
       "_origin": "ast",
-      "community": 2,
+      "community": 218,
       "norm_label": "formatdate()",
       "id": "apps_frontend_lib_utils_formatdate"
     },
@@ -14009,7 +14249,7 @@
       "source_file": "apps/frontend/lib/utils.ts",
       "source_location": "L64",
       "_origin": "ast",
-      "community": 2,
+      "community": 218,
       "norm_label": "formattime()",
       "id": "apps_frontend_lib_utils_formattime"
     },
@@ -14019,7 +14259,7 @@
       "source_file": "apps/frontend/lib/utils.ts",
       "source_location": "L75",
       "_origin": "ast",
-      "community": 2,
+      "community": 218,
       "norm_label": "sleep()",
       "id": "apps_frontend_lib_utils_sleep"
     },
@@ -14029,7 +14269,7 @@
       "source_file": "apps/frontend/lib/utils.ts",
       "source_location": "L82",
       "_origin": "ast",
-      "community": 2,
+      "community": 218,
       "norm_label": "generateuuid()",
       "id": "apps_frontend_lib_utils_generateuuid"
     },
@@ -27455,7 +27695,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/frontend/app/(main)/tournament-checkin/page.tsx",
-      "source_location": "L713",
+      "source_location": "L714",
       "weight": 1.0,
       "source": "apps_frontend_app_main_tournament_checkin_page",
       "target": "apps_frontend_app_main_tournament_checkin_page_stationsetup",
@@ -27469,6 +27709,236 @@
       "weight": 1.0,
       "source": "apps_frontend_app_main_tournament_checkin_page",
       "target": "apps_frontend_app_main_tournament_checkin_page_tournamentcheckinpage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_09_public_registration_page",
+      "target": "docs_superpowers_plans_2026_07_09_public_registration_page_public_registration_page_implementation_plan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_09_public_registration_page_public_registration_page_implementation_plan",
+      "target": "docs_superpowers_plans_2026_07_09_public_registration_page_codebase_context_read_this_first",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1358",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_09_public_registration_page_public_registration_page_implementation_plan",
+      "target": "docs_superpowers_plans_2026_07_09_public_registration_page_implementation_order_recommended",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L201",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_09_public_registration_page_public_registration_page_implementation_plan",
+      "target": "docs_superpowers_plans_2026_07_09_public_registration_page_phase_2_backend_module",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L845",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_09_public_registration_page_public_registration_page_implementation_plan",
+      "target": "docs_superpowers_plans_2026_07_09_public_registration_page_phase_5_frontend_admin_settings_field_builder",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1116",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_09_public_registration_page_public_registration_page_implementation_plan",
+      "target": "docs_superpowers_plans_2026_07_09_public_registration_page_phase_6_frontend_integration_navigation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1257",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_09_public_registration_page_public_registration_page_implementation_plan",
+      "target": "docs_superpowers_plans_2026_07_09_public_registration_page_phase_7_verification_testing",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1325",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_09_public_registration_page_public_registration_page_implementation_plan",
+      "target": "docs_superpowers_plans_2026_07_09_public_registration_page_summary_of_all_files",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_09_public_registration_page_codebase_context_read_this_first",
+      "target": "docs_superpowers_plans_2026_07_09_public_registration_page_project_structure",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L203",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_09_public_registration_page_phase_2_backend_module",
+      "target": "docs_superpowers_plans_2026_07_09_public_registration_page_task_2_1_create_dto_files",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L847",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_09_public_registration_page_phase_5_frontend_admin_settings_field_builder",
+      "target": "docs_superpowers_plans_2026_07_09_public_registration_page_task_5_1_create_admin_settings_page_for_public_registration",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1118",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_09_public_registration_page_phase_6_frontend_integration_navigation",
+      "target": "docs_superpowers_plans_2026_07_09_public_registration_page_task_6_1_add_public_to_guest_list_source_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1150",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_09_public_registration_page_phase_6_frontend_integration_navigation",
+      "target": "docs_superpowers_plans_2026_07_09_public_registration_page_task_6_2_add_toggle_link_card_to_event_settings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1200",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_09_public_registration_page_phase_6_frontend_integration_navigation",
+      "target": "docs_superpowers_plans_2026_07_09_public_registration_page_task_6_3_add_register_link_to_topnav",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1227",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_09_public_registration_page_phase_6_frontend_integration_navigation",
+      "target": "docs_superpowers_plans_2026_07_09_public_registration_page_task_6_4_add_enablepublicregistration_to_events_dto_service_required",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1259",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_09_public_registration_page_phase_7_verification_testing",
+      "target": "docs_superpowers_plans_2026_07_09_public_registration_page_task_7_1_build_verification",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1277",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_09_public_registration_page_phase_7_verification_testing",
+      "target": "docs_superpowers_plans_2026_07_09_public_registration_page_task_7_2_database_migration_verification",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1295",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_09_public_registration_page_phase_7_verification_testing",
+      "target": "docs_superpowers_plans_2026_07_09_public_registration_page_task_7_3_manual_end_to_end_test",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1307",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_09_public_registration_page_phase_7_verification_testing",
+      "target": "docs_superpowers_plans_2026_07_09_public_registration_page_task_7_4_update_documentation_optional",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1351",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_09_public_registration_page_summary_of_all_files",
+      "target": "docs_superpowers_plans_2026_07_09_public_registration_page_migration_auto_generated",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1338",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_09_public_registration_page_summary_of_all_files",
+      "target": "docs_superpowers_plans_2026_07_09_public_registration_page_modified_files_modify",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1327",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_09_public_registration_page_summary_of_all_files",
+      "target": "docs_superpowers_plans_2026_07_09_public_registration_page_new_files_create",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-07-09-public-registration-page.md",
+      "source_location": "L1470",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_07_09_public_registration_page_implementation_order_recommended",
+      "target": "docs_superpowers_plans_2026_07_09_public_registration_page_task_3_4_build_backend_to_verify",
       "confidence_score": 1.0
     },
     {
@@ -65742,5 +66212,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "6728dbdd4370f7488881fd5cc654bf10f0c4d877"
+  "built_at_commit": "d345ed8ef6330b2deb8d71367d0494b7c84d5c9c"
 }

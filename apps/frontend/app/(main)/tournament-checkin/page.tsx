@@ -6,7 +6,7 @@ import { Html5Qrcode } from "html5-qrcode";
 import {
   Search, QrCode, Loader2, CheckCircle, XCircle, AlertCircle,
   Settings, Camera, Wifi, WifiOff, Trophy, Users, Clock, X,
-  RefreshCw, Trash2, LogOut
+  RefreshCw, Trash2, LogOut, Calendar, ChevronDown
 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
@@ -50,6 +50,8 @@ export default function TournamentCheckinPage() {
   const [pendingItems, setPendingItems] = useState<any[]>([]);
   const [syncing, setSyncing] = useState(false);
   const [lastCheck, setLastCheck] = useState<string | null>(null);
+  const [todayMatches, setTodayMatches] = useState<any[]>([]);
+  const [showTodayMatches, setShowTodayMatches] = useState(false);
 
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const resultTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -192,6 +194,25 @@ export default function TournamentCheckinPage() {
   useEffect(() => {
     if (station) loadPendingCount();
   }, [station, loadPendingCount]);
+
+  // Fetch today's matches
+  const fetchTodayMatches = useCallback(async () => {
+    try {
+      const data = await checkinApi.getTodayMatches();
+      setTodayMatches(data);
+    } catch (err) {
+      console.error("Failed to fetch today matches:", err);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (station) fetchTodayMatches();
+    // Refresh every 30 seconds
+    const interval = setInterval(() => {
+      if (station) fetchTodayMatches();
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [station, fetchTodayMatches]);
 
   // Save station config to both IndexedDB and localStorage
   const saveStation = async (config: StationConfig) => {
@@ -638,6 +659,94 @@ export default function TournamentCheckinPage() {
                   {result.message || "Sudah check-in untuk match ini"}
                 </p>
               </>
+            )}
+          </div>
+        )}
+
+        {/* Today's Matches */}
+        {todayMatches.length > 0 && (
+          <div className="bg-brand-surface rounded-2xl border border-brand-border p-4 mb-6">
+            <button
+              onClick={() => setShowTodayMatches(!showTodayMatches)}
+              className="w-full flex items-center justify-between text-sm font-semibold text-brand-text"
+            >
+              <span className="flex items-center gap-2">
+                <Calendar size={16} /> Match Hari Ini ({todayMatches.reduce((acc, t) => acc + t.matches.length, 0)})
+              </span>
+              <ChevronDown size={16} className={`transition-transform ${showTodayMatches ? "rotate-180" : ""}`} />
+            </button>
+
+            {showTodayMatches && (
+              <div className="mt-4 space-y-4">
+                {todayMatches.map((group) => (
+                  <div key={group.tournament.id}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Trophy size={14} className="text-brand-accent" />
+                      <span className="text-xs font-bold text-brand-accent uppercase tracking-wider">
+                        {group.tournament.name}
+                      </span>
+                    </div>
+                    <div className="space-y-2">
+                      {group.matches.map((match: any) => {
+                        const time = match.scheduledAt
+                          ? new Date(match.scheduledAt).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })
+                          : "-";
+                        const bothTeamsAssigned = match.teamA && match.teamB;
+                        const anyEliminated = match.teamA?.isEliminated || match.teamB?.isEliminated;
+
+                        return (
+                          <div
+                            key={match.id}
+                            className={`p-3 rounded-lg border text-sm ${
+                              match.status === "COMPLETED"
+                                ? "bg-brand-success/5 border-brand-success/20"
+                                : anyEliminated
+                                  ? "bg-brand-warning/5 border-brand-warning/20"
+                                  : "bg-brand-bg border-brand-border"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between mb-1">
+                              <div className="flex items-center gap-2">
+                                <Clock size={12} className="text-brand-textMuted" />
+                                <span className="font-medium text-brand-text">{time}</span>
+                                {match.court && (
+                                  <span className="text-xs text-brand-textMuted">• {match.court}</span>
+                                )}
+                                {match.round && (
+                                  <span className="text-xs text-brand-textMuted">• {match.round}</span>
+                                )}
+                              </div>
+                              <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${
+                                match.status === "SCHEDULED"
+                                  ? "bg-brand-primary/20 text-brand-primary"
+                                  : match.status === "ONGOING"
+                                    ? "bg-brand-warning/20 text-brand-warning"
+                                    : "bg-brand-success/20 text-brand-success"
+                              }`}>
+                                {match.status}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className={match.teamA?.isEliminated ? "line-through text-brand-textMuted" : "text-brand-text font-medium"}>
+                                {match.teamA?.name || "TBD"}
+                              </span>
+                              <span className="text-brand-textMuted text-xs">vs</span>
+                              <span className={match.teamB?.isEliminated ? "line-through text-brand-textMuted" : "text-brand-text font-medium"}>
+                                {match.teamB?.name || "TBD"}
+                              </span>
+                            </div>
+                            {bothTeamsAssigned && match.status === "SCHEDULED" && (
+                              <div className="mt-1 text-xs text-brand-textMuted">
+                                Check-in: {match.checkinCount}/{match.totalMembers} member
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
         )}
