@@ -456,6 +456,10 @@ model Tournament {
   eventId           String?
   event             Event?              @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
+  enableMatchCheckin   Boolean  @default(false)
+  checkinWindowMinutes Int      @default(30)
+  checkinCloseMinutes  Int      @default(15)
+
   teams             TournamentTeam[]
   matches           Match[]
   brackets          TournamentBracket[]
@@ -503,6 +507,7 @@ model TeamMember {
   role            String?         @db.VarChar(50)
 
   matchParticipations MatchParticipant[]
+  tournamentCheckins  TournamentCheckin[]
 
   createdAt       DateTime        @default(now())
 
@@ -538,6 +543,7 @@ model Match {
 
   sets            MatchSet[]
   participants    MatchParticipant[]
+  checkins        TournamentCheckin[]
   previousMatches Match[]          @relation("NextMatch")
 
   createdAt       DateTime        @default(now())
@@ -607,4 +613,28 @@ model BracketRound {
 
   @@index([bracketId])
   @@unique([bracketId, roundNumber])
+}
+
+model TournamentCheckin {
+  id              String    @id @default(uuid())
+  memberId        String
+  member          TeamMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  matchId         String
+  match           Match      @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  teamId          String
+  tournamentId    String
+  guestId         String?
+  checkedAt       DateTime  @default(now())
+  checkedById     String?
+  checkedByName   String?
+  counterName     String?
+
+  isOffline       Boolean   @default(false)
+  clientTimestamp DateTime?
+  syncedAt        DateTime?
+
+  @@unique([memberId, matchId])
+  @@index([matchId])
+  @@index([tournamentId])
+  @@index([teamId])
 }

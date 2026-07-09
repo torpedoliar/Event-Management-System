@@ -3,9 +3,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import type { Tournament, TournamentTeam, Match, BracketView as BracketViewType, TournamentStats } from "@/types/tournament.types";
+import type { Tournament, TournamentTeam, Match, BracketView as BracketViewType, TournamentStats, TeamCheckinStatus } from "@/types/tournament.types";
 import { TournamentStatus, ScoringMode } from "@/types/tournament.types";
-import { tournamentApi, matchApi, bracketApi, teamApi, statsApi } from "@/lib/tournament-api";
+import { tournamentApi, matchApi, bracketApi, teamApi, statsApi, checkinApi } from "@/lib/tournament-api";
 import { TournamentTabs, TabPanel } from "@/components/tournament/TournamentTabs";
 import { StatusPill } from "@/components/tournament/StatusPill";
 import { TeamCard, TeamFormModal, TeamMemberFormModal, ImportTeamsModal } from "@/components/tournament/team";
@@ -52,6 +52,7 @@ export default function TournamentDetailPage() {
   const [bracketView, setBracketView] = useState<BracketViewType | null>(null);
   const [bracketLoading, setBracketLoading] = useState(false);
   const [stats, setStats] = useState<TournamentStats | null>(null);
+  const [checkinStatus, setCheckinStatus] = useState<TeamCheckinStatus>({});
 
   const sse = useTournamentSSE(tournamentId);
 
@@ -84,8 +85,9 @@ export default function TournamentDetailPage() {
     unsubs.push(sse.onMatchCompleted(() => { refreshMatches(); }));
     unsubs.push(sse.onMatchCancelled(() => { refreshMatches(); }));
     unsubs.push(sse.onMatchUpdated(() => { refreshMatches(); }));
+    unsubs.push(sse.onTournamentCheckin(() => { checkinApi.getStatus(tournamentId).then(setCheckinStatus).catch(console.error); }));
     return () => unsubs.forEach(u => u());
-  }, [sse]);
+  }, [sse, tournamentId]);
 
   // Fetch bracket view when brackets tab is active or after bracket generation
   useEffect(() => {
@@ -121,6 +123,8 @@ export default function TournamentDetailPage() {
         setMatches(matchData);
         // Load tournament stats for standings
         statsApi.getTournamentStats(tournamentId).then(setStats).catch(console.error);
+        // Load check-in status
+        checkinApi.getStatus(tournamentId).then(setCheckinStatus).catch(console.error);
       } catch (err: any) {
         setError(err.message || "Failed to load tournament");
       } finally {
@@ -414,6 +418,7 @@ export default function TournamentDetailPage() {
                   key={team.id}
                   team={team}
                   showDetails
+                  checkinStatus={checkinStatus}
                   onEdit={() => {
                     setEditingTeam(team);
                     setTeamModalOpen(true);

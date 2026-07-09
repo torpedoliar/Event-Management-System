@@ -16,6 +16,8 @@ import type {
   ImportTeamsDto,
   ImportTeamsResult,
   EligibleGuest,
+  CheckinResult,
+  TeamCheckinStatus,
 } from '../types/tournament.types';
 
 const BASE = '/tournaments';
@@ -220,5 +222,35 @@ export const matchApi = {
 export const statsApi = {
   async getTournamentStats(tournamentId: string): Promise<TournamentStats> {
     return apiFetch<TournamentStats>(`${BASE}/${tournamentId}/stats`);
+  },
+};
+
+/**
+ * Tournament Check-in
+ */
+export const checkinApi = {
+  async checkIn(data: { guestId: string; adminId?: string; adminName?: string; counterName?: string }): Promise<CheckinResult> {
+    return apiFetch<CheckinResult>(`${BASE}/checkin`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+
+  async batchSync(checkins: any[]): Promise<{ synced: number; results: any[] }> {
+    return apiFetch<{ synced: number; results: any[] }>(`${BASE}/checkin/batch-sync`, {
+      method: 'POST',
+      body: JSON.stringify({ checkins }),
+    });
+  },
+
+  async getStatus(tournamentId: string): Promise<TeamCheckinStatus> {
+    return apiFetch<TeamCheckinStatus>(`${BASE}/${tournamentId}/checkin-status`);
+  },
+
+  async uncheck(tournamentId: string, checkinId: string): Promise<{ success: boolean }> {
+    return apiFetch<{ success: boolean }>(`${BASE}/${tournamentId}/checkin/uncheck`, {
+      method: 'POST',
+      body: JSON.stringify({ checkinId }),
+    });
   },
 };

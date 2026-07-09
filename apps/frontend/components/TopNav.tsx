@@ -20,6 +20,7 @@ import {
   Settings,
   ChevronDown,
   Trophy,
+  QrCode,
 } from "lucide-react";
 import { apiBase } from "../lib/api";
 import { useSSE } from "../lib/sse-context";
@@ -120,6 +121,7 @@ export default function TopNav() {
     { href: "/luckydraw", label: "Lucky Draw", icon: <Dices size={16} /> },
     { href: "/souvenir", label: "Doorprize", icon: <Package size={16} /> },
     ...(eventCfg?.enableTournament ? [{ href: "/admin/tournaments", label: "Tournament", icon: <Trophy size={16} /> }] : []),
+    ...(eventCfg?.enableTournament ? [{ href: "/tournament-checkin", label: "Tournament Check-in", icon: <QrCode size={16} /> }] : []),
     { href: "/admin/events", label: "Events", icon: <CalendarDays size={16} /> },
     { href: "/admin/settings/event", label: "Settings", icon: <Settings size={16} /> },
     { href: "/admin/settings/landing-page", label: "Landing", icon: <Layout size={16} /> },

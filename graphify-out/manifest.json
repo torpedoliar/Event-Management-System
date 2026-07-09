@@ -720,8 +720,8 @@
     "semantic_hash": "76b34d155858025e00cd069fb1df69b1"
   },
   "apps/frontend/lib/sse-context.tsx": {
-    "mtime": 1782781979.88732,
-    "ast_hash": "7946aadfc14ba7cb9a3bec26c437f5f4",
+    "mtime": 1783521527.316027,
+    "ast_hash": "a3ba8547d2c41bd59bbc1a755bb81f79",
     "semantic_hash": ""
   },
   "apps/frontend/lib/utils.ts": {
@@ -755,12 +755,12 @@
     "semantic_hash": "8640f9b2e6475cc3f5b1ff4548925765"
   },
   "apps/frontend/public/sw.js": {
-    "mtime": 1783520734.9134295,
-    "ast_hash": "12b7101cb9e17c9ad7949cbe0c3c63bf",
+    "mtime": 1783521914.6419528,
+    "ast_hash": "55a29a3f7f8cc4ac510b16c17d92c6db",
     "semantic_hash": ""
   },
   "apps/frontend/public/workbox-c2c0676f.js": {
-    "mtime": 1783520734.9134295,
+    "mtime": 1783521914.6419528,
     "ast_hash": "80e63d1bc987fbb9f079f9d6a8c9a60e",
     "semantic_hash": "80e63d1bc987fbb9f079f9d6a8c9a60e"
   },
@@ -1195,8 +1195,8 @@
     "semantic_hash": ""
   },
   "apps/backend/src/tournaments/match-scoring.service.ts": {
-    "mtime": 1783502603.8920074,
-    "ast_hash": "20d8758432759decbbfdc66948dd69d1",
+    "mtime": 1783521821.579407,
+    "ast_hash": "1c6c51a6c2c88ae496bb08752831f168",
     "semantic_hash": ""
   },
   "apps/backend/test/tournaments/match-scoring.spec.ts": {
@@ -1205,8 +1205,8 @@
     "semantic_hash": ""
   },
   "apps/backend/src/tournaments/tournaments.service.ts": {
-    "mtime": 1783520294.5836265,
-    "ast_hash": "21376544ee66268cc3b568dab12e8033",
+    "mtime": 1783521850.509652,
+    "ast_hash": "2618a11277597d60243199813cda67b3",
     "semantic_hash": ""
   },
   "apps/backend/src/tournaments/tournaments.controller.ts": {
@@ -1220,13 +1220,13 @@
     "semantic_hash": ""
   },
   "apps/frontend/types/tournament.types.ts": {
-    "mtime": 1783414958.8334458,
-    "ast_hash": "ddfb0dbf3caa3475a0c4150cfbc5c949",
+    "mtime": 1783521534.3796303,
+    "ast_hash": "52219ae3b9f5eb38f336d614498fe610",
     "semantic_hash": ""
   },
   "apps/frontend/hooks/useTournamentSSE.ts": {
-    "mtime": 1782791638.8757203,
-    "ast_hash": "c26bccceb200aa72151f433d0238dced",
+    "mtime": 1783521561.6442964,
+    "ast_hash": "ee6cd4245f53b65fa58555ee9a38f2cd",
     "semantic_hash": ""
   },
   "apps/frontend/lib/tournament-api.ts": {
@@ -1270,8 +1270,8 @@
     "semantic_hash": ""
   },
   "apps/frontend/components/tournament/team/index.ts": {
-    "mtime": 1782805134.0316238,
-    "ast_hash": "5e6a514c6b55480cc7201f7f4d83c97c",
+    "mtime": 1783521653.5695899,
+    "ast_hash": "7431456f7c63b219aabe2d30dc1a1a59",
     "semantic_hash": ""
   },
   "apps/frontend/components/tournament/match/LiveMatchDisplay.tsx": {
@@ -1325,8 +1325,8 @@
     "semantic_hash": ""
   },
   "apps/frontend/app/(main)/admin/tournaments/[id]/page.tsx": {
-    "mtime": 1783520617.7224784,
-    "ast_hash": "80f1a20890a7e0a56d68d38d96cebd3d",
+    "mtime": 1783521775.5303884,
+    "ast_hash": "6c4d73cc5860d20ecfa2e57c67770f16",
     "semantic_hash": ""
   },
   "apps/frontend/app/(main)/admin/tournaments/new/page.tsx": {
@@ -1390,8 +1390,8 @@
     "semantic_hash": ""
   },
   "apps/frontend/app/(main)/tournament/live/[matchId]/page.tsx": {
-    "mtime": 1783415569.0713294,
-    "ast_hash": "3d2e90f4efa3156fcf4f970823e16439",
+    "mtime": 1783521604.0286372,
+    "ast_hash": "367c61d1f24c6cfef3ceef84b809d0f5",
     "semantic_hash": ""
   },
   "apps/frontend/components/tournament/team/GuestPicker.tsx": {
@@ -1435,8 +1435,8 @@
     "semantic_hash": ""
   },
   "apps/backend/src/tournaments/dto/create-match.dto.ts": {
-    "mtime": 1783520213.3806915,
-    "ast_hash": "a30dfe59e1940cf1dbf8508273d3218b",
+    "mtime": 1783521868.7610793,
+    "ast_hash": "7aaad8030f1fa2e3fb8d44906f965065",
     "semantic_hash": ""
   },
   "apps/frontend/components/tournament/match/CreateMatchModal.tsx": {
@@ -1447,6 +1447,11 @@
   "docs/superpowers/plans/2026-07-08-manual-match-management.md": {
     "mtime": 1783520193.3225546,
     "ast_hash": "46a95bc518cb6d793feee4024ab351a4",
+    "semantic_hash": ""
+  },
+  "apps/frontend/components/tournament/team/ImportTeamsModal.tsx": {
+    "mtime": 1783521641.1738622,
+    "ast_hash": "d3f168712ebe4d67b9c3e1d0d75ffbe9",
     "semantic_hash": ""
   }
 }

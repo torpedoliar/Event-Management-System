@@ -14,7 +14,7 @@ import Select from "@/components/ui/Select";
 import Button from "@/components/ui/Button";
 import FormSection from "@/components/ui/FormSection";
 import Label from "@/components/ui/Label";
-import { Save, X } from "lucide-react";
+import { Save, X, ToggleLeft, ToggleRight } from "lucide-react";
 
 interface TournamentFormProps {
   initialData?: Partial<CreateTournamentDto>;
@@ -41,6 +41,9 @@ export function TournamentForm({ initialData, onSubmit, onCancel, isLoading }: T
     startDate: initialData?.startDate || undefined,
     endDate: initialData?.endDate || undefined,
     eventId: initialData?.eventId || undefined,
+    enableMatchCheckin: initialData?.enableMatchCheckin || false,
+    checkinWindowMinutes: initialData?.checkinWindowMinutes || 30,
+    checkinCloseMinutes: initialData?.checkinCloseMinutes || 15,
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -215,6 +218,53 @@ export function TournamentForm({ initialData, onSubmit, onCancel, isLoading }: T
             />
             {errors.endDate && <p className="mt-1 text-sm text-brand-danger">{errors.endDate}</p>}
           </div>
+        </div>
+      </FormSection>
+
+      <FormSection title="Match Check-in">
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-brand-text">Enable Match Check-in</p>
+              <p className="text-xs text-brand-textMuted">Allow team members to check-in per match via tournament kiosk</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => updateField("enableMatchCheckin", !formData.enableMatchCheckin)}
+              className="text-brand-primary"
+            >
+              {formData.enableMatchCheckin ? <ToggleRight size={32} /> : <ToggleLeft size={32} />}
+            </button>
+          </div>
+
+          {formData.enableMatchCheckin && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+              <div>
+                <Label htmlFor="checkinWindowMinutes" className="mb-2 block">Window Before (minutes)</Label>
+                <Input
+                  id="checkinWindowMinutes"
+                  type="number"
+                  value={formData.checkinWindowMinutes}
+                  onChange={(e) => updateField("checkinWindowMinutes", parseInt(e.target.value, 10))}
+                  min={1}
+                  max={120}
+                />
+                <p className="text-xs text-brand-textMuted mt-1">Check-in opens X minutes before scheduled match</p>
+              </div>
+              <div>
+                <Label htmlFor="checkinCloseMinutes" className="mb-2 block">Tolerance After (minutes)</Label>
+                <Input
+                  id="checkinCloseMinutes"
+                  type="number"
+                  value={formData.checkinCloseMinutes}
+                  onChange={(e) => updateField("checkinCloseMinutes", parseInt(e.target.value, 10))}
+                  min={1}
+                  max={60}
+                />
+                <p className="text-xs text-brand-textMuted mt-1">Check-in stays open X minutes after scheduled match</p>
+              </div>
+            </div>
+          )}
         </div>
       </FormSection>
 

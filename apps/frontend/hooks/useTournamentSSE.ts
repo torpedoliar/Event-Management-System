@@ -14,6 +14,7 @@ interface TournamentSSEHandlers {
   onMatchUpdated: TournamentEventHandler | null;
   onBracketUpdated: TournamentEventHandler | null;
   onTournamentUpdated: TournamentEventHandler | null;
+  onTournamentCheckin: TournamentEventHandler | null;
 }
 
 /**
@@ -32,6 +33,7 @@ export function useTournamentSSE(tournamentId: string) {
     onMatchUpdated: null,
     onBracketUpdated: null,
     onTournamentUpdated: null,
+    onTournamentCheckin: null,
   });
 
   // Track active subscriptions for cleanup
@@ -169,6 +171,18 @@ export function useTournamentSSE(tournamentId: string) {
     };
   }, []);
 
+  /**
+   * Subscribe to tournament check-in events
+   */
+  const onTournamentCheckin = useCallback((handler: TournamentEventHandler) => {
+    handlersRef.current.onTournamentCheckin = handler;
+    const unsub = subscribe('tournament_checkin', handler);
+    return () => {
+      handlersRef.current.onTournamentCheckin = null;
+      unsub();
+    };
+  }, [subscribe]);
+
   return {
     connected,
     onMatchScoreUpdate,
@@ -178,6 +192,7 @@ export function useTournamentSSE(tournamentId: string) {
     onMatchUpdated,
     onBracketUpdated,
     onTournamentUpdated,
+    onTournamentCheckin,
   };
 }
 

@@ -91,6 +91,9 @@ export interface CreateTournamentDto {
   startDate?: string;
   endDate?: string;
   eventId?: string;
+  enableMatchCheckin?: boolean;
+  checkinWindowMinutes?: number;
+  checkinCloseMinutes?: number;
 }
 
 export interface UpdateTournamentDto extends Partial<CreateTournamentDto> {
@@ -148,6 +151,9 @@ export interface Tournament {
   startDate?: string;
   endDate?: string;
   eventId?: string;
+  enableMatchCheckin?: boolean;
+  checkinWindowMinutes?: number;
+  checkinCloseMinutes?: number;
   teams?: TournamentTeam[];
   brackets?: TournamentBracket[];
   matches?: Match[];
@@ -304,6 +310,38 @@ export interface ImportTeamsResult {
 // SSE Event Types
 // ============================================
 
+export interface TournamentCheckin {
+  id: string;
+  memberId: string;
+  matchId: string;
+  teamId: string;
+  tournamentId: string;
+  guestId?: string;
+  checkedAt: string;
+  checkedById?: string;
+  checkedByName?: string;
+}
+
+export interface CheckinResult {
+  success: boolean;
+  alreadyCheckedIn: boolean;
+  member?: TeamMember;
+  team?: TournamentTeam;
+  match?: { id: string; teamA?: string; teamB?: string };
+  checkinId?: string;
+  reasons?: string[];
+  message?: string;
+}
+
+export interface TeamCheckinStatus {
+  [memberId: string]: {
+    checkedIn: boolean;
+    matchId?: string;
+    matchLabel?: string;
+    checkedAt?: string;
+  };
+}
+
 export type TournamentEvent =
   | { type: 'match_score_update'; data: Match }
   | { type: 'match_started'; data: Match }
@@ -311,7 +349,8 @@ export type TournamentEvent =
   | { type: 'match_cancelled'; data: Match }
   | { type: 'match_updated'; data: Match }
   | { type: 'bracket_updated'; data: { tournamentId: string } }
-  | { type: 'tournament_updated'; data: Tournament };
+  | { type: 'tournament_updated'; data: Tournament }
+  | { type: 'tournament_checkin'; data: { tournamentId: string; memberId: string; matchId: string; unchecked?: boolean } };
 
 // ============================================
 // Sport Display Helpers

@@ -21,6 +21,8 @@ import { CreateTeamDto } from './dto/create-team.dto';
 import { UpdateScoreDto } from './dto/update-score.dto';
 import { ImportTeamsDto } from './dto/import-teams.dto';
 import { CreateMatchDto } from './dto/create-match.dto';
+import { TournamentCheckinDto, TournamentCheckinBatchSyncDto } from './dto/tournament-checkin.dto';
+import { TournamentCheckinService } from './tournament-checkin.service';
 import { photosStorage } from '../common/storage';
 
 @Controller('tournaments')
@@ -29,6 +31,7 @@ export class TournamentsController {
   constructor(
     private readonly tournaments: TournamentsService,
     private readonly scoring: MatchScoringService,
+    private readonly checkin: TournamentCheckinService,
   ) {}
 
   // ============================================
@@ -43,6 +46,30 @@ export class TournamentsController {
   @Get()
   findAll(@Query('eventId') eventId?: string) {
     return this.tournaments.findAll(eventId);
+  }
+
+  // ============================================
+  // Check-in Endpoints (before :id to avoid param conflict)
+  // ============================================
+
+  @Post('checkin')
+  checkInMember(@Body() dto: TournamentCheckinDto) {
+    return this.checkin.checkInMember(dto);
+  }
+
+  @Post('checkin/batch-sync')
+  batchSync(@Body() dto: TournamentCheckinBatchSyncDto) {
+    return this.checkin.batchSyncOfflineCheckins(dto);
+  }
+
+  @Get(':id/checkin-status')
+  getCheckinStatus(@Param('id') id: string) {
+    return this.checkin.getTeamCheckinStatus(id);
+  }
+
+  @Post(':id/checkin/uncheck')
+  uncheckCheckin(@Body('checkinId') checkinId: string) {
+    return this.checkin.uncheckTournamentCheckin(checkinId);
   }
 
   @Get(':id')

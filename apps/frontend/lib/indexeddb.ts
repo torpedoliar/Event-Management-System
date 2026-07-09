@@ -60,7 +60,7 @@ export interface LocalSouvenirCache {
 }
 
 const DB_NAME = 'guest-checkin-db';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 
 class IndexedDBService {
   private db: IDBPDatabase | null = null;
@@ -112,6 +112,14 @@ class IndexedDBService {
 
           if (!db.objectStoreNames.contains('souvenirCache')) {
             db.createObjectStore('souvenirCache', { keyPath: 'id' });
+          }
+
+          // Version 3 additions: Tournament Pending Checkins
+          if (!db.objectStoreNames.contains('tournamentPendingCheckins')) {
+            const tournStore = db.createObjectStore('tournamentPendingCheckins', { keyPath: 'id' });
+            tournStore.createIndex('guestId', 'guestId', { unique: false });
+            tournStore.createIndex('clientTimestamp', 'clientTimestamp', { unique: false });
+            tournStore.createIndex('status', 'status', { unique: false });
           }
         }
       });
@@ -181,6 +189,78 @@ class IndexedDBService {
     await this.init();
     const pending = await this.db!.countFromIndex('pendingCheckins', 'status', 'pending');
     const failed = await this.db!.countFromIndex('pendingCheckins', 'status', 'failed');
+    return pending + failed;
+  }
+
+  // ==================== TOURNAMENT PENDING CHECKINS ====================
+
+  async addTournamentPendingCheckin(checkin: {
+    guestId: string;
+    adminId?: string;
+    adminName?: string;
+    counterName?: string;
+    isOffline: boolean;
+    clientTimestamp: string;
+  }): Promise<string> {
+    await this.init();
+    const id = generateUUID();
+    const now = new Date().toISOString();
+
+    await this.db!.add('tournamentPendingCheckins', {
+      ...checkin,
+      id,
+      status: 'pending',
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    return id;
+  }
+
+  async getTournamentPendingCheckins(): Promise<any[]> {
+    await this.init();
+    const all = await this.db!.getAll('tournamentPendingCheckins');
+    return all
+      .filter((c) => c.status === 'pending' || c.status === 'failed')
+      .sort((a, b) => new Date(a.clientTimestamp).getTime() - new Date(b.clientTimestamp).getTime());
+  }
+
+  async updateTournamentPendingCheckin(id: string, updates: any): Promise<void> {
+    await this.init();
+    const existing = await this.db!.get('tournamentPendingCheckins', id);
+    if (!existing) return;
+
+    await this.db!.put('tournamentPendingCheckins', {
+      ...existing,
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    });
+  }
+
+  async deleteTournamentPendingCheckin(id: string): Promise<void> {
+    await this.init();
+    await this.db!.delete('tournamentPendingCheckins', id);
+  }
+
+  async clearSyncedTournamentCheckins(): Promise<void> {
+    await this.init();
+    const tx = this.db!.transaction('tournamentPendingCheckins', 'readwrite');
+    const store = tx.objectStore('tournamentPendingCheckins');
+    let cursor = await store.openCursor();
+
+    while (cursor) {
+      if (cursor.value.status === 'synced') {
+        cursor.delete();
+      }
+      cursor = await cursor.continue();
+    }
+    await tx.done;
+  }
+
+  async getTournamentPendingCount(): Promise<number> {
+    await this.init();
+    const pending = await this.db!.countFromIndex('tournamentPendingCheckins', 'status', 'pending');
+    const failed = await this.db!.countFromIndex('tournamentPendingCheckins', 'status', 'failed');
     return pending + failed;
   }
 
@@ -423,6 +503,7 @@ class IndexedDBService {
     await this.db!.clear('syncLog');
     await this.db!.clear('pendingSouvenirs');
     await this.db!.clear('souvenirCache');
+    await this.db!.clear('tournamentPendingCheckins');
   }
 }
 

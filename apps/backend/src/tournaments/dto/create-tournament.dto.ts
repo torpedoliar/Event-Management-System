@@ -3,6 +3,7 @@ import {
   IsEnum,
   IsOptional,
   IsInt,
+  IsBoolean,
   IsDateString,
   IsObject,
   MaxLength,
@@ -61,4 +62,20 @@ export class CreateTournamentDto {
   @IsString()
   @IsOptional()
   eventId?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  enableMatchCheckin?: boolean;
+
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  @Type(() => Number)
+  checkinWindowMinutes?: number;
+
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  @Type(() => Number)
+  checkinCloseMinutes?: number;
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import type { TournamentTeam } from "@/types/tournament.types";
+import type { TournamentTeam, TeamCheckinStatus } from "@/types/tournament.types";
 import { TeamLogo } from "./TeamLogo";
 import { Edit, Trash2, Users } from "lucide-react";
 import Button from "@/components/ui/Button";
@@ -14,9 +14,10 @@ interface TeamCardProps {
   onDelete?: () => void;
   onManageMembers?: () => void;
   showDetails?: boolean;
+  checkinStatus?: TeamCheckinStatus;
 }
 
-export function TeamCard({ team, onClick, onEdit, onDelete, onManageMembers, showDetails = false }: TeamCardProps) {
+export function TeamCard({ team, onClick, onEdit, onDelete, onManageMembers, showDetails = false, checkinStatus }: TeamCardProps) {
   return (
     <div
       className={cn(
@@ -104,7 +105,7 @@ export function TeamCard({ team, onClick, onEdit, onDelete, onManageMembers, sho
             <h4 className="text-sm font-semibold mb-3 text-brand-text">
               Members ({team.members.length})
             </h4>
-            <TeamMemberList members={team.members} compact />
+            <TeamMemberList members={team.members} compact checkinStatus={checkinStatus} />
           </div>
         )}
       </div>

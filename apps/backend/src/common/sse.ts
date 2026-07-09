@@ -23,7 +23,8 @@ export type ServerEvent =
   | { type: 'match_cancelled'; data: any }
   | { type: 'bracket_updated'; data: any }
   | { type: 'match_updated'; data: any }
-  | { type: 'tournament_updated'; data: any };
+  | { type: 'tournament_updated'; data: any }
+  | { type: 'tournament_checkin'; data: any };
 
 const emitter = new EventEmitter();
 emitter.setMaxListeners(1000);
