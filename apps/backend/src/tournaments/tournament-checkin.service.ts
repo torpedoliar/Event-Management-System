@@ -230,10 +230,13 @@ export class TournamentCheckinService {
 
         results.push({ ...result, guestId: checkinDto.guestId });
       } catch (err: any) {
+        const message = err?.response?.message || err.message || 'Sync failed';
+        const reasons = err?.response?.reasons || [];
         results.push({
           success: false,
           guestId: checkinDto.guestId,
-          error: err.message || 'Sync failed',
+          error: typeof message === 'string' ? message : JSON.stringify(message),
+          reasons,
           isDuplicate: err.code === 'P2002',
         });
       }
@@ -251,9 +254,36 @@ export class TournamentCheckinService {
       throw new NotFoundException('Check-in not found');
     }
 
+    // Delete TournamentCheckin
     await this.prisma.tournamentCheckin.delete({
       where: { id: checkinId },
     });
+
+    // Revert GuestCheckin (core) — delete the most recent one for this guest
+    if (checkin.guestId) {
+      const latestGuestCheckin = await this.prisma.guestCheckin.findFirst({
+        where: { guestId: checkin.guestId },
+        orderBy: { checkinAt: 'desc' },
+      });
+
+      if (latestGuestCheckin) {
+        await this.prisma.guestCheckin.delete({
+          where: { id: latestGuestCheckin.id },
+        });
+      }
+
+      // Decrement checkinCount (guard against negative)
+      const guest = await this.prisma.guest.findUnique({
+        where: { id: checkin.guestId },
+        select: { checkinCount: true },
+      });
+      if (guest && guest.checkinCount > 0) {
+        await this.prisma.guest.update({
+          where: { id: checkin.guestId },
+          data: { checkinCount: { decrement: 1 } },
+        });
+      }
+    }
 
     // Emit SSE
     emitEvent({

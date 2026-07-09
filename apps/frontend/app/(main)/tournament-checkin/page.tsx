@@ -45,9 +45,33 @@ export default function TournamentCheckinPage() {
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const resultTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Connection status
+  // Connection status + auto-sync on reconnect
   useEffect(() => {
-    const handleOnline = () => setOnline(true);
+    const handleOnline = async () => {
+      setOnline(true);
+      // Auto-sync tournament pending checkins
+      try {
+        const { indexedDBService } = await import("@/lib/indexeddb");
+        const pending = await indexedDBService.getTournamentPendingCheckins();
+        if (pending.length > 0 && station) {
+          const { checkinApi } = await import("@/lib/tournament-api");
+          const result = await checkinApi.batchSync(pending);
+          // Mark synced items
+          for (const r of result.results) {
+            if (r.success || r.isDuplicate) {
+              const item = pending.find((p) => p.guestId === r.guestId);
+              if (item) {
+                await indexedDBService.updateTournamentPendingCheckin(item.id, { status: "synced" });
+              }
+            }
+          }
+          await indexedDBService.clearSyncedTournamentCheckins();
+          setPendingCount(await indexedDBService.getTournamentPendingCount());
+        }
+      } catch (err) {
+        console.error("Failed to sync tournament checkins:", err);
+      }
+    };
     const handleOffline = () => setOnline(false);
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
@@ -56,7 +80,7 @@ export default function TournamentCheckinPage() {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
     };
-  }, []);
+  }, [station]);
 
   // Load station config from localStorage
   useEffect(() => {

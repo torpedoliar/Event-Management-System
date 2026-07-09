@@ -67,7 +67,7 @@ export class TournamentsController {
     return this.checkin.getTeamCheckinStatus(id);
   }
 
-  @Post(':id/checkin/uncheck')
+  @Delete(':id/checkin/uncheck')
   uncheckCheckin(@Body('checkinId') checkinId: string) {
     return this.checkin.uncheckTournamentCheckin(checkinId);
   }

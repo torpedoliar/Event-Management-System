@@ -249,7 +249,7 @@ export const checkinApi = {
 
   async uncheck(tournamentId: string, checkinId: string): Promise<{ success: boolean }> {
     return apiFetch<{ success: boolean }>(`${BASE}/${tournamentId}/checkin/uncheck`, {
-      method: 'POST',
+      method: 'DELETE',
       body: JSON.stringify({ checkinId }),
     });
   },

@@ -89,6 +89,13 @@ export default function TournamentDetailPage() {
     return () => unsubs.forEach(u => u());
   }, [sse, tournamentId]);
 
+  // Fetch checkin status when teams tab is active
+  useEffect(() => {
+    if (activeTab === "teams" && tournamentId && tournament?.enableMatchCheckin) {
+      checkinApi.getStatus(tournamentId).then(setCheckinStatus).catch(console.error);
+    }
+  }, [activeTab, tournamentId, tournament?.enableMatchCheckin]);
+
   // Fetch bracket view when brackets tab is active or after bracket generation
   useEffect(() => {
     if (activeTab === "brackets" && tournamentId) {
