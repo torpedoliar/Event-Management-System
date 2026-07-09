@@ -95,8 +95,8 @@
     "semantic_hash": "ddab072c4581f305178ff501fb451331"
   },
   "apps/backend/src/common/sse.ts": {
-    "mtime": 1783567852.5281258,
-    "ast_hash": "38ca8cbc18ae5edbb9d96d36f42cbb34",
+    "mtime": 1783517311.1398664,
+    "ast_hash": "fc6303630f98e0c3338bd57a10d65596",
     "semantic_hash": ""
   },
   "apps/backend/src/common/storage.ts": {
@@ -530,8 +530,8 @@
     "semantic_hash": "4deaa0e9060ee75b9cbb33388730abf9"
   },
   "apps/frontend/components/TopNav.tsx": {
-    "mtime": 1783568397.3271754,
-    "ast_hash": "c23311c3a1a85666546193563ec47f56",
+    "mtime": 1783517640.4851384,
+    "ast_hash": "04164ba8462f718302eb215316e9b061",
     "semantic_hash": ""
   },
   "apps/frontend/components/WebcamCapture.tsx": {
@@ -705,9 +705,9 @@
     "semantic_hash": "41aaa2abcc9f0a09e13bba1bc4e09381"
   },
   "apps/frontend/lib/indexeddb.ts": {
-    "mtime": 1783568412.2596614,
-    "ast_hash": "86dd4c20da3692405d201139817c1bea",
-    "semantic_hash": ""
+    "mtime": 1776671537.909783,
+    "ast_hash": "5b3007f9aaa0e04b55a3b812ea1178a9",
+    "semantic_hash": "5b3007f9aaa0e04b55a3b812ea1178a9"
   },
   "apps/frontend/lib/offline-sync.service.ts": {
     "mtime": 1776518988.361834,
@@ -720,8 +720,8 @@
     "semantic_hash": "76b34d155858025e00cd069fb1df69b1"
   },
   "apps/frontend/lib/sse-context.tsx": {
-    "mtime": 1783567982.0213094,
-    "ast_hash": "6dcc4201da39b16cc72239d36b28dba4",
+    "mtime": 1783521527.316027,
+    "ast_hash": "a3ba8547d2c41bd59bbc1a755bb81f79",
     "semantic_hash": ""
   },
   "apps/frontend/lib/utils.ts": {
@@ -755,12 +755,12 @@
     "semantic_hash": "8640f9b2e6475cc3f5b1ff4548925765"
   },
   "apps/frontend/public/sw.js": {
-    "mtime": 1783568553.2364504,
-    "ast_hash": "facb875cee963ddb1b2049965a590976",
+    "mtime": 1783521914.6419528,
+    "ast_hash": "55a29a3f7f8cc4ac510b16c17d92c6db",
     "semantic_hash": ""
   },
   "apps/frontend/public/workbox-c2c0676f.js": {
-    "mtime": 1783568553.2364504,
+    "mtime": 1783521914.6419528,
     "ast_hash": "80e63d1bc987fbb9f079f9d6a8c9a60e",
     "semantic_hash": "80e63d1bc987fbb9f079f9d6a8c9a60e"
   },
@@ -1160,8 +1160,8 @@
     "semantic_hash": ""
   },
   "apps/backend/src/tournaments/dto/create-tournament.dto.ts": {
-    "mtime": 1783567776.8863926,
-    "ast_hash": "b677fb1043bf3187417989bd003575ba",
+    "mtime": 1782746045.4686658,
+    "ast_hash": "35b8fda39c14fa2704806df099d9cc5a",
     "semantic_hash": ""
   },
   "apps/backend/src/tournaments/dto/update-score.dto.ts": {
@@ -1175,8 +1175,8 @@
     "semantic_hash": ""
   },
   "apps/backend/src/tournaments/tournaments.module.ts": {
-    "mtime": 1783567752.4499009,
-    "ast_hash": "ccef11c65f0337dacde893ef9dec7f60",
+    "mtime": 1783415089.3688257,
+    "ast_hash": "0a75e5ea18d9d7f5a61cfd4849514bf6",
     "semantic_hash": ""
   },
   "apps/backend/src/tournaments/types/tournament.types.ts": {
@@ -1210,8 +1210,8 @@
     "semantic_hash": ""
   },
   "apps/backend/src/tournaments/tournaments.controller.ts": {
-    "mtime": 1783567735.1976383,
-    "ast_hash": "3bb8a8acbd56dc57a877fbe1d92c1c06",
+    "mtime": 1783520334.7501667,
+    "ast_hash": "f980efd592c0e66e8ab59717d18f8445",
     "semantic_hash": ""
   },
   "apps/backend/src/tournaments/dto/import-teams.dto.ts": {
@@ -1220,18 +1220,18 @@
     "semantic_hash": ""
   },
   "apps/frontend/types/tournament.types.ts": {
-    "mtime": 1783568529.8044128,
-    "ast_hash": "828752a80b8265122758c3bc826e8ca1",
+    "mtime": 1783521534.3796303,
+    "ast_hash": "52219ae3b9f5eb38f336d614498fe610",
     "semantic_hash": ""
   },
   "apps/frontend/hooks/useTournamentSSE.ts": {
-    "mtime": 1783568039.2773921,
-    "ast_hash": "9267d44ef86015a05634344b4cebe799",
+    "mtime": 1783521561.6442964,
+    "ast_hash": "ee6cd4245f53b65fa58555ee9a38f2cd",
     "semantic_hash": ""
   },
   "apps/frontend/lib/tournament-api.ts": {
-    "mtime": 1783568015.214356,
-    "ast_hash": "8757fb3d25025167f6c9755823b6f5e9",
+    "mtime": 1783520375.2145293,
+    "ast_hash": "ce0779168ab5fc9cc4766a2a15db12ef",
     "semantic_hash": ""
   },
   "apps/frontend/components/tournament/bracket/BracketConnector.tsx": {
@@ -1255,8 +1255,8 @@
     "semantic_hash": ""
   },
   "apps/frontend/components/tournament/team/TeamCard.tsx": {
-    "mtime": 1783568210.3020954,
-    "ast_hash": "6c7434bbbf28db690e548c7ec87a9599",
+    "mtime": 1782804833.3667803,
+    "ast_hash": "ecda8a8abf942843cb787c626ad396b4",
     "semantic_hash": ""
   },
   "apps/frontend/components/tournament/team/TeamLogo.tsx": {
@@ -1265,8 +1265,8 @@
     "semantic_hash": ""
   },
   "apps/frontend/components/tournament/team/TeamMemberList.tsx": {
-    "mtime": 1783568176.1597242,
-    "ast_hash": "c2a23d59305e9c2c678ec5ba32444dc3",
+    "mtime": 1782800004.5819428,
+    "ast_hash": "add95b33250c2ebcf3b4e1a6f28866ea",
     "semantic_hash": ""
   },
   "apps/frontend/components/tournament/team/index.ts": {
@@ -1305,8 +1305,8 @@
     "semantic_hash": ""
   },
   "apps/frontend/components/tournament/TournamentForm.tsx": {
-    "mtime": 1783568353.5762732,
-    "ast_hash": "c411a2f0d812da36bd450bdc64316419",
+    "mtime": 1782799472.2425182,
+    "ast_hash": "404ec1a1041d65fa6efcc71a809067ed",
     "semantic_hash": ""
   },
   "apps/frontend/components/tournament/TournamentTabs.tsx": {
@@ -1325,8 +1325,8 @@
     "semantic_hash": ""
   },
   "apps/frontend/app/(main)/admin/tournaments/[id]/page.tsx": {
-    "mtime": 1783568305.8960004,
-    "ast_hash": "06638cd080faaf5040c67b12619d3381",
+    "mtime": 1783521775.5303884,
+    "ast_hash": "6c4d73cc5860d20ecfa2e57c67770f16",
     "semantic_hash": ""
   },
   "apps/frontend/app/(main)/admin/tournaments/new/page.tsx": {
@@ -1452,26 +1452,6 @@
   "apps/frontend/components/tournament/team/ImportTeamsModal.tsx": {
     "mtime": 1783521641.1738622,
     "ast_hash": "d3f168712ebe4d67b9c3e1d0d75ffbe9",
-    "semantic_hash": ""
-  },
-  "apps/backend/src/tournaments/dto/tournament-checkin.dto.ts": {
-    "mtime": 1783567687.7600453,
-    "ast_hash": "862cdda4dccf84c7131feddcc5485355",
-    "semantic_hash": ""
-  },
-  "apps/backend/src/tournaments/tournament-checkin.service.ts": {
-    "mtime": 1783567911.9583347,
-    "ast_hash": "135cae8877d2dc484a743642510d9c68",
-    "semantic_hash": ""
-  },
-  "apps/frontend/app/(main)/tournament-checkin/page.tsx": {
-    "mtime": 1783568484.2736766,
-    "ast_hash": "a3a7bf4b26b8ff9b7064dd3cf94070f3",
-    "semantic_hash": ""
-  },
-  "docs/superpowers/plans/2026-07-09-tournament-match-checkin.md": {
-    "mtime": 1783566954.1939108,
-    "ast_hash": "d525e69f2ff21e906049d815ba353474",
     "semantic_hash": ""
   }
 }
