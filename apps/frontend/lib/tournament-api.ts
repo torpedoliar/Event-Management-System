@@ -230,10 +230,29 @@ export const statsApi = {
  */
 export const checkinApi = {
   async checkIn(data: { guestId: string; adminId?: string; adminName?: string; counterName?: string }): Promise<CheckinResult> {
-    return apiFetch<CheckinResult>(`${BASE}/checkin`, {
+    // Use direct fetch to preserve error structure (reasons array)
+    const { apiBase } = await import('./api');
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const res = await fetch(`${apiBase()}${BASE}/checkin`, {
       method: 'POST',
+      headers,
       body: JSON.stringify(data),
     });
+
+    const json = await res.json();
+
+    if (!res.ok) {
+      // Create error with full response data preserved
+      const err: any = new Error(json.message || 'Check-in failed');
+      err.response = { data: json };
+      err.status = res.status;
+      throw err;
+    }
+
+    return json as CheckinResult;
   },
 
   async batchSync(checkins: any[]): Promise<{ synced: number; results: any[] }> {

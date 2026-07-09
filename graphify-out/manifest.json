@@ -755,12 +755,12 @@
     "semantic_hash": "8640f9b2e6475cc3f5b1ff4548925765"
   },
   "apps/frontend/public/sw.js": {
-    "mtime": 1783570519.6443157,
-    "ast_hash": "5b798ac38f0dc9df329930bdd2aa14eb",
+    "mtime": 1783571455.8451018,
+    "ast_hash": "3eebd0f51bbddba788daca7e4b8bd627",
     "semantic_hash": ""
   },
   "apps/frontend/public/workbox-c2c0676f.js": {
-    "mtime": 1783570519.6443157,
+    "mtime": 1783571455.8451018,
     "ast_hash": "80e63d1bc987fbb9f079f9d6a8c9a60e",
     "semantic_hash": "80e63d1bc987fbb9f079f9d6a8c9a60e"
   },
@@ -1320,13 +1320,13 @@
     "semantic_hash": ""
   },
   "apps/frontend/app/(main)/admin/tournaments/[id]/edit/page.tsx": {
-    "mtime": 1782788882.5892982,
-    "ast_hash": "3963e4dd89214c7561ddb0867dc07aa9",
+    "mtime": 1783571199.6608217,
+    "ast_hash": "9f782b356a8c051a7a7ac0c5ae30b0e6",
     "semantic_hash": ""
   },
   "apps/frontend/app/(main)/admin/tournaments/[id]/page.tsx": {
-    "mtime": 1783570451.8465977,
-    "ast_hash": "fa3f87c7534281f6d93163591e3170c0",
+    "mtime": 1783571186.4961765,
+    "ast_hash": "397daaca878e43a112953e8a222f7d7a",
     "semantic_hash": ""
   },
   "apps/frontend/app/(main)/admin/tournaments/new/page.tsx": {
@@ -1465,8 +1465,8 @@
     "semantic_hash": ""
   },
   "apps/frontend/app/(main)/tournament-checkin/page.tsx": {
-    "mtime": 1783570424.5077815,
-    "ast_hash": "96d72a12f612c49a1fc8a03653d49eb0",
+    "mtime": 1783571418.1078615,
+    "ast_hash": "90bd0d1613eabc0f7c5da2d7e0c278f9",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-07-09-tournament-match-checkin.md": {

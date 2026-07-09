@@ -6,7 +6,7 @@ import { Html5Qrcode } from "html5-qrcode";
 import {
   Search, QrCode, Loader2, CheckCircle, XCircle, AlertCircle,
   Settings, Camera, Wifi, WifiOff, Trophy, Users, Clock, X,
-  RefreshCw, Trash2
+  RefreshCw, Trash2, LogOut
 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
@@ -33,7 +33,8 @@ function cleanQrContent(text: string): string {
 
 export default function TournamentCheckinPage() {
   const [station, setStation] = useState<StationConfig | null>(null);
-  const [showSetup, setShowSetup] = useState(true);
+  const [showSetup, setShowSetup] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searching, setSearching] = useState(false);
   const [result, setResult] = useState<CheckinResult | null>(null);
@@ -118,13 +119,9 @@ export default function TournamentCheckinPage() {
 
   // Connection monitoring with health checks
   useEffect(() => {
-    // Initial health check
     checkHealth();
-
-    // Periodic health check every 3 seconds
     healthCheckRef.current = setInterval(checkHealth, 3000);
 
-    // Also listen to browser online/offline events
     const handleOnline = () => {
       setOnline(true);
       checkHealth();
@@ -149,7 +146,11 @@ export default function TournamentCheckinPage() {
         const config = JSON.parse(saved);
         setStation(config);
         setShowSetup(false);
-      } catch {}
+      } catch {
+        setShowSetup(true);
+      }
+    } else {
+      setShowSetup(true);
     }
   }, []);
 
@@ -162,6 +163,14 @@ export default function TournamentCheckinPage() {
     localStorage.setItem("tournament_checkin_station", JSON.stringify(config));
     setStation(config);
     setShowSetup(false);
+    setShowSettings(false);
+  };
+
+  const clearStation = () => {
+    localStorage.removeItem("tournament_checkin_station");
+    setStation(null);
+    setShowSetup(true);
+    setShowSettings(false);
   };
 
   const showResult = (res: CheckinResult, type: "success" | "reject" | "info") => {
@@ -174,16 +183,57 @@ export default function TournamentCheckinPage() {
     }, 5000);
   };
 
+  // Extract error message from various error formats
+  const extractErrorMessage = (err: any): string => {
+    // NestJS ConflictException with reasons
+    if (err?.response?.data?.message) {
+      return err.response.data.message;
+    }
+    if (err?.response?.data?.reasons?.length > 0) {
+      return err.response.data.reasons[0];
+    }
+    // Standard error message
+    if (err?.message) {
+      return err.message;
+    }
+    // String error
+    if (typeof err === 'string') {
+      return err;
+    }
+    return "Terjadi kesalahan";
+  };
+
+  // Extract rejection reasons from error
+  const extractReasons = (err: any): string[] => {
+    if (err?.response?.data?.reasons) {
+      return err.response.data.reasons;
+    }
+    if (err?.response?.data?.message) {
+      return [err.response.data.message];
+    }
+    return [];
+  };
+
   const handleCheckin = useCallback(
     async (guestId: string) => {
-      if (!station) return;
+      if (!station) {
+        setError("Station belum dikonfigurasi");
+        return;
+      }
+      if (!guestId.trim()) {
+        setError("Guest ID tidak boleh kosong");
+        return;
+      }
+
       setError(null);
       setSearching(true);
+      setResult(null);
+      setResultType(null);
 
       try {
         if (online) {
           const res = await checkinApi.checkIn({
-            guestId,
+            guestId: guestId.trim(),
             adminId: station.adminId,
             adminName: station.adminName,
             counterName: station.counterName,
@@ -193,13 +243,15 @@ export default function TournamentCheckinPage() {
             showResult(res, "info");
           } else if (res.success) {
             showResult(res, "success");
+          } else if (res.reasons && res.reasons.length > 0) {
+            showResult(res, "reject");
           }
         } else {
           // Offline: queue to IndexedDB
           try {
             const { indexedDBService } = await import("@/lib/indexeddb");
             await indexedDBService.addTournamentPendingCheckin({
-              guestId,
+              guestId: guestId.trim(),
               adminId: station.adminId,
               adminName: station.adminName,
               counterName: station.counterName,
@@ -208,16 +260,18 @@ export default function TournamentCheckinPage() {
             });
             await loadPendingCount();
             showResult(
-              { success: true, alreadyCheckedIn: false, message: "Queued for sync (offline)" },
+              { success: true, alreadyCheckedIn: false, message: "Check-in berhasil (offline) — akan di-sync saat online" },
               "info"
             );
-          } catch (err: any) {
-            setError("Failed to queue offline: " + (err.message || "Unknown error"));
+            setSearchQuery("");
+          } catch (queueErr: any) {
+            setError("Gagal menyimpan offline: " + (queueErr.message || "Unknown error"));
           }
         }
       } catch (err: any) {
-        const msg = parseErrorMessage(err);
-        const reasons = err?.response?.data?.reasons || [];
+        console.error("Check-in error:", err);
+        const reasons = extractReasons(err);
+        const msg = extractErrorMessage(err);
         showResult(
           { success: false, alreadyCheckedIn: false, reasons: reasons.length > 0 ? reasons : [msg] },
           "reject"
@@ -232,6 +286,7 @@ export default function TournamentCheckinPage() {
   // QR Scanner
   const startScanner = async () => {
     setScanning(true);
+    setError(null);
     try {
       const html5QrCode = new Html5Qrcode("tournament-qr-reader");
       scannerRef.current = html5QrCode;
@@ -252,7 +307,8 @@ export default function TournamentCheckinPage() {
         () => {} // ignore errors during scan
       );
     } catch (err: any) {
-      setError("Camera access denied or not available");
+      const msg = err?.message || "Camera access denied or not available";
+      setError(msg);
       setScanning(false);
     }
   };
@@ -275,9 +331,15 @@ export default function TournamentCheckinPage() {
     };
   }, []);
 
-  // Station Setup Modal
-  if (showSetup) {
-    return <StationSetup onSave={saveStation} />;
+  // Show setup screen if no station configured
+  if (showSetup || !station) {
+    return (
+      <StationSetup
+        onSave={saveStation}
+        initialAdminName={station?.adminName || ""}
+        initialCounterName={station?.counterName || ""}
+      />
+    );
   }
 
   return (
@@ -289,10 +351,12 @@ export default function TournamentCheckinPage() {
             <Trophy className="w-8 h-8 text-brand-accent" />
             <div>
               <h1 className="text-xl font-bold text-brand-text">Tournament Check-in</h1>
-              <p className="text-sm text-brand-textMuted">{station?.counterName}</p>
+              <p className="text-sm text-brand-textMuted">
+                {station.counterName} — {station.adminName}
+              </p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             {/* Connection Status */}
             <button
               onClick={() => {
@@ -327,14 +391,86 @@ export default function TournamentCheckinPage() {
                 </span>
               )}
             </button>
+            {/* Settings */}
             <button
-              onClick={() => setShowSetup(true)}
-              className="p-2 rounded-lg hover:bg-white/10 text-brand-textMuted"
+              onClick={() => setShowSettings(true)}
+              className="p-2 rounded-lg hover:bg-white/10 text-brand-textMuted hover:text-brand-text transition-colors"
+              title="Settings"
             >
               <Settings size={18} />
             </button>
           </div>
         </div>
+
+        {/* Settings Modal */}
+        {showSettings && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+            <div className="bg-brand-surface rounded-2xl border border-brand-border p-6 max-w-md w-full">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-brand-text">Station Settings</h2>
+                <button onClick={() => setShowSettings(false)} className="text-brand-textMuted hover:text-brand-text">
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs text-brand-textMuted mb-1">Admin Name</label>
+                  <Input
+                    value={station.adminName}
+                    onChange={(e) => setStation({ ...station, adminName: e.target.value })}
+                    placeholder="Admin name"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-brand-textMuted mb-1">Counter / Station Name</label>
+                  <Input
+                    value={station.counterName}
+                    onChange={(e) => setStation({ ...station, counterName: e.target.value })}
+                    placeholder="Counter name"
+                  />
+                </div>
+
+                {/* Connection Info */}
+                <div className="p-3 rounded-lg bg-brand-bg border border-brand-border">
+                  <p className="text-xs text-brand-textMuted">Connection Status</p>
+                  <p className="text-sm text-brand-text font-medium">
+                    {online ? "Online" : "Offline"}
+                    {lastCheck && ` — Last check: ${new Date(lastCheck).toLocaleTimeString("id-ID")}`}
+                  </p>
+                </div>
+
+                {/* Pending Queue Info */}
+                {pendingCount > 0 && (
+                  <div className="p-3 rounded-lg bg-brand-warning/10 border border-brand-warning/20">
+                    <p className="text-xs text-brand-warning">
+                      {pendingCount} check-in(s) waiting to sync
+                    </p>
+                    {online && (
+                      <Button size="sm" onClick={syncPending} loading={syncing} className="mt-2">
+                        <RefreshCw size={14} className="mr-1" /> Sync Now
+                      </Button>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div className="flex justify-between gap-2 mt-6">
+                <Button variant="danger" size="sm" onClick={clearStation}>
+                  <LogOut size={14} className="mr-1" /> Reset Station
+                </Button>
+                <div className="flex gap-2">
+                  <Button variant="secondary" onClick={() => setShowSettings(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={() => saveStation(station)}>
+                    Save
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Queue Panel */}
         {showQueue && (
@@ -382,8 +518,8 @@ export default function TournamentCheckinPage() {
         {error && (
           <div className="mb-4 p-3 rounded-xl bg-brand-danger/10 text-brand-danger border border-brand-danger/20 text-sm flex items-center gap-2">
             <AlertCircle size={16} />
-            {error}
-            <button onClick={() => setError(null)} className="ml-auto">
+            <span className="flex-1">{error}</span>
+            <button onClick={() => setError(null)} className="ml-auto flex-shrink-0">
               <X size={14} />
             </button>
           </div>
@@ -392,7 +528,7 @@ export default function TournamentCheckinPage() {
         {/* Result Popup */}
         {result && resultType && (
           <div
-            className={`mb-6 p-4 rounded-2xl border text-center animate-in fade-in zoom-in-95 duration-200 ${
+            className={`mb-6 p-4 rounded-2xl border text-center ${
               resultType === "success"
                 ? "bg-brand-success/10 border-brand-success/30"
                 : resultType === "reject"
@@ -415,11 +551,17 @@ export default function TournamentCheckinPage() {
               <>
                 <XCircle className="w-12 h-12 mx-auto text-brand-danger mb-2" />
                 <p className="text-lg font-bold text-brand-danger">Check-in Ditolak</p>
-                {result.reasons?.map((r, i) => (
-                  <p key={i} className="text-sm text-brand-textMuted mt-1">
-                    {r}
+                {result.reasons && result.reasons.length > 0 ? (
+                  result.reasons.map((r, i) => (
+                    <p key={i} className="text-sm text-brand-textMuted mt-1">
+                      {r}
+                    </p>
+                  ))
+                ) : (
+                  <p className="text-sm text-brand-textMuted mt-1">
+                    {result.message || "Tidak dapat check-in saat ini"}
                   </p>
-                ))}
+                )}
               </>
             )}
             {resultType === "info" && (
@@ -492,7 +634,7 @@ export default function TournamentCheckinPage() {
         {!online && (
           <div className="mt-4 p-3 rounded-xl bg-brand-warning/10 border border-brand-warning/20 text-sm text-center">
             <Clock size={16} className="inline mr-1" />
-            Offline mode — check-ins will be queued and synced when connection is restored.
+            Mode offline — check-in akan di-queue dan di-sync saat koneksi pulih.
           </div>
         )}
       </div>
@@ -501,12 +643,25 @@ export default function TournamentCheckinPage() {
 }
 
 // Station Setup Component
-function StationSetup({ onSave }: { onSave: (config: StationConfig) => void }) {
-  const [adminName, setAdminName] = useState("");
-  const [counterName, setCounterName] = useState("");
+function StationSetup({
+  onSave,
+  initialAdminName = "",
+  initialCounterName = "",
+}: {
+  onSave: (config: StationConfig) => void;
+  initialAdminName?: string;
+  initialCounterName?: string;
+}) {
+  const [adminName, setAdminName] = useState(initialAdminName);
+  const [counterName, setCounterName] = useState(initialCounterName);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSave = () => {
-    if (!adminName.trim()) return;
+    if (!adminName.trim()) {
+      setError("Admin Name wajib diisi");
+      return;
+    }
+    setError(null);
     onSave({
       adminId: `admin-${Date.now()}`,
       adminName: adminName.trim(),
@@ -522,6 +677,13 @@ function StationSetup({ onSave }: { onSave: (config: StationConfig) => void }) {
           <h1 className="text-2xl font-bold text-brand-text">Tournament Check-in</h1>
           <p className="text-sm text-brand-textMuted mt-1">Setup your station</p>
         </div>
+
+        {error && (
+          <div className="mb-4 p-3 rounded-xl bg-brand-danger/10 text-brand-danger border border-brand-danger/20 text-sm flex items-center gap-2">
+            <AlertCircle size={16} />
+            {error}
+          </div>
+        )}
 
         <div className="space-y-4">
           <div>
