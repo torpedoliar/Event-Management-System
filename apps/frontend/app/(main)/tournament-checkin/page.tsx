@@ -54,6 +54,14 @@ export default function TournamentCheckinPage() {
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const resultTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const healthCheckRef = useRef<NodeJS.Timeout | null>(null);
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Auto-focus search input helper
+  const focusSearch = useCallback(() => {
+    setTimeout(() => {
+      searchInputRef.current?.focus();
+    }, 50);
+  }, []);
 
   // Load station config from IndexedDB on mount
   useEffect(() => {
@@ -70,6 +78,7 @@ export default function TournamentCheckinPage() {
             counterName: config.stationName?.split(" — ")[1] || config.stationName || "",
           });
           setLoading(false);
+          focusSearch();
           return;
         }
       } catch {}
@@ -81,6 +90,7 @@ export default function TournamentCheckinPage() {
           const config = JSON.parse(saved);
           setStation(config);
           setLoading(false);
+          focusSearch();
           return;
         }
       } catch {}
@@ -318,6 +328,7 @@ export default function TournamentCheckinPage() {
         );
       } finally {
         setSearching(false);
+        focusSearch();
       }
     },
     [station, online, loadPendingCount]
@@ -637,6 +648,7 @@ export default function TournamentCheckinPage() {
           </h2>
           <div className="flex gap-2">
             <Input
+              ref={searchInputRef}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Enter guest ID..."
