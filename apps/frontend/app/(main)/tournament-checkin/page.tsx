@@ -14,10 +14,12 @@ import { checkinApi } from "@/lib/tournament-api";
 import type { CheckinResult } from "@/types/tournament.types";
 
 type StationConfig = {
-  adminId: string;
+  stationId: string;
   adminName: string;
   counterName: string;
 };
+
+const STATION_STORAGE_KEY = "tournament_checkin_station_v2";
 
 function cleanQrContent(text: string): string {
   if (!text) return "";
@@ -33,6 +35,7 @@ function cleanQrContent(text: string): string {
 
 export default function TournamentCheckinPage() {
   const [station, setStation] = useState<StationConfig | null>(null);
+  const [loading, setLoading] = useState(true);
   const [showSetup, setShowSetup] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -51,6 +54,43 @@ export default function TournamentCheckinPage() {
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const resultTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const healthCheckRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Load station config from IndexedDB on mount
+  useEffect(() => {
+    const loadStation = async () => {
+      try {
+        // Try IndexedDB first (persistent, survives cache clear better)
+        const { indexedDBService } = await import("@/lib/indexeddb");
+        const config = await indexedDBService.getStationConfig();
+        if (config) {
+          // Adapt from core StationConfig to tournament StationConfig
+          setStation({
+            stationId: config.stationId,
+            adminName: config.stationName?.split(" — ")[0] || config.stationName || "",
+            counterName: config.stationName?.split(" — ")[1] || config.stationName || "",
+          });
+          setLoading(false);
+          return;
+        }
+      } catch {}
+
+      // Fallback: try localStorage
+      try {
+        const saved = localStorage.getItem(STATION_STORAGE_KEY);
+        if (saved) {
+          const config = JSON.parse(saved);
+          setStation(config);
+          setLoading(false);
+          return;
+        }
+      } catch {}
+
+      // No config found — show setup
+      setShowSetup(true);
+      setLoading(false);
+    };
+    loadStation();
+  }, []);
 
   // Load pending count from IndexedDB
   const loadPendingCount = useCallback(async () => {
@@ -98,7 +138,7 @@ export default function TournamentCheckinPage() {
     }
   }, [syncing, online, loadPendingCount, loadPendingItems]);
 
-  // Health check (ping server periodically)
+  // Health check
   const checkHealth = useCallback(async () => {
     try {
       const res = await fetch(`${apiBase()}/public/health`, {
@@ -117,7 +157,7 @@ export default function TournamentCheckinPage() {
     }
   }, [pendingCount, syncPending]);
 
-  // Connection monitoring with health checks
+  // Connection monitoring
   useEffect(() => {
     checkHealth();
     healthCheckRef.current = setInterval(checkHealth, 3000);
@@ -138,36 +178,42 @@ export default function TournamentCheckinPage() {
     };
   }, [checkHealth]);
 
-  // Load station config from localStorage
+  // Load pending count when station changes
   useEffect(() => {
-    const saved = localStorage.getItem("tournament_checkin_station");
-    if (saved) {
-      try {
-        const config = JSON.parse(saved);
-        setStation(config);
-        setShowSetup(false);
-      } catch {
-        setShowSetup(true);
-      }
-    } else {
-      setShowSetup(true);
-    }
-  }, []);
-
-  // Load pending count on mount and when station changes
-  useEffect(() => {
-    loadPendingCount();
+    if (station) loadPendingCount();
   }, [station, loadPendingCount]);
 
-  const saveStation = (config: StationConfig) => {
-    localStorage.setItem("tournament_checkin_station", JSON.stringify(config));
+  // Save station config to both IndexedDB and localStorage
+  const saveStation = async (config: StationConfig) => {
+    // Save to localStorage (fast, synchronous)
+    localStorage.setItem(STATION_STORAGE_KEY, JSON.stringify(config));
+
+    // Save to IndexedDB (persistent, used by core check-in too)
+    try {
+      const { indexedDBService } = await import("@/lib/indexeddb");
+      await indexedDBService.saveStationConfig({
+        stationId: config.stationId,
+        stationName: `${config.adminName} — ${config.counterName}`,
+        eventId: "", // Not tied to specific event
+        isActive: true,
+      });
+    } catch (err) {
+      console.warn("Failed to save to IndexedDB:", err);
+    }
+
     setStation(config);
     setShowSetup(false);
     setShowSettings(false);
   };
 
+  // Clear station config
   const clearStation = () => {
-    localStorage.removeItem("tournament_checkin_station");
+    localStorage.removeItem(STATION_STORAGE_KEY);
+    try {
+      import("@/lib/indexeddb").then(({ indexedDBService }) => {
+        indexedDBService.deleteStationConfig();
+      });
+    } catch {}
     setStation(null);
     setShowSetup(true);
     setShowSettings(false);
@@ -183,33 +229,26 @@ export default function TournamentCheckinPage() {
     }, 5000);
   };
 
-  // Extract error message from various error formats
   const extractErrorMessage = (err: any): string => {
-    // NestJS ConflictException with reasons
     if (err?.response?.data?.message) {
-      return err.response.data.message;
+      const msg = err.response.data.message;
+      return typeof msg === 'string' ? msg : JSON.stringify(msg);
     }
     if (err?.response?.data?.reasons?.length > 0) {
       return err.response.data.reasons[0];
     }
-    // Standard error message
-    if (err?.message) {
-      return err.message;
-    }
-    // String error
-    if (typeof err === 'string') {
-      return err;
-    }
+    if (err?.message) return err.message;
+    if (typeof err === 'string') return err;
     return "Terjadi kesalahan";
   };
 
-  // Extract rejection reasons from error
   const extractReasons = (err: any): string[] => {
     if (err?.response?.data?.reasons) {
       return err.response.data.reasons;
     }
     if (err?.response?.data?.message) {
-      return [err.response.data.message];
+      const msg = err.response.data.message;
+      return [typeof msg === 'string' ? msg : JSON.stringify(msg)];
     }
     return [];
   };
@@ -234,7 +273,7 @@ export default function TournamentCheckinPage() {
         if (online) {
           const res = await checkinApi.checkIn({
             guestId: guestId.trim(),
-            adminId: station.adminId,
+            adminId: station.stationId,
             adminName: station.adminName,
             counterName: station.counterName,
           });
@@ -246,13 +285,14 @@ export default function TournamentCheckinPage() {
           } else if (res.reasons && res.reasons.length > 0) {
             showResult(res, "reject");
           }
+          setSearchQuery("");
         } else {
           // Offline: queue to IndexedDB
           try {
             const { indexedDBService } = await import("@/lib/indexeddb");
             await indexedDBService.addTournamentPendingCheckin({
               guestId: guestId.trim(),
-              adminId: station.adminId,
+              adminId: station.stationId,
               adminName: station.adminName,
               counterName: station.counterName,
               isOffline: true,
@@ -331,13 +371,22 @@ export default function TournamentCheckinPage() {
     };
   }, []);
 
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-brand-bg flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-4 border-brand-primary border-t-transparent" />
+      </div>
+    );
+  }
+
   // Show setup screen if no station configured
   if (showSetup || !station) {
     return (
       <StationSetup
         onSave={saveStation}
-        initialAdminName={station?.adminName || ""}
-        initialCounterName={station?.counterName || ""}
+        initialAdminName=""
+        initialCounterName=""
       />
     );
   }
@@ -414,6 +463,12 @@ export default function TournamentCheckinPage() {
               </div>
 
               <div className="space-y-4">
+                <div>
+                  <label className="block text-xs text-brand-textMuted mb-1">Station ID</label>
+                  <div className="px-3 py-2 bg-brand-bg border border-brand-border rounded-lg text-brand-textMuted text-sm font-mono">
+                    {station.stationId}
+                  </div>
+                </div>
                 <div>
                   <label className="block text-xs text-brand-textMuted mb-1">Admin Name</label>
                   <Input
@@ -662,8 +717,17 @@ function StationSetup({
       return;
     }
     setError(null);
+    // Generate a unique station ID that persists
+    const existingId = localStorage.getItem(STATION_STORAGE_KEY);
+    let stationId: string;
+    try {
+      const parsed = existingId ? JSON.parse(existingId) : null;
+      stationId = parsed?.stationId || `tournament-station-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    } catch {
+      stationId = `tournament-station-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    }
     onSave({
-      adminId: `admin-${Date.now()}`,
+      stationId,
       adminName: adminName.trim(),
       counterName: counterName.trim() || `Counter ${Date.now() % 100}`,
     });

@@ -1,16 +1,16 @@
 # Graph Report - Registrasi Tamu  (2026-07-09)
 
 ## Corpus Check
-- 289 files · ~228,438 words
+- 289 files · ~228,944 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2741 nodes · 3718 edges · 214 communities (178 shown, 36 thin omitted)
+- 2741 nodes · 3707 edges · 216 communities (178 shown, 38 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 18 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `739e81bd`
+- Built from commit: `c01a1db6`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -204,6 +204,7 @@
 - [[_COMMUNITY_Community 195|Community 195]]
 - [[_COMMUNITY_Community 196|Community 196]]
 - [[_COMMUNITY_Community 197|Community 197]]
+- [[_COMMUNITY_Community 198|Community 198]]
 - [[_COMMUNITY_Community 200|Community 200]]
 - [[_COMMUNITY_Community 201|Community 201]]
 - [[_COMMUNITY_Community 203|Community 203]]
@@ -234,21 +235,21 @@
 10. `EventsService` - 25 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `useTournamentSSE()` --calls--> `useSSE()`  [EXTRACTED]
-  apps/frontend/hooks/useTournamentSSE.ts → apps/frontend/lib/sse-context.tsx
-- `useAllTournamentSSE()` --calls--> `useSSE()`  [EXTRACTED]
-  apps/frontend/hooks/useTournamentSSE.ts → apps/frontend/lib/sse-context.tsx
 - `GuestsListPage()` --calls--> `useSSE()`  [EXTRACTED]
   apps/frontend/app/(main)/admin/guests/page.tsx → apps/frontend/lib/sse-context.tsx
 - `UsersManagementPage()` --calls--> `useSSE()`  [EXTRACTED]
   apps/frontend/app/(main)/admin/settings/users/page.tsx → apps/frontend/lib/sse-context.tsx
 - `StatisticsPage()` --calls--> `useSSE()`  [EXTRACTED]
   apps/frontend/app/(main)/admin/statistics/page.tsx → apps/frontend/lib/sse-context.tsx
+- `EditGuestPage()` --calls--> `toApiUrl()`  [EXTRACTED]
+  apps/frontend/app/(main)/admin/guests/[id]/page.tsx → apps/frontend/lib/api.ts
+- `EventSettingsPage()` --calls--> `toApiUrl()`  [EXTRACTED]
+  apps/frontend/app/(main)/admin/settings/event/page.tsx → apps/frontend/lib/api.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (214 total, 36 thin omitted)
+## Communities (216 total, 38 thin omitted)
 
 ### Community 1 - "Landing Page Backend"
 Cohesion: 0.09
@@ -276,7 +277,7 @@ Nodes (33): dependencies, bcrypt, cache-manager, cache-manager-redis-yet, class-
 
 ### Community 8 - "Admin Settings"
 Cohesion: 0.06
-Nodes (45): Event, EventStats, KanbanColumn, ViewMode, CATEGORY_OPTIONS, EditGuestPage(), Guest, GuestCategory (+37 more)
+Nodes (37): Event, EventStats, KanbanColumn, ViewMode, CATEGORY_OPTIONS, EditGuestPage(), Guest, GuestCategory (+29 more)
 
 ### Community 9 - "Check-in & Show"
 Cohesion: 0.05
@@ -292,7 +293,7 @@ Nodes (6): ChangePasswordDto, CreateUserDto, UpdateUserDto, UsersController, Use
 
 ### Community 12 - "UI Components"
 Cohesion: 0.09
-Nodes (22): Alert(), config, Props, Variant, Badge(), Props, styles, Variant (+14 more)
+Nodes (23): Alert(), config, Props, Variant, Badge(), Props, styles, Variant (+15 more)
 
 ### Community 13 - "NestJS App Modules"
 Cohesion: 0.09
@@ -375,11 +376,11 @@ Cohesion: 0.50
 Nodes (3): OfflineTournamentCheckinDto, TournamentCheckinBatchSyncDto, TournamentCheckinDto
 
 ### Community 38 - "Lucky Draw Page"
-Cohesion: 0.14
-Nodes (11): DRAMA_CONFIGS, DramaConfig, EligibleGuest, EligibleGuestsResponse, FINALE_CONFETTI, GRAND_CONFETTI, Guest, Prize (+3 more)
+Cohesion: 0.08
+Nodes (18): DRAMA_CONFIGS, DramaConfig, EligibleGuest, EligibleGuestsResponse, FINALE_CONFETTI, GRAND_CONFETTI, Guest, LuckyDrawPage() (+10 more)
 
 ### Community 41 - "Public Checkin API"
-Cohesion: 0.15
+Cohesion: 0.16
 Nodes (11): formatOptions, participantOptions, scoringOptions, sportOptions, TournamentForm(), TournamentFormProps, CreateTournamentDto, ParticipantType (+3 more)
 
 ### Community 42 - "Server Config"
@@ -443,12 +444,12 @@ Cohesion: 0.18
 Nodes (12): AppModule, AuthModule, AuditModule, RedisCacheModule, throttlerConfig, EmailModule, EventsModule, GuestsModule (+4 more)
 
 ### Community 76 - "Community 76"
-Cohesion: 0.14
-Nodes (22): CheckinPage(), CarouselDrawPage(), LiveDisplayPage(), LuckyDrawPage(), AutoScrollWinnersPage(), Prize, Winner, EventConfig (+14 more)
+Cohesion: 0.11
+Nodes (23): EventConfig, LoginPage(), CheckinPage(), EventConfig, Guest, GuestCheckin, ScanLogItem, AutoScrollWinnersPage() (+15 more)
 
 ### Community 77 - "Community 77"
-Cohesion: 0.09
-Nodes (14): FINALE_CONFETTI, GRAND_CONFETTI, Guest, Prize, REGULAR_CONFETTI, SHIMMER_CONFETTI, SlotRow, TICKER_COLORS (+6 more)
+Cohesion: 0.08
+Nodes (24): FINALE_CONFETTI, GRAND_CONFETTI, Guest, LiveDisplayPage(), Prize, REGULAR_CONFETTI, SHIMMER_CONFETTI, SlotRow (+16 more)
 
 ### Community 78 - "Community 78"
 Cohesion: 0.18
@@ -467,8 +468,8 @@ Cohesion: 0.07
 Nodes (29): 1. Siapkan Environment File, 2. Siapkan SSL Certificate, 3. Jalankan Deployment, 4. Verifikasi Deployment, Arsitektur, Backup Database, Checklist Keamanan, Container tidak start (+21 more)
 
 ### Community 83 - "Community 83"
-Cohesion: 0.14
-Nodes (10): TabId, StationConfig, bracketApi, checkinApi, eligibleGuestApi, importApi, matchApi, statsApi (+2 more)
+Cohesion: 0.19
+Nodes (8): bracketApi, checkinApi, eligibleGuestApi, importApi, matchApi, statsApi, teamApi, tournamentApi
 
 ### Community 84 - "Community 84"
 Cohesion: 0.07
@@ -483,8 +484,8 @@ Cohesion: 0.08
 Nodes (25): 1. Backend: Endpoint Baru `GET /prizes/eligible-guests`, 2. Frontend: Update Interface & State, 2a. Tambah field `guestId` ke interface Guest, 2b. State baru untuk panel, 2c. Fetch function untuk panel, 2d. Debounced search & auto-refresh, 3. Frontend: UI Panel yang Disempurnakan, 4. Tambahan Import (+17 more)
 
 ### Community 87 - "Community 87"
-Cohesion: 0.17
-Nodes (9): FESTIVE_COLORS, FINALE_CONFETTI, GRAND_CONFETTI, Prize, REGULAR_CONFETTI, TICKER_COLORS, Guest, LuckyDraw3DWheelProps (+1 more)
+Cohesion: 0.15
+Nodes (10): CarouselDrawPage(), FESTIVE_COLORS, FINALE_CONFETTI, GRAND_CONFETTI, Prize, REGULAR_CONFETTI, TICKER_COLORS, Guest (+2 more)
 
 ### Community 88 - "Community 88"
 Cohesion: 0.29
@@ -882,17 +883,13 @@ Nodes (3): Backend (`apps/backend/.env`), 🔐 Environment Variables, Frontend (
 Cohesion: 0.67
 Nodes (3): Cara Memberikan Souvenir, 🎁 Pembagian Souvenir, Pengambilan Hadiah Lucky Draw
 
-### Community 192 - "Community 192"
-Cohesion: 0.29
-Nodes (6): TournamentEventHandler, TournamentSSEHandlers, useAllTournamentSSE(), useTournamentSSE(), Tournament, TournamentEvent
-
 ### Community 193 - "Community 193"
 Cohesion: 0.09
 Nodes (22): Automated Tests, Backend — Bracket Regeneration, Backend — Match CRUD Endpoints, Frontend — API Client, Frontend — Match Management UI, Manual Match Management — Tournament System, Manual Verification, [MODIFY] [bracket-engine.service.ts](file:///e:/Vibe/Registrasi Tamu/apps/backend/src/tournaments/bracket-engine.service.ts) (+14 more)
 
 ### Community 196 - "Community 196"
-Cohesion: 0.08
-Nodes (15): cinzel, inter, jetbrainsMono, metadata, ErrorBoundary, Props, State, AdminLink (+7 more)
+Cohesion: 0.11
+Nodes (9): cinzel, inter, jetbrainsMono, metadata, ErrorBoundary, Props, State, QueryProvider() (+1 more)
 
 ### Community 197 - "Community 197"
 Cohesion: 0.50
@@ -927,21 +924,21 @@ Cohesion: 0.23
 Nodes (4): PrismaModule, StationsModule, BracketEngineService, TeamSeed
 
 ## Knowledge Gaps
-- **1320 isolated node(s):** `TabId`, `StationConfig`, `eligibleGuestApi`, `importApi`, `ServerEvent` (+1315 more)
+- **1324 isolated node(s):** `TabId`, `StationConfig`, `eligibleGuestApi`, `teamApi`, `importApi` (+1319 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **36 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **38 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `apiFetch()` connect `Community 76` to `Frontend Hooks`, `Frontend Core Layout`, `Lucky Draw Page`, `Admin Settings`, `Community 77`, `Statistics & Charts`, `Souvenir & Queue`, `Community 214`, `Community 87`, `Service Worker`?**
   _High betweenness centrality (0.016) - this node is a cross-community bridge._
-- **Why does `IndexedDBService` connect `IndexedDB Service` to `Admin Settings`, `Frontend Core Layout`, `Souvenir & Queue`, `Offline Types`?**
+- **Why does `IndexedDBService` connect `IndexedDB Service` to `Frontend Core Layout`, `Souvenir & Queue`, `Community 76`, `Offline Types`?**
   _High betweenness centrality (0.012) - this node is a cross-community bridge._
-- **Why does `useSSE()` connect `Community 76` to `Community 192`, `Frontend Hooks`, `Community 196`, `Lucky Draw Page`, `Admin Settings`, `Community 77`, `Statistics & Charts`, `Souvenir & Queue`, `Community 214`, `Community 87`?**
+- **Why does `useSSE()` connect `Community 77` to `Frontend Hooks`, `Lucky Draw Page`, `Admin Settings`, `Community 76`, `Statistics & Charts`, `Souvenir & Queue`, `Community 214`, `Community 87`?**
   _High betweenness centrality (0.008) - this node is a cross-community bridge._
 - **What connects `TabId`, `StationConfig`, `eligibleGuestApi` to the rest of the system?**
-  _1320 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _1324 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Guest Management` be split into smaller, more focused modules?**
   _Cohesion score 0.14039408866995073 - nodes in this community are weakly interconnected._
 - **Should `Landing Page Backend` be split into smaller, more focused modules?**

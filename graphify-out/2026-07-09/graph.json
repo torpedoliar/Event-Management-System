@@ -4,434 +4,24 @@
   "graph": {},
   "nodes": [
     {
-      "label": "tournament-checkin.service.ts",
+      "label": "page.tsx",
       "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
+      "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/edit/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournament_checkin_service",
-      "community": 15,
-      "norm_label": "tournament-checkin.service.ts"
+      "id": "apps_frontend_app_main_admin_tournaments_id_edit_page",
+      "community": 199,
+      "norm_label": "page.tsx"
     },
     {
-      "label": "TournamentCheckinService",
+      "label": "EditTournamentPage()",
       "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
-      "source_location": "L7",
+      "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/edit/page.tsx",
+      "source_location": "L12",
       "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice",
-      "community": 15,
-      "norm_label": "tournamentcheckinservice"
-    },
-    {
-      "label": ".constructor()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
-      "source_location": "L8",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_constructor",
-      "community": 15,
-      "norm_label": ".constructor()"
-    },
-    {
-      "label": ".checkInMember()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
-      "source_location": "L10",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_checkinmember",
-      "community": 15,
-      "norm_label": ".checkinmember()"
-    },
-    {
-      "label": ".getTeamCheckinStatus()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
-      "source_location": "L176",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_getteamcheckinstatus",
-      "community": 15,
-      "norm_label": ".getteamcheckinstatus()"
-    },
-    {
-      "label": ".batchSyncOfflineCheckins()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
-      "source_location": "L207",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_batchsyncofflinecheckins",
-      "community": 15,
-      "norm_label": ".batchsyncofflinecheckins()"
-    },
-    {
-      "label": ".uncheckTournamentCheckin()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
-      "source_location": "L248",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_unchecktournamentcheckin",
-      "community": 15,
-      "norm_label": ".unchecktournamentcheckin()"
-    },
-    {
-      "label": "tournaments.controller.ts",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller",
-      "community": 15,
-      "norm_label": "tournaments.controller.ts"
-    },
-    {
-      "label": "TournamentsController",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L30",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "community": 15,
-      "norm_label": "tournamentscontroller"
-    },
-    {
-      "label": ".constructor()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L31",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_constructor",
-      "community": 15,
-      "norm_label": ".constructor()"
-    },
-    {
-      "label": ".create()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L42",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_create",
-      "community": 15,
-      "norm_label": ".create()"
-    },
-    {
-      "label": ".findAll()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L47",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_findall",
-      "community": 15,
-      "norm_label": ".findall()"
-    },
-    {
-      "label": ".checkInMember()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L56",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_checkinmember",
-      "community": 15,
-      "norm_label": ".checkinmember()"
-    },
-    {
-      "label": ".batchSync()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L61",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_batchsync",
-      "community": 15,
-      "norm_label": ".batchsync()"
-    },
-    {
-      "label": ".getCheckinStatus()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L66",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getcheckinstatus",
-      "community": 15,
-      "norm_label": ".getcheckinstatus()"
-    },
-    {
-      "label": ".uncheckCheckin()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L71",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_uncheckcheckin",
-      "community": 15,
-      "norm_label": ".uncheckcheckin()"
-    },
-    {
-      "label": ".findOne()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L76",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_findone",
-      "community": 15,
-      "norm_label": ".findone()"
-    },
-    {
-      "label": ".getEligibleGuests()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L81",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_geteligibleguests",
-      "community": 15,
-      "norm_label": ".geteligibleguests()"
-    },
-    {
-      "label": ".update()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L89",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_update",
-      "community": 15,
-      "norm_label": ".update()"
-    },
-    {
-      "label": ".remove()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L97",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_remove",
-      "community": 15,
-      "norm_label": ".remove()"
-    },
-    {
-      "label": ".createTeam()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L107",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_createteam",
-      "community": 15,
-      "norm_label": ".createteam()"
-    },
-    {
-      "label": ".updateTeam()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L120",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_updateteam",
-      "community": 15,
-      "norm_label": ".updateteam()"
-    },
-    {
-      "label": ".removeTeam()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L132",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_removeteam",
-      "community": 15,
-      "norm_label": ".removeteam()"
-    },
-    {
-      "label": ".addTeamMember()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L141",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_addteammember",
-      "community": 15,
-      "norm_label": ".addteammember()"
-    },
-    {
-      "label": ".removeTeamMember()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L149",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_removeteammember",
-      "community": 15,
-      "norm_label": ".removeteammember()"
-    },
-    {
-      "label": ".importTeams()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L158",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_importteams",
-      "community": 15,
-      "norm_label": ".importteams()"
-    },
-    {
-      "label": ".generateBracket()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L170",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_generatebracket",
-      "community": 15,
-      "norm_label": ".generatebracket()"
-    },
-    {
-      "label": ".regenerateBracket()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L175",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_regeneratebracket",
-      "community": 15,
-      "norm_label": ".regeneratebracket()"
-    },
-    {
-      "label": ".getBracketView()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L180",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getbracketview",
-      "community": 15,
-      "norm_label": ".getbracketview()"
-    },
-    {
-      "label": ".createMatch()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L189",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_creatematch",
-      "community": 15,
-      "norm_label": ".creatematch()"
-    },
-    {
-      "label": ".deleteMatch()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L197",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_deletematch",
-      "community": 15,
-      "norm_label": ".deletematch()"
-    },
-    {
-      "label": ".resetMatch()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L202",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_resetmatch",
-      "community": 15,
-      "norm_label": ".resetmatch()"
-    },
-    {
-      "label": ".updateMatch()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L207",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_updatematch",
-      "community": 15,
-      "norm_label": ".updatematch()"
-    },
-    {
-      "label": ".getMatches()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L215",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getmatches",
-      "community": 15,
-      "norm_label": ".getmatches()"
-    },
-    {
-      "label": ".getUpcomingMatches()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L223",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getupcomingmatches",
-      "community": 15,
-      "norm_label": ".getupcomingmatches()"
-    },
-    {
-      "label": ".getLiveMatches()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L228",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getlivematches",
-      "community": 15,
-      "norm_label": ".getlivematches()"
-    },
-    {
-      "label": ".getMatch()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L233",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getmatch",
-      "community": 15,
-      "norm_label": ".getmatch()"
-    },
-    {
-      "label": ".startMatch()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L238",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_startmatch",
-      "community": 15,
-      "norm_label": ".startmatch()"
-    },
-    {
-      "label": ".finishMatch()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L243",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_finishmatch",
-      "community": 15,
-      "norm_label": ".finishmatch()"
-    },
-    {
-      "label": ".updateScore()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L248",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_updatescore",
-      "community": 15,
-      "norm_label": ".updatescore()"
-    },
-    {
-      "label": ".cancelMatch()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L256",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_cancelmatch",
-      "community": 15,
-      "norm_label": ".cancelmatch()"
-    },
-    {
-      "label": ".awardWalkover()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L261",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_awardwalkover",
-      "community": 15,
-      "norm_label": ".awardwalkover()"
-    },
-    {
-      "label": ".getStats()",
-      "file_type": "code",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L273",
-      "_origin": "ast",
-      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getstats",
-      "community": 15,
-      "norm_label": ".getstats()"
+      "id": "apps_frontend_app_main_admin_tournaments_id_edit_page_edittournamentpage",
+      "community": 199,
+      "norm_label": "edittournamentpage()"
     },
     {
       "label": "page.tsx",
@@ -440,7 +30,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_frontend_app_main_admin_tournaments_id_page",
-      "community": 83,
+      "community": 198,
       "norm_label": "page.tsx"
     },
     {
@@ -450,7 +40,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "apps_frontend_app_main_admin_tournaments_id_page_tabid",
-      "community": 83,
+      "community": 198,
       "norm_label": "tabid"
     },
     {
@@ -460,7 +50,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "apps_frontend_app_main_admin_tournaments_id_page_tournamentdetailpage",
-      "community": 83,
+      "community": 198,
       "norm_label": "tournamentdetailpage()"
     },
     {
@@ -470,138 +60,48 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_frontend_app_main_tournament_checkin_page",
-      "community": 83,
+      "community": 192,
       "norm_label": "page.tsx"
     },
     {
       "label": "StationConfig",
       "file_type": "code",
       "source_file": "apps/frontend/app/(main)/tournament-checkin/page.tsx",
-      "source_location": "L15",
+      "source_location": "L16",
       "_origin": "ast",
       "id": "apps_frontend_app_main_tournament_checkin_page_stationconfig",
-      "community": 83,
+      "community": 192,
       "norm_label": "stationconfig"
     },
     {
       "label": "cleanQrContent()",
       "file_type": "code",
       "source_file": "apps/frontend/app/(main)/tournament-checkin/page.tsx",
-      "source_location": "L21",
+      "source_location": "L22",
       "_origin": "ast",
       "id": "apps_frontend_app_main_tournament_checkin_page_cleanqrcontent",
-      "community": 83,
+      "community": 192,
       "norm_label": "cleanqrcontent()"
     },
     {
       "label": "TournamentCheckinPage()",
       "file_type": "code",
       "source_file": "apps/frontend/app/(main)/tournament-checkin/page.tsx",
-      "source_location": "L33",
+      "source_location": "L34",
       "_origin": "ast",
       "id": "apps_frontend_app_main_tournament_checkin_page_tournamentcheckinpage",
-      "community": 83,
+      "community": 192,
       "norm_label": "tournamentcheckinpage()"
     },
     {
       "label": "StationSetup()",
       "file_type": "code",
       "source_file": "apps/frontend/app/(main)/tournament-checkin/page.tsx",
-      "source_location": "L378",
+      "source_location": "L504",
       "_origin": "ast",
       "id": "apps_frontend_app_main_tournament_checkin_page_stationsetup",
-      "community": 83,
+      "community": 192,
       "norm_label": "stationsetup()"
-    },
-    {
-      "label": "tournament-api.ts",
-      "file_type": "code",
-      "source_file": "apps/frontend/lib/tournament-api.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "apps_frontend_lib_tournament_api",
-      "community": 83,
-      "norm_label": "tournament-api.ts"
-    },
-    {
-      "label": "eligibleGuestApi",
-      "file_type": "code",
-      "source_file": "apps/frontend/lib/tournament-api.ts",
-      "source_location": "L28",
-      "_origin": "ast",
-      "id": "apps_frontend_lib_tournament_api_eligibleguestapi",
-      "community": 83,
-      "norm_label": "eligibleguestapi"
-    },
-    {
-      "label": "tournamentApi",
-      "file_type": "code",
-      "source_file": "apps/frontend/lib/tournament-api.ts",
-      "source_location": "L38",
-      "_origin": "ast",
-      "id": "apps_frontend_lib_tournament_api_tournamentapi",
-      "community": 83,
-      "norm_label": "tournamentapi"
-    },
-    {
-      "label": "teamApi",
-      "file_type": "code",
-      "source_file": "apps/frontend/lib/tournament-api.ts",
-      "source_location": "L70",
-      "_origin": "ast",
-      "id": "apps_frontend_lib_tournament_api_teamapi",
-      "community": 83,
-      "norm_label": "teamapi"
-    },
-    {
-      "label": "importApi",
-      "file_type": "code",
-      "source_file": "apps/frontend/lib/tournament-api.ts",
-      "source_location": "L112",
-      "_origin": "ast",
-      "id": "apps_frontend_lib_tournament_api_importapi",
-      "community": 83,
-      "norm_label": "importapi"
-    },
-    {
-      "label": "bracketApi",
-      "file_type": "code",
-      "source_file": "apps/frontend/lib/tournament-api.ts",
-      "source_location": "L124",
-      "_origin": "ast",
-      "id": "apps_frontend_lib_tournament_api_bracketapi",
-      "community": 83,
-      "norm_label": "bracketapi"
-    },
-    {
-      "label": "matchApi",
-      "file_type": "code",
-      "source_file": "apps/frontend/lib/tournament-api.ts",
-      "source_location": "L145",
-      "_origin": "ast",
-      "id": "apps_frontend_lib_tournament_api_matchapi",
-      "community": 83,
-      "norm_label": "matchapi"
-    },
-    {
-      "label": "statsApi",
-      "file_type": "code",
-      "source_file": "apps/frontend/lib/tournament-api.ts",
-      "source_location": "L222",
-      "_origin": "ast",
-      "id": "apps_frontend_lib_tournament_api_statsapi",
-      "community": 83,
-      "norm_label": "statsapi"
-    },
-    {
-      "label": "checkinApi",
-      "file_type": "code",
-      "source_file": "apps/frontend/lib/tournament-api.ts",
-      "source_location": "L231",
-      "_origin": "ast",
-      "id": "apps_frontend_lib_tournament_api_checkinapi",
-      "community": 83,
-      "norm_label": "checkinapi"
     },
     {
       "label": "sw.js",
@@ -612,6 +112,526 @@
       "id": "apps_frontend_public_sw",
       "community": 69,
       "norm_label": "sw.js"
+    },
+    {
+      "label": "tournament-checkin.service.ts",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": "tournament-checkin.service.ts",
+      "id": "apps_backend_src_tournaments_tournament_checkin_service"
+    },
+    {
+      "label": "TournamentCheckinService",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
+      "source_location": "L7",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": "tournamentcheckinservice",
+      "id": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
+      "source_location": "L8",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".constructor()",
+      "id": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_constructor"
+    },
+    {
+      "label": ".checkInMember()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
+      "source_location": "L10",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".checkinmember()",
+      "id": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_checkinmember"
+    },
+    {
+      "label": ".getTeamCheckinStatus()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
+      "source_location": "L176",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".getteamcheckinstatus()",
+      "id": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_getteamcheckinstatus"
+    },
+    {
+      "label": ".batchSyncOfflineCheckins()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
+      "source_location": "L207",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".batchsyncofflinecheckins()",
+      "id": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_batchsyncofflinecheckins"
+    },
+    {
+      "label": ".uncheckTournamentCheckin()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
+      "source_location": "L248",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".unchecktournamentcheckin()",
+      "id": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_unchecktournamentcheckin"
+    },
+    {
+      "label": "tournaments.controller.ts",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": "tournaments.controller.ts",
+      "id": "apps_backend_src_tournaments_tournaments_controller"
+    },
+    {
+      "label": "TournamentsController",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L30",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": "tournamentscontroller",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L31",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".constructor()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_constructor"
+    },
+    {
+      "label": ".create()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L42",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".create()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_create"
+    },
+    {
+      "label": ".findAll()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L47",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".findall()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_findall"
+    },
+    {
+      "label": ".checkInMember()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L56",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".checkinmember()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_checkinmember"
+    },
+    {
+      "label": ".batchSync()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L61",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".batchsync()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_batchsync"
+    },
+    {
+      "label": ".getCheckinStatus()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L66",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".getcheckinstatus()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getcheckinstatus"
+    },
+    {
+      "label": ".uncheckCheckin()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L71",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".uncheckcheckin()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_uncheckcheckin"
+    },
+    {
+      "label": ".findOne()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L76",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".findone()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_findone"
+    },
+    {
+      "label": ".getEligibleGuests()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L81",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".geteligibleguests()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_geteligibleguests"
+    },
+    {
+      "label": ".update()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L89",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".update()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_update"
+    },
+    {
+      "label": ".remove()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L97",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".remove()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_remove"
+    },
+    {
+      "label": ".createTeam()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L107",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".createteam()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_createteam"
+    },
+    {
+      "label": ".updateTeam()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L120",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".updateteam()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_updateteam"
+    },
+    {
+      "label": ".removeTeam()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L132",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".removeteam()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_removeteam"
+    },
+    {
+      "label": ".addTeamMember()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L141",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".addteammember()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_addteammember"
+    },
+    {
+      "label": ".removeTeamMember()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L149",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".removeteammember()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_removeteammember"
+    },
+    {
+      "label": ".importTeams()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L158",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".importteams()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_importteams"
+    },
+    {
+      "label": ".generateBracket()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L170",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".generatebracket()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_generatebracket"
+    },
+    {
+      "label": ".regenerateBracket()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L175",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".regeneratebracket()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_regeneratebracket"
+    },
+    {
+      "label": ".getBracketView()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L180",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".getbracketview()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getbracketview"
+    },
+    {
+      "label": ".createMatch()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L189",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".creatematch()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_creatematch"
+    },
+    {
+      "label": ".deleteMatch()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L197",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".deletematch()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_deletematch"
+    },
+    {
+      "label": ".resetMatch()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L202",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".resetmatch()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_resetmatch"
+    },
+    {
+      "label": ".updateMatch()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L207",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".updatematch()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_updatematch"
+    },
+    {
+      "label": ".getMatches()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L215",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".getmatches()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getmatches"
+    },
+    {
+      "label": ".getUpcomingMatches()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L223",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".getupcomingmatches()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getupcomingmatches"
+    },
+    {
+      "label": ".getLiveMatches()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L228",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".getlivematches()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getlivematches"
+    },
+    {
+      "label": ".getMatch()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L233",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".getmatch()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getmatch"
+    },
+    {
+      "label": ".startMatch()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L238",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".startmatch()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_startmatch"
+    },
+    {
+      "label": ".finishMatch()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L243",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".finishmatch()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_finishmatch"
+    },
+    {
+      "label": ".updateScore()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L248",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".updatescore()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_updatescore"
+    },
+    {
+      "label": ".cancelMatch()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L256",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".cancelmatch()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_cancelmatch"
+    },
+    {
+      "label": ".awardWalkover()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L261",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".awardwalkover()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_awardwalkover"
+    },
+    {
+      "label": ".getStats()",
+      "file_type": "code",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L273",
+      "_origin": "ast",
+      "community": 15,
+      "norm_label": ".getstats()",
+      "id": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getstats"
+    },
+    {
+      "label": "tournament-api.ts",
+      "file_type": "code",
+      "source_file": "apps/frontend/lib/tournament-api.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 83,
+      "norm_label": "tournament-api.ts",
+      "id": "apps_frontend_lib_tournament_api"
+    },
+    {
+      "label": "eligibleGuestApi",
+      "file_type": "code",
+      "source_file": "apps/frontend/lib/tournament-api.ts",
+      "source_location": "L28",
+      "_origin": "ast",
+      "community": 83,
+      "norm_label": "eligibleguestapi",
+      "id": "apps_frontend_lib_tournament_api_eligibleguestapi"
+    },
+    {
+      "label": "tournamentApi",
+      "file_type": "code",
+      "source_file": "apps/frontend/lib/tournament-api.ts",
+      "source_location": "L38",
+      "_origin": "ast",
+      "community": 83,
+      "norm_label": "tournamentapi",
+      "id": "apps_frontend_lib_tournament_api_tournamentapi"
+    },
+    {
+      "label": "teamApi",
+      "file_type": "code",
+      "source_file": "apps/frontend/lib/tournament-api.ts",
+      "source_location": "L70",
+      "_origin": "ast",
+      "community": 83,
+      "norm_label": "teamapi",
+      "id": "apps_frontend_lib_tournament_api_teamapi"
+    },
+    {
+      "label": "importApi",
+      "file_type": "code",
+      "source_file": "apps/frontend/lib/tournament-api.ts",
+      "source_location": "L112",
+      "_origin": "ast",
+      "community": 83,
+      "norm_label": "importapi",
+      "id": "apps_frontend_lib_tournament_api_importapi"
+    },
+    {
+      "label": "bracketApi",
+      "file_type": "code",
+      "source_file": "apps/frontend/lib/tournament-api.ts",
+      "source_location": "L124",
+      "_origin": "ast",
+      "community": 83,
+      "norm_label": "bracketapi",
+      "id": "apps_frontend_lib_tournament_api_bracketapi"
+    },
+    {
+      "label": "matchApi",
+      "file_type": "code",
+      "source_file": "apps/frontend/lib/tournament-api.ts",
+      "source_location": "L145",
+      "_origin": "ast",
+      "community": 83,
+      "norm_label": "matchapi",
+      "id": "apps_frontend_lib_tournament_api_matchapi"
+    },
+    {
+      "label": "statsApi",
+      "file_type": "code",
+      "source_file": "apps/frontend/lib/tournament-api.ts",
+      "source_location": "L222",
+      "_origin": "ast",
+      "community": 83,
+      "norm_label": "statsapi",
+      "id": "apps_frontend_lib_tournament_api_statsapi"
+    },
+    {
+      "label": "checkinApi",
+      "file_type": "code",
+      "source_file": "apps/frontend/lib/tournament-api.ts",
+      "source_location": "L231",
+      "_origin": "ast",
+      "community": 83,
+      "norm_label": "checkinapi",
+      "id": "apps_frontend_lib_tournament_api_checkinapi"
     },
     {
       "label": "sse.ts",
@@ -749,7 +769,7 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 196,
+      "community": 77,
       "norm_label": "topnav.tsx",
       "id": "apps_frontend_components_topnav"
     },
@@ -759,7 +779,7 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L32",
       "_origin": "ast",
-      "community": 196,
+      "community": 77,
       "norm_label": "adminlink",
       "id": "apps_frontend_components_topnav_adminlink"
     },
@@ -769,7 +789,7 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L38",
       "_origin": "ast",
-      "community": 196,
+      "community": 77,
       "norm_label": "topnav()",
       "id": "apps_frontend_components_topnav_topnav"
     },
@@ -779,7 +799,7 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L361",
       "_origin": "ast",
-      "community": 196,
+      "community": 77,
       "norm_label": "cn()",
       "id": "apps_frontend_components_topnav_cn"
     },
@@ -939,7 +959,7 @@
       "source_file": "apps/frontend/hooks/useTournamentSSE.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 192,
+      "community": 77,
       "norm_label": "usetournamentsse.ts",
       "id": "apps_frontend_hooks_usetournamentsse"
     },
@@ -949,7 +969,7 @@
       "source_file": "apps/frontend/hooks/useTournamentSSE.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 192,
+      "community": 77,
       "norm_label": "tournamenteventhandler",
       "id": "apps_frontend_hooks_usetournamentsse_tournamenteventhandler"
     },
@@ -959,7 +979,7 @@
       "source_file": "apps/frontend/hooks/useTournamentSSE.ts",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 192,
+      "community": 77,
       "norm_label": "tournamentssehandlers",
       "id": "apps_frontend_hooks_usetournamentsse_tournamentssehandlers"
     },
@@ -969,7 +989,7 @@
       "source_file": "apps/frontend/hooks/useTournamentSSE.ts",
       "source_location": "L24",
       "_origin": "ast",
-      "community": 192,
+      "community": 77,
       "norm_label": "usetournamentsse()",
       "id": "apps_frontend_hooks_usetournamentsse_usetournamentsse"
     },
@@ -979,7 +999,7 @@
       "source_file": "apps/frontend/hooks/useTournamentSSE.ts",
       "source_location": "L203",
       "_origin": "ast",
-      "community": 192,
+      "community": 77,
       "norm_label": "usealltournamentsse()",
       "id": "apps_frontend_hooks_usetournamentsse_usealltournamentsse"
     },
@@ -1459,7 +1479,7 @@
       "source_file": "apps/frontend/lib/sse-context.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 196,
+      "community": 77,
       "norm_label": "sse-context.tsx",
       "id": "apps_frontend_lib_sse_context"
     },
@@ -1469,7 +1489,7 @@
       "source_file": "apps/frontend/lib/sse-context.tsx",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 196,
+      "community": 77,
       "norm_label": "ssecontexttype",
       "id": "apps_frontend_lib_sse_context_ssecontexttype"
     },
@@ -1479,7 +1499,7 @@
       "source_file": "apps/frontend/lib/sse-context.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 196,
+      "community": 77,
       "norm_label": "ssecontext",
       "id": "apps_frontend_lib_sse_context_ssecontext"
     },
@@ -1489,7 +1509,7 @@
       "source_file": "apps/frontend/lib/sse-context.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 196,
+      "community": 77,
       "norm_label": "event_types",
       "id": "apps_frontend_lib_sse_context_event_types"
     },
@@ -1509,7 +1529,7 @@
       "source_file": "apps/frontend/lib/sse-context.tsx",
       "source_location": "L147",
       "_origin": "ast",
-      "community": 76,
+      "community": 77,
       "norm_label": "usesse()",
       "id": "apps_frontend_lib_sse_context_usesse"
     },
@@ -1689,7 +1709,7 @@
       "source_file": "apps/frontend/types/tournament.types.ts",
       "source_location": "L140",
       "_origin": "ast",
-      "community": 192,
+      "community": 77,
       "norm_label": "tournament",
       "id": "apps_frontend_types_tournament_types_tournament"
     },
@@ -1859,7 +1879,7 @@
       "source_file": "apps/frontend/types/tournament.types.ts",
       "source_location": "L345",
       "_origin": "ast",
-      "community": 192,
+      "community": 77,
       "norm_label": "tournamentevent",
       "id": "apps_frontend_types_tournament_types_tournamentevent"
     },
@@ -3882,26 +3902,6 @@
       "community": 45,
       "norm_label": "execution handoff",
       "id": "docs_superpowers_plans_2026_06_30_tournament_frontend_theme_and_landing_spacing_execution_handoff"
-    },
-    {
-      "label": "page.tsx",
-      "file_type": "code",
-      "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/edit/page.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 41,
-      "norm_label": "page.tsx",
-      "id": "apps_frontend_app_main_admin_tournaments_id_edit_page"
-    },
-    {
-      "label": "EditTournamentPage()",
-      "file_type": "code",
-      "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/edit/page.tsx",
-      "source_location": "L11",
-      "_origin": "ast",
-      "community": 41,
-      "norm_label": "edittournamentpage()",
-      "id": "apps_frontend_app_main_admin_tournaments_id_edit_page_edittournamentpage"
     },
     {
       "label": "page.tsx",
@@ -9919,7 +9919,7 @@
       "source_file": "apps/frontend/app/(main)/admin/login/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 8,
+      "community": 76,
       "norm_label": "page.tsx",
       "id": "apps_frontend_app_main_admin_login_page"
     },
@@ -9929,7 +9929,7 @@
       "source_file": "apps/frontend/app/(main)/admin/login/page.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 8,
+      "community": 76,
       "norm_label": "eventconfig",
       "id": "apps_frontend_app_main_admin_login_page_eventconfig"
     },
@@ -9939,7 +9939,7 @@
       "source_file": "apps/frontend/app/(main)/admin/login/page.tsx",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 8,
+      "community": 76,
       "norm_label": "loginpage()",
       "id": "apps_frontend_app_main_admin_login_page_loginpage"
     },
@@ -10339,7 +10339,7 @@
       "source_file": "apps/frontend/app/(main)/checkin/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 8,
+      "community": 76,
       "norm_label": "page.tsx",
       "id": "apps_frontend_app_main_checkin_page"
     },
@@ -10349,7 +10349,7 @@
       "source_file": "apps/frontend/app/(main)/checkin/page.tsx",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 8,
+      "community": 76,
       "norm_label": "eventconfig",
       "id": "apps_frontend_app_main_checkin_page_eventconfig"
     },
@@ -10359,7 +10359,7 @@
       "source_file": "apps/frontend/app/(main)/checkin/page.tsx",
       "source_location": "L38",
       "_origin": "ast",
-      "community": 8,
+      "community": 76,
       "norm_label": "guestcheckin",
       "id": "apps_frontend_app_main_checkin_page_guestcheckin"
     },
@@ -10369,7 +10369,7 @@
       "source_file": "apps/frontend/app/(main)/checkin/page.tsx",
       "source_location": "L45",
       "_origin": "ast",
-      "community": 8,
+      "community": 76,
       "norm_label": "guest",
       "id": "apps_frontend_app_main_checkin_page_guest"
     },
@@ -10379,7 +10379,7 @@
       "source_file": "apps/frontend/app/(main)/checkin/page.tsx",
       "source_location": "L66",
       "_origin": "ast",
-      "community": 8,
+      "community": 76,
       "norm_label": "cleanqrcontent()",
       "id": "apps_frontend_app_main_checkin_page_cleanqrcontent"
     },
@@ -10389,7 +10389,7 @@
       "source_file": "apps/frontend/app/(main)/checkin/page.tsx",
       "source_location": "L86",
       "_origin": "ast",
-      "community": 8,
+      "community": 76,
       "norm_label": "scanlogitem",
       "id": "apps_frontend_app_main_checkin_page_scanlogitem"
     },
@@ -10409,7 +10409,7 @@
       "source_file": "apps/frontend/app/(main)/checkin/page.tsx",
       "source_location": "L2054",
       "_origin": "ast",
-      "community": 8,
+      "community": 76,
       "norm_label": "html5qrcodeplugin()",
       "id": "apps_frontend_app_main_checkin_page_html5qrcodeplugin"
     },
@@ -10519,7 +10519,7 @@
       "source_file": "apps/frontend/app/(main)/luckydraw/carousel/page.tsx",
       "source_location": "L29",
       "_origin": "ast",
-      "community": 76,
+      "community": 87,
       "norm_label": "carouseldrawpage()",
       "id": "apps_frontend_app_main_luckydraw_carousel_page_carouseldrawpage"
     },
@@ -10649,7 +10649,7 @@
       "source_file": "apps/frontend/app/(main)/luckydraw/display/page.tsx",
       "source_location": "L172",
       "_origin": "ast",
-      "community": 76,
+      "community": 77,
       "norm_label": "livedisplaypage()",
       "id": "apps_frontend_app_main_luckydraw_display_page_livedisplaypage"
     },
@@ -10789,7 +10789,7 @@
       "source_file": "apps/frontend/app/(main)/luckydraw/page.tsx",
       "source_location": "L109",
       "_origin": "ast",
-      "community": 76,
+      "community": 38,
       "norm_label": "luckydrawpage()",
       "id": "apps_frontend_app_main_luckydraw_page_luckydrawpage"
     },
@@ -11289,7 +11289,7 @@
       "source_file": "apps/frontend/components/EventSelector.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 76,
+      "community": 77,
       "norm_label": "eventselector.tsx",
       "id": "apps_frontend_components_eventselector"
     },
@@ -11299,7 +11299,7 @@
       "source_file": "apps/frontend/components/EventSelector.tsx",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 76,
+      "community": 77,
       "norm_label": "event",
       "id": "apps_frontend_components_eventselector_event"
     },
@@ -11309,7 +11309,7 @@
       "source_file": "apps/frontend/components/EventSelector.tsx",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 76,
+      "community": 77,
       "norm_label": "eventselector()",
       "id": "apps_frontend_components_eventselector_eventselector"
     },
@@ -11469,7 +11469,7 @@
       "source_file": "apps/frontend/components/PrizeReceiptModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 77,
+      "community": 38,
       "norm_label": "prizereceiptmodal.tsx",
       "id": "apps_frontend_components_prizereceiptmodal"
     },
@@ -11479,7 +11479,7 @@
       "source_file": "apps/frontend/components/PrizeReceiptModal.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 77,
+      "community": 38,
       "norm_label": "winner",
       "id": "apps_frontend_components_prizereceiptmodal_winner"
     },
@@ -11489,7 +11489,7 @@
       "source_file": "apps/frontend/components/PrizeReceiptModal.tsx",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 77,
+      "community": 38,
       "norm_label": "prize",
       "id": "apps_frontend_components_prizereceiptmodal_prize"
     },
@@ -11499,7 +11499,7 @@
       "source_file": "apps/frontend/components/PrizeReceiptModal.tsx",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 77,
+      "community": 38,
       "norm_label": "prizereceiptmodalprops",
       "id": "apps_frontend_components_prizereceiptmodal_prizereceiptmodalprops"
     },
@@ -11509,7 +11509,7 @@
       "source_file": "apps/frontend/components/PrizeReceiptModal.tsx",
       "source_location": "L32",
       "_origin": "ast",
-      "community": 77,
+      "community": 38,
       "norm_label": "prizereceiptmodal()",
       "id": "apps_frontend_components_prizereceiptmodal_prizereceiptmodal"
     },
@@ -11639,7 +11639,7 @@
       "source_file": "apps/frontend/components/WinnerHistoryModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 77,
+      "community": 38,
       "norm_label": "winnerhistorymodal.tsx",
       "id": "apps_frontend_components_winnerhistorymodal"
     },
@@ -11649,7 +11649,7 @@
       "source_file": "apps/frontend/components/WinnerHistoryModal.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 77,
+      "community": 38,
       "norm_label": "winner",
       "id": "apps_frontend_components_winnerhistorymodal_winner"
     },
@@ -11659,7 +11659,7 @@
       "source_file": "apps/frontend/components/WinnerHistoryModal.tsx",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 77,
+      "community": 38,
       "norm_label": "prize",
       "id": "apps_frontend_components_winnerhistorymodal_prize"
     },
@@ -11669,7 +11669,7 @@
       "source_file": "apps/frontend/components/WinnerHistoryModal.tsx",
       "source_location": "L22",
       "_origin": "ast",
-      "community": 77,
+      "community": 38,
       "norm_label": "winnerhistorymodalprops",
       "id": "apps_frontend_components_winnerhistorymodal_winnerhistorymodalprops"
     },
@@ -11679,7 +11679,7 @@
       "source_file": "apps/frontend/components/WinnerHistoryModal.tsx",
       "source_location": "L31",
       "_origin": "ast",
-      "community": 77,
+      "community": 38,
       "norm_label": "winnerhistorymodal()",
       "id": "apps_frontend_components_winnerhistorymodal_winnerhistorymodal"
     },
@@ -13079,7 +13079,7 @@
       "source_file": "apps/frontend/components/ui/Textarea.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 8,
+      "community": 12,
       "norm_label": "textarea.tsx",
       "id": "apps_frontend_components_ui_textarea"
     },
@@ -13089,7 +13089,7 @@
       "source_file": "apps/frontend/components/ui/Textarea.tsx",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 8,
+      "community": 12,
       "norm_label": "props",
       "id": "apps_frontend_components_ui_textarea_props"
     },
@@ -13209,7 +13209,7 @@
       "source_file": "apps/frontend/lib/api.ts",
       "source_location": "L82",
       "_origin": "ast",
-      "community": 8,
+      "community": 76,
       "norm_label": "parseerrormessage()",
       "id": "apps_frontend_lib_api_parseerrormessage"
     },
@@ -27434,500 +27434,12 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
-      "source_location": "L7",
+      "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/edit/page.tsx",
+      "source_location": "L12",
       "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournament_checkin_service",
-      "target": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice",
+      "source": "apps_frontend_app_main_admin_tournaments_id_edit_page",
+      "target": "apps_frontend_app_main_admin_tournaments_id_edit_page_edittournamentpage",
       "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L25",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller",
-      "target": "apps_backend_src_tournaments_tournament_checkin_service",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.module.ts",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_module",
-      "target": "apps_backend_src_tournaments_tournament_checkin_service"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
-      "source_location": "L207",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice",
-      "target": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_batchsyncofflinecheckins",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
-      "source_location": "L10",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice",
-      "target": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_checkinmember",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
-      "source_location": "L8",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice",
-      "target": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_constructor",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
-      "source_location": "L176",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice",
-      "target": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_getteamcheckinstatus",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
-      "source_location": "L248",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice",
-      "target": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_unchecktournamentcheckin",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L25",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller",
-      "target": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L31",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_constructor",
-      "target": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.module.ts",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_module",
-      "target": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
-      "source_location": "L212",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_batchsyncofflinecheckins",
-      "target": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_checkinmember",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L30",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.module.ts",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_module",
-      "target": "apps_backend_src_tournaments_tournaments_controller"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L141",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_addteammember",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L261",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_awardwalkover",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L61",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_batchsync",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L256",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_cancelmatch",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L56",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_checkinmember",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L31",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_constructor",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L42",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_create",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L189",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_creatematch",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L107",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_createteam",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L197",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_deletematch",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L47",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_findall",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L76",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_findone",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L243",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_finishmatch",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L170",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_generatebracket",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L180",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getbracketview",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L66",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getcheckinstatus",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L81",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_geteligibleguests",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L228",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getlivematches",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L233",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getmatch",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L215",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getmatches",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L273",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getstats",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L223",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getupcomingmatches",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L158",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_importteams",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L175",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_regeneratebracket",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L97",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_remove",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L132",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_removeteam",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L149",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_removeteammember",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L202",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_resetmatch",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L238",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_startmatch",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L71",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_uncheckcheckin",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L89",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_update",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L207",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_updatematch",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L248",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_updatescore",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
-      "source_location": "L120",
-      "weight": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_updateteam",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/backend/src/tournaments/tournaments.module.ts",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_backend_src_tournaments_tournaments_module",
-      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller"
     },
     {
       "relation": "contains",
@@ -27950,87 +27462,10 @@
       "confidence_score": 1.0
     },
     {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/page.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "source": "apps_frontend_app_main_admin_tournaments_id_page",
-      "target": "apps_frontend_lib_tournament_api",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/page.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "source": "apps_frontend_app_main_admin_tournaments_id_page",
-      "target": "apps_frontend_lib_tournament_api_bracketapi",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/page.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "source": "apps_frontend_app_main_admin_tournaments_id_page",
-      "target": "apps_frontend_lib_tournament_api_checkinapi",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/page.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "source": "apps_frontend_app_main_admin_tournaments_id_page",
-      "target": "apps_frontend_lib_tournament_api_matchapi",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/page.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "source": "apps_frontend_app_main_admin_tournaments_id_page",
-      "target": "apps_frontend_lib_tournament_api_statsapi",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/page.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "source": "apps_frontend_app_main_admin_tournaments_id_page",
-      "target": "apps_frontend_lib_tournament_api_teamapi",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/page.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "source": "apps_frontend_app_main_admin_tournaments_id_page",
-      "target": "apps_frontend_lib_tournament_api_tournamentapi",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/frontend/app/(main)/tournament-checkin/page.tsx",
-      "source_location": "L21",
+      "source_location": "L22",
       "weight": 1.0,
       "source": "apps_frontend_app_main_tournament_checkin_page",
       "target": "apps_frontend_app_main_tournament_checkin_page_cleanqrcontent",
@@ -28040,7 +27475,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/frontend/app/(main)/tournament-checkin/page.tsx",
-      "source_location": "L15",
+      "source_location": "L16",
       "weight": 1.0,
       "source": "apps_frontend_app_main_tournament_checkin_page",
       "target": "apps_frontend_app_main_tournament_checkin_page_stationconfig",
@@ -28050,7 +27485,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/frontend/app/(main)/tournament-checkin/page.tsx",
-      "source_location": "L378",
+      "source_location": "L504",
       "weight": 1.0,
       "source": "apps_frontend_app_main_tournament_checkin_page",
       "target": "apps_frontend_app_main_tournament_checkin_page_stationsetup",
@@ -28060,33 +27495,509 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/frontend/app/(main)/tournament-checkin/page.tsx",
-      "source_location": "L33",
+      "source_location": "L34",
       "weight": 1.0,
       "source": "apps_frontend_app_main_tournament_checkin_page",
       "target": "apps_frontend_app_main_tournament_checkin_page_tournamentcheckinpage",
       "confidence_score": 1.0
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournament_checkin_service",
+      "target": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice"
+    },
+    {
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/tournament-checkin/page.tsx",
-      "source_location": "L12",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L25",
       "weight": 1.0,
-      "source": "apps_frontend_app_main_tournament_checkin_page",
-      "target": "apps_frontend_lib_tournament_api",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller",
+      "target": "apps_backend_src_tournaments_tournament_checkin_service"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.module.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_module",
+      "target": "apps_backend_src_tournaments_tournament_checkin_service"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
+      "source_location": "L207",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice",
+      "target": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_batchsyncofflinecheckins"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice",
+      "target": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_checkinmember"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice",
+      "target": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_constructor"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
+      "source_location": "L176",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice",
+      "target": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_getteamcheckinstatus"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
+      "source_location": "L248",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice",
+      "target": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_unchecktournamentcheckin"
     },
     {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/tournament-checkin/page.tsx",
-      "source_location": "L12",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L25",
       "weight": 1.0,
-      "source": "apps_frontend_app_main_tournament_checkin_page",
-      "target": "apps_frontend_lib_tournament_api_checkinapi",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller",
+      "target": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice"
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L31",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_constructor",
+      "target": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.module.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_module",
+      "target": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournament-checkin.service.ts",
+      "source_location": "L212",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_batchsyncofflinecheckins",
+      "target": "apps_backend_src_tournaments_tournament_checkin_service_tournamentcheckinservice_checkinmember"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L30",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.module.ts",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_module",
+      "target": "apps_backend_src_tournaments_tournaments_controller"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L141",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_addteammember"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L261",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_awardwalkover"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L61",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_batchsync"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L256",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_cancelmatch"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L56",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_checkinmember"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L31",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_constructor"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L42",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_create"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L189",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_creatematch"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L107",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_createteam"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L197",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_deletematch"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L47",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_findall"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L76",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_findone"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L243",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_finishmatch"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L170",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_generatebracket"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L180",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getbracketview"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L66",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getcheckinstatus"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L81",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_geteligibleguests"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L228",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getlivematches"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L233",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getmatch"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L215",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getmatches"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L273",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getstats"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L223",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_getupcomingmatches"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L158",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_importteams"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L175",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_regeneratebracket"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L97",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_remove"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L132",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_removeteam"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L149",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_removeteammember"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L202",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_resetmatch"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L238",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_startmatch"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L71",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_uncheckcheckin"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L89",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_update"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L207",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_updatematch"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L248",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_updatescore"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.controller.ts",
+      "source_location": "L120",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller_updateteam"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/backend/src/tournaments/tournaments.module.ts",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "apps_backend_src_tournaments_tournaments_module",
+      "target": "apps_backend_src_tournaments_tournaments_controller_tournamentscontroller"
     },
     {
       "relation": "imports_from",
@@ -28116,9 +28027,9 @@
       "source_file": "apps/frontend/lib/tournament-api.ts",
       "source_location": "L124",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_lib_tournament_api",
-      "target": "apps_frontend_lib_tournament_api_bracketapi",
-      "confidence_score": 1.0
+      "target": "apps_frontend_lib_tournament_api_bracketapi"
     },
     {
       "relation": "contains",
@@ -28126,9 +28037,9 @@
       "source_file": "apps/frontend/lib/tournament-api.ts",
       "source_location": "L231",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_lib_tournament_api",
-      "target": "apps_frontend_lib_tournament_api_checkinapi",
-      "confidence_score": 1.0
+      "target": "apps_frontend_lib_tournament_api_checkinapi"
     },
     {
       "relation": "contains",
@@ -28136,9 +28047,9 @@
       "source_file": "apps/frontend/lib/tournament-api.ts",
       "source_location": "L28",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_lib_tournament_api",
-      "target": "apps_frontend_lib_tournament_api_eligibleguestapi",
-      "confidence_score": 1.0
+      "target": "apps_frontend_lib_tournament_api_eligibleguestapi"
     },
     {
       "relation": "contains",
@@ -28146,9 +28057,9 @@
       "source_file": "apps/frontend/lib/tournament-api.ts",
       "source_location": "L112",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_lib_tournament_api",
-      "target": "apps_frontend_lib_tournament_api_importapi",
-      "confidence_score": 1.0
+      "target": "apps_frontend_lib_tournament_api_importapi"
     },
     {
       "relation": "contains",
@@ -28156,9 +28067,9 @@
       "source_file": "apps/frontend/lib/tournament-api.ts",
       "source_location": "L145",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_lib_tournament_api",
-      "target": "apps_frontend_lib_tournament_api_matchapi",
-      "confidence_score": 1.0
+      "target": "apps_frontend_lib_tournament_api_matchapi"
     },
     {
       "relation": "contains",
@@ -28166,9 +28077,9 @@
       "source_file": "apps/frontend/lib/tournament-api.ts",
       "source_location": "L222",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_lib_tournament_api",
-      "target": "apps_frontend_lib_tournament_api_statsapi",
-      "confidence_score": 1.0
+      "target": "apps_frontend_lib_tournament_api_statsapi"
     },
     {
       "relation": "contains",
@@ -28176,9 +28087,9 @@
       "source_file": "apps/frontend/lib/tournament-api.ts",
       "source_location": "L70",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_lib_tournament_api",
-      "target": "apps_frontend_lib_tournament_api_teamapi",
-      "confidence_score": 1.0
+      "target": "apps_frontend_lib_tournament_api_teamapi"
     },
     {
       "relation": "contains",
@@ -28186,9 +28097,9 @@
       "source_file": "apps/frontend/lib/tournament-api.ts",
       "source_location": "L38",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_lib_tournament_api",
-      "target": "apps_frontend_lib_tournament_api_tournamentapi",
-      "confidence_score": 1.0
+      "target": "apps_frontend_lib_tournament_api_tournamentapi"
     },
     {
       "relation": "imports",
@@ -28952,17 +28863,6 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/edit/page.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_tournaments_id_edit_page",
-      "target": "apps_frontend_components_tournament_tournamentform"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "apps/frontend/app/(main)/admin/tournaments/new/page.tsx",
       "source_location": "L7",
       "weight": 1.0,
@@ -29117,17 +29017,6 @@
       "confidence_score": 1.0,
       "source": "apps_frontend_components_tournament_tournamentform_tournamentformprops",
       "target": "apps_frontend_types_tournament_types_createtournamentdto"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/edit/page.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_tournaments_id_edit_page",
-      "target": "apps_frontend_components_tournament_tournamentform_tournamentform"
     },
     {
       "relation": "imports",
@@ -34728,16 +34617,6 @@
       "confidence_score": 1.0,
       "source": "docs_superpowers_plans_2026_06_30_tournament_frontend_theme_and_landing_spacing_file_structure",
       "target": "docs_superpowers_plans_2026_06_30_tournament_frontend_theme_and_landing_spacing_modified_tournament_files"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/edit/page.tsx",
-      "source_location": "L11",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_tournaments_id_edit_page",
-      "target": "apps_frontend_app_main_admin_tournaments_id_edit_page_edittournamentpage"
     },
     {
       "relation": "contains",
@@ -65863,5 +65742,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "739e81bd94034cac20cf7e05ca7951c8df971713"
+  "built_at_commit": "c01a1db6b6018bd57611eb784a596e435ab48eac"
 }
