@@ -267,6 +267,15 @@ export class EventsService {
       }
     }
     const updated = await this.prisma.event.update({ where: { id: active.id }, data });
+    
+    // Sync PublicRegistrationConfig.isActive if enablePublicRegistration is toggled here
+    if (data.enablePublicRegistration !== undefined) {
+      await this.prisma.publicRegistrationConfig.updateMany({
+        where: { eventId: active.id },
+        data: { isActive: data.enablePublicRegistration }
+      });
+    }
+
     await this.invalidateCache();
     return updated;
   }

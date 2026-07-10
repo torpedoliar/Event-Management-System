@@ -46,6 +46,13 @@ export async function apiFetch<T>(path: string, options: RequestInit = {}): Prom
   // Get response text first
   const text = await res.text();
 
+  // Global 401 handler: token expired or invalid → auto-logout
+  if (res.status === 401 && typeof window !== 'undefined') {
+    localStorage.removeItem('token');
+    window.location.href = '/admin/login';
+    throw new Error('Sesi telah berakhir. Silakan login kembali.');
+  }
+
   if (!res.ok) {
     // Parse error message for user-friendly display
     const errorMessage = parseErrorMessage(text);

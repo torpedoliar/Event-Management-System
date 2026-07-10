@@ -1,5 +1,8 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Users } from 'lucide-react';
+import { Users, LayoutDashboard } from 'lucide-react';
 import { MobileNav } from './MobileNav';
 
 interface EventConfig {
@@ -35,6 +38,19 @@ function BrandMark({ logoUrl, eventName }: { logoUrl?: string; eventName?: strin
 }
 
 export default function LandingNav({ eventConfig }: LandingNavProps) {
+  const [isAuth, setIsAuth] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    setIsAuth(!!localStorage.getItem('token'));
+
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === 'token') setIsAuth(!!e.newValue);
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
+
   return (
     <>
       <header className="sticky top-0 z-40 bg-brand-bg/80 backdrop-blur-md border-b border-brand-border">
@@ -55,18 +71,30 @@ export default function LandingNav({ eventConfig }: LandingNavProps) {
               >
                 Display
               </Link>
-              <Link
-                href="/admin/login"
-                className="bg-brand-primary text-brand-bg px-5 py-2.5 rounded-xl font-medium
-                           hover:bg-brand-primaryHover transition-colors duration-fast
-                           focus-visible:ring-2 focus-visible:ring-brand-primary/50"
-              >
-                Login
-              </Link>
+              {isAuth ? (
+                <Link
+                  href="/admin/dashboard"
+                  className="bg-brand-primary text-brand-bg px-5 py-2.5 rounded-xl font-medium
+                             hover:bg-brand-primaryHover transition-colors duration-fast
+                             focus-visible:ring-2 focus-visible:ring-brand-primary/50 inline-flex items-center gap-2"
+                >
+                  <LayoutDashboard size={16} />
+                  Dashboard
+                </Link>
+              ) : (
+                <Link
+                  href="/admin/login"
+                  className="bg-brand-primary text-brand-bg px-5 py-2.5 rounded-xl font-medium
+                             hover:bg-brand-primaryHover transition-colors duration-fast
+                             focus-visible:ring-2 focus-visible:ring-brand-primary/50"
+                >
+                  Login
+                </Link>
+              )}
             </div>
 
             {/* Mobile: Hamburger */}
-            <MobileNav eventConfig={eventConfig} />
+            <MobileNav eventConfig={eventConfig} isAuth={isAuth} />
           </div>
         </div>
       </header>

@@ -24,6 +24,12 @@ export default function LoginPage() {
   const router = useRouter();
 
   useEffect(() => {
+    // Redirect to dashboard if already logged in
+    if (typeof window !== 'undefined' && localStorage.getItem('token')) {
+      router.replace('/admin/dashboard');
+      return;
+    }
+
     fetch(`${apiBase()}/config/event`)
       .then(r => r.json())
       .then(data => setEventCfg(data))

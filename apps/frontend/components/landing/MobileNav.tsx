@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Users } from 'lucide-react';
+import { Menu, X, Users, LayoutDashboard } from 'lucide-react';
 
 interface EventConfig {
   name?: string;
@@ -11,6 +11,7 @@ interface EventConfig {
 
 interface MobileNavProps {
   eventConfig?: EventConfig | null;
+  isAuth?: boolean;
 }
 
 function BrandMark({ logoUrl, eventName }: { logoUrl?: string; eventName?: string }) {
@@ -36,7 +37,7 @@ function BrandMark({ logoUrl, eventName }: { logoUrl?: string; eventName?: strin
   );
 }
 
-export function MobileNav({ eventConfig }: MobileNavProps) {
+export function MobileNav({ eventConfig, isAuth }: MobileNavProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -71,13 +72,24 @@ export function MobileNav({ eventConfig }: MobileNavProps) {
               >
                 Display
               </Link>
-              <Link
-                href="/admin/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center px-5 py-3 rounded-xl bg-brand-primary text-brand-bg font-medium hover:bg-brand-primaryHover transition-colors"
-              >
-                Login
-              </Link>
+              {isAuth ? (
+                <Link
+                  href="/admin/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full text-center px-5 py-3 rounded-xl bg-brand-primary text-brand-bg font-medium hover:bg-brand-primaryHover transition-colors inline-flex items-center justify-center gap-2"
+                >
+                  <LayoutDashboard size={16} />
+                  Dashboard
+                </Link>
+              ) : (
+                <Link
+                  href="/admin/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full text-center px-5 py-3 rounded-xl bg-brand-primary text-brand-bg font-medium hover:bg-brand-primaryHover transition-colors"
+                >
+                  Login
+                </Link>
+              )}
             </nav>
           </div>
         </div>

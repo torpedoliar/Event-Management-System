@@ -32,7 +32,7 @@ export class PublicRegistrationService {
     return event.id;
   }
 
-  private async getActiveEventIdForPublic(): Promise<string> {
+  private async getActiveEventInfoForPublic(): Promise<{ eventId: string; enabled: boolean }> {
     const event = await this.events.getActive();
     if (!event) throw new NotFoundException('No active event');
     // Query DB directly to avoid stale Redis cache — admin may have just toggled the flag
@@ -40,10 +40,7 @@ export class PublicRegistrationService {
       where: { id: event.id },
       select: { enablePublicRegistration: true },
     });
-    if (!freshEvent?.enablePublicRegistration) {
-      throw new BadRequestException('Public registration is not enabled');
-    }
-    return event.id;
+    return { eventId: event.id, enabled: !!freshEvent?.enablePublicRegistration };
   }
 
   private async getOrCreateConfig(eventId: string) {
@@ -79,10 +76,16 @@ export class PublicRegistrationService {
 
   // Public: get config for rendering the form (no sensitive data)
   async getPublicConfig() {
-    const eventId = await this.getActiveEventIdForPublic();
+    const { eventId, enabled } = await this.getActiveEventInfoForPublic();
     const config = await this.getOrCreateConfig(eventId);
     const currentCount = await this.countPublicRegistrants(eventId);
-    const { open, reason } = this.isRegistrationOpen(config);
+    let { open, reason } = this.isRegistrationOpen(config);
+    
+    if (!enabled) {
+      open = false;
+      reason = 'closed';
+    }
+
     const isFull = config.maxQuota > 0 && currentCount >= config.maxQuota;
 
     return {
@@ -113,7 +116,15 @@ export class PublicRegistrationService {
     await this.getOrCreateConfig(eventId);
 
     const data: any = {};
-    if (dto.isActive !== undefined) data.isActive = dto.isActive;
+    if (dto.isActive !== undefined) {
+      data.isActive = dto.isActive;
+      // Sync Event level flag so both toggles stay consistent
+      await this.prisma.event.update({
+        where: { id: eventId },
+        data: { enablePublicRegistration: dto.isActive },
+      });
+      await this.events.invalidateCache();
+    }
     if (dto.maxQuota !== undefined) data.maxQuota = dto.maxQuota;
     if (dto.title !== undefined) data.title = dto.title;
     if (dto.description !== undefined) data.description = dto.description;
@@ -160,16 +171,13 @@ export class PublicRegistrationService {
       return { success: true, message: 'Terima kasih!', guestId: null, queueNumber: null };
     }
 
-    const eventId = await this.getActiveEventIdForPublic();
+    const { eventId, enabled } = await this.getActiveEventInfoForPublic();
+    if (!enabled) throw new BadRequestException('Pendaftaran telah ditutup');
+
     const config = await this.getOrCreateConfig(eventId);
 
     const { open } = this.isRegistrationOpen(config);
     if (!open) throw new BadRequestException(config.closedMessage);
-
-    if (config.maxQuota > 0) {
-      const currentCount = await this.countPublicRegistrants(eventId);
-      if (currentCount >= config.maxQuota) throw new BadRequestException(config.fullMessage);
-    }
 
     const fields = (config.fields as unknown as RegistrationField[]) || [];
     const input: any = {};
@@ -182,28 +190,83 @@ export class PublicRegistrationService {
     }
     if (!input.name) throw new BadRequestException('Nama wajib diisi');
 
-    // Auto-generate guestId if not provided via form
-    const needsAutoGuestId = !fields.some(f => f.key === 'guestId') || !input.guestId;
-    if (needsAutoGuestId) {
-      const queueNumber = await this.guests.nextQueueNumber(eventId);
-      input.guestId = `${config.guestIdPrefix}-${queueNumber}`;
-      input.queueNumber = queueNumber;
-    }
+    // Run everything in a serialized transaction to prevent Quota and QueueNumber race conditions (Fix Issue #3)
+    const guest = await this.prisma.$transaction(async (tx) => {
+      // 1. Acquire an exclusive row lock on the Event to queue concurrent submissions
+      await tx.$queryRaw`SELECT id FROM "Event" WHERE id = ${eventId} FOR UPDATE`;
 
-    // Check duplicates if enabled
-    if (config.preventDuplicates) {
-      const conditions: any[] = [];
-      for (const field of fields) {
-        if (input[field.key]) conditions.push({ [field.key]: input[field.key] });
+      // 2. Check Quota safely
+      if (config.maxQuota > 0) {
+        const currentCount = await tx.guest.count({ where: { eventId, registrationSource: 'PUBLIC' } });
+        if (currentCount >= config.maxQuota) throw new BadRequestException(config.fullMessage);
       }
-      if (conditions.length > 0) {
-        const existing = await this.prisma.guest.findFirst({ where: { eventId, OR: conditions } });
-        if (existing) throw new ConflictException('Anda sudah terdaftar dengan data yang sama');
-      }
-    }
 
-    // Create guest via existing GuestsService (reuses queue number, table default, etc.)
-    const guest = await this.guests.create(input, undefined, true, 'PUBLIC');
+      // 3. Smart Duplicate Check (Fix Bug #1)
+      if (config.preventDuplicates) {
+        const uniqueOrConditions: any[] = [];
+        if (input.email) uniqueOrConditions.push({ email: input.email });
+        if (input.phone) uniqueOrConditions.push({ phone: input.phone });
+        if (input.guestId) uniqueOrConditions.push({ guestId: input.guestId });
+
+        let existing = null;
+        if (uniqueOrConditions.length > 0) {
+          existing = await tx.guest.findFirst({ where: { eventId, OR: uniqueOrConditions } });
+        } else {
+          // Fallback: Exact match on all provided standard fields (AND condition)
+          const andConditions: any = { eventId, name: input.name };
+          if (input.company) andConditions.company = input.company;
+          if (input.department) andConditions.department = input.department;
+          existing = await tx.guest.findFirst({ where: andConditions });
+        }
+        if (existing) throw new ConflictException('Anda sudah terdaftar dengan data yang sama atau email/no. HP sudah digunakan');
+      }
+
+      // 4. Generate Queue Number and Guest ID safely
+      const needsAutoGuestId = !fields.some(f => f.key === 'guestId') || !input.guestId;
+      if (needsAutoGuestId) {
+        const lastGuest = await tx.guest.findFirst({
+          where: { eventId },
+          orderBy: { queueNumber: 'desc' },
+          select: { queueNumber: true }
+        });
+        const queueNumber = (lastGuest?.queueNumber ?? 0) + 1;
+        input.guestId = `${config.guestIdPrefix}-${queueNumber}`;
+        input.queueNumber = queueNumber;
+      } else {
+        // If guestId is manually provided, respect Event settings (Fix Bug #2)
+        const event = await tx.event.findUnique({ where: { id: eventId } });
+        if (!event?.allowDuplicateGuestId) {
+          const existingId = await tx.guest.findFirst({ where: { eventId, guestId: input.guestId } });
+          if (existingId) throw new ConflictException(`Guest ID "${input.guestId}" sudah digunakan`);
+        }
+        const lastGuest = await tx.guest.findFirst({
+          where: { eventId },
+          orderBy: { queueNumber: 'desc' },
+          select: { queueNumber: true }
+        });
+        input.queueNumber = (lastGuest?.queueNumber ?? 0) + 1;
+      }
+
+      // 5. Create Guest inline
+      return tx.guest.create({
+        data: {
+          eventId,
+          queueNumber: input.queueNumber,
+          guestId: input.guestId,
+          name: input.name,
+          email: input.email,
+          phone: input.phone,
+          company: input.company,
+          department: input.department,
+          division: input.division,
+          tableLocation: input.tableLocation || '-',
+          notes: input.notes,
+          category: 'REGULAR',
+          registrationSource: 'PUBLIC',
+          checkedIn: false,
+        }
+      });
+    });
 
     return {
       success: true,
