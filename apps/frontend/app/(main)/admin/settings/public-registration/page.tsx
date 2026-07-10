@@ -10,6 +10,7 @@ import Button from "@/components/ui/Button";
 import Toggle from "@/components/ui/Toggle";
 import Select from "@/components/ui/Select";
 import { Save, Loader2, Plus, Trash2, ChevronUp, ChevronDown, Settings, Users, Clock, FileText, ListPlus, BarChart3 } from "lucide-react";
+import { toLocalDatetimeString, toUTCDateString } from "@/lib/utils";
 
 interface RegField { key: string; label: string; required: boolean; type: string; placeholder?: string; }
 interface RegConfig {
@@ -65,8 +66,8 @@ export default function PublicRegistrationSettingsPage() {
       const cfgData = await cfgRes.json();
       setConfig({
         ...DEFAULT_CONFIG, ...cfgData,
-        openAt: cfgData.openAt ? new Date(cfgData.openAt).toISOString().slice(0, 16) : null,
-        closeAt: cfgData.closeAt ? new Date(cfgData.closeAt).toISOString().slice(0, 16) : null,
+        openAt: cfgData.openAt || null,
+        closeAt: cfgData.closeAt || null,
         fields: cfgData.fields || DEFAULT_CONFIG.fields,
       });
       if (statsRes.ok) setStats(await statsRes.json());
@@ -181,9 +182,9 @@ export default function PublicRegistrationSettingsPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div><Label className="mb-2">Waktu Buka (opsional)</Label>
-                <Input type="datetime-local" value={config.openAt || ""} onChange={(e) => setConfig({ ...config, openAt: e.target.value || null })} /></div>
+                <Input type="datetime-local" value={config.openAt ? toLocalDatetimeString(config.openAt) : ""} onChange={(e) => setConfig({ ...config, openAt: e.target.value ? toUTCDateString(e.target.value) : null })} /></div>
               <div><Label className="mb-2">Waktu Tutup (opsional)</Label>
-                <Input type="datetime-local" value={config.closeAt || ""} onChange={(e) => setConfig({ ...config, closeAt: e.target.value || null })} /></div>
+                <Input type="datetime-local" value={config.closeAt ? toLocalDatetimeString(config.closeAt) : ""} onChange={(e) => setConfig({ ...config, closeAt: e.target.value ? toUTCDateString(e.target.value) : null })} /></div>
             </div>
           </Card>
 

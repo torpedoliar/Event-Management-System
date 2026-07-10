@@ -92,3 +92,22 @@ export function generateUUID(): string {
     return v.toString(16);
   });
 }
+
+/**
+ * Convert UTC date string/object to local datetime string (for input type="datetime-local")
+ */
+export function toLocalDatetimeString(date: string | Date): string {
+  if (!date) return '';
+  const d = typeof date === "string" ? new Date(date) : date;
+  // Create a new date adjusted by the timezone offset
+  const localDate = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+  return localDate.toISOString().slice(0, 16);
+}
+
+/**
+ * Convert local datetime string from input type="datetime-local" to UTC ISO string
+ */
+export function toUTCDateString(localDatetimeString: string): string {
+  if (!localDatetimeString) return '';
+  return new Date(localDatetimeString).toISOString();
+}

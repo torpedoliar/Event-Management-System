@@ -146,10 +146,7 @@ export class EmailService {
   private formatDate(date: Date | null): string {
     if (!date) return '-';
     return new Date(date).toLocaleDateString('id-ID', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Jakarta'
     });
   }
 

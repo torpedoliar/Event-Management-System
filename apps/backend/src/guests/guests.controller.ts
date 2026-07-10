@@ -341,14 +341,14 @@ export class GuestsController {
       if (activeEvent) {
         activeEventId = activeEvent.id;
         eventName = activeEvent.name;
-        eventDate = activeEvent.date ? new Date(activeEvent.date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '';
+        eventDate = activeEvent.date ? new Date(activeEvent.date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Jakarta' }) : '';
         eventTime = activeEvent.time || '';
         eventLocation = activeEvent.location || '';
       }
     } else {
       const event = await this.guests.getEventById(eventId!);
       eventName = event?.name || '';
-      eventDate = event?.date ? new Date(event.date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '';
+      eventDate = event?.date ? new Date(event.date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Jakarta' }) : '';
       eventTime = event?.time || '';
       eventLocation = event?.location || '';
     }

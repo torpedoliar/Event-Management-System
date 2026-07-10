@@ -209,7 +209,7 @@ export class TournamentCheckinService {
 
         if (futureMatch) {
           const matchDate = new Date(futureMatch.scheduledAt!).toLocaleDateString('id-ID', {
-            weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+            weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Jakarta'
           });
           reasons.push(`Jadwal pertandingan ${team.name} berikutnya: ${matchDate}`);
         } else {

@@ -79,7 +79,7 @@ export class ReportsService {
     doc.moveDown(0.5);
     doc.fontSize(16).font('Helvetica').text(event.name, { align: 'center' });
     doc.fontSize(10).fillColor('#666666').text(
-      `Generated: ${new Date().toLocaleString('id-ID')}`,
+      `Generated: ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })}`,
       { align: 'center' }
     );
     doc.moveDown(1);

@@ -5,6 +5,7 @@ import type { TournamentTeam, BracketRound } from "@/types/tournament.types";
 import { Modal } from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import { Plus } from "lucide-react";
+import { toUTCDateString } from "@/lib/utils";
 
 interface CreateMatchModalProps {
   open: boolean;
@@ -44,7 +45,7 @@ export function CreateMatchModal({
         teamBId: teamBId || undefined,
         roundId: roundId || undefined,
         court: court || undefined,
-        scheduledAt: scheduledAt || undefined,
+        scheduledAt: scheduledAt ? toUTCDateString(scheduledAt) : undefined,
       });
       // Reset form
       setTeamAId("");

@@ -15,6 +15,7 @@ import Button from "@/components/ui/Button";
 import FormSection from "@/components/ui/FormSection";
 import Label from "@/components/ui/Label";
 import { Save, X, ToggleLeft, ToggleRight } from "lucide-react";
+import { toLocalDatetimeString, toUTCDateString } from "@/lib/utils";
 
 interface TournamentFormProps {
   initialData?: Partial<CreateTournamentDto>;
@@ -204,8 +205,8 @@ export function TournamentForm({ initialData, onSubmit, onCancel, isLoading }: T
             <Input
               id="startDate"
               type="datetime-local"
-              value={formData.startDate?.slice(0, 16) || ""}
-              onChange={(e) => updateField("startDate", e.target.value)}
+              value={formData.startDate ? toLocalDatetimeString(formData.startDate) : ""}
+              onChange={(e) => updateField("startDate", e.target.value ? toUTCDateString(e.target.value) : undefined)}
             />
           </div>
           <div>
@@ -213,8 +214,8 @@ export function TournamentForm({ initialData, onSubmit, onCancel, isLoading }: T
             <Input
               id="endDate"
               type="datetime-local"
-              value={formData.endDate?.slice(0, 16) || ""}
-              onChange={(e) => updateField("endDate", e.target.value)}
+              value={formData.endDate ? toLocalDatetimeString(formData.endDate) : ""}
+              onChange={(e) => updateField("endDate", e.target.value ? toUTCDateString(e.target.value) : undefined)}
             />
             {errors.endDate && <p className="mt-1 text-sm text-brand-danger">{errors.endDate}</p>}
           </div>

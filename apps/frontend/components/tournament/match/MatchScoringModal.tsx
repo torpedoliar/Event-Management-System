@@ -8,6 +8,7 @@ import Button from "@/components/ui/Button";
 import { ScoreInput } from "./ScoreInput";
 import { StatusPill } from "../StatusPill";
 import { Play, XCircle, Flag, Swords, Square, RotateCcw, Trash2, Save } from "lucide-react";
+import { toLocalDatetimeString, toUTCDateString } from "@/lib/utils";
 
 interface MatchScoringModalProps {
   match: Match | null;
@@ -42,7 +43,7 @@ export function MatchScoringModal({
   // Initialize state from match when modal opens
   useEffect(() => {
     if (match) {
-      setScheduledAt(match.scheduledAt ? new Date(match.scheduledAt).toISOString().slice(0, 16) : '');
+      setScheduledAt(match.scheduledAt ? toLocalDatetimeString(match.scheduledAt) : '');
       setCourt(match.court || '');
       setSelectedTeamA(match.teamAId || '');
       setSelectedTeamB(match.teamBId || '');
@@ -56,7 +57,7 @@ export function MatchScoringModal({
     try {
       const { matchApi } = await import("@/lib/tournament-api");
       await matchApi.update(match.id, {
-        scheduledAt: scheduledAt || null,
+        scheduledAt: scheduledAt ? toUTCDateString(scheduledAt) : null,
         court: court || null,
       });
       onUpdate();
