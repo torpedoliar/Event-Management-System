@@ -115,19 +115,21 @@ export class TournamentCheckinService {
   }
 
   async checkInMember(dto: TournamentCheckinDto) {
-    // 1. Find Guest by guestId
-    const guest = await this.prisma.guest.findFirst({
+    // 1. Find Guests by guestId (handle potential duplicates across different events)
+    const guests = await this.prisma.guest.findMany({
       where: { guestId: dto.guestId },
     });
 
-    if (!guest) {
+    if (guests.length === 0) {
       throw new NotFoundException('Guest not found');
     }
 
-    // 2. Find TeamMembers where guestId matches and tournament has enableMatchCheckin
+    const guestIds = guests.map(g => g.id);
+
+    // 2. Find TeamMembers where guestId matches any of the guests and tournament has enableMatchCheckin
     const memberships = await this.prisma.teamMember.findMany({
       where: {
-        guestId: guest.id,
+        guestId: { in: guestIds },
         team: {
           tournament: {
             enableMatchCheckin: true,
@@ -153,7 +155,7 @@ export class TournamentCheckinService {
 
     const { startOfDay, endOfDay } = this.getTodayRange();
     const reasons: string[] = [];
-    let candidate: { memberId: string; teamId: string; tournamentId: string; matchId: string; match: any } | null = null;
+    let candidate: { memberId: string; teamId: string; tournamentId: string; matchId: string; guestId: string; match: any } | null = null;
 
     // 3. For each membership, validate
     for (const membership of memberships) {
@@ -224,6 +226,7 @@ export class TournamentCheckinService {
         teamId: team.id,
         tournamentId: tournament.id,
         matchId: eligibleMatch.id,
+        guestId: membership.guestId!,
         match: eligibleMatch,
       };
       break;
@@ -262,7 +265,7 @@ export class TournamentCheckinService {
             matchId: candidate!.matchId,
             teamId: candidate!.teamId,
             tournamentId: candidate!.tournamentId,
-            guestId: guest.id,
+            guestId: candidate!.guestId,
             checkedAt: now, // Explicit timestamp to link with GuestCheckin
             checkedById: dto.adminId,
             checkedByName: dto.adminName,
@@ -273,7 +276,7 @@ export class TournamentCheckinService {
         // Create GuestCheckin (core) with EXACT SAME timestamp (Fix Bug #2 prep)
         await tx.guestCheckin.create({
           data: {
-            guestId: guest.id,
+            guestId: candidate!.guestId,
             checkinAt: now,
             checkinById: dto.adminId,
             checkinByName: dto.adminName,
@@ -283,7 +286,7 @@ export class TournamentCheckinService {
 
         // Increment checkinCount
         await tx.guest.update({
-          where: { id: guest.id },
+          where: { id: candidate!.guestId },
           data: { checkinCount: { increment: 1 } },
         });
 
