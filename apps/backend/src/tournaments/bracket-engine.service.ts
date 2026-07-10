@@ -58,9 +58,16 @@ export class BracketEngineService {
     // First round: pair teams with byes for extra slots
     const firstRoundMatches = bracketSize / 2;
     const firstRoundCreated: Match[] = [];
+    
+    // Use standard folded seeding to avoid top seeds meeting early
+    const seeding = this.getStandardSeeding(bracketSize);
+
     for (let i = 0; i < firstRoundMatches; i++) {
-      const teamA = sortedTeams[i] || null;
-      const teamB = sortedTeams[bracketSize - 1 - i] || null;
+      const seedA = seeding[i * 2];
+      const seedB = seeding[i * 2 + 1];
+
+      const teamA = sortedTeams[seedA - 1] || null;
+      const teamB = sortedTeams[seedB - 1] || null;
 
       const created = await this.prisma.match.create({
         data: {
@@ -229,5 +236,23 @@ export class BracketEngineService {
     if (roundNumber === totalRounds - 1) return 'Semi-Final';
     if (roundNumber === totalRounds - 2) return 'Quarter-Final';
     return `Round of ${Math.pow(2, totalRounds - roundNumber + 1)}`;
+  }
+
+  /**
+   * Generates a standard folded seed placement array.
+   * Ensures top seeds are spread across the bracket (e.g. for 8 teams: [1, 8, 4, 5, 2, 7, 3, 6])
+   */
+  private getStandardSeeding(bracketSize: number): number[] {
+    let matches = [1, 2];
+    for (let round = 2; Math.pow(2, round) <= bracketSize; round++) {
+      const currentSize = Math.pow(2, round);
+      const newMatches: number[] = [];
+      for (let i = 0; i < matches.length; i++) {
+        newMatches.push(matches[i]);
+        newMatches.push(currentSize + 1 - matches[i]);
+      }
+      matches = newMatches;
+    }
+    return matches;
   }
 }

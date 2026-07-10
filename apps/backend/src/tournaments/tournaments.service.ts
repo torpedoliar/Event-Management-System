@@ -429,7 +429,7 @@ export class TournamentsService {
     const teams = tournament.teams.map((t) => ({
       id: t.id,
       name: t.name,
-      seed: t.seed ?? t.name.length,
+      seed: t.seed ?? Math.random(),
     }));
 
     await this.bracketEngine.generateSingleElimination(
@@ -780,7 +780,7 @@ export class TournamentsService {
     const teams = tournament.teams.map((t) => ({
       id: t.id,
       name: t.name,
-      seed: t.seed ?? t.name.length,
+      seed: t.seed ?? Math.random(),
     }));
 
     // Generate new bracket
