@@ -12,8 +12,9 @@ export class TournamentCheckinService {
    */
   private getTodayRange(): { startOfDay: Date; endOfDay: Date } {
     const now = new Date();
-    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
-    const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+    // Use UTC to match Prisma's UTC storage — avoids timezone drift
+    const startOfDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0, 0));
+    const endOfDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 23, 59, 59, 999));
     return { startOfDay, endOfDay };
   }
 
@@ -165,11 +166,11 @@ export class TournamentCheckinService {
         continue;
       }
 
-      // Find eligible match: team is in match, SCHEDULED, scheduled today
+      // Find eligible match: team is in match, SCHEDULED or ONGOING, scheduled today
       const eligibleMatch = await this.prisma.match.findFirst({
         where: {
           tournamentId: tournament.id,
-          status: 'SCHEDULED',
+          status: { in: ['SCHEDULED', 'ONGOING'] },
           scheduledAt: {
             gte: startOfDay,
             lte: endOfDay,
@@ -229,9 +230,24 @@ export class TournamentCheckinService {
     }
 
     if (!candidate) {
+      // Diagnostic: check if there are ANY matches today for debugging
+      const allTodayMatches = await this.prisma.match.count({
+        where: {
+          scheduledAt: { gte: startOfDay, lte: endOfDay },
+          tournament: { enableMatchCheckin: true, status: 'IN_PROGRESS' },
+        },
+      });
+      const allTeamMatches = await this.prisma.match.count({
+        where: {
+          tournament: { enableMatchCheckin: true, status: 'IN_PROGRESS' },
+          OR: memberships.map(m => ({ OR: [{ teamAId: m.teamId }, { teamBId: m.teamId }] })),
+        },
+      });
+      console.warn(`[TournamentCheckin] Check-in rejected for guest ${dto.guestId}. Today matches: ${allTodayMatches}, Team total matches: ${allTeamMatches}. Reasons:`, reasons);
+
       throw new ConflictException({
         message: 'Check-in ditolak',
-        reasons: reasons.length > 0 ? reasons : ['Tidak ada jadwal pertandingan yang sesuai'],
+        reasons: reasons.length > 0 ? reasons : ['Tidak ada jadwal pertandingan hari ini'],
       });
     }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { TeamMember, EligibleGuest } from "@/types/tournament.types";
 import { Modal } from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
@@ -29,12 +29,18 @@ export function TeamMemberFormModal({
   onClose,
   onSuccess,
 }: TeamMemberFormModalProps) {
+  const [localMembers, setLocalMembers] = useState<TeamMember[]>(members);
   const [name, setName] = useState("");
   const [jerseyNumber, setJerseyNumber] = useState("");
   const [role, setRole] = useState("");
   const [selectedGuest, setSelectedGuest] = useState<EligibleGuest | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Sync local state when prop changes (from parent refresh)
+  useEffect(() => {
+    setLocalMembers(members);
+  }, [members]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,11 +73,15 @@ export function TeamMemberFormModal({
 
   const handleRemove = async (memberId: string) => {
     if (!confirm("Remove this member?")) return;
+    // Optimistic update: remove from local state immediately
+    setLocalMembers((prev) => prev.filter((m) => m.id !== memberId));
     try {
       await teamApi.removeMember(memberId);
       onSuccess();
     } catch (err: any) {
       setError(err.message || "Failed to remove member");
+      // Revert on error by re-syncing from parent
+      onSuccess();
     }
   };
 
@@ -80,7 +90,7 @@ export function TeamMemberFormModal({
       open={open}
       onClose={onClose}
       title={`${teamName} — Members`}
-      description={`${members.length} registered member(s)`}
+      description={`${localMembers.length} registered member(s)`}
       className="max-w-md"
     >
       <div className="space-y-4">
@@ -91,7 +101,7 @@ export function TeamMemberFormModal({
         )}
 
         <div className="max-h-48 overflow-y-auto space-y-2">
-          {members.map((member) => (
+          {localMembers.map((member) => (
             <div
               key={member.id}
               className="flex items-center justify-between p-3 rounded-lg bg-brand-bg border border-brand-border"

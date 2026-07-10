@@ -109,6 +109,33 @@
   .hide-top-nav nav {
     display: none !important;
   }
+
+  /* datetime-local input: make calendar/clock picker icons visible in dark mode */
+  input[type="datetime-local"],
+  input[type="date"],
+  input[type="time"] {
+    color-scheme: dark;
+  }
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.7) brightness(1.2);
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.15s;
+  }
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+  }
+  input[type="datetime-local"]::-webkit-datetime-edit {
+    color: inherit;
+  }
+
+  /* date input picker icons */
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.7) brightness(1.2);
+    cursor: pointer;
+    opacity: 0.7;
+  }
 }
 
 /* =============================================
