@@ -36,11 +36,11 @@ export function TeamLogo({ src, name, size = 'md', className = '' }: TeamLogoPro
   const initial = name.charAt(0).toUpperCase();
   const colorIndex = name.length % 5;
   const colors = [
-    'bg-blue-500',
-    'bg-green-500',
-    'bg-yellow-500',
-    'bg-purple-500',
-    'bg-pink-500',
+    'bg-brand-info',
+    'bg-brand-success',
+    'bg-brand-warning',
+    'bg-brand-primary',
+    'bg-brand-danger',
   ];
 
   return (
@@ -48,7 +48,7 @@ export function TeamLogo({ src, name, size = 'md', className = '' }: TeamLogoPro
       className={`
         rounded-full flex items-center justify-center
         ${colors[colorIndex]}
-        text-white font-bold
+        text-brand-bg font-bold
         ${className}
       `}
       style={{

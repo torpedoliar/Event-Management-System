@@ -37,7 +37,7 @@ export function BracketMatchBox({
       onKeyDown={onClick ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick(); } } : undefined}
     >
       {isLive && (
-        <div className="bg-brand-danger text-white text-[10px] uppercase font-bold px-2 py-0.5 flex items-center justify-center gap-1.5">
+        <div className="bg-brand-danger text-brand-bg text-2xs uppercase font-bold px-2 py-0.5 flex items-center justify-center gap-1.5">
           <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
           Live
         </div>

@@ -152,7 +152,13 @@ export default function WebcamCapture({ open, onClose, onCapture, aspect = "squa
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Ambil Foto via Webcam"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
       <div className="surface-elevated p-6 w-full max-w-lg shadow-panel">
         <div className="text-xl font-bold text-brand-text mb-4 flex items-center gap-2">
           <Camera size={24} className="text-brand-success" />
@@ -200,7 +206,7 @@ export default function WebcamCapture({ open, onClose, onCapture, aspect = "squa
           <button 
             onClick={capture} 
             disabled={!isReady || !!error}
-            className="px-5 py-2.5 bg-brand-success hover:bg-brand-success/90 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+            className="px-5 py-2.5 bg-brand-success hover:bg-brand-success/90 text-brand-bg rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
           >
             <Camera size={18} />
             Ambil Foto

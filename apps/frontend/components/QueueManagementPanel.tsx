@@ -97,7 +97,13 @@ export default function QueueManagementPanel({ isOpen, onClose }: QueueManagemen
   const pendingCount = currentQueue.filter(c => c.status === 'pending').length;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Kelola Antrean Offline"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
       <div className="surface-elevated max-w-2xl w-full max-h-[85vh] overflow-hidden flex flex-col shadow-panel">
         {/* Header */}
         <div className="px-6 py-4 border-b border-brand-border flex items-center justify-between bg-brand-surface/50">
@@ -118,6 +124,7 @@ export default function QueueManagementPanel({ isOpen, onClose }: QueueManagemen
           </div>
           <button
             onClick={onClose}
+            aria-label="Tutup"
             className="text-brand-textDim hover:text-brand-text transition-colors"
           >
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -188,7 +195,7 @@ export default function QueueManagementPanel({ isOpen, onClose }: QueueManagemen
                           {item.guestIdentifier}
                         </span>
                         {'souvenirId' in item && (
-                          <span className="px-2 py-0.5 rounded bg-brand-primary/20 text-brand-primary text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded bg-brand-primary/20 text-brand-primary text-2xs font-bold">
                              SOUVENIR ID: {item.souvenirId}
                           </span>
                         )}
@@ -218,7 +225,7 @@ export default function QueueManagementPanel({ isOpen, onClose }: QueueManagemen
                     </div>
                     
                     <div className="flex flex-col items-end gap-2">
-                       <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase transition-colors ${
+                       <span className={`px-2 py-1 rounded text-2xs font-bold uppercase transition-colors ${
                          item.status === 'failed' ? 'bg-brand-danger text-white' : 
                          item.status === 'syncing' ? 'bg-brand-primary text-white animate-pulse' : 
                          'bg-brand-warning text-black'

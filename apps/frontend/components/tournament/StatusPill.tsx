@@ -42,7 +42,7 @@ function getConfigKey(status: string): string {
 export function StatusPill({ status, size = "md" }: StatusPillProps) {
   const configKey = getConfigKey(status);
   const config = statusMap[configKey] || { variant: "neutral", label: status };
-  const sizeClass = size === "sm" ? "text-[10px] px-2 py-0.5" : size === "lg" ? "text-sm px-3 py-1" : "text-xs px-2.5 py-0.5";
+  const sizeClass = size === "sm" ? "text-2xs px-2 py-0.5" : size === "lg" ? "text-sm px-3 py-1" : "text-xs px-2.5 py-0.5";
 
   return (
     <Badge variant={config.variant} className={sizeClass}>

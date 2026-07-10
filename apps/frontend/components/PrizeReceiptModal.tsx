@@ -47,7 +47,13 @@ export default function PrizeReceiptModal({ isOpen, onClose, winner, winners, pr
           });
 
     return (
-        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-300 print:absolute print:inset-0 print:bg-transparent print:p-0 print:block">
+        <div
+            className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-300 print:absolute print:inset-0 print:bg-transparent print:p-0 print:block"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Tanda Terima Hadiah"
+            onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+        >
             {/* Modal Container */}
             <div className="relative bg-white text-black border border-gray-300 rounded-xl w-full max-w-[500px] max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col print:static print:border-none print:shadow-none print:max-w-none print:max-h-none print:rounded-none print:overflow-visible print:block print:m-0 print:bg-transparent">
                 
@@ -64,6 +70,7 @@ export default function PrizeReceiptModal({ isOpen, onClose, winner, winners, pr
                         </button>
                         <button
                             onClick={onClose}
+                            aria-label="Tutup"
                             className="p-1.5 hover:bg-gray-200 rounded-full text-gray-500 hover:text-gray-800 transition-all"
                         >
                             <X size={20} />
@@ -81,7 +88,7 @@ export default function PrizeReceiptModal({ isOpen, onClose, winner, winners, pr
                                     <img src={toApiUrl(logoUrl)} className="h-12 mb-2 object-contain" alt="Event Logo" />
                                 )}
                                 <h1 className="text-xl font-black uppercase tracking-wider text-center leading-tight">Tanda Serah Terima Hadiah</h1>
-                                <p className="text-[10px] uppercase tracking-widest text-gray-500 mt-1">Undian Lucky Draw</p>
+                                <p className="text-2xs uppercase tracking-widest text-gray-500 mt-1">Undian Lucky Draw</p>
                             </div>
 
                             {/* Content Body */}
@@ -137,12 +144,12 @@ export default function PrizeReceiptModal({ isOpen, onClose, winner, winners, pr
                                 <div className="text-center w-44">
                                     <p className="mb-14 font-bold text-xs">Diserahkan Oleh,</p>
                                     <div className="border-b border-black w-full mb-1"></div>
-                                    <p className="text-[10px] text-gray-600">Panitia Penyelenggara</p>
+                                    <p className="text-2xs text-gray-600">Panitia Penyelenggara</p>
                                 </div>
                                 <div className="text-center w-44">
                                     <p className="mb-14 font-bold text-xs">Diterima Oleh,</p>
                                     <div className="border-b border-black w-full mb-1"></div>
-                                    <p className="text-[10px] font-bold uppercase">{w.name}</p>
+                                    <p className="text-2xs font-bold uppercase">{w.name}</p>
                                 </div>
                             </div>
                         </div>

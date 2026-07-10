@@ -53,6 +53,7 @@ export default {
         'body-sm': ['0.875rem', { lineHeight: '1.6' }],
         'body-xs': ['0.75rem', { lineHeight: '1.5' }],
         label: ['0.75rem', { lineHeight: '1.25', letterSpacing: '0.04em', fontWeight: '500' }],
+        '2xs': ['0.625rem', { lineHeight: '1.5' }],
       },
       borderRadius: {
         DEFAULT: '0.75rem',

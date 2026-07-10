@@ -1076,7 +1076,7 @@ export default function SouvenirPage() {
                         >
                             <Clock size={24} />
                             {pendingSouvCount > 0 && (
-                                <span className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-brand-danger text-[10px] font-bold text-brand-bg shadow-lg animate-bounce">
+                                <span className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-brand-danger text-2xs font-bold text-brand-bg shadow-lg animate-pulse">
                                     {pendingSouvCount}
                                 </span>
                             )}
@@ -1288,7 +1288,7 @@ export default function SouvenirPage() {
                                                 <div className="flex gap-2">
                                                     <button
                                                         onClick={() => { setSelectedReceiptPrizeWin(pw); setShowReceiptModal(true); }}
-                                                        className="flex items-center gap-2 rounded-lg bg-blue-500/20 text-blue-400 border border-blue-500/30 px-3 py-2 font-medium hover:bg-blue-500/30 transition-colors"
+                                                        className="flex items-center gap-2 rounded-lg bg-brand-info/20 text-brand-info border border-brand-info/30 px-3 py-2 font-medium hover:bg-brand-info/30 transition-colors"
                                                         title="Print Tanda Terima"
                                                     >
                                                         <Printer size={16} />
@@ -1332,7 +1332,7 @@ export default function SouvenirPage() {
                                                 <div className="flex items-center gap-3">
                                                     <button
                                                         onClick={() => { setSelectedReceiptPrizeWin(pw); setShowReceiptModal(true); }}
-                                                        className="flex items-center gap-2 rounded-lg bg-blue-500/20 text-blue-400 border border-blue-500/30 px-3 py-1 font-medium hover:bg-blue-500/30 transition-colors"
+                                                        className="flex items-center gap-2 rounded-lg bg-brand-info/20 text-brand-info border border-brand-info/30 px-3 py-1 font-medium hover:bg-brand-info/30 transition-colors"
                                                         title="Print Tanda Terima"
                                                     >
                                                         <Printer size={14} /> Cetak
@@ -1377,7 +1377,7 @@ export default function SouvenirPage() {
                                         {h.photoUrl ? (
                                             <img src={toApiUrl(h.photoUrl)} className="h-full w-full object-cover" />
                                         ) : (
-                                            <div className="flex h-full w-full items-center justify-center text-[10px] text-brand-textDim">No Photo</div>
+                                            <div className="flex h-full w-full items-center justify-center text-2xs text-brand-textDim">No Photo</div>
                                         )}
                                     </div>
                                     <div className="text-sm overflow-hidden">

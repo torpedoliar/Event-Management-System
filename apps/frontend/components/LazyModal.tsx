@@ -26,7 +26,10 @@ export function LazyModal({ show, onClose, children }: LazyModalProps) {
     <Suspense fallback={<ModalFallback />}>
       <div
         className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
-        onClick={onClose}
+        role="dialog"
+        aria-modal="true"
+        onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+        onKeyDown={(e) => { if (e.key === "Escape") onClose(); }}
       >
         <div onClick={(e) => e.stopPropagation()}>{children}</div>
       </div>

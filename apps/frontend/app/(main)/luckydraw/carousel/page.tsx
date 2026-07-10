@@ -198,7 +198,7 @@ export default function CarouselDrawPage() {
                 {/* ─── Top: Title + Prize Info ─── */}
                 <div className="w-full flex flex-col items-center gap-4">
                     {/* Title */}
-                    <h1 className="text-3xl md:text-5xl font-heading font-black text-transparent bg-clip-text bg-gradient-to-b from-brand-primarySoft via-brand-primary to-brand-primarySoft drop-shadow-[0_10px_30px_rgba(212,168,83,0.3)] tracking-[0.1em] uppercase text-center">
+                    <h1 className="text-3xl md:text-5xl font-heading font-black text-brand-primary drop-shadow-[0_10px_30px_rgba(212,168,83,0.3)] tracking-[0.1em] uppercase text-center">
                         LUCKY DRAW
                     </h1>
 

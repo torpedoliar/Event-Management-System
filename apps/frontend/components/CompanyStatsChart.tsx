@@ -109,7 +109,7 @@ export default function CompanyStatsChart({ stats }: CompanyStatsChartProps) {
                                 return (
                                     <div className="inline-flex flex-col ml-2 mb-2 align-middle">
                                         <span className="text-brand-text font-medium text-xs">{value}</span>
-                                        <span className="text-brand-textMuted text-[10px]">
+                                        <span className="text-brand-textMuted text-2xs">
                                             {payload.checkedIn} / {payload.total} Check-in ({percentage}%)
                                         </span>
                                     </div>

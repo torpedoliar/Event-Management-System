@@ -452,7 +452,7 @@ export default function EventCalendarPage() {
                             <div
                               key={event.id}
                               className={`
-                                flex items-center justify-between gap-1 text-[10px] md:text-xs px-1 py-0.5 rounded
+                                flex items-center justify-between gap-1 text-2xs md:text-xs px-1 py-0.5 rounded
                                 ${event.isActive
                                   ? 'bg-brand-success/30 text-brand-success border border-brand-success/30'
                                   : isEventPast(event.date)
@@ -469,7 +469,7 @@ export default function EventCalendarPage() {
                             <Link
                               key={t.id}
                               href={`/admin/tournaments/${t.id}` as any}
-                              className="block text-[10px] md:text-xs px-1 py-0.5 rounded bg-brand-warning/10 text-brand-warning truncate hover:bg-brand-warning/20 transition-colors"
+                              className="block text-2xs md:text-xs px-1 py-0.5 rounded bg-brand-warning/10 text-brand-warning truncate hover:bg-brand-warning/20 transition-colors"
                             >
                               <span className="inline-flex items-center gap-1">
                                 <Trophy size={10} />
@@ -478,7 +478,7 @@ export default function EventCalendarPage() {
                             </Link>
                           ))}
                           {day.events.length > 3 && (
-                            <div className="text-[10px] text-white/50">
+                            <div className="text-2xs text-white/50">
                               +{day.events.length - 3} lainnya
                             </div>
                           )}

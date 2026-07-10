@@ -278,7 +278,7 @@ export default function MyShowPage() {
                 {selected.photoUrl ? (
                   <>
                     <img src={toApiUrl(selected.photoUrl)} alt={selected.name} className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-slate-900/50" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-brand-bg/80 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-brand-bg/50" />
                   </>
                 ) : (
                   <div className="text-brand-textDim p-8 flex flex-col items-center gap-4">
@@ -304,7 +304,7 @@ export default function MyShowPage() {
                     <CheckCircle size={28} className="text-brand-warning" />
                   </div>
                   <div>
-                    <div className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-warning text-xl md:text-2xl font-bold tracking-wider">ANDA CHECK-IN</div>
+                    <div className="text-brand-primary text-xl md:text-2xl font-bold tracking-wider">ANDA CHECK-IN</div>
                     <div className="text-brand-text/60 text-sm">
                       {new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                     </div>

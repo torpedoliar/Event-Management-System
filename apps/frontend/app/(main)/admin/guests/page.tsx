@@ -784,7 +784,7 @@ export default function GuestsListPage() {
                       <td className="px-4 py-4 text-white font-medium align-middle">
                         <div className="group-hover:text-brand-primarySoft transition-colors flex items-center gap-2">
                           {g.name}
-                          {showDuplicatesOnly && <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">DUPLIKAT</span>}
+                          {showDuplicatesOnly && <span className="px-2 py-0.5 rounded text-2xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">DUPLIKAT</span>}
                         </div>
                         {g.notes && (
                           <div className="text-xs text-brand-warning/80 mt-1 px-2 py-1 bg-brand-warning/10 rounded border border-brand-warning/20 max-w-xs truncate">
@@ -827,7 +827,7 @@ export default function GuestsListPage() {
                                 <Package size={12} />
                                 {g.souvenirTakes.length}
                               </span>
-                              <span className="text-[10px] text-white/50 max-w-[100px] truncate" title={g.souvenirTakes.map(s => s.souvenir.name).join(', ')}>
+                              <span className="text-2xs text-white/50 max-w-[100px] truncate" title={g.souvenirTakes.map(s => s.souvenir.name).join(', ')}>
                                 {g.souvenirTakes.map(s => s.souvenir.name).join(', ')}
                               </span>
                             </div>
@@ -863,7 +863,7 @@ export default function GuestsListPage() {
                         )}
                       </td>
                       <td className="px-4 py-4 align-middle text-center">
-                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-mono uppercase tracking-widest ${g.checkedIn ? 'bg-brand-success/10 text-brand-success border border-brand-success/20' : 'bg-white/5 text-white/40 border border-white/10'}`}>
+                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-2xs font-mono uppercase tracking-widest ${g.checkedIn ? 'bg-brand-success/10 text-brand-success border border-brand-success/20' : 'bg-white/5 text-white/40 border border-white/10'}`}>
                           {g.checkedIn ? 'CHECKED-IN' : 'BELUM'}
                         </span>
                       </td>

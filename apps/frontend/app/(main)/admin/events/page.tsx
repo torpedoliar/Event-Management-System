@@ -326,7 +326,7 @@ export default function EventsPage() {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             {event.isActive && (
-              <span className="px-1.5 py-0.5 text-[10px] font-medium bg-brand-success/20 text-brand-success rounded-full">
+              <span className="px-1.5 py-0.5 text-2xs font-medium bg-brand-success/20 text-brand-success rounded-full">
                 ACTIVE
               </span>
             )}

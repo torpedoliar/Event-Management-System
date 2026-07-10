@@ -95,6 +95,9 @@ export default function EventSelector() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+        aria-label="Pilih Event"
+        aria-haspopup="listbox"
         className="flex items-center gap-2 pl-3 pr-2.5 py-1.5 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-borderHover hover:bg-brand-surfaceMuted transition-all duration-fast text-sm"
       >
         <div className="w-2 h-2 rounded-full bg-brand-success" />
@@ -116,7 +119,7 @@ export default function EventSelector() {
               <div className="text-xs text-brand-textDim uppercase tracking-wider px-2 py-1">Pilih Event</div>
             )}
           </div>
-          <div className="max-h-64 overflow-y-auto p-2 space-y-1">
+          <div className="max-h-64 overflow-y-auto p-2 space-y-1" role="listbox">
             {events.map((event) => (
               <button
                 key={event.id}

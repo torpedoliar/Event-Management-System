@@ -48,6 +48,9 @@ export default function ImageCarousel({
   return (
     <div
       className={`relative ${aspectRatio} rounded-2xl shadow-panel overflow-hidden ${className}`}
+      role="region"
+      aria-label="Galeri gambar"
+      aria-roledescription="carousel"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -74,7 +77,7 @@ export default function ImageCarousel({
               className={`w-2 h-2 rounded-full transition-all ${
                 i === index ? 'bg-white w-6' : 'bg-white/50'
               }`}
-              aria-label={`Go to image ${i + 1}`}
+              aria-label={`Gambar ${i + 1} dari ${images.length}`}
             />
           ))}
         </div>

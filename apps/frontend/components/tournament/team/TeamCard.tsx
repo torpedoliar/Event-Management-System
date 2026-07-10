@@ -81,19 +81,19 @@ export function TeamCard({ team, onClick, onEdit, onDelete, onManageMembers, sho
             <p className="text-xl font-bold text-brand-success leading-none mb-1">
               {team.wins}
             </p>
-            <p className="text-[10px] uppercase font-bold text-brand-success/70 tracking-wider">Wins</p>
+            <p className="text-2xs uppercase font-bold text-brand-success/70 tracking-wider">Wins</p>
           </div>
           <div className="flex-1 text-center bg-brand-danger/10 rounded-lg p-2">
             <p className="text-xl font-bold text-brand-danger leading-none mb-1">
               {team.losses}
             </p>
-            <p className="text-[10px] uppercase font-bold text-brand-danger/70 tracking-wider">Losses</p>
+            <p className="text-2xs uppercase font-bold text-brand-danger/70 tracking-wider">Losses</p>
           </div>
           <div className="flex-1 text-center bg-brand-surface border border-brand-border rounded-lg p-2">
             <p className="text-xl font-bold text-brand-textMuted leading-none mb-1">
               {team.draws}
             </p>
-            <p className="text-[10px] uppercase font-bold text-brand-textMuted tracking-wider">Draws</p>
+            <p className="text-2xs uppercase font-bold text-brand-textMuted tracking-wider">Draws</p>
           </div>
         </div>
 

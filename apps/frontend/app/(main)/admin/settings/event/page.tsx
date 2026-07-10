@@ -850,9 +850,9 @@ export default function EventSettingsPage() {
                     <div className="flex justify-between items-center">
                       <Label className="text-white/80">{sound.label}</Label>
                       {sound.url ? (
-                        <span className="text-[10px] bg-brand-primary/20 text-brand-primarySoft px-2 py-0.5 rounded-full font-mono">Custom</span>
+                        <span className="text-2xs bg-brand-primary/20 text-brand-primarySoft px-2 py-0.5 rounded-full font-mono">Custom</span>
                       ) : (
-                        <span className="text-[10px] bg-white/10 text-white/40 px-2 py-0.5 rounded-full font-mono">Default</span>
+                        <span className="text-2xs bg-white/10 text-white/40 px-2 py-0.5 rounded-full font-mono">Default</span>
                       )}
                     </div>
                     
@@ -868,7 +868,7 @@ export default function EventSettingsPage() {
                         <Volume2 size={16} />
                       </button>
                       <div className="flex-1 min-w-0">
-                        <div className="text-[10px] text-white/30 truncate font-mono">
+                        <div className="text-2xs text-white/30 truncate font-mono">
                           {sound.url ? sound.url.split('/').pop() : sound.default.split('/').pop()}
                         </div>
                       </div>

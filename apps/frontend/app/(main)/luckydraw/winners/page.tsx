@@ -84,7 +84,7 @@ export default function AutoScrollWinnersPage() {
                 {eventCfg?.logoUrl && (
                     <img src={toApiUrl(eventCfg.logoUrl)} className="h-20 md:h-28 object-contain drop-shadow-2xl mb-4" alt="Event Logo" />
                 )}
-                <h1 className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-brand-primarySoft via-brand-primary to-brand-primarySoft uppercase tracking-[0.2em] drop-shadow-[0_0_20px_rgba(212,168,83,0.5)]">
+                <h1 className="text-4xl md:text-6xl font-black text-brand-primary uppercase tracking-[0.2em] drop-shadow-[0_0_20px_rgba(212,168,83,0.5)]">
                     HALL OF FAME
                 </h1>
                 <div className="text-brand-textMuted font-mono tracking-[0.3em] mt-2 text-center text-sm md:text-base">DAFTAR PEMENANG UNDIAN</div>

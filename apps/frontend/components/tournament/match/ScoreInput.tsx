@@ -77,6 +77,7 @@ export function ScoreInput({
                 <button
                   type="button"
                   onClick={() => decrement("A")}
+                  aria-label={`Kurangi skor ${match.teamA?.name || "Team A"}`}
                   className="w-10 h-10 flex items-center justify-center rounded-full bg-brand-surface border border-brand-border text-brand-text hover:bg-white/[0.04] transition-colors"
                 >
                   <Minus size={16} />
@@ -87,10 +88,12 @@ export function ScoreInput({
                   onChange={(e) => setScoreA(Math.max(0, parseInt(e.target.value) || 0))}
                   className="w-20 h-12 text-center text-2xl font-bold rounded-lg !px-0"
                   min={0}
+                  aria-label={`Skor ${match.teamA?.name || "Team A"}`}
                 />
                 <button
                   type="button"
                   onClick={() => increment("A")}
+                  aria-label={`Tambah skor ${match.teamA?.name || "Team A"}`}
                   className="w-10 h-10 flex items-center justify-center rounded-full bg-brand-surface border border-brand-border text-brand-text hover:bg-white/[0.04] transition-colors"
                 >
                   <Plus size={16} />
@@ -112,6 +115,7 @@ export function ScoreInput({
                 <button
                   type="button"
                   onClick={() => decrement("B")}
+                  aria-label={`Kurangi skor ${match.teamB?.name || "Team B"}`}
                   className="w-10 h-10 flex items-center justify-center rounded-full bg-brand-surface border border-brand-border text-brand-text hover:bg-white/[0.04] transition-colors"
                 >
                   <Minus size={16} />
@@ -122,10 +126,12 @@ export function ScoreInput({
                   onChange={(e) => setScoreB(Math.max(0, parseInt(e.target.value) || 0))}
                   className="w-20 h-12 text-center text-2xl font-bold rounded-lg !px-0"
                   min={0}
+                  aria-label={`Skor ${match.teamB?.name || "Team B"}`}
                 />
                 <button
                   type="button"
                   onClick={() => increment("B")}
+                  aria-label={`Tambah skor ${match.teamB?.name || "Team B"}`}
                   className="w-10 h-10 flex items-center justify-center rounded-full bg-brand-surface border border-brand-border text-brand-text hover:bg-white/[0.04] transition-colors"
                 >
                   <Plus size={16} />
@@ -149,7 +155,7 @@ export function ScoreInput({
                       className={cn(
                         "w-12 h-12 rounded-lg font-bold transition-colors border",
                         setsA > i
-                          ? "bg-brand-success text-white border-brand-success"
+                          ? "bg-brand-success text-brand-bg border-brand-success"
                           : "bg-brand-surface text-brand-textMuted border-brand-border hover:bg-white/[0.04]"
                       )}
                     >
@@ -172,7 +178,7 @@ export function ScoreInput({
                       className={cn(
                         "w-12 h-12 rounded-lg font-bold transition-colors border",
                         setsB > i
-                          ? "bg-brand-success text-white border-brand-success"
+                          ? "bg-brand-success text-brand-bg border-brand-success"
                           : "bg-brand-surface text-brand-textMuted border-brand-border hover:bg-white/[0.04]"
                       )}
                     >

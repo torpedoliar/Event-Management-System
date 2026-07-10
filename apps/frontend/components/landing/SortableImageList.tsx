@@ -70,6 +70,7 @@ function SortableItem({
         <button
           {...attributes}
           {...listeners}
+          aria-label="Seret untuk mengurutkan"
           className="p-2 cursor-grab active:cursor-grabbing text-brand-textMuted hover:text-brand-text"
         >
           <GripVertical className="w-4 h-4" />
@@ -105,6 +106,7 @@ function SortableItem({
 
         <button
           onClick={onDelete}
+          aria-label="Hapus gambar"
           className="p-2 text-brand-textMuted hover:text-brand-danger transition-colors"
         >
           <Trash2 className="w-4 h-4" />

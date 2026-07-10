@@ -87,11 +87,11 @@ export default function LivePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-brand-bg flex items-center justify-center">
         <div className="text-center">
           <div className="animate-pulse flex flex-col items-center gap-4">
-            <div className="w-16 h-16 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
-            <p className="text-white text-xl font-medium">Loading live matches...</p>
+            <div className="w-16 h-16 border-4 border-brand-danger border-t-transparent rounded-full animate-spin" />
+            <p className="text-brand-text text-xl font-medium">Loading live matches...</p>
           </div>
         </div>
       </div>
@@ -100,14 +100,14 @@ export default function LivePage() {
 
   if (error && tournaments.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-brand-bg flex items-center justify-center">
         <div className="text-center max-w-md mx-auto px-4">
-          <div className="text-red-500 text-6xl mb-6">⚠️</div>
-          <h1 className="text-4xl font-bold text-white mb-4">Connection Error</h1>
-          <p className="text-slate-400 text-lg mb-8">{error}</p>
+          <div className="text-brand-danger text-6xl mb-6">⚠️</div>
+          <h1 className="text-4xl font-bold text-brand-text mb-4">Connection Error</h1>
+          <p className="text-brand-textMuted text-lg mb-8">{error}</p>
           <button
             onClick={fetchData}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary text-brand-bg rounded-lg hover:bg-brand-primaryHover transition-colors"
           >
             <RefreshCw className="w-5 h-5" />
             Try Again
@@ -119,21 +119,21 @@ export default function LivePage() {
 
   if (tournaments.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-brand-bg flex items-center justify-center">
         <div className="text-center max-w-md mx-auto px-4">
           <div className="text-8xl mb-6">🏆</div>
-          <h1 className="text-4xl font-bold text-white mb-4">No Live Matches</h1>
-          <p className="text-slate-400 text-lg mb-8">
+          <h1 className="text-4xl font-bold text-brand-text mb-4">No Live Matches</h1>
+          <p className="text-brand-textMuted text-lg mb-8">
             There are no matches in progress right now. Check back later or visit a tournament bracket.
           </p>
           <Link
             href="/tournament/bracket"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary text-brand-bg rounded-lg hover:bg-brand-primaryHover transition-colors"
           >
             <ChevronLeft className="w-5 h-5" />
             View Tournament Brackets
           </Link>
-          <p className="text-slate-500 text-sm mt-6">
+          <p className="text-brand-textDim text-sm mt-6">
             Last checked: {lastUpdated.toLocaleTimeString()}
           </p>
         </div>
@@ -142,31 +142,31 @@ export default function LivePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen bg-brand-bg">
       {/* Header */}
-      <div className="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-sm border-b border-slate-700">
+      <div className="sticky top-0 z-50 bg-brand-bg/80 backdrop-blur-sm border-b border-brand-border">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="relative">
-                <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
-                <div className="absolute inset-0 w-3 h-3 bg-red-500 rounded-full animate-ping" />
+                <div className="w-3 h-3 bg-brand-danger rounded-full animate-pulse" />
+                <div className="absolute inset-0 w-3 h-3 bg-brand-danger rounded-full animate-ping" />
               </div>
-              <h1 className="text-2xl font-bold text-white tracking-tight">
+              <h1 className="text-2xl font-bold text-brand-text tracking-tight">
                 LIVE MATCHES
               </h1>
-              <span className="px-3 py-1 bg-red-500/20 text-red-400 text-sm font-medium rounded-full">
+              <span className="px-3 py-1 bg-brand-danger/20 text-brand-danger text-sm font-medium rounded-full">
                 {tournaments.reduce((sum, t) => sum + t.liveMatches.length, 0)} Active
               </span>
             </div>
             <div className="flex items-center gap-4">
-              <div className="text-slate-400 text-sm">
+              <div className="text-brand-textMuted text-sm">
                 Last updated: {lastUpdated.toLocaleTimeString()}
               </div>
               <button
                 onClick={fetchData}
-                className="p-2 text-slate-400 hover:text-white transition-colors"
-                title="Refresh"
+                className="p-2 text-brand-textMuted hover:text-brand-text transition-colors"
+                aria-label="Refresh live matches"
               >
                 <RefreshCw className="w-4 h-4" />
               </button>
@@ -177,8 +177,8 @@ export default function LivePage() {
 
       {/* Error Banner (non-blocking) */}
       {error && tournaments.length > 0 && (
-        <div className="bg-amber-500/20 border-b border-amber-500/30 px-4 py-2">
-          <p className="text-amber-400 text-sm text-center">
+        <div className="bg-brand-warning/20 border-b border-brand-warning/30 px-4 py-2">
+          <p className="text-brand-warning text-sm text-center">
             Some matches may not be visible due to connection issues.{' '}
             <button onClick={fetchData} className="underline hover:no-underline">
               Retry
@@ -193,10 +193,10 @@ export default function LivePage() {
           <div key={tournament.id} className="mb-12">
             {/* Tournament Header */}
             <div className="mb-6">
-              <h2 className="text-xl font-semibold text-white mb-1">
+              <h2 className="text-xl font-semibold text-brand-text mb-1">
                 {tournament.name}
               </h2>
-              <p className="text-slate-400 text-sm capitalize">
+              <p className="text-brand-textMuted text-sm capitalize">
                 {tournament.sportType?.toLowerCase().replace('_', ' ')} • {tournament.formatType?.toLowerCase().replace('_', ' ')}
               </p>
             </div>
@@ -222,9 +222,9 @@ export default function LivePage() {
       </div>
 
       {/* Auto-refresh indicator */}
-      <div className="fixed bottom-4 right-4 flex items-center gap-2 px-3 py-2 bg-slate-800/80 backdrop-blur-sm rounded-lg border border-slate-700">
-        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-        <span className="text-slate-400 text-sm">Auto-refreshing every 5s</span>
+      <div className="fixed bottom-4 right-4 flex items-center gap-2 px-3 py-2 bg-brand-bgElevated/80 backdrop-blur-sm rounded-lg border border-brand-border">
+        <div className="w-2 h-2 bg-brand-success rounded-full animate-pulse" />
+        <span className="text-brand-textMuted text-sm">Auto-refreshing every 5s</span>
       </div>
     </div>
   );

@@ -37,7 +37,13 @@ export default function WinnerHistoryModal({ isOpen, onClose, prizes, logoUrl }:
     const hasAnyWinners = prizes.some(p => p.winners.length > 0);
 
     return (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-300">
+        <div
+            className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-300"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Riwayat Pemenang Undian"
+            onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+        >
             <div className="surface-elevated border-brand-primary/30 rounded-[2.5rem] w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col shadow-[0_0_100px_rgba(0,0,0,0.8)] animate-in zoom-in duration-300">
                 {/* Header */}
                 <div className="p-8 border-b border-brand-border flex justify-between items-center bg-brand-bg/30">
@@ -47,6 +53,7 @@ export default function WinnerHistoryModal({ isOpen, onClose, prizes, logoUrl }:
                     </h2>
                     <button
                         onClick={onClose}
+                        aria-label="Tutup"
                         className="p-3 hover:bg-brand-surfaceMuted rounded-full text-brand-textDim hover:text-brand-text transition-all hover:rotate-90"
                     >
                         <X size={32} />
@@ -76,14 +83,17 @@ export default function WinnerHistoryModal({ isOpen, onClose, prizes, logoUrl }:
                                             </h4>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                                 {prize.winners.map((w) => (
-                                                    <div 
-                                                        key={w.id} 
+                                                    <div
+                                                        key={w.id}
+                                                        role="button"
+                                                        tabIndex={0}
                                                         onClick={() => {
                                                             setSelectedPrintWinner(w);
                                                             setSelectedPrintPrize(prize);
                                                         }}
-                                                        className="bg-brand-bg/50 rounded-2xl p-4 flex items-center gap-4 border border-brand-border hover:border-brand-primary/40 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(212,168,83,0.15)] transition-all duration-300 group cursor-pointer"
-                                                        title="Klik untuk cetak Tanda Serah Terima Hadiah"
+                                                        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSelectedPrintWinner(w); setSelectedPrintPrize(prize); } }}
+                                                        className="bg-brand-bg/50 rounded-2xl p-4 flex items-center gap-4 border border-brand-border hover:border-brand-primary/40 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(212,168,83,0.15)] transition-all duration-300 group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50"
+                                                        aria-label={`Cetak tanda terima untuk ${w.name}`}
                                                     >
                                                         <div className="w-12 h-12 rounded-full bg-brand-primary/20 flex items-center justify-center font-black text-lg text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-bg group-hover:scale-110 transition-all duration-300">
                                                             {w.queueNumber}
