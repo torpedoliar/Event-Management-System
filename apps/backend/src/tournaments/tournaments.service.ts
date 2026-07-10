@@ -47,6 +47,9 @@ export class TournamentsService {
           ? new Date(createTournamentDto.endDate)
           : null,
         eventId: eventId || null,
+        enableMatchCheckin: createTournamentDto.enableMatchCheckin,
+        checkinWindowMinutes: createTournamentDto.checkinWindowMinutes,
+        checkinCloseMinutes: createTournamentDto.checkinCloseMinutes,
       },
       include: {
         teams: {
@@ -155,6 +158,9 @@ export class TournamentsService {
         endDate: updateTournamentDto.endDate
           ? new Date(updateTournamentDto.endDate)
           : undefined,
+        enableMatchCheckin: updateTournamentDto.enableMatchCheckin,
+        checkinWindowMinutes: updateTournamentDto.checkinWindowMinutes,
+        checkinCloseMinutes: updateTournamentDto.checkinCloseMinutes,
       },
       include: {
         teams: {
