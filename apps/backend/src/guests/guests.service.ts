@@ -253,7 +253,7 @@ export class GuestsService {
     });
   }
 
-  async create(input: CreateGuestDto, photoUrl?: string, skipDuplicateCheck?: boolean, registrationSource?: 'MANUAL' | 'IMPORT' | 'WALKIN') {
+  async create(input: CreateGuestDto, photoUrl?: string, skipDuplicateCheck?: boolean, registrationSource?: 'MANUAL' | 'IMPORT' | 'WALKIN' | 'PUBLIC') {
     let eventId = input.eventId;
     if (!eventId) {
       const activeId = await this.getActiveEventId();

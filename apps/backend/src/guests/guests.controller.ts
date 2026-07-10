@@ -234,6 +234,7 @@ export class GuestsController {
           case 'MANUAL': return 'Manual (Admin)';
           case 'IMPORT': return 'Import Excel';
           case 'WALKIN': return 'Walk-in (Check-in)';
+          case 'PUBLIC': return 'Public (Registrasi)';
           default: return 'Manual (Admin)';
         }
       };
@@ -452,6 +453,7 @@ export class GuestsController {
         case 'MANUAL': return 'Manual';
         case 'IMPORT': return 'Import';
         case 'WALKIN': return 'Walk-in';
+        case 'PUBLIC': return 'Public';
         default: return 'Manual';
       }
     };
@@ -539,7 +541,7 @@ export class GuestsController {
 
       // Sumber Registrasi
       const sourceText = formatSourcePdf(guest.registrationSource);
-      const sourceColor = guest.registrationSource === 'WALKIN' ? '#f97316' : guest.registrationSource === 'IMPORT' ? '#3b82f6' : '#6b7280';
+      const sourceColor = guest.registrationSource === 'WALKIN' ? '#f97316' : guest.registrationSource === 'IMPORT' ? '#3b82f6' : guest.registrationSource === 'PUBLIC' ? '#10b981' : '#6b7280';
       doc.fillColor(sourceColor)
         .text(sourceText, colX + 4, y + 7, { width: cols[7].width - 8, align: 'center' });
       colX += cols[7].width;

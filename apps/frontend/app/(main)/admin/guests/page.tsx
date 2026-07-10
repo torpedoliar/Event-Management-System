@@ -11,7 +11,7 @@ import { useSSE } from '@/lib/sse-context';
 import { Textarea } from '@/components/ui/Textarea';
 
 type GuestCategory = 'REGULAR' | 'VIP' | 'VVIP' | 'MEDIA' | 'SPONSOR' | 'SPEAKER' | 'ORGANIZER';
-type RegistrationSource = 'MANUAL' | 'IMPORT' | 'WALKIN';
+type RegistrationSource = 'MANUAL' | 'IMPORT' | 'WALKIN' | 'PUBLIC';
 
 const CATEGORY_CONFIG: Record<GuestCategory, { label: string; color: string; bg: string; border: string }> = {
   REGULAR: { label: 'Regular', color: 'text-gray-300', bg: 'bg-gray-500/20', border: 'border-gray-500/30' },
@@ -27,6 +27,7 @@ const SOURCE_CONFIG: Record<RegistrationSource, { label: string; color: string; 
   MANUAL: { label: 'Manual', color: 'text-gray-300', bg: 'bg-gray-500/20', border: 'border-gray-500/30' },
   IMPORT: { label: 'Import', color: 'text-brand-primarySoft', bg: 'bg-brand-primary/20', border: 'border-brand-primary/30' },
   WALKIN: { label: 'Walk-in', color: 'text-orange-300', bg: 'bg-orange-500/20', border: 'border-orange-500/30' },
+  PUBLIC: { label: 'Public', color: 'text-emerald-300', bg: 'bg-emerald-500/20', border: 'border-emerald-500/30' },
 };
 
 interface PrizeWin {
@@ -804,7 +805,7 @@ export default function GuestsListPage() {
                           <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${cat.bg} ${cat.color} border ${cat.border}`}>
                             {cat.label}
                           </span>
-                          {src && g.registrationSource === 'WALKIN' && (
+                          {src && (g.registrationSource === 'WALKIN' || g.registrationSource === 'PUBLIC') && (
                             <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${src.bg} ${src.color} border ${src.border}`}>
                               {src.label}
                             </span>

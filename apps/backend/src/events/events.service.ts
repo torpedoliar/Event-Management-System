@@ -218,6 +218,7 @@ export class EventsService {
     enableLuckyDraw?: boolean;
     enableSouvenir?: boolean;
     enableTournament?: boolean;
+    enablePublicRegistration?: boolean;
     allowDuplicateGuestId?: boolean;
     allowMultipleCheckinPerCounter?: boolean;
     requireCheckinForSouvenir?: boolean;

@@ -76,6 +76,10 @@ export class UpdateEventDto {
 
   @IsOptional()
   @IsBoolean()
+  enablePublicRegistration?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
   allowDuplicateGuestId?: boolean;
 
   @IsOptional()

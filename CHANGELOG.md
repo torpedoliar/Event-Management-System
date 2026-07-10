@@ -102,6 +102,83 @@ enum RegistrationSource {
 
 ---
 
+### v1.4.0 - Public Registration Page (July 2026)
+**Status:** ✅ Current Version
+
+#### Public Registration
+- ✨ **Halaman Registrasi Publik (`/register`)**
+  - Halaman publik tanpa login untuk pendaftaran peserta
+  - Form dinamis berdasarkan konfigurasi admin (field builder)
+  - Kuota peserta dengan progress bar real-time
+  - Window waktu pendaftaran (openAt / closeAt)
+  - Anti-duplicate option (tolak data yang sudah ada)
+  - Honeypot anti-bot (hidden field)
+  - Integrasi langsung ke Guest system (`registrationSource: PUBLIC`)
+  - Guest ID auto-generate dengan prefix (contoh: `PUB-42`)
+
+- ⚙️ **Admin Settings (`/admin/settings/public-registration`)**
+  - Toggle on/off registrasi publik
+  - Konfigurasi kuota peserta (0 = unlimited)
+  - Pengaturan waktu buka/tutup
+  - Custom form content (judul, deskripsi, pesan sukses/tutup/penuh)
+  - Field builder: add/remove/reorder field pendaftaran
+  - 9 field options: Nama, ID Peserta, Email, No. HP, Perusahaan, Departemen, Divisi, Meja, Catatan
+  - Statistik pendaftar real-time
+
+- 🔧 **Backend Module (`public-registration/`)**
+  - `PublicRegistrationConfig` model (1:1 dengan Event, JSONB fields)
+  - Public API: `GET /public/registration/config`, `POST /public/registration/submit`
+  - Admin API: `GET/PUT /admin/public-registration`, `GET /admin/public-registration/stats`
+  - Reuse `GuestsService.create()` — tidak duplikasi logic
+  - `@SkipThrottle` di controller (NAT environment)
+
+#### Database Changes
+```sql
+-- New enum value
+ALTER TYPE "RegistrationSource" ADD VALUE 'PUBLIC';
+
+-- New field on Event
+ALTER TABLE "Event" ADD COLUMN "enablePublicRegistration" BOOLEAN NOT NULL DEFAULT false;
+
+-- New model
+CREATE TABLE "PublicRegistrationConfig" (
+  id TEXT PRIMARY KEY,
+  "eventId" TEXT UNIQUE REFERENCES "Event"(id) ON DELETE CASCADE,
+  "isActive" BOOLEAN DEFAULT false,
+  "maxQuota" INTEGER DEFAULT 0,
+  "openAt" TIMESTAMP,
+  "closeAt" TIMESTAMP,
+  title TEXT DEFAULT 'Registrasi Peserta',
+  description TEXT,
+  "successMessage" TEXT DEFAULT 'Terima kasih, registrasi Anda berhasil!',
+  "closedMessage" TEXT DEFAULT 'Pendaftaran telah ditutup.',
+  "fullMessage" TEXT DEFAULT 'Kuota pendaftaran telah penuh.',
+  fields JSONB DEFAULT '[]',
+  "preventDuplicates" BOOLEAN DEFAULT false,
+  "guestIdPrefix" TEXT DEFAULT 'PUB',
+  "createdAt" TIMESTAMP DEFAULT NOW(),
+  "updatedAt" TIMESTAMP
+);
+```
+
+#### Technical Changes
+```
++ PublicRegistrationModule (controller, service, DTOs)
++ PublicRegistrationConfig model in Prisma schema
++ RegistrationSource.PUBLIC enum value
++ enablePublicRegistration field on Event model
++ enablePublicRegistration in UpdateEventDto + setActiveConfig()
++ 'PUBLIC' in GuestsService.create() union type
++ formatSource/formatSourcePdf/sourceColor for PUBLIC
++ /register page (Client Component, dynamic form)
++ /admin/settings/public-registration page (field builder)
++ Toggle + link card in event settings
++ /register link in TopNav (desktop + mobile)
++ SOURCE_CONFIG for PUBLIC (emerald green badge)
+```
+
+---
+
 ### v1.2.0 - Email Integration & UX Improvements (December 2025)
 **Status:** ✅ Previous Stable
 

@@ -113,6 +113,9 @@ model Event {
   // Tournament settings
   enableTournament        Boolean            @default(false)  // Enable tournament system
 
+  // Public registration settings
+  enablePublicRegistration Boolean            @default(false)  // Enable public registration page
+
   createdAt             DateTime             @default(now())
   updatedAt             DateTime             @updatedAt
   guests                Guest[]
@@ -120,6 +123,7 @@ model Event {
   souvenirs             Souvenir[]
   stations              CheckinStation[]
   landingPageConfig     LandingPageConfig?
+  publicRegistrationConfig PublicRegistrationConfig?
   tournaments           Tournament[]
 }
 
@@ -137,6 +141,7 @@ enum RegistrationSource {
   MANUAL
   IMPORT
   WALKIN
+  PUBLIC
 }
 
 model Guest {
@@ -637,4 +642,41 @@ model TournamentCheckin {
   @@index([matchId])
   @@index([tournamentId])
   @@index([teamId])
+}
+
+// ============================================
+// Public Registration
+// ============================================
+
+model PublicRegistrationConfig {
+  id                String    @id @default(uuid())
+  eventId           String    @unique
+  event             Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  // Control
+  isActive          Boolean   @default(false)   // on/off main switch
+  maxQuota          Int       @default(0)       // 0 = unlimited
+  openAt            DateTime?                   // null = open immediately
+  closeAt           DateTime?                   // null = until event
+
+  // Form content
+  title             String    @default("Registrasi Peserta")
+  description       String?   @db.Text
+  successMessage    String    @default("Terima kasih, registrasi Anda berhasil!")
+  closedMessage     String    @default("Pendaftaran telah ditutup.")
+  fullMessage       String    @default("Kuota pendaftaran telah penuh.")
+
+  // Configurable form fields (JSONB array of { key, label, required, type, placeholder })
+  // key: one of Guest column names (name, guestId, email, phone, company, department, division, tableLocation, notes)
+  // type: 'text' | 'textarea'
+  fields            Json      @default("[]")
+
+  // Anti-duplicate
+  preventDuplicates Boolean   @default(false)
+
+  // Guest ID auto-generation prefix (used when guestId field not in form)
+  guestIdPrefix     String    @default("PUB")
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 }

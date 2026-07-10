@@ -52,6 +52,7 @@ interface EventConfig {
   enableLuckyDraw: boolean;
   enableSouvenir: boolean;
   enableTournament: boolean;
+  enablePublicRegistration: boolean;
   allowDuplicateGuestId: boolean;
   allowMultipleCheckinPerCounter?: boolean;
   customCategories?: CustomCategory[];
@@ -130,6 +131,7 @@ export default function EventSettingsPage() {
             enableLuckyDraw: false,
             enableSouvenir: false,
             enableTournament: false,
+            enablePublicRegistration: false,
             allowDuplicateGuestId: false,
             allowMultipleCheckinPerCounter: false,
             checkinPopupTimeoutMs: 5000
@@ -209,6 +211,7 @@ export default function EventSettingsPage() {
           enableLuckyDraw: cfg.enableLuckyDraw ?? false,
           enableSouvenir: cfg.enableSouvenir ?? false,
           enableTournament: cfg.enableTournament ?? false,
+          enablePublicRegistration: cfg.enablePublicRegistration ?? false,
           allowDuplicateGuestId: cfg.allowDuplicateGuestId ?? false,
           allowMultipleCheckinPerCounter: cfg.allowMultipleCheckinPerCounter ?? false,
           customCategories: cfg.customCategories || null,
@@ -419,6 +422,22 @@ export default function EventSettingsPage() {
               </div>
               <ChevronRight size={18} className="text-white/40 group-hover:text-white/70 transition-colors" />
             </Link>
+
+            <Link
+              href="/admin/settings/public-registration"
+              className="flex items-center justify-between p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-emerald-500/20">
+                  <UserPlus size={20} className="text-emerald-400" />
+                </div>
+                <div>
+                  <div className="font-medium text-white">Registrasi Publik</div>
+                  <div className="text-xs text-white/60">Halaman pendaftaran publik & kuota</div>
+                </div>
+              </div>
+              <ChevronRight size={18} className="text-white/40 group-hover:text-white/70 transition-colors" />
+            </Link>
           </div>
 
           {error && <div className="text-sm text-brand-danger bg-brand-danger/10 p-3 rounded-lg border border-brand-danger/20">{error}</div>}
@@ -591,6 +610,25 @@ export default function EventSettingsPage() {
                       className="hidden"
                       checked={cfg.enableTournament ?? false}
                       onChange={(e) => setCfg({ ...cfg, enableTournament: e.target.checked })}
+                    />
+                  </div>
+                </label>
+
+                <label className="flex items-center justify-between p-3 rounded-lg border border-white/10 bg-white/5 cursor-pointer hover:bg-white/10 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <UserPlus size={20} className="text-emerald-400" />
+                    <div>
+                      <div className="font-medium text-white">Enable Public Registration</div>
+                      <div className="text-sm text-white/60">Aktifkan halaman registrasi publik /register</div>
+                    </div>
+                  </div>
+                  <div className={`w-12 h-7 rounded-full transition-colors relative ${cfg.enablePublicRegistration ? 'bg-emerald-500' : 'bg-white/20'}`}>
+                    <div className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transform ${cfg.enablePublicRegistration ? 'translate-x-5' : 'translate-x-0'}`} />
+                    <input
+                      type="checkbox"
+                      className="hidden"
+                      checked={cfg.enablePublicRegistration ?? false}
+                      onChange={(e) => setCfg({ ...cfg, enablePublicRegistration: e.target.checked })}
                     />
                   </div>
                 </label>
@@ -959,5 +997,5 @@ export default function EventSettingsPage() {
   );
 }
 
-import { Type, Calendar, Clock, MapPin, Settings2, Image as ImageIcon, Monitor, Upload, Loader2, EyeOff, Save, Trash2, AlertTriangle, Gift, Dices, Package, UserCog, Trophy, ChevronRight, Camera, Users, UserCheck, Tag, X, Plus, Mail, Music, RotateCcw, Volume2 } from 'lucide-react';
+import { Type, Calendar, Clock, MapPin, Settings2, Image as ImageIcon, Monitor, Upload, Loader2, EyeOff, Save, Trash2, AlertTriangle, Gift, Dices, Package, UserCog, Trophy, ChevronRight, Camera, Users, UserCheck, Tag, X, Plus, Mail, Music, RotateCcw, Volume2, UserPlus } from 'lucide-react';
 import Link from 'next/link';

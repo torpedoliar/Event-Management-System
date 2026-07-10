@@ -1375,8 +1375,8 @@
     "semantic_hash": ""
   },
   "apps/frontend/components/tournament/team/TeamMemberFormModal.tsx": {
-    "mtime": 1783656429.9953816,
-    "ast_hash": "6b5a3c3bf1b4ce67db3d931c70ae9ab5",
+    "mtime": 1783415048.5931141,
+    "ast_hash": "8e32962c0d11c11988114e4546395879",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-06-30-tournament-detail-features.md": {
@@ -1460,8 +1460,8 @@
     "semantic_hash": ""
   },
   "apps/backend/src/tournaments/tournament-checkin.service.ts": {
-    "mtime": 1783656284.1504457,
-    "ast_hash": "8a7f7fe5358f33ba849783d0281f698d",
+    "mtime": 1783589309.3284068,
+    "ast_hash": "a176c1b8e79185b4aad9f7761762774e",
     "semantic_hash": ""
   },
   "apps/frontend/app/(main)/tournament-checkin/page.tsx": {

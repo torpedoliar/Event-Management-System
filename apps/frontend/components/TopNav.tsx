@@ -21,6 +21,7 @@ import {
   ChevronDown,
   Trophy,
   QrCode,
+  UserPlus,
 } from "lucide-react";
 import { apiBase } from "../lib/api";
 import { useSSE } from "../lib/sse-context";
@@ -186,6 +187,11 @@ export default function TopNav() {
                 <span>Check-in</span>
               </Link>
 
+              <Link className={linkCls("/register")} href="/register">
+                <UserPlus size={16} />
+                <span>Daftar</span>
+              </Link>
+
               {isAuth && (
                 <div className="relative" ref={adminMenuRef}>
                   <button
@@ -310,6 +316,9 @@ export default function TopNav() {
           {/* Public / primary */}
           <Link className={mobileLinkCls("/checkin")} href="/checkin">
             <UserCheck size={16} /> Check-in
+          </Link>
+          <Link className={mobileLinkCls("/register")} href="/register">
+            <UserPlus size={16} /> Daftar
           </Link>
           <Link className={mobileLinkCls("/about")} href="/about">
             <Info size={16} /> About
