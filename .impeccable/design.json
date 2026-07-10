@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-10T00:00:00Z",
+  "title": "Design System: Event Management System",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Heritage Gold",
+        "canonical": "#D4A853",
+        "tonalRamp": [
+          "#3D2A0F",
+          "#5C4019",
+          "#7A5623",
+          "#D4A853",
+          "#DFBC73",
+          "#E8CE99",
+          "#F2DFB8",
+          "#F9EDD3"
+        ]
+      },
+      "bg": {
+        "role": "neutral",
+        "displayName": "Void",
+        "canonical": "#09090B",
+        "tonalRamp": [
+          "#000000",
+          "#030305",
+          "#09090B",
+          "#12121A",
+          "#1A1A24",
+          "#1E1E2A",
+          "#272735",
+          "#FAFAF9"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface",
+        "canonical": "#151520",
+        "tonalRamp": [
+          "#09090B",
+          "#0E0E15",
+          "#151520",
+          "#1E1E2A",
+          "#272735",
+          "#32324A",
+          "#3D3D5C",
+          "#FAFAF9"
+        ]
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "Primary Text",
+        "canonical": "#FAFAF9",
+        "tonalRamp": [
+          "#FAFAF9",
+          "#E4E4E7",
+          "#A1A1AA",
+          "#71717A",
+          "#52525B",
+          "#3F3F46",
+          "#27272A",
+          "#09090B"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero headlines, event names, winner displays. Reserved for ceremonial moments."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page titles, section headers."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Card titles, subsection headings."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Paragraph text, descriptions, functional content."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "UI labels, badges, metadata."
+      }
+    },
+    "shadows": [
+      {
+        "name": "soft",
+        "value": "0 4px 20px rgba(0,0,0,0.28)",
+        "purpose": "Default card elevation. Surfaces at rest."
+      },
+      {
+        "name": "panel",
+        "value": "0 24px 60px rgba(0,0,0,0.40)",
+        "purpose": "Elevated panels, modals, slide-out drawers."
+      },
+      {
+        "name": "gold",
+        "value": "0 0 40px rgba(212,168,83,0.12)",
+        "purpose": "Gold-accented elements, prize cards, winner highlights."
+      },
+      {
+        "name": "gold-sm",
+        "value": "0 0 20px rgba(212,168,83,0.10)",
+        "purpose": "Subtle gold glow on interactive elements."
+      },
+      {
+        "name": "inner-glow",
+        "value": "inset 0 1px 0 0 rgba(255,255,255,0.06)",
+        "purpose": "Top-edge highlight on cards, subtle 'lit from above' effect."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-smooth",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Default easing for state transitions."
+      },
+      {
+        "name": "ease-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Orchestrated entrances, slide-up reveals."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main call-to-action. Gold background with dark text.",
+      "html": "<button class=\"ds-btn-primary\">Register Now</button>",
+      "css": ".ds-btn-primary { background: #D4A853; color: #09090B; font-family: Inter, system-ui, sans-serif; font-size: 0.875rem; font-weight: 600; padding: 0.625rem 1.5rem; border: none; border-radius: 0.75rem; cursor: pointer; transition: background 0.15s ease, transform 0.15s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.28); } .ds-btn-primary:hover { background: #C49A4A; transform: translateY(-2px); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px #09090B, 0 0 0 4px rgba(212,168,83,0.50); }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary actions. Transparent with gold border.",
+      "html": "<button class=\"ds-btn-ghost\">Learn More</button>",
+      "css": ".ds-btn-ghost { background: transparent; color: #D4A853; font-family: Inter, system-ui, sans-serif; font-size: 0.875rem; font-weight: 600; padding: 0.625rem 1.5rem; border: 1px solid rgba(212,168,83,0.40); border-radius: 0.75rem; cursor: pointer; transition: border-color 0.15s ease, background 0.15s ease; } .ds-btn-ghost:hover { border-color: rgba(212,168,83,0.60); background: rgba(212,168,83,0.05); } .ds-btn-ghost:focus-visible { outline: none; box-shadow: 0 0 0 2px rgba(212,168,83,0.50); }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Form input field with subtle border.",
+      "html": "<input type=\"text\" class=\"ds-input\" placeholder=\"Enter your name\">",
+      "css": ".ds-input { width: 100%; background: rgba(26,26,36,0.60); color: #FAFAF9; font-family: Inter, system-ui, sans-serif; font-size: 0.875rem; padding: 0.625rem 1rem; border: 1px solid rgba(255,255,255,0.06); border-radius: 0.75rem; transition: border-color 0.15s ease, box-shadow 0.15s ease; } .ds-input::placeholder { color: #71717A; } .ds-input:focus { outline: none; border-color: rgba(212,168,83,0.40); box-shadow: 0 0 0 2px rgba(212,168,83,0.40); }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Default card surface with subtle border and shadow.",
+      "html": "<div class=\"ds-card\"><h3 class=\"ds-card-title\">Guest Name</h3><p class=\"ds-card-body\">Checked in at 2:30 PM</p></div>",
+      "css": ".ds-card { background: #151520; border: 1px solid rgba(255,255,255,0.06); border-radius: 0.75rem; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.28); transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease; } .ds-card:hover { border-color: rgba(255,255,255,0.12); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.32), 0 0 30px rgba(212,168,83,0.06); } .ds-card-title { font-family: Cinzel, serif; font-size: 1.125rem; font-weight: 600; color: #FAFAF9; margin: 0 0 0.5rem; } .ds-card-body { font-family: Inter, system-ui, sans-serif; font-size: 0.875rem; color: #A1A1AA; margin: 0; }"
+    },
+    {
+      "name": "Navigation Item",
+      "kind": "nav",
+      "refersTo": "nav",
+      "description": "Top navigation link with hover and active states.",
+      "html": "<nav class=\"ds-nav\"><a href=\"#\" class=\"ds-nav-link ds-nav-active\">Dashboard</a><a href=\"#\" class=\"ds-nav-link\">Guests</a></nav>",
+      "css": ".ds-nav { display: flex; gap: 0.5rem; } .ds-nav-link { font-family: Inter, system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; color: #A1A1AA; text-decoration: none; padding: 0.5rem 1rem; border-radius: 0.5rem; transition: color 0.15s ease, background 0.15s ease; } .ds-nav-link:hover { color: #FAFAF9; background: rgba(255,255,255,0.05); } .ds-nav-active { color: #D4A853; background: rgba(212,168,83,0.10); } .ds-nav-active:hover { color: #D4A853; background: rgba(212,168,83,0.15); }"
+    },
+    {
+      "name": "Status Badge",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "Status indicator pill with semantic colors.",
+      "html": "<span class=\"ds-badge ds-badge-success\">Checked In</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; gap: 0.375rem; font-family: Inter, system-ui, sans-serif; font-size: 0.75rem; font-weight: 500; padding: 0.25rem 0.75rem; border-radius: 9999px; } .ds-badge-success { background: rgba(74,222,128,0.10); color: #4ADE80; border: 1px solid rgba(74,222,128,0.20); } .ds-badge-warning { background: rgba(251,191,36,0.10); color: #FBBF24; border: 1px solid rgba(251,191,36,0.20); } .ds-badge-danger { background: rgba(248,113,113,0.10); color: #F87171; border: 1px solid rgba(248,113,113,0.20); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Golden Vault",
+    "overview": "Heritage elegance meets modern restraint. Like stepping into a private members club's digital presence — warm gold light against deep charcoal walls, every surface intentional, every interaction confident. The system communicates that this event took care of every detail without shouting it.\n\nThe foundation is near-black charcoal (#09090B), a deliberate choice for event venues where ambient lighting is low. Gold accents (#D4A853) are rare and purposeful — their scarcity is the point. The interface should feel like a well-designed luxury product: nothing wasted, nothing missing.",
+    "keyCharacteristics": [
+      "Dark canvas with warm gold illumination on key interactions",
+      "Serif display type (Cinzel) for headings conveys heritage and authority",
+      "Sans-serif body type (Inter) provides crisp readability",
+      "Rounded surfaces with subtle depth via shadows, not glass effects",
+      "Motion is responsive and confident, never bouncy or playful"
+    ],
+    "rules": [
+      { "name": "The Rarity Rule", "body": "Primary gold appears on ≤10% of any given screen. Its scarcity is the message.", "section": "colors" },
+      { "name": "The Balance Rule", "body": "Use text-wrap: balance on h1-h3 for even line lengths in headings.", "section": "typography" },
+      { "name": "The Pretty Rule", "body": "Use text-wrap: pretty on long prose paragraphs to reduce orphans.", "section": "typography" },
+      { "name": "The Flat-By-Default Rule", "body": "Surfaces are flat at rest. Shadows appear only as a response to state (hover, elevation, focus).", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use heritage gold sparingly — the accent's power comes from restraint",
+      "Do use Cinzel for headings and ceremonial moments; Inter for functional text",
+      "Do use shadows for depth — a lit-from-above effect feels premium",
+      "Do verify contrast ratios: body text ≥4.5:1, large text ≥3:1",
+      "Do include reduced motion support — guests with vestibular disorders need full access",
+      "Do use icons as visual anchors alongside text labels — never color as the only signal"
+    ],
+    "donts": [
+      "Don't use gradient text — decorative, never meaningful",
+      "Don't add glassmorphism as decoration — blur and glass are rare and purposeful",
+      "Don't scaffold with numbered sequences (01, 02, 03)",
+      "Don't add eyebrow kickers above every section",
+      "Don't use side-stripe borders (border-left > 1px as accent)",
+      "Don't create identical card grids — vary sizing and emphasis",
+      "Don't overflow text containers — test headings at every breakpoint"
+    ]
+  }
+}

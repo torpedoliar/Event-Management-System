@@ -38,8 +38,12 @@ export function LiveMatchCard({ match, tournamentName, onMatchClick }: LiveMatch
 
   return (
     <div
-      className="relative bg-brand-surface border border-brand-border rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] cursor-pointer group"
+      role="button"
+      tabIndex={0}
+      aria-label={`Live match: ${teamAName} vs ${teamBName}`}
+      className="relative bg-brand-surface border border-brand-border rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50"
       onClick={() => onMatchClick?.(match)}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onMatchClick?.(match); } }}
     >
       <div className="absolute top-0 left-0 right-0 bg-brand-danger px-4 py-2 flex items-center justify-between">
         <div className="flex items-center gap-2">

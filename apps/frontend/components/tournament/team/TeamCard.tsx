@@ -20,11 +20,15 @@ interface TeamCardProps {
 export function TeamCard({ team, onClick, onEdit, onDelete, onManageMembers, showDetails = false, checkinStatus }: TeamCardProps) {
   return (
     <div
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      aria-label={onClick ? `Team: ${team.name}` : undefined}
       className={cn(
         "rounded-xl border bg-brand-surface shadow-sm overflow-hidden",
-        onClick ? "cursor-pointer hover:border-brand-primary/50 hover:shadow-md transition-all hover:-translate-y-0.5" : "border-brand-border"
+        onClick ? "cursor-pointer hover:border-brand-primary/50 hover:shadow-md transition-all hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50" : "border-brand-border"
       )}
       onClick={onClick}
+      onKeyDown={onClick ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick(); } } : undefined}
     >
       <div className="p-5">
         <div className="flex items-start justify-between gap-3">

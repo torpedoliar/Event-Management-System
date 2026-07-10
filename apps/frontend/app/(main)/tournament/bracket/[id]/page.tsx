@@ -156,7 +156,7 @@ export default function PublicBracketViewerPage() {
 
               <div>
                 <div className="flex items-center gap-3">
-                  <Trophy className={`w-6 h-6 ${isDarkMode ? "text-brand-warning" : "text-yellow-600"}`} />
+                  <Trophy className="w-6 h-6 text-brand-warning" />
                   <h1 className={`text-xl font-bold ${isDarkMode ? "text-brand-text" : "text-gray-900"}`}>
                     {tournament.name}
                   </h1>
@@ -187,6 +187,7 @@ export default function PublicBracketViewerPage() {
             <div className="flex items-center gap-2">
               <button
                 onClick={toggleDarkMode}
+                aria-label={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
                 className={`p-2 rounded-lg transition-colors ${
                   isDarkMode
                     ? "hover:bg-white/[0.04] text-brand-textMuted hover:text-brand-text"
@@ -198,6 +199,7 @@ export default function PublicBracketViewerPage() {
               </button>
               <button
                 onClick={toggleFullscreen}
+                aria-label="Toggle Fullscreen"
                 className={`p-2 rounded-lg transition-colors ${
                   isDarkMode
                     ? "hover:bg-white/[0.04] text-brand-textMuted hover:text-brand-text"
@@ -231,7 +233,7 @@ export default function PublicBracketViewerPage() {
       {tournament.status === "IN_PROGRESS" && (
         <div
           className={`fixed bottom-4 right-4 px-4 py-2 rounded-full font-bold text-sm flex items-center gap-2 shadow-lg ${
-            isDarkMode ? "bg-brand-success text-brand-bg shadow-brand-success/20" : "bg-green-500 text-white"
+            isDarkMode ? "bg-brand-success text-brand-bg shadow-brand-success/20" : "bg-brand-success text-white shadow-brand-success/20"
           }`}
         >
           <span className="relative flex h-3 w-3">

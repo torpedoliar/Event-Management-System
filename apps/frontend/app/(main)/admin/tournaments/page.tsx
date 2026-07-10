@@ -133,11 +133,11 @@ export default function AdminTournamentsPage() {
               <table className="w-full text-left">
                 <thead className="bg-black/20 text-brand-textMuted text-xs uppercase tracking-wider font-semibold border-b border-brand-border">
                   <tr>
-                    <th className="px-6 py-4">Tournament</th>
-                    <th className="px-6 py-4">Status</th>
-                    <th className="px-6 py-4">Teams</th>
-                    <th className="px-6 py-4">Start Date</th>
-                    <th className="px-6 py-4 text-right">Actions</th>
+                    <th scope="col" className="px-6 py-4">Tournament</th>
+                    <th scope="col" className="px-6 py-4">Status</th>
+                    <th scope="col" className="px-6 py-4">Teams</th>
+                    <th scope="col" className="px-6 py-4">Start Date</th>
+                    <th scope="col" className="px-6 py-4 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-brand-border">
@@ -212,12 +212,19 @@ export default function AdminTournamentsPage() {
       )}
 
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-brand-surface rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-brand-border">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="create-tournament-title"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          onClick={(e) => { if (e.target === e.currentTarget) setShowCreateModal(false); }}
+        >
+          <div className="bg-brand-surface rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-brand-border animate-scaleIn">
             <div className="flex items-center justify-between p-6 border-b border-brand-border sticky top-0 bg-brand-surface/90 backdrop-blur z-10">
-              <h2 className="text-2xl font-bold text-brand-text">Create Tournament</h2>
+              <h2 id="create-tournament-title" className="text-2xl font-bold text-brand-text">Create Tournament</h2>
               <button
                 onClick={() => setShowCreateModal(false)}
+                aria-label="Close modal"
                 className="text-brand-textMuted hover:text-brand-text p-2 hover:bg-white/[0.04] rounded-lg transition-colors"
               >
                 ×

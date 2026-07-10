@@ -28,13 +28,17 @@ export function MatchCard({ match, onClick, compact = false, isLive: isLiveProp 
 
   return (
     <div
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      aria-label={onClick ? `Match #${match.matchNumber}: ${match.teamA?.name || "TBD"} vs ${match.teamB?.name || "TBD"}` : undefined}
       className={cn(
         "rounded-xl border transition-all",
         isLive ? "border-brand-danger animate-pulse" : "border-brand-border bg-brand-surface",
-        onClick && "cursor-pointer hover:border-brand-primary/50 hover:bg-white/[0.02]",
+        onClick && "cursor-pointer hover:border-brand-primary/50 hover:bg-white/[0.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50",
         compact ? "p-3" : "p-4"
       )}
       onClick={onClick}
+      onKeyDown={onClick ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick(); } } : undefined}
     >
       <div className="flex items-center justify-between mb-3">
         <span className="text-xs font-medium text-brand-textMuted flex items-center gap-3">

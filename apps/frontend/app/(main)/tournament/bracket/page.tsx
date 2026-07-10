@@ -64,10 +64,10 @@ export default function TournamentBracketsPage() {
 
   if (isLoading || !eventCfg) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-brand-bg flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent mx-auto mb-4" />
-          <p className="text-white">Loading...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-brand-primary border-t-transparent mx-auto mb-4" />
+          <p className="text-brand-text">Loading...</p>
         </div>
       </div>
     );
@@ -75,12 +75,12 @@ export default function TournamentBracketsPage() {
 
   if (!eventCfg.enableTournament) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
-        <div className="text-center p-8 bg-slate-800/50 rounded-2xl border border-slate-700">
-          <Trophy className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-          <h2 className="text-2xl text-white font-bold mb-2">Tournaments Not Enabled</h2>
-          <p className="text-slate-400">Tournament feature is currently disabled for this event.</p>
-          <Link href="/" className="inline-block mt-6 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+      <div className="min-h-screen bg-brand-bg flex items-center justify-center">
+        <div className="text-center p-8 bg-brand-surface rounded-2xl border border-brand-border">
+          <Trophy className="w-16 h-16 text-brand-textDim mx-auto mb-4" />
+          <h2 className="text-2xl text-brand-text font-bold mb-2">Tournaments Not Enabled</h2>
+          <p className="text-brand-textMuted">Tournament feature is currently disabled for this event.</p>
+          <Link href="/" className="inline-block mt-6 px-6 py-2.5 bg-brand-primary hover:bg-brand-primaryHover text-brand-bg rounded-xl transition-colors">
             Return Home
           </Link>
         </div>
@@ -89,15 +89,15 @@ export default function TournamentBracketsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen bg-brand-bg">
       {/* Header */}
-      <div className="bg-slate-900/80 backdrop-blur-sm border-b border-slate-700">
+      <div className="bg-brand-bg/80 backdrop-blur-sm border-b border-brand-border">
         <div className="max-w-6xl mx-auto px-4 py-8">
           <div className="flex items-center gap-3 mb-2">
-            <Trophy className="w-8 h-8 text-yellow-500" />
-            <h1 className="text-3xl font-bold text-white">Tournament Brackets</h1>
+            <Trophy className="w-8 h-8 text-brand-warning" />
+            <h1 className="text-3xl font-bold text-brand-text">Tournament Brackets</h1>
           </div>
-          <p className="text-slate-400">
+          <p className="text-brand-textMuted">
             View live brackets and match results for ongoing and completed tournaments
           </p>
         </div>
@@ -108,13 +108,15 @@ export default function TournamentBracketsPage() {
         <div className="flex flex-col sm:flex-row gap-4 mb-8">
           {/* Search */}
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-textMuted" />
             <input
+              id="search-tournaments"
               type="text"
+              aria-label="Search tournaments"
               placeholder="Search tournaments..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-10 pr-4 py-3 bg-brand-bgSubtle border border-brand-border rounded-xl text-brand-text placeholder:text-brand-textDim focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary/60 transition-all duration-fast"
             />
           </div>
 
@@ -122,7 +124,7 @@ export default function TournamentBracketsPage() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-3 bg-brand-bgSubtle border border-brand-border rounded-xl text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary/60 transition-all duration-fast cursor-pointer"
           >
             <option value="all">All Status</option>
             <option value="IN_PROGRESS">In Progress</option>
@@ -133,9 +135,9 @@ export default function TournamentBracketsPage() {
         {/* Tournament Grid */}
         {filteredTournaments.length === 0 ? (
           <div className="text-center py-16">
-            <Trophy className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-            <h2 className="text-xl text-slate-400 mb-2">No tournaments found</h2>
-            <p className="text-slate-500">
+            <Trophy className="w-16 h-16 text-brand-textDim mx-auto mb-4" />
+            <h2 className="text-xl text-brand-textMuted mb-2">No tournaments found</h2>
+            <p className="text-brand-textDim">
               {tournaments.length === 0
                 ? 'No tournaments with brackets available yet.'
                 : 'Try adjusting your search or filter.'}
@@ -147,26 +149,26 @@ export default function TournamentBracketsPage() {
               <Link
                 key={tournament.id}
                 href={'/tournament/bracket/' + tournament.id}
-                className="group bg-slate-800/50 border border-slate-700 rounded-xl p-6 hover:border-blue-500/50 hover:bg-slate-800/80 transition-all duration-200"
+                className="group bg-brand-surface border border-brand-border rounded-xl p-6 hover:border-brand-primary/50 hover:bg-brand-surfaceMuted/50 transition-all duration-200"
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div className="p-3 bg-yellow-500/10 rounded-lg">
-                    <Trophy className="w-6 h-6 text-yellow-500" />
+                  <div className="p-3 bg-brand-warning/10 rounded-lg">
+                    <Trophy className="w-6 h-6 text-brand-warning" />
                   </div>
                   <StatusPill status={tournament.status} />
                 </div>
 
-                <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors">
+                <h3 className="text-lg font-semibold text-brand-text mb-2 group-hover:text-brand-primary transition-colors">
                   {tournament.name}
                 </h3>
 
-                <p className="text-slate-400 text-sm capitalize mb-4">
+                <p className="text-brand-textMuted text-sm capitalize mb-4">
                   {tournament.sportType?.toLowerCase().replace('_', ' ')} •{' '}
                   {tournament.formatType?.toLowerCase().replace('_', ' ')}
                 </p>
 
                 <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-4 text-slate-500">
+                  <div className="flex items-center gap-4 text-brand-textDim">
                     <span className="flex items-center gap-1">
                       <Users className="w-4 h-4" />
                       {tournament.teams?.length || 0}
@@ -178,7 +180,7 @@ export default function TournamentBracketsPage() {
                       </span>
                     )}
                   </div>
-                  <ExternalLink className="w-4 h-4 text-slate-500 group-hover:text-blue-400 transition-colors" />
+                  <ExternalLink className="w-4 h-4 text-brand-textDim group-hover:text-brand-primary transition-colors" />
                 </div>
               </Link>
             ))}

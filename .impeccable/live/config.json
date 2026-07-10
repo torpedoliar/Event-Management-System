@@ -1,0 +1,6 @@
+{
+  "files": ["apps/frontend/app/**/*.tsx", "apps/frontend/app/**/*.ts"],
+  "insertBefore": "export default",
+  "commentSyntax": "//",
+  "cspChecked": false
+}

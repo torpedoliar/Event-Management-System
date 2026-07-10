@@ -24,13 +24,17 @@ export function BracketMatchBox({
 
   return (
     <div
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      aria-label={`${match.teamA?.name || "TBD"} vs ${match.teamB?.name || "TBD"}${isLive ? " — Live" : ""}${hasWinner ? ` — Winner: ${match.winner?.name}` : ""}`}
       className={cn(
         baseClasses,
         "rounded-xl border-2 bg-brand-surface shadow-sm overflow-hidden transition-all duration-200 relative z-10",
         isHighlighted ? "border-brand-primary" : isLive ? "border-brand-danger animate-pulse" : "border-brand-border",
-        onClick && "cursor-pointer hover:border-brand-primary/50 hover:shadow-md hover:-translate-y-0.5"
+        onClick && "cursor-pointer hover:border-brand-primary/50 hover:shadow-md hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50"
       )}
       onClick={onClick}
+      onKeyDown={onClick ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick(); } } : undefined}
     >
       {isLive && (
         <div className="bg-brand-danger text-white text-[10px] uppercase font-bold px-2 py-0.5 flex items-center justify-center gap-1.5">
