@@ -36,8 +36,10 @@ export class PublicRegistrationController {
 
   @UseGuards(JwtAuthGuard)
   @Get('admin/public-registration')
-  getAdminConfig() {
-    return this.service.getAdminConfig();
+  async getAdminConfig(@Res() res: Response) {
+    const data = await this.service.getAdminConfig();
+    res.setHeader('Cache-Control', 'no-store, max-age=0');
+    return res.json(data);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -53,7 +55,9 @@ export class PublicRegistrationController {
 
   @UseGuards(JwtAuthGuard)
   @Get('admin/public-registration/stats')
-  getStats() {
-    return this.service.getStats();
+  async getStats(@Res() res: Response) {
+    const data = await this.service.getStats();
+    res.setHeader('Cache-Control', 'no-store, max-age=0');
+    return res.json(data);
   }
 }

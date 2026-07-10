@@ -35,7 +35,14 @@ export class PublicRegistrationService {
   private async getActiveEventIdForPublic(): Promise<string> {
     const event = await this.events.getActive();
     if (!event) throw new NotFoundException('No active event');
-    if (!event.enablePublicRegistration) throw new BadRequestException('Public registration is not enabled');
+    // Query DB directly to avoid stale Redis cache — admin may have just toggled the flag
+    const freshEvent = await this.prisma.event.findUnique({
+      where: { id: event.id },
+      select: { enablePublicRegistration: true },
+    });
+    if (!freshEvent?.enablePublicRegistration) {
+      throw new BadRequestException('Public registration is not enabled');
+    }
     return event.id;
   }
 
