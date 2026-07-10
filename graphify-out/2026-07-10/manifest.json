@@ -1375,8 +1375,8 @@
     "semantic_hash": ""
   },
   "apps/frontend/components/tournament/team/TeamMemberFormModal.tsx": {
-    "mtime": 1783415048.5931141,
-    "ast_hash": "8e32962c0d11c11988114e4546395879",
+    "mtime": 1783656429.9953816,
+    "ast_hash": "6b5a3c3bf1b4ce67db3d931c70ae9ab5",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-06-30-tournament-detail-features.md": {
@@ -1460,8 +1460,8 @@
     "semantic_hash": ""
   },
   "apps/backend/src/tournaments/tournament-checkin.service.ts": {
-    "mtime": 1783589309.3284068,
-    "ast_hash": "a176c1b8e79185b4aad9f7761762774e",
+    "mtime": 1783656284.1504457,
+    "ast_hash": "8a7f7fe5358f33ba849783d0281f698d",
     "semantic_hash": ""
   },
   "apps/frontend/app/(main)/tournament-checkin/page.tsx": {
@@ -1500,8 +1500,8 @@
     "semantic_hash": ""
   },
   "apps/backend/src/public-registration/public-registration.controller.ts": {
-    "mtime": 1783651917.3294232,
-    "ast_hash": "0ddff2e8f4fdad4c1ed21a8127ab9321",
+    "mtime": 1783666279.661362,
+    "ast_hash": "06d4d2b7ae53600a0a5b6b9096c52bce",
     "semantic_hash": ""
   },
   "apps/backend/src/public-registration/public-registration.module.ts": {
@@ -1510,8 +1510,8 @@
     "semantic_hash": ""
   },
   "apps/backend/src/public-registration/public-registration.service.ts": {
-    "mtime": 1783652281.9485514,
-    "ast_hash": "7dba7234490eafa8073adc9e166c4453",
+    "mtime": 1783666172.7618415,
+    "ast_hash": "0e27354dfa8b14c9d3f49945f2994ce8",
     "semantic_hash": ""
   },
   "apps/frontend/app/(main)/admin/settings/public-registration/page.tsx": {

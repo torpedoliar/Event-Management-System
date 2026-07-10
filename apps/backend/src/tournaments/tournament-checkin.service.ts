@@ -12,9 +12,9 @@ export class TournamentCheckinService {
    */
   private getTodayRange(): { startOfDay: Date; endOfDay: Date } {
     const now = new Date();
-    // Use UTC to match Prisma's UTC storage — avoids timezone drift
-    const startOfDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0, 0));
-    const endOfDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 23, 59, 59, 999));
+    // Use local time instead of UTC to avoid timezone drift in WIB (Fix Bug #3)
+    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+    const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
     return { startOfDay, endOfDay };
   }
 
@@ -251,35 +251,43 @@ export class TournamentCheckinService {
       });
     }
 
-    // 4. Upsert TournamentCheckin (idempotent via @@unique)
+    // 4. Upsert TournamentCheckin in a transaction (Fix Bug #1)
+    const now = new Date();
+    
     try {
-      const checkin = await this.prisma.tournamentCheckin.create({
-        data: {
-          memberId: candidate.memberId,
-          matchId: candidate.matchId,
-          teamId: candidate.teamId,
-          tournamentId: candidate.tournamentId,
-          guestId: guest.id,
-          checkedById: dto.adminId,
-          checkedByName: dto.adminName,
-          counterName: dto.counterName,
-        },
-      });
+      const { checkin } = await this.prisma.$transaction(async (tx) => {
+        const checkin = await tx.tournamentCheckin.create({
+          data: {
+            memberId: candidate!.memberId,
+            matchId: candidate!.matchId,
+            teamId: candidate!.teamId,
+            tournamentId: candidate!.tournamentId,
+            guestId: guest.id,
+            checkedAt: now, // Explicit timestamp to link with GuestCheckin
+            checkedById: dto.adminId,
+            checkedByName: dto.adminName,
+            counterName: dto.counterName,
+          },
+        });
 
-      // Create GuestCheckin (core) for consistency
-      await this.prisma.guestCheckin.create({
-        data: {
-          guestId: guest.id,
-          checkinById: dto.adminId,
-          checkinByName: dto.adminName,
-          counterName: dto.counterName,
-        },
-      });
+        // Create GuestCheckin (core) with EXACT SAME timestamp (Fix Bug #2 prep)
+        await tx.guestCheckin.create({
+          data: {
+            guestId: guest.id,
+            checkinAt: now,
+            checkinById: dto.adminId,
+            checkinByName: dto.adminName,
+            counterName: dto.counterName,
+          },
+        });
 
-      // Increment checkinCount
-      await this.prisma.guest.update({
-        where: { id: guest.id },
-        data: { checkinCount: { increment: 1 } },
+        // Increment checkinCount
+        await tx.guest.update({
+          where: { id: guest.id },
+          data: { checkinCount: { increment: 1 } },
+        });
+
+        return { checkin };
       });
 
       // Emit SSE
@@ -398,36 +406,41 @@ export class TournamentCheckinService {
       throw new NotFoundException('Check-in not found');
     }
 
-    // Delete TournamentCheckin
-    await this.prisma.tournamentCheckin.delete({
-      where: { id: checkinId },
+    // Wrap in transaction and safely delete specific GuestCheckin (Fix Bug #1 & #2)
+    await this.prisma.$transaction(async (tx) => {
+      // Delete TournamentCheckin
+      await tx.tournamentCheckin.delete({
+        where: { id: checkinId },
+      });
+
+      // Revert GuestCheckin using EXACT timestamp match to avoid deleting unrelated check-ins
+      if (checkin.guestId) {
+        const matchingGuestCheckin = await tx.guestCheckin.findFirst({
+          where: { 
+            guestId: checkin.guestId,
+            checkinAt: checkin.checkedAt // Exact match links the two records safely
+          },
+        });
+
+        if (matchingGuestCheckin) {
+          await tx.guestCheckin.delete({
+            where: { id: matchingGuestCheckin.id },
+          });
+
+          // Decrement checkinCount safely
+          const guest = await tx.guest.findUnique({
+            where: { id: checkin.guestId },
+            select: { checkinCount: true },
+          });
+          if (guest && guest.checkinCount > 0) {
+            await tx.guest.update({
+              where: { id: checkin.guestId },
+              data: { checkinCount: { decrement: 1 } },
+            });
+          }
+        }
+      }
     });
-
-    // Revert GuestCheckin (core) — delete the most recent one for this guest
-    if (checkin.guestId) {
-      const latestGuestCheckin = await this.prisma.guestCheckin.findFirst({
-        where: { guestId: checkin.guestId },
-        orderBy: { checkinAt: 'desc' },
-      });
-
-      if (latestGuestCheckin) {
-        await this.prisma.guestCheckin.delete({
-          where: { id: latestGuestCheckin.id },
-        });
-      }
-
-      // Decrement checkinCount (guard against negative)
-      const guest = await this.prisma.guest.findUnique({
-        where: { id: checkin.guestId },
-        select: { checkinCount: true },
-      });
-      if (guest && guest.checkinCount > 0) {
-        await this.prisma.guest.update({
-          where: { id: checkin.guestId },
-          data: { checkinCount: { decrement: 1 } },
-        });
-      }
-    }
 
     // Emit SSE
     emitEvent({

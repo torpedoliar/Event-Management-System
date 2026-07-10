@@ -18,6 +18,10 @@ export class MatchScoringService {
       throw new NotFoundException('Match not found');
     }
 
+    if (match.status === MatchStatus.COMPLETED || match.status === MatchStatus.CANCELLED || match.status === MatchStatus.WALKOVER) {
+      throw new Error(`Cannot update score for a match that is already ${match.status}. Please reset or use finishMatch logic if needed.`);
+    }
+
     // Determine winner based on scoring mode
     let winnerId: string | null = null;
 

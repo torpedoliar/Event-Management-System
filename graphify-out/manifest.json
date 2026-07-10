@@ -145,8 +145,8 @@
     "semantic_hash": "b6ea91b60b435c660d6fbe7933b7a485"
   },
   "apps/backend/src/events/events.service.ts": {
-    "mtime": 1783652239.0393956,
-    "ast_hash": "9ad6bc82674482dd4c797fc12e5765da",
+    "mtime": 1783694075.4595244,
+    "ast_hash": "6ee10fdcc4ab5b5725edf0ec10ce8b24",
     "semantic_hash": ""
   },
   "apps/backend/src/guests/dto/create-guest.dto.ts": {
@@ -370,9 +370,9 @@
     "semantic_hash": ""
   },
   "apps/frontend/app/(main)/admin/login/page.tsx": {
-    "mtime": 1782478911.654548,
-    "ast_hash": "b3d89219a8aaa63757c778ecc91b1e05",
-    "semantic_hash": "b3d89219a8aaa63757c778ecc91b1e05"
+    "mtime": 1783694134.9108908,
+    "ast_hash": "9b4b250c3ac0bbeba7d4aa1bf1f2c99d",
+    "semantic_hash": ""
   },
   "apps/frontend/app/(main)/admin/prizes/page.tsx": {
     "mtime": 1782478911.9049656,
@@ -575,14 +575,14 @@
     "semantic_hash": "6d9551bdc33c4c7fdf21739336df4d6b"
   },
   "apps/frontend/components/landing/LandingNav.tsx": {
-    "mtime": 1782478059.665956,
-    "ast_hash": "49f1b93e3d223898a99bae3f729f4335",
-    "semantic_hash": "49f1b93e3d223898a99bae3f729f4335"
+    "mtime": 1783694092.3900926,
+    "ast_hash": "76da94f6c6bc4669252bf83d25e40afd",
+    "semantic_hash": ""
   },
   "apps/frontend/components/landing/MobileNav.tsx": {
-    "mtime": 1782478079.9676673,
-    "ast_hash": "d431532ec190fa893e3c987303d09a6e",
-    "semantic_hash": "d431532ec190fa893e3c987303d09a6e"
+    "mtime": 1783694118.2678263,
+    "ast_hash": "fe61e21692f0b8b139b518024a3af526",
+    "semantic_hash": ""
   },
   "apps/frontend/components/landing/ProductShowcase.tsx": {
     "mtime": 1782477964.3766327,
@@ -685,8 +685,8 @@
     "semantic_hash": "a04f8d04422001647c72c8675f5c2359"
   },
   "apps/frontend/lib/api.ts": {
-    "mtime": 1783415516.1841395,
-    "ast_hash": "52d799eebe91053e138a54054c8a9851",
+    "mtime": 1783694584.6525059,
+    "ast_hash": "715e24d584d15c2ed6d2d401e5e46217",
     "semantic_hash": ""
   },
   "apps/frontend/lib/connection-status.ts": {
@@ -1500,8 +1500,8 @@
     "semantic_hash": ""
   },
   "apps/backend/src/public-registration/public-registration.controller.ts": {
-    "mtime": 1783651917.3294232,
-    "ast_hash": "0ddff2e8f4fdad4c1ed21a8127ab9321",
+    "mtime": 1783666279.661362,
+    "ast_hash": "06d4d2b7ae53600a0a5b6b9096c52bce",
     "semantic_hash": ""
   },
   "apps/backend/src/public-registration/public-registration.module.ts": {
@@ -1510,8 +1510,8 @@
     "semantic_hash": ""
   },
   "apps/backend/src/public-registration/public-registration.service.ts": {
-    "mtime": 1783652281.9485514,
-    "ast_hash": "7dba7234490eafa8073adc9e166c4453",
+    "mtime": 1783694611.4422944,
+    "ast_hash": "a3ca699194eb8803fa48dbbe6d0d2914",
     "semantic_hash": ""
   },
   "apps/frontend/app/(main)/admin/settings/public-registration/page.tsx": {

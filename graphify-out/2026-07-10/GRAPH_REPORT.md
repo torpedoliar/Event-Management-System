@@ -1,16 +1,16 @@
 # Graph Report - Registrasi Tamu  (2026-07-10)
 
 ## Corpus Check
-- 299 files · ~243,045 words
+- 299 files · ~243,277 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2935 nodes · 4424 edges · 204 communities (176 shown, 28 thin omitted)
+- 2936 nodes · 4197 edges · 222 communities (185 shown, 37 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 25 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `a1242186`
+- Built from commit: `f8861b54`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -203,50 +203,67 @@
 - [[_COMMUNITY_Community 193|Community 193]]
 - [[_COMMUNITY_Community 194|Community 194]]
 - [[_COMMUNITY_Community 195|Community 195]]
+- [[_COMMUNITY_Community 196|Community 196]]
 - [[_COMMUNITY_Community 197|Community 197]]
 - [[_COMMUNITY_Community 198|Community 198]]
 - [[_COMMUNITY_Community 199|Community 199]]
 - [[_COMMUNITY_Community 200|Community 200]]
+- [[_COMMUNITY_Community 201|Community 201]]
+- [[_COMMUNITY_Community 202|Community 202]]
 - [[_COMMUNITY_Community 203|Community 203]]
+- [[_COMMUNITY_Community 204|Community 204]]
+- [[_COMMUNITY_Community 205|Community 205]]
+- [[_COMMUNITY_Community 206|Community 206]]
+- [[_COMMUNITY_Community 207|Community 207]]
+- [[_COMMUNITY_Community 208|Community 208]]
+- [[_COMMUNITY_Community 209|Community 209]]
+- [[_COMMUNITY_Community 210|Community 210]]
+- [[_COMMUNITY_Community 211|Community 211]]
+- [[_COMMUNITY_Community 212|Community 212]]
 - [[_COMMUNITY_Community 213|Community 213]]
+- [[_COMMUNITY_Community 214|Community 214]]
+- [[_COMMUNITY_Community 215|Community 215]]
 - [[_COMMUNITY_Community 216|Community 216]]
+- [[_COMMUNITY_Community 217|Community 217]]
+- [[_COMMUNITY_Community 220|Community 220]]
+- [[_COMMUNITY_Community 221|Community 221]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `emitEvent()` - 55 edges
-2. `IndexedDBService` - 48 edges
-3. `PrismaService` - 45 edges
-4. `GuestsService` - 38 edges
-5. `TournamentsController` - 37 edges
-6. `Button` - 35 edges
-7. `useSSE()` - 34 edges
-8. `OfflineSyncService` - 33 edges
-9. `EventsService` - 32 edges
-10. `TournamentsService` - 31 edges
+1. `IndexedDBService` - 48 edges
+2. `emitEvent()` - 42 edges
+3. `PrismaService` - 37 edges
+4. `TournamentsController` - 37 edges
+5. `GuestsService` - 36 edges
+6. `OfflineSyncService` - 33 edges
+7. `TournamentsService` - 31 edges
+8. `EventsService` - 30 edges
+9. `useSSE()` - 30 edges
+10. `Button` - 29 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `EditGuestPage()` --calls--> `toApiUrl()`  [EXTRACTED]
   apps/frontend/app/(main)/admin/guests/[id]/page.tsx → apps/frontend/lib/api.ts
-- `GuestsListPage()` --calls--> `useSSE()`  [EXTRACTED]
-  apps/frontend/app/(main)/admin/guests/page.tsx → apps/frontend/lib/sse-context.tsx
+- `useAllTournamentSSE()` --calls--> `useSSE()`  [EXTRACTED]
+  apps/frontend/hooks/useTournamentSSE.ts → apps/frontend/lib/sse-context.tsx
+- `DashboardPage()` --calls--> `useSSE()`  [EXTRACTED]
+  apps/frontend/app/(main)/admin/dashboard/page.tsx → apps/frontend/lib/sse-context.tsx
 - `LoginPage()` --calls--> `toApiUrl()`  [EXTRACTED]
   apps/frontend/app/(main)/admin/login/page.tsx → apps/frontend/lib/api.ts
-- `EventSettingsPage()` --calls--> `toApiUrl()`  [EXTRACTED]
-  apps/frontend/app/(main)/admin/settings/event/page.tsx → apps/frontend/lib/api.ts
 - `UsersManagementPage()` --calls--> `useSSE()`  [EXTRACTED]
   apps/frontend/app/(main)/admin/settings/users/page.tsx → apps/frontend/lib/sse-context.tsx
 
 ## Import Cycles
 - None detected.
 
-## Communities (204 total, 28 thin omitted)
+## Communities (222 total, 37 thin omitted)
 
 ### Community 1 - "Landing Page Backend"
 Cohesion: 0.07
 Nodes (8): landingPageStorage(), CreateFeatureDto, UpdateFeatureDto, UpdateLandingConfigDto, IMAGE_FILTER, IMAGE_LIMITS, LandingPageController, LandingPageService
 
 ### Community 2 - "Frontend Core Layout"
-Cohesion: 0.05
-Nodes (23): cinzel, inter, jetbrainsMono, metadata, AuditLog, AuditStats, formatUptime(), HealthStatus (+15 more)
+Cohesion: 0.17
+Nodes (10): AuditLog, AuditStats, formatUptime(), HealthStatus, LogEntry, LogFile, LogStats, SystemPage() (+2 more)
 
 ### Community 3 - "Frontend Dependencies"
 Cohesion: 0.05
@@ -265,8 +282,8 @@ Cohesion: 0.06
 Nodes (33): dependencies, bcrypt, cache-manager, cache-manager-redis-yet, class-transformer, class-validator, compression, dotenv (+25 more)
 
 ### Community 8 - "Admin Settings"
-Cohesion: 0.07
-Nodes (24): CATEGORY_OPTIONS, EditGuestPage(), Guest, GuestCategory, CATEGORY_OPTIONS, GuestCategory, EmailSettings, DEFAULT_CONFIG (+16 more)
+Cohesion: 0.18
+Nodes (8): DEFAULT_CONFIG, Feature, FeatureCardProps, FeatureImage, GalleryImage, HeroImage, LandingConfig, LandingPageAdminData
 
 ### Community 9 - "Check-in & Show"
 Cohesion: 0.05
@@ -277,24 +294,16 @@ Cohesion: 0.11
 Nodes (6): ChangePasswordDto, CreateUserDto, UpdateUserDto, UsersController, UsersModule, UsersService
 
 ### Community 12 - "UI Components"
-Cohesion: 0.08
-Nodes (24): CheckinPage(), EventConfig, Guest, GuestCheckin, ScanLogItem, Alert(), config, Props (+16 more)
-
-### Community 13 - "NestJS App Modules"
 Cohesion: 0.07
-Nodes (10): AuditAction, AuditLogInput, AuditService, BulkSendEmailDto, EmailSettingsDto, SendEmailDto, EventsService, HealthController (+2 more)
+Nodes (27): Alert(), config, Props, Variant, Badge(), Props, styles, Variant (+19 more)
 
 ### Community 14 - "Backend Core Services"
 Cohesion: 0.12
 Nodes (3): emitter, ServerEvent, TournamentsService
 
-### Community 15 - "Admin Dashboard"
-Cohesion: 0.05
-Nodes (8): CreateMatchDto, CreateTeamDto, OfflineTournamentCheckinDto, TournamentCheckinBatchSyncDto, TournamentCheckinDto, UpdateScoreDto, TournamentCheckinService, TournamentsController
-
 ### Community 16 - "Statistics & Charts"
-Cohesion: 0.11
-Nodes (16): colorMap, CompanyStats, PrizeStats, SouvenirStats, StatisticsPage(), Stats, COLORS, CompanyStats (+8 more)
+Cohesion: 0.14
+Nodes (9): COLORS, CompanyStats, CompanyStatsChartProps, COLORS, GuestStatsChartProps, Stats, Props, Variant (+1 more)
 
 ### Community 18 - "Logger Service"
 Cohesion: 0.12
@@ -345,20 +354,20 @@ Cohesion: 0.12
 Nodes (14): ConnectionStatusIndicatorProps, ConnectionInfo, ConnectionStatus, StatusListener, ConnectionStatus, HealthCheckResponse, OfflineCheckinRequest, OfflineCheckinResponse (+6 more)
 
 ### Community 31 - "Storage & Events"
-Cohesion: 0.13
-Nodes (7): JwtAuthGuard, AuditController, backgroundsStorage(), logosStorage(), photosStorage(), soundsStorage(), CreateEventDto
+Cohesion: 0.21
+Nodes (6): backgroundsStorage(), logosStorage(), photosStorage(), soundsStorage(), CreateEventDto, CustomCategory
 
 ### Community 32 - "Reports"
-Cohesion: 0.18
-Nodes (4): ReportsController, ReportsModule, ReportOptions, ReportsService
+Cohesion: 0.15
+Nodes (5): JwtAuthGuard, ReportsController, ReportsModule, ReportOptions, ReportsService
 
 ### Community 33 - "Frontend Hooks"
-Cohesion: 0.13
-Nodes (10): DashboardPage(), GuestStatsChart, Event, Guest, GuestListResponse, queryKeys, Stats, useActiveEvent() (+2 more)
+Cohesion: 0.08
+Nodes (27): DashboardPage(), GuestStatsChart, CATEGORY_OPTIONS, GuestCategory, Prize, PRIZE_CATEGORIES, Souvenir, SouvenirTake (+19 more)
 
 ### Community 34 - "Events Service"
-Cohesion: 0.09
-Nodes (25): CalendarDay, Event, TournamentCalendarItem, Event, EventStats, KanbanColumn, ViewMode, Prize (+17 more)
+Cohesion: 0.12
+Nodes (16): CalendarDay, Event, TournamentCalendarItem, Event, EventStats, KanbanColumn, ViewMode, EventConfig (+8 more)
 
 ### Community 35 - "Backend Config"
 Cohesion: 0.13
@@ -369,16 +378,16 @@ Cohesion: 0.08
 Nodes (25): Backend Files (Phase 1-3), Code Quality Checklist (Run Before Each Commit), Context Management, Error Recovery, Execution Approaches, File Structure, Frontend Files (Phase 1-3), Global Constraints (+17 more)
 
 ### Community 37 - "Events Controller"
-Cohesion: 0.17
-Nodes (16): GuestPicker(), GuestPickerProps, ImportTeamsModal(), ImportTeamsModalProps, TeamFormModal(), TeamMemberFormModal(), Modal(), eligibleGuestApi (+8 more)
+Cohesion: 0.15
+Nodes (10): StationConfig, GuestPickerProps, checkinApi, eligibleGuestApi, teamApi, CheckinResult, CreateTeamDto, EligibleGuest (+2 more)
 
 ### Community 38 - "Lucky Draw Page"
 Cohesion: 0.08
-Nodes (18): DRAMA_CONFIGS, DramaConfig, EligibleGuest, EligibleGuestsResponse, FINALE_CONFETTI, GRAND_CONFETTI, Guest, LuckyDrawPage() (+10 more)
+Nodes (17): DRAMA_CONFIGS, DramaConfig, EligibleGuest, EligibleGuestsResponse, FINALE_CONFETTI, GRAND_CONFETTI, Guest, Prize (+9 more)
 
 ### Community 41 - "Public Checkin API"
 Cohesion: 0.09
-Nodes (24): formatOptions, participantOptions, scoringOptions, sportOptions, TournamentForm(), TournamentFormProps, FormSection(), Props (+16 more)
+Nodes (25): formatOptions, participantOptions, scoringOptions, sportOptions, TournamentForm(), TournamentFormProps, FormSection(), Props (+17 more)
 
 ### Community 42 - "Server Config"
 Cohesion: 0.08
@@ -388,13 +397,17 @@ Nodes (20): config, app, { createServer }, { createServer: createHttpServer }, f
 Cohesion: 0.17
 Nodes (12): devDependencies, prisma, ts-node, ts-node-dev, @types/bcrypt, @types/compression, @types/express, @types/multer (+4 more)
 
+### Community 44 - "Prizes Service"
+Cohesion: 0.09
+Nodes (3): PrizesController, PrizesModule, PrizesService
+
 ### Community 45 - "Community 45"
 Cohesion: 0.10
 Nodes (19): Execution Handoff, File Structure, Global Constraints, Modified landing page files, Modified tournament files, Placeholder Scan, Spec Coverage, Task 10: Tighten Landing Page Section Spacing (+11 more)
 
 ### Community 46 - "Community 46"
-Cohesion: 0.19
-Nodes (13): CreateTeamMemberDto, CreateTournamentDto, ImportTeamDto, ImportTeamMemberDto, ImportTeamsDto, UpdateTournamentDto, ParticipantType, SchedulingMode (+5 more)
+Cohesion: 0.27
+Nodes (12): TeamSeed, CreateTeamMemberDto, CreateTournamentDto, UpdateTournamentDto, MatchStatus, ParticipantType, SchedulingMode, ScoringConfig (+4 more)
 
 ### Community 47 - "Community 47"
 Cohesion: 0.13
@@ -414,7 +427,7 @@ Nodes (4): main, name, private, version
 
 ### Community 52 - "Audit Controller"
 Cohesion: 0.11
-Nodes (18): TabId, TournamentDetailPage(), PublicBracketViewerPage(), Tab, TabId, TabPanel(), TabPanelProps, tabs (+10 more)
+Nodes (17): TabId, ImportTeamsModal(), ImportTeamsModalProps, TeamFormModal(), TeamMemberFormModal(), TeamMemberFormModalProps, Tab, TabId (+9 more)
 
 ### Community 53 - "Events DTOs"
 Cohesion: 0.09
@@ -437,24 +450,24 @@ Cohesion: 0.09
 Nodes (21): Before-After Comparison, Files NOT Modified, Global Constraints, Modified File (ONLY ONE), Phase 1: Add assignSeeds Helper Method, Phase 2: Fix generateBracket Method, Phase 3: Fix regenerateBracket Method, Phase 4: Build Verification (+13 more)
 
 ### Community 75 - "Community 75"
-Cohesion: 0.12
-Nodes (16): AppModule, AuthModule, JwtStrategy, AuditModule, RedisCacheModule, throttlerConfig, EmailModule, EventsModule (+8 more)
+Cohesion: 0.18
+Nodes (8): onEvent(), EmailModule, EventsModule, GuestsModule, LandingPageModule, reqOnClose(), PublicModule, SouvenirsModule
 
 ### Community 76 - "Community 76"
-Cohesion: 0.07
-Nodes (34): FINALE_CONFETTI, GRAND_CONFETTI, Guest, LiveDisplayPage(), Prize, REGULAR_CONFETTI, SHIMMER_CONFETTI, SlotRow (+26 more)
+Cohesion: 0.06
+Nodes (37): LoginPage(), UsersManagementPage(), StatisticsPage(), CheckinPage(), EventConfig, Guest, GuestCheckin, ScanLogItem (+29 more)
+
+### Community 77 - "Community 77"
+Cohesion: 0.13
+Nodes (4): BulkSendEmailDto, EmailSettingsDto, SendEmailDto, EventsService
 
 ### Community 78 - "Community 78"
 Cohesion: 0.10
 Nodes (19): Create a tournament without eventId → verify it's linked to active event, GET /tournaments (no eventId) → only returns active event's tournaments, Global Constraints, Phase 1: Guest Picker for Team Member (Import Peserta dari Data Tamu), Phase 3: Toggle `enableTournament` di Event Settings, Phase 4: Integrasi Lanjutan (Calendar, Stats, Sync Tanggal), Skill Binding Guide, Task 1.1: Backend Endpoint — Eligible Guests for Tournament (+11 more)
 
-### Community 79 - "Community 79"
-Cohesion: 0.20
-Nodes (5): PrismaModule, BracketEngineService, TeamSeed, TournamentsModule, MatchStatus
-
 ### Community 80 - "Community 80"
-Cohesion: 0.22
-Nodes (7): DEFAULT_CONFIG, FIELD_KEY_OPTIONS, RegConfig, RegField, RegStats, Props, Select
+Cohesion: 0.29
+Nodes (5): DEFAULT_CONFIG, FIELD_KEY_OPTIONS, RegConfig, RegField, RegStats
 
 ### Community 81 - "Community 81"
 Cohesion: 0.10
@@ -465,8 +478,8 @@ Cohesion: 0.07
 Nodes (29): 1. Siapkan Environment File, 2. Siapkan SSL Certificate, 3. Jalankan Deployment, 4. Verifikasi Deployment, Arsitektur, Backup Database, Checklist Keamanan, Container tidak start (+21 more)
 
 ### Community 83 - "Community 83"
-Cohesion: 0.16
-Nodes (7): SubmitRegistrationDto, RegistrationFieldDto, UpdateRegistrationConfigDto, PublicRegistrationController, PublicRegistrationService, RegistrationField, VALID_FIELD_KEYS
+Cohesion: 0.12
+Nodes (8): AppModule, bootstrap(), compression, PublicRegistrationController, PublicRegistrationModule, PublicRegistrationService, RegistrationField, VALID_FIELD_KEYS
 
 ### Community 84 - "Community 84"
 Cohesion: 0.07
@@ -481,28 +494,28 @@ Cohesion: 0.08
 Nodes (25): 1. Backend: Endpoint Baru `GET /prizes/eligible-guests`, 2. Frontend: Update Interface & State, 2a. Tambah field `guestId` ke interface Guest, 2b. State baru untuk panel, 2c. Fetch function untuk panel, 2d. Debounced search & auto-refresh, 3. Frontend: UI Panel yang Disempurnakan, 4. Tambahan Import (+17 more)
 
 ### Community 87 - "Community 87"
-Cohesion: 0.15
-Nodes (10): CarouselDrawPage(), FESTIVE_COLORS, FINALE_CONFETTI, GRAND_CONFETTI, Prize, REGULAR_CONFETTI, TICKER_COLORS, Guest (+2 more)
+Cohesion: 0.21
+Nodes (5): Skeleton(), SkeletonCard(), SkeletonChart(), SkeletonProps, cn()
 
 ### Community 88 - "Community 88"
-Cohesion: 0.29
-Nodes (7): getConfigKey(), statusMap, StatusPill(), StatusPillProps, MatchStatus, TournamentStatus, TournamentStatusLabels
+Cohesion: 0.13
+Nodes (16): TournamentDetailPage(), PublicBracketViewerPage(), getConfigKey(), statusMap, StatusPill(), StatusPillProps, TournamentEventHandler, TournamentSSEHandlers (+8 more)
 
 ### Community 89 - "Community 89"
 Cohesion: 0.09
 Nodes (21): File Structure, Global Constraints, Landing Page Customization Implementation Plan, Summary, Task 10: Create Features Component, Task 11: Create Gallery Component, Task 12: Update Footer Component, Task 13: Update Landing Page (page.tsx) (+13 more)
 
 ### Community 90 - "Community 90"
-Cohesion: 0.11
-Nodes (24): LiveTournamentInfo, LiveMatchCard(), LiveMatchCardProps, cn(), LiveMatchDisplay(), LiveMatchDisplayProps, cn(), MatchCard() (+16 more)
+Cohesion: 0.13
+Nodes (19): LiveTournamentInfo, LiveMatchCard(), LiveMatchCardProps, cn(), LiveMatchDisplay(), LiveMatchDisplayProps, cn(), MatchCard() (+11 more)
 
 ### Community 91 - "Community 91"
-Cohesion: 0.20
-Nodes (6): RegisterStationDto, ListStationsResponseDto, StationResponseDto, StationsController, StationsModule, StationsService
+Cohesion: 0.16
+Nodes (7): PrismaModule, RegisterStationDto, ListStationsResponseDto, StationResponseDto, StationsController, StationsModule, StationsService
 
 ### Community 92 - "Community 92"
-Cohesion: 0.08
-Nodes (5): emitEvent(), CustomCategory, UpdateEventDto, EventsController, SouvenirsController
+Cohesion: 0.10
+Nodes (4): emitEvent(), UpdateEventDto, EventsController, PublicController
 
 ### Community 93 - "Community 93"
 Cohesion: 0.10
@@ -511,6 +524,10 @@ Nodes (19): Documentation, Enforced Workflows, Example Conversation, File Locati
 ### Community 94 - "Community 94"
 Cohesion: 0.10
 Nodes (19): 1. Wire Offline to Check-in Flow ✅, 2. Queue Limit Enforcement ✅, 3. Photo Offline Support ✅, 4. Conflict Error UI ✅, 5. Distinct SSE Event for Sync ✅, 6. Station Rate Limiting ⏭️ Skipped, ✅ All 6 Fixes Implemented, Changes Summary (+11 more)
+
+### Community 95 - "Community 95"
+Cohesion: 0.10
+Nodes (6): AuditAction, AuditLogInput, AuditService, HealthController, HealthStatus, PrismaService
 
 ### Community 96 - "Community 96"
 Cohesion: 0.11
@@ -541,8 +558,8 @@ Cohesion: 0.14
 Nodes (13): Akses Aplikasi, 📞 Butuh Bantuan?, Cara Login, 📑 Daftar Isi, Dashboard Statistik, Guest Registration & Check-in System, Halaman Utama, 🔐 Login Admin (+5 more)
 
 ### Community 103 - "Community 103"
-Cohesion: 0.19
-Nodes (14): CreateMatchModal(), CreateMatchModalProps, cn(), TeamCard(), TeamCardProps, TeamFormModalProps, TeamMemberFormModalProps, cn() (+6 more)
+Cohesion: 0.21
+Nodes (13): CreateMatchModal(), CreateMatchModalProps, cn(), TeamCard(), TeamCardProps, TeamFormModalProps, cn(), TeamMemberList() (+5 more)
 
 ### Community 104 - "Community 104"
 Cohesion: 0.15
@@ -877,8 +894,8 @@ Cohesion: 0.67
 Nodes (3): Cara Memberikan Souvenir, 🎁 Pembagian Souvenir, Pengambilan Hadiah Lucky Draw
 
 ### Community 192 - "Community 192"
-Cohesion: 0.23
-Nodes (3): AuthController, AuthService, LoginDto
+Cohesion: 0.17
+Nodes (5): AuthController, AuthModule, AuthService, LoginDto, JwtStrategy
 
 ### Community 193 - "Community 193"
 Cohesion: 0.09
@@ -889,44 +906,76 @@ Cohesion: 0.29
 Nodes (6): Build verification, Changes to files, Concerns, Manual test (recommended), Task 1.1: BYE Auto-Advance — Report, What was done
 
 ### Community 195 - "Community 195"
-Cohesion: 0.26
-Nodes (7): BulkDeleteGuestsDto, BulkUpdateGuestsDto, CreateGuestDto, GuestCategory, UpdateGuestDto, formatLocalTime(), truncateText()
+Cohesion: 0.38
+Nodes (5): BulkDeleteGuestsDto, BulkUpdateGuestsDto, CreateGuestDto, GuestCategory, UpdateGuestDto
 
 ### Community 197 - "Community 197"
 Cohesion: 0.33
 Nodes (5): Phase 3: Calendar Integration (Bug #4), Task 2.1: Backend — Add match update endpoint, Task 2.2: Frontend API — Add match update method, Task 2.3: Frontend — Enhance MatchScoringModal with match editing, Task 2.4: Auto-load matches on tournament detail page load
 
+### Community 201 - "Community 201"
+Cohesion: 0.24
+Nodes (6): cinzel, inter, jetbrainsMono, metadata, QueryProvider(), SSEProvider()
+
+### Community 202 - "Community 202"
+Cohesion: 0.15
+Nodes (8): CreateMatchDto, ImportTeamDto, ImportTeamMemberDto, ImportTeamsDto, OfflineTournamentCheckinDto, TournamentCheckinBatchSyncDto, TournamentCheckinDto, UpdateScoreDto
+
 ### Community 203 - "Community 203"
-Cohesion: 0.09
-Nodes (20): CATEGORY_CONFIG, Guest, GuestCategory, GuestCheckin, GuestsListPage(), GuestsResponse, ImportResult, PrizeWin (+12 more)
+Cohesion: 0.17
+Nodes (10): CATEGORY_CONFIG, Guest, GuestCategory, GuestCheckin, GuestsResponse, ImportResult, PrizeWin, RegistrationSource (+2 more)
+
+### Community 205 - "Community 205"
+Cohesion: 0.46
+Nodes (5): MatchScoringModalProps, ScoreInput(), ScoreInputProps, ScoringMode, UpdateScoreDto
+
+### Community 206 - "Community 206"
+Cohesion: 0.33
+Nodes (4): COLOR_OPTIONS, CustomCategory, DEFAULT_CATEGORIES, EventConfig
+
+### Community 207 - "Community 207"
+Cohesion: 0.16
+Nodes (4): AuditController, AuditModule, formatLocalTime(), truncateText()
+
+### Community 208 - "Community 208"
+Cohesion: 0.40
+Nodes (3): PageState, PublicConfig, RegistrationField
+
+### Community 210 - "Community 210"
+Cohesion: 0.67
+Nodes (3): AdminLink, cn(), TopNav()
 
 ### Community 213 - "Community 213"
-Cohesion: 0.16
-Nodes (3): onEvent(), PublicController, reqOnClose()
+Cohesion: 0.15
+Nodes (10): CarouselDrawPage(), FESTIVE_COLORS, FINALE_CONFETTI, GRAND_CONFETTI, Prize, REGULAR_CONFETTI, TICKER_COLORS, Guest (+2 more)
 
 ### Community 216 - "Community 216"
 Cohesion: 0.08
 Nodes (23): Codebase Context (READ THIS FIRST), Implementation Order (Recommended), Migration (AUTO-GENERATED), Modified Files (MODIFY), New Files (CREATE), Phase 2: Backend Module, Phase 5: Frontend — Admin Settings (Field Builder), Phase 6: Frontend Integration & Navigation (+15 more)
 
+### Community 217 - "Community 217"
+Cohesion: 0.22
+Nodes (6): CATEGORY_OPTIONS, EditGuestPage(), Guest, GuestCategory, Textarea, Props
+
 ## Knowledge Gaps
-- **1390 isolated node(s):** `name`, `version`, `private`, `main`, `dev` (+1385 more)
+- **1409 isolated node(s):** `VALID_FIELD_KEYS`, `RegistrationField`, `Event Management System (formerly Guest Registry)`, `Timeline Overview`, `Rebranding` (+1404 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **28 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **37 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `apiFetch()` connect `Events Service` to `Frontend Hooks`, `Frontend Core Layout`, `Landing Page Components`, `Events Controller`, `Lucky Draw Page`, `Admin Settings`, `Community 203`, `Community 76`, `Statistics & Charts`, `Souvenir & Queue`, `Community 87`, `Service Worker`?**
-  _High betweenness centrality (0.016) - this node is a cross-community bridge._
-- **Why does `PrismaService` connect `NestJS App Modules` to `Community 192`, `Reports`, `Community 195`, `Community 75`, `Prizes Service`, `Stations & Users`, `Community 46`, `Community 79`, `Admin Dashboard`, `Email Service`, `Community 83`, `Souvenirs Backend`, `Community 91`, `Community 95`?**
-  _High betweenness centrality (0.009) - this node is a cross-community bridge._
-- **Why does `ErrorBoundary` connect `Frontend Core Layout` to `Community 76`?**
-  _High betweenness centrality (0.006) - this node is a cross-community bridge._
+- **Why does `apiFetch()` connect `Frontend Hooks` to `Events Service`, `Frontend Core Layout`, `Landing Page Components`, `Events Controller`, `Lucky Draw Page`, `Community 76`, `Souvenir & Queue`, `Community 213`, `Service Worker`?**
+  _High betweenness centrality (0.020) - this node is a cross-community bridge._
+- **Why does `OfflineSyncService` connect `Offline Sync Service` to `Souvenir & Queue`, `Community 76`, `Offline Types`?**
+  _High betweenness centrality (0.005) - this node is a cross-community bridge._
+- **Why does `TournamentsController` connect `Admin Dashboard` to `Community 202`, `Community 79`?**
+  _High betweenness centrality (0.005) - this node is a cross-community bridge._
 - **Are the 7 inferred relationships involving `emitEvent()` (e.g. with `.createMatch()` and `.deleteMatch()`) actually correct?**
   _`emitEvent()` has 7 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `name`, `version`, `private` to the rest of the system?**
-  _1390 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `VALID_FIELD_KEYS`, `RegistrationField`, `Event Management System (formerly Guest Registry)` to the rest of the system?**
+  _1409 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Guest Management` be split into smaller, more focused modules?**
-  _Cohesion score 0.14039408866995073 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.1349206349206349 - nodes in this community are weakly interconnected._
 - **Should `Landing Page Backend` be split into smaller, more focused modules?**
-  _Cohesion score 0.06648936170212766 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.070578231292517 - nodes in this community are weakly interconnected._
