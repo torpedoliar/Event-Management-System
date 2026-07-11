@@ -43,6 +43,22 @@ export class PublicRegistrationService {
     return { eventId: event.id, enabled: !!freshEvent?.enablePublicRegistration };
   }
 
+  // Public: list events that have public registration enabled
+  async getPublicEvents() {
+    const events = await this.prisma.event.findMany({
+      where: { enablePublicRegistration: true },
+      select: {
+        id: true,
+        name: true,
+        date: true,
+        time: true,
+        location: true,
+      },
+      orderBy: { date: 'desc' },
+    });
+    return events;
+  }
+
   private async getOrCreateConfig(eventId: string) {
     let config = await this.prisma.publicRegistrationConfig.findUnique({
       where: { eventId },
@@ -75,12 +91,30 @@ export class PublicRegistrationService {
   }
 
   // Public: get config for rendering the form (no sensitive data)
-  async getPublicConfig() {
-    const { eventId, enabled } = await this.getActiveEventInfoForPublic();
-    const config = await this.getOrCreateConfig(eventId);
-    const currentCount = await this.countPublicRegistrants(eventId);
+  async getPublicConfig(eventId?: string) {
+    let targetEventId: string;
+    let enabled: boolean;
+
+    if (eventId) {
+      // Specific event requested — verify it exists and has registration enabled
+      const event = await this.prisma.event.findUnique({
+        where: { id: eventId },
+        select: { enablePublicRegistration: true },
+      });
+      if (!event) throw new NotFoundException('Event tidak ditemukan');
+      targetEventId = eventId;
+      enabled = event.enablePublicRegistration;
+    } else {
+      // Fall back to active event
+      const info = await this.getActiveEventInfoForPublic();
+      targetEventId = info.eventId;
+      enabled = info.enabled;
+    }
+
+    const config = await this.getOrCreateConfig(targetEventId);
+    const currentCount = await this.countPublicRegistrants(targetEventId);
     let { open, reason } = this.isRegistrationOpen(config);
-    
+
     if (!enabled) {
       open = false;
       reason = 'closed';
@@ -171,7 +205,23 @@ export class PublicRegistrationService {
       return { success: true, message: 'Terima kasih!', guestId: null, queueNumber: null };
     }
 
-    const { eventId, enabled } = await this.getActiveEventInfoForPublic();
+    let eventId: string;
+    let enabled: boolean;
+
+    if (dto.eventId) {
+      const event = await this.prisma.event.findUnique({
+        where: { id: dto.eventId },
+        select: { enablePublicRegistration: true },
+      });
+      if (!event) throw new NotFoundException('Event tidak ditemukan');
+      eventId = dto.eventId;
+      enabled = event.enablePublicRegistration;
+    } else {
+      const info = await this.getActiveEventInfoForPublic();
+      eventId = info.eventId;
+      enabled = info.enabled;
+    }
+
     if (!enabled) throw new BadRequestException('Pendaftaran telah ditutup');
 
     const config = await this.getOrCreateConfig(eventId);

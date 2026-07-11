@@ -1,4 +1,4 @@
-import { Controller, Get, Put, Post, Body, Res, UseGuards, Logger } from '@nestjs/common';
+import { Controller, Get, Put, Post, Body, Query, Res, UseGuards, Logger } from '@nestjs/common';
 import { SkipThrottle } from '@nestjs/throttler';
 import { Response } from 'express';
 import { PublicRegistrationService } from './public-registration.service';
@@ -15,9 +15,16 @@ export class PublicRegistrationController {
 
   // --- Public API (no auth) ---
 
+  @Get('public/events')
+  async getPublicEvents(@Res() res: Response) {
+    const data = await this.service.getPublicEvents();
+    res.setHeader('Cache-Control', 'no-store, max-age=0');
+    return res.json(data);
+  }
+
   @Get('public/registration/config')
-  async getPublicConfig(@Res() res: Response) {
-    const data = await this.service.getPublicConfig();
+  async getPublicConfig(@Query('eventId') eventId: string | undefined, @Res() res: Response) {
+    const data = await this.service.getPublicConfig(eventId || undefined);
     res.setHeader('Cache-Control', 'no-store, max-age=0');
     return res.json(data);
   }

@@ -108,6 +108,7 @@ export default function TopNav() {
   }, [adminMenuOpen]);
 
   if (pathname?.startsWith("/show") || pathname === "/admin/login") return null;
+  const isRegisterPage = pathname === "/register";
 
   const logout = () => {
     if (typeof window !== "undefined") {
@@ -183,10 +184,12 @@ export default function TopNav() {
 
             {/* Center: primary nav + admin dropdown */}
             <div className="hidden lg:flex items-center gap-2">
-              <Link className={linkCls("/checkin")} href="/checkin">
-                <UserCheck size={16} />
-                <span>Check-in</span>
-              </Link>
+              {!isRegisterPage && (
+                <Link className={linkCls("/checkin")} href="/checkin">
+                  <UserCheck size={16} />
+                  <span>Check-in</span>
+                </Link>
+              )}
 
               <Link className={linkCls("/register")} href="/register">
                 <UserPlus size={16} />
@@ -244,27 +247,33 @@ export default function TopNav() {
                 </div>
               )}
 
-              <Link className={linkCls("/about")} href="/about">
-                <Info size={16} />
-                <span>About</span>
-              </Link>
+              {!isRegisterPage && (
+                <Link className={linkCls("/about")} href="/about">
+                  <Info size={16} />
+                  <span>About</span>
+                </Link>
+              )}
             </div>
 
             {/* Right: status + auth */}
             <div className="flex items-center gap-2 shrink-0">
-              <HelpPanel contextSection={
-                pathname?.startsWith('/checkin') ? 'checkin' :
-                pathname?.startsWith('/luckydraw') ? 'luckydraw' :
-                pathname?.startsWith('/admin/guests') ? 'guests' :
-                undefined
-              } />
-              <StatusBadge
-                status={connected ? "success" : "danger"}
-                pulse={connected}
-                className="hidden sm:inline-flex"
-              >
-                {connected ? "Live" : "Offline"}
-              </StatusBadge>
+              {!isRegisterPage && (
+                <HelpPanel contextSection={
+                  pathname?.startsWith('/checkin') ? 'checkin' :
+                  pathname?.startsWith('/luckydraw') ? 'luckydraw' :
+                  pathname?.startsWith('/admin/guests') ? 'guests' :
+                  undefined
+                } />
+              )}
+              {!isRegisterPage && (
+                <StatusBadge
+                  status={connected ? "success" : "danger"}
+                  pulse={connected}
+                  className="hidden sm:inline-flex"
+                >
+                  {connected ? "Live" : "Offline"}
+                </StatusBadge>
+              )}
               <div className="hidden lg:flex items-center gap-2">
                 {!isAuth ? (
                   <Button size="sm" asChild>
@@ -321,15 +330,19 @@ export default function TopNav() {
 
         <div className="p-3 space-y-1 overflow-y-auto">
           {/* Public / primary */}
-          <Link className={mobileLinkCls("/checkin")} href="/checkin">
-            <UserCheck size={16} /> Check-in
-          </Link>
+          {!isRegisterPage && (
+            <Link className={mobileLinkCls("/checkin")} href="/checkin">
+              <UserCheck size={16} /> Check-in
+            </Link>
+          )}
           <Link className={mobileLinkCls("/register")} href="/register">
             <UserPlus size={16} /> Daftar
           </Link>
-          <Link className={mobileLinkCls("/about")} href="/about">
-            <Info size={16} /> About
-          </Link>
+          {!isRegisterPage && (
+            <Link className={mobileLinkCls("/about")} href="/about">
+              <Info size={16} /> About
+            </Link>
+          )}
 
           {isAuth && (
             <>

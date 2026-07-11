@@ -10,4 +10,9 @@ export class SubmitRegistrationDto {
   @IsOptional()
   @IsString()
   website?: string;
+
+  // Optional event ID — if not provided, falls back to the active event
+  @IsOptional()
+  @IsString()
+  eventId?: string;
 }
