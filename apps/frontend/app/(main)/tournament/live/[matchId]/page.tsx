@@ -6,6 +6,7 @@ import { matchApi } from "@/lib/tournament-api";
 import { LiveMatchDisplay } from "@/components/tournament/match/LiveMatchDisplay";
 import type { Match } from "@/types/tournament.types";
 import { Trophy, AlertCircle, RefreshCw } from "lucide-react";
+import { useSSE } from "@/lib/sse-context";
 
 export default function LiveMatchPage() {
   const params = useParams();
@@ -14,6 +15,7 @@ export default function LiveMatchPage() {
   const [error, setError] = useState<string | null>(null);
   const [notFound, setNotFound] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const { lastEvent } = useSSE();
 
   const fetchMatch = async () => {
     if (!params.matchId) return;
@@ -47,6 +49,21 @@ export default function LiveMatchPage() {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, [params.matchId]);
+
+  useEffect(() => {
+    if (!lastEvent || !params.matchId) return;
+
+    if (
+      (lastEvent.type === "match_score_update" || lastEvent.type === "match_completed") &&
+      lastEvent.data?.id === params.matchId
+    ) {
+      setMatch((prev) => {
+        if (!prev) return lastEvent.data as Match;
+        // Merge the new data, keeping nested relations like teamA/teamB if they are missing in SSE payload
+        return { ...prev, ...lastEvent.data } as Match;
+      });
+    }
+  }, [lastEvent, params.matchId]);
 
   if (loading) {
     return (

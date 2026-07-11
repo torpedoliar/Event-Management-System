@@ -65,6 +65,7 @@ export class TournamentsService {
                     teamB: true,
                     winner: true,
                   },
+                  orderBy: { matchNumber: 'asc' },
                 },
               },
               orderBy: { roundNumber: 'asc' },
@@ -112,6 +113,7 @@ export class TournamentsService {
                     teamB: true,
                     winner: true,
                   },
+                  orderBy: { matchNumber: 'asc' },
                 },
               },
               orderBy: { roundNumber: 'asc' },
@@ -173,6 +175,7 @@ export class TournamentsService {
               include: {
                 matches: {
                   include: { teamA: true, teamB: true, winner: true },
+                  orderBy: { matchNumber: 'asc' },
                 },
               },
               orderBy: { roundNumber: 'asc' },
@@ -455,6 +458,7 @@ export class TournamentsService {
               include: {
                 matches: {
                   include: { teamA: true, teamB: true, winner: true },
+                  orderBy: { matchNumber: 'asc' },
                 },
               },
               orderBy: { roundNumber: 'asc' },
@@ -804,6 +808,7 @@ export class TournamentsService {
               include: {
                 matches: {
                   include: { teamA: true, teamB: true, winner: true },
+                  orderBy: { matchNumber: 'asc' },
                 },
               },
               orderBy: { roundNumber: 'asc' },

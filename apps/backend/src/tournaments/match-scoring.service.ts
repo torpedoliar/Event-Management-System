@@ -22,29 +22,6 @@ export class MatchScoringService {
       throw new Error(`Cannot update score for a match that is already ${match.status}. Please reset or use finishMatch logic if needed.`);
     }
 
-    // Determine winner based on scoring mode
-    let winnerId: string | null = null;
-
-    if (match.tournament.scoringMode === 'SETS' && scores.setsA !== undefined && scores.setsB !== undefined) {
-      // SETS mode: winner determined by sets won
-      winnerId = this.determineWinnerBySets(
-        match.teamAId,
-        match.teamBId,
-        scores.setsA,
-        scores.setsB,
-      );
-    } else {
-      // SIMPLE or POINTS mode: winner determined by total score
-      winnerId = this.determineWinner(
-        match.teamAId,
-        match.teamBId,
-        scores.scoreA,
-        scores.scoreB,
-        scores.setsA ?? null,
-        scores.setsB ?? null,
-      );
-    }
-
     // Update match
     const updatedMatch = await this.prisma.match.update({
       where: { id: matchId },
@@ -53,38 +30,12 @@ export class MatchScoringService {
         scoreB: scores.scoreB,
         setsA: scores.setsA,
         setsB: scores.setsB,
-        winnerId,
-        status: winnerId ? MatchStatus.COMPLETED : MatchStatus.ONGOING,
-        completedAt: winnerId ? new Date() : null,
-        startedAt: match.startedAt ?? new Date(),
       },
     });
 
-    // Advance winner to next match
-    if (winnerId && match.nextMatchId && match.nextMatchSlot) {
-      await this.advanceWinner(match.nextMatchId, match.nextMatchSlot, winnerId);
-    }
-
-    // Update team stats
-    if (match.teamAId && match.teamBId) {
-      if (winnerId) {
-        await this.updateTeamStats(match.teamAId, match.teamBId, winnerId);
-      } else {
-        // Draw — both teams get a draw
-        await this.prisma.tournamentTeam.update({
-          where: { id: match.teamAId },
-          data: { draws: { increment: 1 } },
-        });
-        await this.prisma.tournamentTeam.update({
-          where: { id: match.teamBId },
-          data: { draws: { increment: 1 } },
-        });
-      }
-    }
-
     // Emit SSE event
     emitEvent({
-      type: winnerId ? 'match_completed' : 'match_score_update',
+      type: 'match_score_update',
       data: updatedMatch,
     });
 
