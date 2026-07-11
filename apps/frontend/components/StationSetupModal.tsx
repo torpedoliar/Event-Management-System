@@ -10,6 +10,8 @@ import { indexedDBService, StationConfig } from '../lib/indexeddb';
 import { offlineSyncService } from '../lib/offline-sync.service';
 import { generateUUID } from '../lib/utils';
 import { HelpCircle } from 'lucide-react';
+import Input from './ui/Input';
+import Button from './ui/Button';
 
 interface StationSetupModalProps {
   isOpen: boolean;
@@ -126,15 +128,16 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
             </div>
           </div>
           {existingConfig && (
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={handleClose}
               aria-label="Tutup"
-              className="text-brand-textDim hover:text-brand-text transition-colors"
             >
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
-            </button>
+            </Button>
           )}
         </div>
 
@@ -158,7 +161,7 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
             <label className="block text-sm font-medium text-brand-textMuted mb-2">
               Nama Station
             </label>
-            <input
+            <Input
               type="text"
               value={stationName}
               onChange={(e) => {
@@ -166,7 +169,6 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
                 setError('');
               }}
               placeholder="Contoh: Station A - Pintu Utama"
-              className="w-full px-4 py-2 bg-brand-bg border border-brand-border rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent text-brand-text placeholder:text-brand-textDim"
               disabled={isLoading}
             />
             <p className="mt-1.5 text-xs text-brand-textDim leading-relaxed">
@@ -218,13 +220,12 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
               <label className="block text-sm font-medium text-brand-textMuted mb-2">
                 Interval Sinkronisasi (detik)
               </label>
-              <input
+              <Input
                 type="number"
-                min="10"
-                max="120"
+                min={10}
+                max={120}
                 value={syncInterval}
                 onChange={(e) => setSyncInterval(parseInt(e.target.value) || 30)}
-                className="w-full px-4 py-2 bg-brand-bg border border-brand-border rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent text-brand-text"
                 disabled={isLoading}
               />
               <p className="mt-1 text-xs text-brand-textDim">
@@ -244,36 +245,21 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
         {/* Footer */}
         <div className="px-6 py-4 border-t border-brand-border flex justify-end gap-3">
           {existingConfig ? (
-            <button
+            <Button
+              variant="ghost"
               onClick={handleClose}
-              className="px-4 py-2 text-brand-textMuted hover:bg-brand-surfaceMuted rounded-lg transition-colors"
               disabled={isLoading}
             >
               Batal
-            </button>
+            </Button>
           ) : null}
-          <button
+          <Button
             onClick={handleSave}
-            disabled={isLoading || !stationName.trim()}
-            className="px-6 py-2 bg-brand-primary hover:bg-brand-primarySoft disabled:opacity-50 text-white rounded-lg transition-colors font-medium flex items-center gap-2"
+            disabled={!stationName.trim()}
+            loading={isLoading}
           >
-            {isLoading ? (
-              <>
-                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                </svg>
-                Menyimpan...
-              </>
-            ) : (
-              <>
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                {existingConfig ? 'Simpan Perubahan' : 'Simpan & Mulai'}
-              </>
-            )}
-          </button>
+            {existingConfig ? 'Simpan Perubahan' : 'Simpan & Mulai'}
+          </Button>
         </div>
       </div>
     </div>

@@ -5,6 +5,7 @@ import { apiFetch, toApiUrl, apiBase } from '@/lib/api';
 import Card from '@/components/ui/Card';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
+import Modal from '@/components/ui/Modal';
 import { QRCodeSVG } from 'qrcode.react';
 import { QrCode, Edit, Trash2, CheckCircle, Gift, X, AlertTriangle, Users, Tag, Mail, Send, Loader2, Settings, Trophy, Package, Download } from 'lucide-react';
 import { useSSE } from '@/lib/sse-context';
@@ -734,7 +735,7 @@ export default function GuestsListPage() {
                       type="checkbox"
                       checked={!!(resp?.data && resp.data.length > 0 && selectedIds.size === resp.data.length)}
                       onChange={toggleSelectAll}
-                      className="rounded border-white/30 bg-white/10 text-brand-primary focus:ring-brand-primary"
+                      className="rounded border-brand-border bg-brand-surface text-brand-primary focus:ring-brand-primary"
                     />
                   </th>
                   <th className="px-4 py-5 whitespace-nowrap">No</th>
@@ -754,7 +755,7 @@ export default function GuestsListPage() {
                   <th className="px-4 py-5 text-right whitespace-nowrap">Aksi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-brand-border">
                 {resp?.data.map((g) => {
                   const cat = CATEGORY_CONFIG[g.category] || CATEGORY_CONFIG.REGULAR;
                   const src = g.registrationSource ? SOURCE_CONFIG[g.registrationSource] : null;
@@ -767,21 +768,21 @@ export default function GuestsListPage() {
                           type="checkbox"
                           checked={selectedIds.has(g.id)}
                           onChange={() => toggleSelect(g.id)}
-                          className="rounded border-white/30 bg-white/10 text-brand-primary focus:ring-brand-primary"
+                          className="rounded border-brand-border bg-brand-surface text-brand-primary focus:ring-brand-primary"
                         />
                       </td>
                       <td className="px-4 py-4 text-xs font-mono text-brand-primarySoft/50 align-middle">{g.queueNumber}</td>
                       <td className="px-4 py-4 align-middle">
                         {g.photoUrl ? (
-                          <img src={toApiUrl(g.photoUrl)} alt={g.name} className="h-10 w-10 rounded-full object-cover border border-white/20" />
+                          <img src={toApiUrl(g.photoUrl)} alt={g.name} className="h-10 w-10 rounded-full object-cover border border-brand-border" />
                         ) : (
-                          <div className="h-10 w-10 rounded-full bg-white/5 flex items-center justify-center text-xs text-white/30 border border-white/10">
+                          <div className="h-10 w-10 rounded-full bg-brand-surface flex items-center justify-center text-xs text-brand-textDim border border-brand-border">
                             <Users size={16} />
                           </div>
                         )}
                       </td>
                       <td className="px-4 py-4 font-mono text-xs text-brand-primarySoft/80 align-middle">{g.guestId}</td>
-                      <td className="px-4 py-4 text-white font-medium align-middle">
+                      <td className="px-4 py-4 text-brand-text font-medium align-middle">
                         <div className="group-hover:text-brand-primarySoft transition-colors flex items-center gap-2">
                           {g.name}
                           {showDuplicatesOnly && <span className="px-2 py-0.5 rounded text-2xs font-bold bg-brand-danger/20 text-brand-danger border border-brand-danger/30">DUPLIKAT</span>}
@@ -792,7 +793,7 @@ export default function GuestsListPage() {
                           </div>
                         )}
                       </td>
-                      <td className="px-4 py-4 text-white/70 text-xs align-middle">
+                      <td className="px-4 py-4 text-brand-textMuted text-xs align-middle">
                         {g.email ? (
                           <span className="flex items-center gap-1">
                             <Mail size={12} className="text-brand-primary" />
@@ -812,11 +813,11 @@ export default function GuestsListPage() {
                           )}
                         </div>
                       </td>
-                      <td className="px-4 py-4 text-white/90 align-middle">{g.tableLocation}</td>
-                      <td className="px-4 py-4 text-white/60 align-middle font-mono text-xs">{g.company || '-'}</td>
-                      <td className="px-4 py-4 text-white/60 align-middle font-mono text-xs">{g.division || '-'}</td>
-                      <td className="px-4 py-4 text-white/60 align-middle font-mono text-xs">{g.department || '-'}</td>
-                      <td className="px-4 py-4 text-white/50 text-xs align-middle font-mono">
+                      <td className="px-4 py-4 text-brand-text align-middle">{g.tableLocation}</td>
+                      <td className="px-4 py-4 text-brand-textMuted align-middle font-mono text-xs">{g.company || '-'}</td>
+                      <td className="px-4 py-4 text-brand-textMuted align-middle font-mono text-xs">{g.division || '-'}</td>
+                      <td className="px-4 py-4 text-brand-textMuted align-middle font-mono text-xs">{g.department || '-'}</td>
+                      <td className="px-4 py-4 text-brand-textDim text-xs align-middle font-mono">
                         {g.checkedInAt ? new Date(g.checkedInAt).toLocaleString('id-ID', { hour12: false }) : '-'}
                       </td>
                       {eventCfg?.enableSouvenir && (
@@ -827,7 +828,7 @@ export default function GuestsListPage() {
                                 <Package size={12} />
                                 {g.souvenirTakes.length}
                               </span>
-                              <span className="text-2xs text-white/50 max-w-[100px] truncate" title={g.souvenirTakes.map(s => s.souvenir.name).join(', ')}>
+                              <span className="text-2xs text-brand-textDim max-w-[100px] truncate" title={g.souvenirTakes.map(s => s.souvenir.name).join(', ')}>
                                 {g.souvenirTakes.map(s => s.souvenir.name).join(', ')}
                               </span>
                             </div>
@@ -837,7 +838,7 @@ export default function GuestsListPage() {
                               Ya
                             </span>
                           ) : (
-                            <span className="text-white/30 text-xs">-</span>
+                            <span className="text-brand-textDim text-xs">-</span>
                           )}
                         </td>
                       )}
@@ -859,11 +860,11 @@ export default function GuestsListPage() {
                             ))}
                           </div>
                         ) : (
-                          <span className="text-white/30 text-xs">-</span>
+                          <span className="text-brand-textDim text-xs">-</span>
                         )}
                       </td>
                       <td className="px-4 py-4 align-middle text-center">
-                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-2xs font-mono uppercase tracking-widest ${g.checkedIn ? 'bg-brand-success/10 text-brand-success border border-brand-success/20' : 'bg-white/5 text-white/40 border border-white/10'}`}>
+                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-2xs font-mono uppercase tracking-widest ${g.checkedIn ? 'bg-brand-success/10 text-brand-success border border-brand-success/20' : 'bg-brand-surface text-brand-textDim border border-brand-border'}`}>
                           {g.checkedIn ? 'CHECKED-IN' : 'BELUM'}
                         </span>
                       </td>
@@ -871,7 +872,7 @@ export default function GuestsListPage() {
                         <div className="flex items-center justify-end gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
                           <button
                             title="Tampilkan QR"
-                            className="p-1.5 rounded-lg text-white/70 hover:bg-white/10 hover:text-white transition-colors"
+                            className="p-1.5 rounded-lg text-brand-textMuted hover:bg-brand-surfaceMuted hover:text-brand-text transition-colors"
                             onClick={() => setQrGuest(g)}
                           >
                             <QrCode size={18} />
@@ -944,139 +945,143 @@ export default function GuestsListPage() {
         </div>
 
         {/* QR Modal */}
-        {qrGuest && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => setQrGuest(null)}>
-            <div className="w-full max-w-sm rounded-xl bg-white p-6 text-center shadow-2xl" onClick={(e) => e.stopPropagation()}>
-              <h3 className="mb-4 text-lg font-bold text-gray-900">QR Code: {qrGuest.name}</h3>
-              <div className="mb-4 flex justify-center">
-                <QRCodeSVG value={qrGuest.id} size={200} />
-              </div>
-              <p className="mb-6 text-sm text-gray-500">Scan code ini di Kiosk Check-in</p>
-              <Button onClick={() => setQrGuest(null)}>Tutup</Button>
+        <Modal open={!!qrGuest} onClose={() => setQrGuest(null)} title={`QR Code: ${qrGuest?.name ?? ''}`}>
+          <div className="flex flex-col items-center gap-4">
+            <div className="flex justify-center">
+              {qrGuest && <QRCodeSVG value={qrGuest.id} size={200} />}
             </div>
+            <p className="text-sm text-brand-textMuted">Scan code ini di Kiosk Check-in</p>
+            <Button onClick={() => setQrGuest(null)}>Tutup</Button>
           </div>
-        )}
+        </Modal>
 
         {/* Bulk Edit Modal */}
-        {showBulkEditModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => setShowBulkEditModal(false)}>
-            <div className="w-full max-w-md rounded-xl bg-brand-bgElevated border border-brand-border p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-              <h3 className="mb-4 text-lg font-bold text-white flex items-center gap-2">
-                <Tag size={20} className="text-brand-primary" />
-                Ubah Kategori ({selectedIds.size} tamu)
-              </h3>
-              <div className="mb-6">
-                <label className="block text-sm text-white/70 mb-2">Pilih Kategori Baru</label>
-                <div className="grid grid-cols-2 gap-2">
-                  {(Object.keys(CATEGORY_CONFIG) as GuestCategory[]).map((cat) => {
-                    const cfg = CATEGORY_CONFIG[cat];
-                    return (
-                      <button
-                        key={cat}
-                        onClick={() => setBulkCategory(cat)}
-                        className={`p-3 rounded-lg border text-left transition-all ${bulkCategory === cat
-                          ? `${cfg.bg} ${cfg.border} ring-2 ring-brand-primary`
-                          : 'border-white/20 bg-white/5 hover:bg-white/10'
-                          }`}
-                      >
-                        <span className={`text-sm font-medium ${cfg.color}`}>{cfg.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="flex gap-3">
-                <Button
-                  variant="ghost"
-                  onClick={() => { setShowBulkEditModal(false); setBulkCategory(''); }}
-                  className="flex-1"
-                >
-                  Batal
-                </Button>
-                <Button
-                  onClick={doBulkUpdate}
-                  disabled={!bulkCategory || bulkActionLoading}
-                  className="flex-1"
-                >
-                  {bulkActionLoading ? 'Menyimpan...' : 'Simpan'}
-                </Button>
-              </div>
+        <Modal
+          open={showBulkEditModal}
+          onClose={() => { setShowBulkEditModal(false); setBulkCategory(''); }}
+          title={
+            <span className="flex items-center gap-2">
+              <Tag size={20} className="text-brand-primary" />
+              Ubah Kategori ({selectedIds.size} tamu)
+            </span>
+          }
+          footer={
+            <div className="flex gap-3">
+              <Button
+                variant="ghost"
+                onClick={() => { setShowBulkEditModal(false); setBulkCategory(''); }}
+                className="flex-1"
+              >
+                Batal
+              </Button>
+              <Button
+                onClick={doBulkUpdate}
+                disabled={!bulkCategory || bulkActionLoading}
+                className="flex-1"
+              >
+                {bulkActionLoading ? 'Menyimpan...' : 'Simpan'}
+              </Button>
+            </div>
+          }
+        >
+          <div>
+            <label className="block text-sm text-brand-textMuted mb-2">Pilih Kategori Baru</label>
+            <div className="grid grid-cols-2 gap-2">
+              {(Object.keys(CATEGORY_CONFIG) as GuestCategory[]).map((cat) => {
+                const cfg = CATEGORY_CONFIG[cat];
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => setBulkCategory(cat)}
+                    className={`p-3 rounded-lg border text-left transition-all ${bulkCategory === cat
+                      ? `${cfg.bg} ${cfg.border} ring-2 ring-brand-primary`
+                      : 'border-brand-border bg-brand-surface hover:bg-brand-surfaceMuted'
+                      }`}
+                  >
+                    <span className={`text-sm font-medium ${cfg.color}`}>{cfg.label}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
-        )}
+        </Modal>
 
         {/* Email Modal */}
-        {showEmailModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => setShowEmailModal(false)}>
-            <div className="w-full max-w-lg rounded-xl bg-brand-bgElevated border border-brand-border p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-              <h3 className="mb-4 text-lg font-bold text-white flex items-center gap-2">
-                <Mail size={20} className="text-brand-primary" />
-                Kirim Email Undangan
-              </h3>
+        <Modal
+          open={showEmailModal}
+          onClose={() => { setShowEmailModal(false); setEmailTargetIds([]); }}
+          title={
+            <span className="flex items-center gap-2">
+              <Mail size={20} className="text-brand-primary" />
+              Kirim Email Undangan
+            </span>
+          }
+          className="max-w-lg"
+          footer={
+            <div className="flex gap-3">
+              <Button
+                variant="ghost"
+                onClick={() => { setShowEmailModal(false); setEmailTargetIds([]); }}
+                className="flex-1"
+                disabled={sendingEmail}
+              >
+                Batal
+              </Button>
+              <Button
+                onClick={sendEmails}
+                disabled={sendingEmail || emailTargetIds.length === 0}
+                className="flex-1"
+              >
+                {sendingEmail ? (
+                  <>
+                    <Loader2 size={16} className="mr-2 animate-spin" />
+                    Mengirim...
+                  </>
+                ) : (
+                  <>
+                    <Send size={16} className="mr-2" />
+                    Kirim Email
+                  </>
+                )}
+              </Button>
+            </div>
+          }
+        >
+          <div className="space-y-4">
+            <div className="p-3 rounded-lg bg-brand-primary/10 border border-brand-primary/20">
+              <p className="text-sm text-brand-primarySoft">
+                <strong>{emailTargetIds.length}</strong> tamu dengan email akan menerima undangan
+              </p>
+            </div>
 
-              <div className="mb-4 p-3 rounded-lg bg-brand-primary/10 border border-brand-primary/20">
-                <p className="text-sm text-brand-primarySoft">
-                  <strong>{emailTargetIds.length}</strong> tamu dengan email akan menerima undangan
-                </p>
-              </div>
+            <div>
+              <label className="block text-sm text-brand-textMuted mb-2">
+                Pesan Kustom dari Administrator (opsional)
+              </label>
+              <Textarea
+                rows={4}
+                placeholder="Contoh: Kami tunggu kehadiran Bapak/Ibu. Mohon hadir 30 menit sebelum acara dimulai."
+                value={emailCustomMessage}
+                onChange={(e) => setEmailCustomMessage(e.target.value)}
+              />
+              <p className="mt-1 text-xs text-brand-textDim">
+                Pesan ini akan ditampilkan di dalam email undangan
+              </p>
+            </div>
 
-              <div className="mb-4">
-                <label className="block text-sm text-white/70 mb-2">
-                  Pesan Kustom dari Administrator (opsional)
-                </label>
-                <Textarea
-                  rows={4}
-                  placeholder="Contoh: Kami tunggu kehadiran Bapak/Ibu. Mohon hadir 30 menit sebelum acara dimulai."
-                  value={emailCustomMessage}
-                  onChange={(e) => setEmailCustomMessage(e.target.value)}
-                />
-                <p className="mt-1 text-xs text-white/50">
-                  Pesan ini akan ditampilkan di dalam email undangan
-                </p>
-              </div>
-
-              <div className="mb-4 p-3 rounded-lg bg-brand-warning/10 border border-brand-warning/20">
-                <p className="text-sm text-brand-warning flex items-start gap-2">
-                  <AlertTriangle size={16} className="mt-0.5 flex-shrink-0" />
-                  <span>
-                    Pastikan pengaturan email sudah dikonfigurasi di{' '}
-                    <a href="/admin/settings/email" className="underline hover:text-amber-200">
-                      Settings → Email
-                    </a>
-                  </span>
-                </p>
-              </div>
-
-              <div className="flex gap-3">
-                <Button
-                  variant="ghost"
-                  onClick={() => { setShowEmailModal(false); setEmailTargetIds([]); }}
-                  className="flex-1"
-                  disabled={sendingEmail}
-                >
-                  Batal
-                </Button>
-                <Button
-                  onClick={sendEmails}
-                  disabled={sendingEmail || emailTargetIds.length === 0}
-                  className="flex-1"
-                >
-                  {sendingEmail ? (
-                    <>
-                      <Loader2 size={16} className="mr-2 animate-spin" />
-                      Mengirim...
-                    </>
-                  ) : (
-                    <>
-                      <Send size={16} className="mr-2" />
-                      Kirim Email
-                    </>
-                  )}
-                </Button>
-              </div>
+            <div className="p-3 rounded-lg bg-brand-warning/10 border border-brand-warning/20">
+              <p className="text-sm text-brand-warning flex items-start gap-2">
+                <AlertTriangle size={16} className="mt-0.5 flex-shrink-0" />
+                <span>
+                  Pastikan pengaturan email sudah dikonfigurasi di{' '}
+                  <a href="/admin/settings/email" className="underline hover:text-amber-200">
+                    Settings → Email
+                  </a>
+                </span>
+              </p>
             </div>
           </div>
-        )}
+        </Modal>
       </div>
     </RequireAuth>
   );

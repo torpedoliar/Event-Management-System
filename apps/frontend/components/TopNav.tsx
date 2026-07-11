@@ -121,7 +121,7 @@ export default function TopNav() {
     { href: "/admin/statistics", label: "Statistik", icon: <BarChart3 size={16} /> },
     { href: "/admin/guests", label: "Tamu", icon: <Users size={16} /> },
     { href: "/luckydraw", label: "Lucky Draw", icon: <Dices size={16} /> },
-    { href: "/souvenir", label: "Lucky Draw", icon: <Package size={16} /> },
+    { href: "/souvenir", label: "Souvenir", icon: <Package size={16} /> },
     ...(eventCfg?.enableTournament ? [{ href: "/admin/tournaments", label: "Tournament", icon: <Trophy size={16} /> }] : []),
     ...(eventCfg?.enableTournament ? [{ href: "/tournament-checkin", label: "Tournament Check-in", icon: <QrCode size={16} /> }] : []),
     { href: "/admin/events", label: "Events", icon: <CalendarDays size={16} /> },

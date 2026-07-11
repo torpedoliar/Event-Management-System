@@ -262,23 +262,23 @@ export default function PrizesPage() {
         <RequireAuth>
             <div className="min-h-screen p-6 md:p-8 mx-auto max-w-5xl space-y-8">
                 <div className="flex items-center justify-between flex-wrap gap-4">
-                    <h1 className="text-2xl font-bold text-white flex items-center gap-3">
+                    <h1 className="text-2xl font-bold text-brand-text flex items-center gap-3">
                         <Trophy className="text-brand-primary" />
                         Kelola Lucky Draw
                     </h1>
                     <div className="flex gap-3 flex-wrap">
-                        <button onClick={() => window.open('/luckydraw/winners', '_blank')} className="flex items-center gap-2 px-4 py-2 bg-brand-primary/20 text-brand-primary border border-brand-primary/50 rounded-lg hover:bg-brand-primary/40 transition-colors font-medium text-sm">
+                        <Button variant="outline" onClick={() => window.open('/luckydraw/winners', '_blank')}>
                             <MonitorPlay size={18} />
                             Display Pemenang
-                        </button>
-                        <button onClick={exportExcel} disabled={prizes.length === 0} className="flex items-center gap-2 px-4 py-2 bg-brand-success/20 text-brand-success border border-brand-success/50 rounded-lg hover:bg-brand-success/40 transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                        </Button>
+                        <Button variant="success" onClick={exportExcel} disabled={prizes.length === 0}>
                             <FileDown size={18} />
                             Export Excel
-                        </button>
-                        <button onClick={exportPdf} disabled={prizes.length === 0} className="flex items-center gap-2 px-4 py-2 bg-brand-danger/20 text-brand-danger border border-brand-danger/50 rounded-lg hover:bg-brand-danger/40 transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                        </Button>
+                        <Button variant="danger" onClick={exportPdf} disabled={prizes.length === 0}>
                             <FileDown size={18} />
                             Export PDF
-                        </button>
+                        </Button>
                     </div>
                 </div>
 
@@ -287,7 +287,7 @@ export default function PrizesPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Create Form */}
                     <Card variant="glass" className="h-fit">
-                        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                        <h2 className="text-lg font-semibold text-brand-text mb-4 flex items-center gap-2">
                             <Plus size={20} /> Tambah Hadiah
                         </h2>
                         <form onSubmit={createPrize} className="space-y-4">
@@ -323,24 +323,24 @@ export default function PrizesPage() {
                                 <select
                                     value={newCategory}
                                     onChange={(e) => setNewCategory(e.target.value)}
-                                    className="w-full rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
+                                    className="w-full rounded-xl border border-brand-border bg-brand-surface/50 px-4 py-3 text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
                                 >
                                     {PRIZE_CATEGORIES.map((cat) => (
                                         <option key={cat.value} value={cat.value} className="bg-brand-bgElevated">{cat.label}</option>
                                     ))}
                                 </select>
                             </div>
-                            <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+                            <div className="flex items-center gap-3 p-3 rounded-xl bg-brand-surface/50 border border-brand-border">
                                 <input
                                     type="checkbox"
                                     id="allowMultipleWins"
                                     checked={newAllowMultipleWins}
                                     onChange={(e) => setNewAllowMultipleWins(e.target.checked)}
-                                    className="w-5 h-5 rounded border-white/30 bg-white/10 text-brand-primary focus:ring-brand-primary/50"
+                                    className="w-5 h-5 rounded border-brand-border bg-brand-surface text-brand-primary focus:ring-brand-primary/50"
                                 />
-                                <label htmlFor="allowMultipleWins" className="text-sm text-white/80 cursor-pointer">
+                                <label htmlFor="allowMultipleWins" className="text-sm text-brand-textMuted cursor-pointer">
                                     <span className="font-medium">Boleh Menang Berkali-kali</span>
-                                    <p className="text-xs text-white/50 mt-0.5">Pemenang hadiah lain tetap bisa ikut undian hadiah ini</p>
+                                    <p className="text-xs text-brand-textDim mt-0.5">Pemenang hadiah lain tetap bisa ikut undian hadiah ini</p>
                                 </label>
                             </div>
                             <Button type="submit" disabled={creating} className="w-full">
@@ -351,20 +351,20 @@ export default function PrizesPage() {
 
                     {/* List */}
                     <div className="lg:col-span-2 space-y-4">
-                        {loading && <div className="text-white/50 text-center py-8">Memuat data...</div>}
+                        {loading && <div className="text-brand-textMuted text-center py-8">Memuat data...</div>}
 
                         {!loading && prizes.length === 0 && (
-                            <div className="text-white/30 text-center py-12 border-2 border-dashed border-white/10 rounded-xl">
+                            <div className="text-brand-textDim text-center py-12 border-2 border-dashed border-brand-border rounded-xl">
                                 Belum ada hadiah yang ditambahkan
                             </div>
                         )}
 
                         {prizes.map((p) => (
-                            <Card key={p.id} variant="glass" className={`group surface-interactive hover:bg-brand-bgSubtle transition-colors ${p.category === 'UTAMA' ? 'border-l-2 border-l-brand-primary' : 'border-l-2 border-l-brand-textMuted'}`}>
+                            <Card key={p.id} variant="glass" className={`group surface-interactive hover:bg-brand-bgSubtle transition-colors ${p.category === 'UTAMA' ? 'ring-1 ring-brand-primary/20' : ''}`}>
                                 <div className="flex items-start justify-between gap-4">
                                     <div className="flex-1">
                                         <div className="flex items-center flex-wrap gap-2 mb-1">
-                                            <h3 className="font-bold text-lg text-white">{p.name}</h3>
+                                            <h3 className="font-bold text-lg text-brand-text">{p.name}</h3>
                                             <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${
                                                 p.category === 'UTAMA' 
                                                     ? 'bg-brand-warning/20 text-brand-warning border-brand-warning/30' 
@@ -380,23 +380,23 @@ export default function PrizesPage() {
                                                         setEditingPrizeId(p.id);
                                                         setEditingQty(p.quantity);
                                                     }}
-                                                    className="ml-1 text-brand-primarySoft hover:text-white transition-colors"
+                                                    className="ml-1 text-brand-primarySoft hover:text-brand-text transition-colors"
                                                     title="Edit Jumlah Hadiah"
                                                 >
                                                     <Edit2 size={12} />
                                                 </button>
                                             </span>
                                             {editingPrizeId === p.id && (
-                                                <div className="flex items-center gap-2 bg-white/10 p-1 rounded-md ml-2">
-                                                    <input 
-                                                        type="number" 
-                                                        min={p.winners.length} 
+                                                <div className="flex items-center gap-2 bg-brand-surface p-1 rounded-md ml-2">
+                                                    <input
+                                                        type="number"
+                                                        min={p.winners.length}
                                                         value={editingQty}
                                                         onChange={(e) => setEditingQty(Number(e.target.value))}
-                                                        className="w-16 bg-black/50 text-white text-xs px-2 py-1 rounded outline-none"
+                                                        className="w-16 bg-brand-bg text-brand-text text-xs px-2 py-1 rounded outline-none"
                                                     />
                                                     <button onClick={() => updateQuantity(p.id)} className="text-xs bg-brand-primary text-brand-bg px-2 py-1 rounded font-bold">OK</button>
-                                                    <button onClick={() => setEditingPrizeId(null)} className="text-xs bg-white/20 text-white px-2 py-1 rounded">Batal</button>
+                                                    <button onClick={() => setEditingPrizeId(null)} className="text-xs bg-brand-surfaceMuted text-brand-text px-2 py-1 rounded">Batal</button>
                                                 </div>
                                             )}
                                             {p.allowMultipleWins && (
@@ -406,11 +406,11 @@ export default function PrizesPage() {
                                                 </span>
                                             )}
                                         </div>
-                                        {p.description && <p className="text-sm text-white/60 mb-3">{p.description}</p>}
+                                        {p.description && <p className="text-sm text-brand-textMuted mb-3">{p.description}</p>}
 
                                         {/* Winners List */}
                                         {p.winners.length > 0 && (
-                                            <div className="mt-3 pt-3 border-t border-white/10">
+                                            <div className="mt-3 pt-3 border-t border-brand-border">
                                                 <div className="flex items-center justify-between mb-2">
                                                     <div className="text-xs font-medium text-brand-textMuted uppercase tracking-wider">Pemenang Terpilih ({p.winners.length})</div>
                                                     <div className="flex items-center gap-2">

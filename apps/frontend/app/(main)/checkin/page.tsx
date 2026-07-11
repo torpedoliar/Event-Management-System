@@ -1798,7 +1798,7 @@ export default function CheckinPage() {
 
         {/* Confirmation full display */}
         {checkedGuest && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={() => { setCheckedGuest(null); setIsDuplicateCheckIn(false); clearPopupTimeout(); }}>
             <div className="w-full max-w-5xl overflow-hidden rounded-2xl surface-elevated shadow-gold grid grid-cols-1 md:grid-cols-[360px_1fr]">
               <div className="bg-brand-text/5 flex items-center justify-center min-h-[300px] md:min-h-full relative">
                 {autoCapturing ? (
