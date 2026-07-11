@@ -311,8 +311,10 @@ export default function TournamentCheckinPage() {
 
           if (res.alreadyCheckedIn) {
             showResult(res, "info");
+            fetchTodayMatches();
           } else if (res.success) {
             showResult(res, "success");
+            fetchTodayMatches();
           } else if (res.reasons && res.reasons.length > 0) {
             showResult(res, "reject");
           }
@@ -430,7 +432,7 @@ export default function TournamentCheckinPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <Trophy className="w-8 h-8 text-brand-accent" />
+            <Trophy className="w-8 h-8 text-brand-primary" />
             <div>
               <h1 className="text-xl font-bold text-brand-text">Tournament Check-in</h1>
               <p className="text-sm text-brand-textMuted">
@@ -681,8 +683,8 @@ export default function TournamentCheckinPage() {
                 {todayMatches.map((group) => (
                   <div key={group.tournament.id}>
                     <div className="flex items-center gap-2 mb-2">
-                      <Trophy size={14} className="text-brand-accent" />
-                      <span className="text-xs font-bold text-brand-accent uppercase tracking-wider">
+                      <Trophy size={14} className="text-brand-primary" />
+                      <span className="text-xs font-bold text-brand-primary uppercase tracking-wider">
                         {group.tournament.name}
                       </span>
                     </div>
@@ -736,8 +738,8 @@ export default function TournamentCheckinPage() {
                               </span>
                             </div>
                             {bothTeamsAssigned && match.status === "SCHEDULED" && (
-                              <div className="mt-1 text-xs text-brand-textMuted">
-                                Check-in: {match.checkinCount}/{match.totalMembers} member
+                              <div className="mt-1 text-xs text-brand-textMuted font-medium">
+                                Total Check-in Match: {match.checkinCount} / {match.totalMembers} Pemain
                               </div>
                             )}
                           </div>
@@ -794,7 +796,7 @@ export default function TournamentCheckinPage() {
             <div>
               <div
                 id="tournament-qr-reader"
-                className="rounded-xl overflow-hidden bg-black aspect-square max-w-sm mx-auto"
+                className="rounded-xl overflow-hidden bg-brand-bg aspect-square max-w-sm mx-auto"
               />
               <Button
                 variant="secondary"
@@ -859,7 +861,7 @@ function StationSetup({
     <div className="min-h-screen bg-brand-bg flex items-center justify-center p-4">
       <div className="bg-brand-surface rounded-2xl border border-brand-border p-8 max-w-md w-full">
         <div className="text-center mb-6">
-          <Trophy className="w-12 h-12 mx-auto text-brand-accent mb-3" />
+          <Trophy className="w-12 h-12 mx-auto text-brand-primary mb-3" />
           <h1 className="text-2xl font-bold text-brand-text">Tournament Check-in</h1>
           <p className="text-sm text-brand-textMuted mt-1">Setup your station</p>
         </div>
