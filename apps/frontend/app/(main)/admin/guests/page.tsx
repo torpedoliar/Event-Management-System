@@ -14,7 +14,7 @@ type GuestCategory = 'REGULAR' | 'VIP' | 'VVIP' | 'MEDIA' | 'SPONSOR' | 'SPEAKER
 type RegistrationSource = 'MANUAL' | 'IMPORT' | 'WALKIN' | 'PUBLIC';
 
 const CATEGORY_CONFIG: Record<GuestCategory, { label: string; color: string; bg: string; border: string }> = {
-  REGULAR: { label: 'Regular', color: 'text-gray-300', bg: 'bg-gray-500/20', border: 'border-gray-500/30' },
+  REGULAR: { label: 'Regular', color: 'text-brand-textMuted', bg: 'bg-brand-textMuted/10', border: 'border-brand-textMuted/20' },
   VIP: { label: 'VIP', color: 'text-brand-warning', bg: 'bg-brand-warning/20', border: 'border-brand-warning/30' },
   VVIP: { label: 'VVIP', color: 'text-brand-primary', bg: 'bg-brand-primary/20', border: 'border-brand-primary/30' },
   MEDIA: { label: 'Media', color: 'text-brand-primarySoft', bg: 'bg-brand-primary/20', border: 'border-brand-primary/30' },
@@ -24,7 +24,7 @@ const CATEGORY_CONFIG: Record<GuestCategory, { label: string; color: string; bg:
 };
 
 const SOURCE_CONFIG: Record<RegistrationSource, { label: string; color: string; bg: string; border: string }> = {
-  MANUAL: { label: 'Manual', color: 'text-gray-300', bg: 'bg-gray-500/20', border: 'border-gray-500/30' },
+  MANUAL: { label: 'Manual', color: 'text-brand-textMuted', bg: 'bg-brand-textMuted/10', border: 'border-brand-textMuted/20' },
   IMPORT: { label: 'Import', color: 'text-brand-primarySoft', bg: 'bg-brand-primary/20', border: 'border-brand-primary/30' },
   WALKIN: { label: 'Walk-in', color: 'text-orange-300', bg: 'bg-orange-500/20', border: 'border-orange-500/30' },
   PUBLIC: { label: 'Public', color: 'text-emerald-300', bg: 'bg-emerald-500/20', border: 'border-emerald-500/30' },
@@ -975,7 +975,7 @@ export default function GuestsListPage() {
                         key={cat}
                         onClick={() => setBulkCategory(cat)}
                         className={`p-3 rounded-lg border text-left transition-all ${bulkCategory === cat
-                          ? `${cfg.bg} ${cfg.border} ring-2 ring-blue-500`
+                          ? `${cfg.bg} ${cfg.border} ring-2 ring-brand-primary`
                           : 'border-white/20 bg-white/5 hover:bg-white/10'
                           }`}
                       >
