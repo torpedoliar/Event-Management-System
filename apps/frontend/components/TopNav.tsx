@@ -29,6 +29,7 @@ import EventSelector from "./EventSelector";
 import StatusBadge from "./ui/StatusBadge";
 import IconButton from "./ui/IconButton";
 import Button from "./ui/Button";
+import HelpPanel from "./HelpPanel";
 
 interface AdminLink {
   href: string;
@@ -120,7 +121,7 @@ export default function TopNav() {
     { href: "/admin/statistics", label: "Statistik", icon: <BarChart3 size={16} /> },
     { href: "/admin/guests", label: "Tamu", icon: <Users size={16} /> },
     { href: "/luckydraw", label: "Lucky Draw", icon: <Dices size={16} /> },
-    { href: "/souvenir", label: "Doorprize", icon: <Package size={16} /> },
+    { href: "/souvenir", label: "Lucky Draw", icon: <Package size={16} /> },
     ...(eventCfg?.enableTournament ? [{ href: "/admin/tournaments", label: "Tournament", icon: <Trophy size={16} /> }] : []),
     ...(eventCfg?.enableTournament ? [{ href: "/tournament-checkin", label: "Tournament Check-in", icon: <QrCode size={16} /> }] : []),
     { href: "/admin/events", label: "Events", icon: <CalendarDays size={16} /> },
@@ -251,6 +252,12 @@ export default function TopNav() {
 
             {/* Right: status + auth */}
             <div className="flex items-center gap-2 shrink-0">
+              <HelpPanel contextSection={
+                pathname?.startsWith('/checkin') ? 'checkin' :
+                pathname?.startsWith('/luckydraw') ? 'luckydraw' :
+                pathname?.startsWith('/admin/guests') ? 'guests' :
+                undefined
+              } />
               <StatusBadge
                 status={connected ? "success" : "danger"}
                 pulse={connected}

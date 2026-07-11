@@ -152,7 +152,7 @@ export default function StatisticsPage() {
                                 <ArrowLeft size={20} />
                             </Link>
                             <div className="flex items-center gap-3">
-                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-primary to-brand-primarySoft flex items-center justify-center shadow-lg">
+                                <div className="w-12 h-12 rounded-xl bg-brand-primary flex items-center justify-center shadow-lg">
                                     <BarChart3 size={24} className="text-white" />
                                 </div>
                                 <div>
@@ -229,7 +229,7 @@ export default function StatisticsPage() {
                                     </div>
                                     <div className="h-4 bg-white/10 rounded-full overflow-hidden">
                                         <div 
-                                            className="h-full bg-gradient-to-r from-brand-primary via-brand-primarySoft to-brand-primarySoft transition-all duration-1000 ease-out"
+                                            className="h-full bg-brand-primary transition-all duration-1000 ease-out"
                                             style={{ width: `${checkinPercent}%` }}
                                         />
                                     </div>
@@ -264,7 +264,7 @@ export default function StatisticsPage() {
                             {souvenirStats && souvenirStats.totalSouvenirs > 0 && (
                                 <>
                                     <div className="flex items-center gap-3 mt-8 mb-4">
-                                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-primary to-brand-primarySoft flex items-center justify-center shadow-lg">
+                                        <div className="w-10 h-10 rounded-xl bg-brand-primary flex items-center justify-center shadow-lg">
                                             <Gift size={20} className="text-white" />
                                         </div>
                                         <h2 className="text-xl font-bold text-white">Statistik Souvenir</h2>
@@ -309,7 +309,7 @@ export default function StatisticsPage() {
                                                     </div>
                                                     <div className="h-3 bg-white/10 rounded-full overflow-hidden">
                                                         <div 
-                                                            className="h-full bg-gradient-to-r from-brand-primary to-brand-primarySoft transition-all duration-500"
+                                                            className="h-full bg-brand-primary transition-all duration-500"
                                                             style={{ width: `${s.quantity > 0 ? (s.taken / s.quantity) * 100 : 0}%` }}
                                                         />
                                                     </div>
@@ -324,7 +324,7 @@ export default function StatisticsPage() {
                             {prizeStats && prizeStats.totalPrizes > 0 && (
                                 <>
                                     <div className="flex items-center gap-3 mt-8 mb-4">
-                                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-600 flex items-center justify-center shadow-lg">
+                                        <div className="w-10 h-10 rounded-xl bg-brand-primary flex items-center justify-center shadow-lg">
                                             <Trophy size={20} className="text-white" />
                                         </div>
                                         <h2 className="text-xl font-bold text-white">Statistik Lucky Draw</h2>
@@ -402,11 +402,11 @@ export default function StatisticsPage() {
     );
 }
 
-const colorMap: Record<string, { bg: string; text: string; border: string }> = {
-    blue: { bg: 'from-brand-primary/20 to-brand-primary/10', text: 'text-brand-primary', border: 'border-brand-primary/20' },
-    emerald: { bg: 'from-brand-success/20 to-brand-success/10', text: 'text-brand-success', border: 'border-brand-success/20' },
-    amber: { bg: 'from-brand-warning/20 to-brand-warning/10', text: 'text-brand-warning', border: 'border-brand-warning/20' },
-    purple: { bg: 'from-brand-primary/20 to-brand-primary/10', text: 'text-brand-primary', border: 'border-brand-primary/20' },
+const colorMap: Record<string, { bgClass: string; text: string; border: string }> = {
+    blue: { bgClass: 'bg-brand-primary/20', text: 'text-brand-primary', border: 'border-brand-primary/20' },
+    emerald: { bgClass: 'bg-brand-success/20', text: 'text-brand-success', border: 'border-brand-success/20' },
+    amber: { bgClass: 'bg-brand-warning/20', text: 'text-brand-warning', border: 'border-brand-warning/20' },
+    purple: { bgClass: 'bg-brand-primary/20', text: 'text-brand-primary', border: 'border-brand-primary/20' },
 };
 
 function StatsCard({ 
@@ -429,7 +429,7 @@ function StatsCard({
     return (
         <div className={`stats-card surface p-5 border ${colors.border} ${border}`}>
             <div className="flex items-start justify-between mb-3">
-                <div className={`p-2.5 rounded-xl bg-gradient-to-br ${colors.bg}`}>
+                <div className={`p-2.5 rounded-xl ${colors.bgClass}`}>
                     <div className={colors.text}>{icon}</div>
                 </div>
                 {subtitle && (

@@ -19,8 +19,8 @@ const DEFAULT_CATEGORIES: CustomCategory[] = [
   { value: 'VVIP', label: 'VVIP', color: 'text-brand-primary' },
   { value: 'MEDIA', label: 'Media', color: 'text-brand-primarySoft' },
   { value: 'SPONSOR', label: 'Sponsor', color: 'text-brand-success' },
-  { value: 'SPEAKER', label: 'Speaker', color: 'text-rose-300' },
-  { value: 'ORGANIZER', label: 'Organizer', color: 'text-cyan-300' },
+  { value: 'SPEAKER', label: 'Speaker', color: 'text-brand-danger' },
+  { value: 'ORGANIZER', label: 'Organizer', color: 'text-brand-info' },
 ];
 
 const COLOR_OPTIONS = [
@@ -29,8 +29,8 @@ const COLOR_OPTIONS = [
   { value: 'text-brand-primary', label: 'Gold', bg: 'bg-brand-primary' },
   { value: 'text-brand-primarySoft', label: 'Blue', bg: 'bg-brand-primary' },
   { value: 'text-brand-success', label: 'Green', bg: 'bg-brand-success' },
-  { value: 'text-rose-300', label: 'Rose', bg: 'bg-rose-500' },
-  { value: 'text-cyan-300', label: 'Cyan', bg: 'bg-cyan-500' },
+  { value: 'text-brand-danger', label: 'Rose', bg: 'bg-brand-danger' },
+  { value: 'text-brand-info', label: 'Cyan', bg: 'bg-brand-info' },
   { value: 'text-orange-300', label: 'Orange', bg: 'bg-orange-500' },
   { value: 'text-brand-primarySoft', label: 'Accent', bg: 'bg-brand-primarySoft' },
   { value: 'text-indigo-300', label: 'Indigo', bg: 'bg-indigo-500' },
@@ -369,7 +369,7 @@ export default function EventSettingsPage() {
                 </div>
                 <div>
                   <div className="font-medium text-white">Prize Inventory</div>
-                  <div className="text-xs text-white/60">Kelola hadiah door prize</div>
+                  <div className="text-xs text-white/60">Kelola hadiah lucky draw</div>
                 </div>
               </div>
               <ChevronRight size={18} className="text-white/40 group-hover:text-white/70 transition-colors" />
@@ -409,10 +409,10 @@ export default function EventSettingsPage() {
 
             <Link
               href="/admin/settings/email"
-              className="flex items-center justify-between p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20 hover:bg-cyan-500/20 transition-colors group"
+              className="flex items-center justify-between p-4 rounded-xl bg-brand-info/10 border border-brand-info/20 hover:bg-brand-info/20 transition-colors group"
             >
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-cyan-500/20">
+                <div className="p-2 rounded-lg bg-brand-info/20">
                   <Mail size={20} className="text-brand-info" />
                 </div>
                 <div>
@@ -425,10 +425,10 @@ export default function EventSettingsPage() {
 
             <Link
               href="/admin/settings/public-registration"
-              className="flex items-center justify-between p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors group"
+              className="flex items-center justify-between p-4 rounded-xl bg-brand-success/10 border border-brand-success/20 hover:bg-brand-success/20 transition-colors group"
             >
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-emerald-500/20">
+                <div className="p-2 rounded-lg bg-brand-success/20">
                   <UserPlus size={20} className="text-emerald-400" />
                 </div>
                 <div>
@@ -622,7 +622,7 @@ export default function EventSettingsPage() {
                       <div className="text-sm text-white/60">Aktifkan halaman registrasi publik /register</div>
                     </div>
                   </div>
-                  <div className={`w-12 h-7 rounded-full transition-colors relative ${cfg.enablePublicRegistration ? 'bg-emerald-500' : 'bg-white/20'}`}>
+                  <div className={`w-12 h-7 rounded-full transition-colors relative ${cfg.enablePublicRegistration ? 'bg-brand-success' : 'bg-white/20'}`}>
                     <div className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transform ${cfg.enablePublicRegistration ? 'translate-x-5' : 'translate-x-0'}`} />
                     <input
                       type="checkbox"

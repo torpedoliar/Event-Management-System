@@ -10,6 +10,7 @@ import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import PrizeReceiptModal from '@/components/PrizeReceiptModal';
+import Modal from '@/components/ui/Modal';
 
 const PRIZE_CATEGORIES = [
     { value: 'HIBURAN', label: 'Hadiah Hiburan' },
@@ -38,6 +39,9 @@ export default function PrizesPage() {
     const [newCategory, setNewCategory] = useState('HIBURAN');
     const [newAllowMultipleWins, setNewAllowMultipleWins] = useState(false);
     const [creating, setCreating] = useState(false);
+
+    // Confirmation state for delete/reset/remove-winner
+    const [confirmAction, setConfirmAction] = useState<{type: string; id: string; name: string; extra?: string} | null>(null);
 
     // Edit Quantity State
     const [editingPrizeId, setEditingPrizeId] = useState<string | null>(null);
@@ -100,7 +104,12 @@ export default function PrizesPage() {
     };
 
     const deletePrize = async (id: string) => {
-        if (!confirm('Hapus hadiah ini?')) return;
+        const prize = prizes.find(p => p.id === id);
+        setConfirmAction({ type: 'delete', id, name: prize?.name || id });
+        return;
+    };
+
+    const executeDeletePrize = async (id: string) => {
         try {
             await apiFetch(`/prizes/${id}`, { method: 'DELETE' });
             load();
@@ -110,7 +119,12 @@ export default function PrizesPage() {
     };
 
     const resetPrize = async (id: string) => {
-        if (!confirm('Reset pemenang untuk hadiah ini?')) return;
+        const prize = prizes.find(p => p.id === id);
+        setConfirmAction({ type: 'reset', id, name: prize?.name || id });
+        return;
+    };
+
+    const executeResetPrize = async (id: string) => {
         try {
             await apiFetch(`/prizes/${id}/reset`, { method: 'POST' });
             load();
@@ -134,7 +148,13 @@ export default function PrizesPage() {
     };
 
     const removeWinner = async (prizeId: string, guestId: string) => {
-        if (!confirm('Anulir pemenang ini dari hadiah? Stok hadiah akan kembali bisa diundi.')) return;
+        const prize = prizes.find(p => p.id === prizeId);
+        const winner = prize?.winners.find((w: any) => w.id === guestId);
+        setConfirmAction({ type: 'removeWinner', id: guestId, name: winner?.name || guestId, extra: prizeId });
+        return;
+    };
+
+    const executeRemoveWinner = async (prizeId: string, guestId: string) => {
         try {
             await apiFetch(`/prizes/${prizeId}/winners/${guestId}`, { method: 'DELETE' });
             load();
@@ -244,18 +264,18 @@ export default function PrizesPage() {
                 <div className="flex items-center justify-between flex-wrap gap-4">
                     <h1 className="text-2xl font-bold text-white flex items-center gap-3">
                         <Trophy className="text-brand-primary" />
-                        Kelola Door Prize
+                        Kelola Lucky Draw
                     </h1>
                     <div className="flex gap-3 flex-wrap">
                         <button onClick={() => window.open('/luckydraw/winners', '_blank')} className="flex items-center gap-2 px-4 py-2 bg-brand-primary/20 text-brand-primary border border-brand-primary/50 rounded-lg hover:bg-brand-primary/40 transition-colors font-medium text-sm">
                             <MonitorPlay size={18} />
                             Display Pemenang
                         </button>
-                        <button onClick={exportExcel} disabled={prizes.length === 0} className="flex items-center gap-2 px-4 py-2 bg-green-600/20 text-green-400 border border-green-600/50 rounded-lg hover:bg-green-600/40 transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                        <button onClick={exportExcel} disabled={prizes.length === 0} className="flex items-center gap-2 px-4 py-2 bg-brand-success/20 text-brand-success border border-brand-success/50 rounded-lg hover:bg-brand-success/40 transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed">
                             <FileDown size={18} />
                             Export Excel
                         </button>
-                        <button onClick={exportPdf} disabled={prizes.length === 0} className="flex items-center gap-2 px-4 py-2 bg-red-600/20 text-red-400 border border-red-600/50 rounded-lg hover:bg-red-600/40 transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                        <button onClick={exportPdf} disabled={prizes.length === 0} className="flex items-center gap-2 px-4 py-2 bg-brand-danger/20 text-brand-danger border border-brand-danger/50 rounded-lg hover:bg-brand-danger/40 transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed">
                             <FileDown size={18} />
                             Export PDF
                         </button>
@@ -396,7 +416,7 @@ export default function PrizesPage() {
                                                     <div className="flex items-center gap-2">
                                                         <button 
                                                             onClick={() => exportPdfForPrize(p)}
-                                                            className="text-xs flex items-center gap-1 bg-red-600/20 hover:bg-red-600/40 text-red-400 px-2 py-1 rounded transition-colors"
+                                                            className="text-xs flex items-center gap-1 bg-brand-danger/20 hover:bg-brand-danger/40 text-brand-danger px-2 py-1 rounded transition-colors"
                                                             title="Export PDF Pemenang"
                                                         >
                                                             <FileDown size={12} /> Export PDF
@@ -496,6 +516,53 @@ export default function PrizesPage() {
                     logoUrl={logoUrl}
                 />
             )}
+
+            {/* Confirmation Modal */}
+            <Modal
+                open={!!confirmAction}
+                onClose={() => setConfirmAction(null)}
+                title="Konfirmasi"
+                className="max-w-md"
+                footer={
+                    <div className="flex gap-3 w-full">
+                        <Button variant="outline" className="flex-1" onClick={() => setConfirmAction(null)}>
+                            Batal
+                        </Button>
+                        <Button
+                            variant="danger"
+                            className="flex-1"
+                            onClick={() => {
+                                if (!confirmAction) return;
+                                const { type, id, extra } = confirmAction;
+                                setConfirmAction(null);
+                                if (type === 'delete') executeDeletePrize(id);
+                                else if (type === 'reset') executeResetPrize(id);
+                                else if (type === 'removeWinner') executeRemoveWinner(extra!, id);
+                            }}
+                        >
+                            Ya, Konfirmasi
+                        </Button>
+                    </div>
+                }
+            >
+                <div className="space-y-3">
+                    {confirmAction?.type === 'delete' && (
+                        <p className="text-brand-textMuted">
+                            Hapus hadiah <strong className="text-brand-text">"{confirmAction.name}"</strong>? Semua data pemenang akan hilang.
+                        </p>
+                    )}
+                    {confirmAction?.type === 'reset' && (
+                        <p className="text-brand-textMuted">
+                            Reset pemenang untuk hadiah <strong className="text-brand-text">"{confirmAction.name}"</strong>? Semua pemenang akan dikosongkan.
+                        </p>
+                    )}
+                    {confirmAction?.type === 'removeWinner' && (
+                        <p className="text-brand-textMuted">
+                            Anulir pemenang <strong className="text-brand-text">"{confirmAction.name}"</strong> dari hadiah? Stok hadiah akan kembali bisa diundi.
+                        </p>
+                    )}
+                </div>
+            </Modal>
         </RequireAuth>
     );
 }

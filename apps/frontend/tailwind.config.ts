@@ -90,12 +90,17 @@ export default {
           '0%': { backgroundPosition: '-1000px 0' },
           '100%': { backgroundPosition: '1000px 0' },
         },
+        slideInRight: {
+          '0%': { opacity: '0', transform: 'translateX(100%)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
       },
       animation: {
         fadeIn: 'fadeIn 0.2s ease-out',
         scaleIn: 'scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
         slideUp: 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
         shimmer: 'shimmer 2s infinite linear',
+        slideInRight: 'slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
       },
       transitionDuration: {
         fast: '150ms',

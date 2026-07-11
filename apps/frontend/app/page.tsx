@@ -77,7 +77,7 @@ export default async function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-brand-bg">
+    <div className="min-h-[100dvh] bg-brand-bg">
       <LandingNav eventConfig={eventConfig} />
       <main>
         {toggles.showHero && (

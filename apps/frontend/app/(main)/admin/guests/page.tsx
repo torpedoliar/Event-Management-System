@@ -19,15 +19,15 @@ const CATEGORY_CONFIG: Record<GuestCategory, { label: string; color: string; bg:
   VVIP: { label: 'VVIP', color: 'text-brand-primary', bg: 'bg-brand-primary/20', border: 'border-brand-primary/30' },
   MEDIA: { label: 'Media', color: 'text-brand-primarySoft', bg: 'bg-brand-primary/20', border: 'border-brand-primary/30' },
   SPONSOR: { label: 'Sponsor', color: 'text-brand-success', bg: 'bg-brand-success/20', border: 'border-brand-success/30' },
-  SPEAKER: { label: 'Speaker', color: 'text-rose-300', bg: 'bg-rose-500/20', border: 'border-rose-500/30' },
-  ORGANIZER: { label: 'Organizer', color: 'text-cyan-300', bg: 'bg-cyan-500/20', border: 'border-cyan-500/30' },
+  SPEAKER: { label: 'Speaker', color: 'text-brand-danger', bg: 'bg-brand-danger/20', border: 'border-brand-danger/30' },
+  ORGANIZER: { label: 'Organizer', color: 'text-brand-info', bg: 'bg-brand-info/20', border: 'border-brand-info/30' },
 };
 
 const SOURCE_CONFIG: Record<RegistrationSource, { label: string; color: string; bg: string; border: string }> = {
   MANUAL: { label: 'Manual', color: 'text-brand-textMuted', bg: 'bg-brand-textMuted/10', border: 'border-brand-textMuted/20' },
   IMPORT: { label: 'Import', color: 'text-brand-primarySoft', bg: 'bg-brand-primary/20', border: 'border-brand-primary/30' },
   WALKIN: { label: 'Walk-in', color: 'text-orange-300', bg: 'bg-orange-500/20', border: 'border-orange-500/30' },
-  PUBLIC: { label: 'Public', color: 'text-emerald-300', bg: 'bg-emerald-500/20', border: 'border-emerald-500/30' },
+  PUBLIC: { label: 'Public', color: 'text-brand-success', bg: 'bg-brand-success/20', border: 'border-brand-success/30' },
 };
 
 interface PrizeWin {
@@ -531,7 +531,7 @@ export default function GuestsListPage() {
           <Button
             size="sm"
             variant={showDuplicatesOnly ? "primary" : "secondary"}
-            className={showDuplicatesOnly ? "bg-rose-600 hover:bg-rose-700 text-white border-rose-500" : ""}
+            className={showDuplicatesOnly ? "bg-brand-danger hover:bg-brand-danger/80 text-white border-brand-danger" : ""}
             onClick={() => {
               const newMode = !showDuplicatesOnly;
               setShowDuplicatesOnly(newMode);
@@ -759,10 +759,10 @@ export default function GuestsListPage() {
                   const cat = CATEGORY_CONFIG[g.category] || CATEGORY_CONFIG.REGULAR;
                   const src = g.registrationSource ? SOURCE_CONFIG[g.registrationSource] : null;
                   return (
-                    <tr key={g.id} className={`group transition-all duration-300 ${showDuplicatesOnly ? 'bg-rose-500/10 hover:bg-rose-500/20 shadow-[inset_0_0_30px_rgba(225,29,72,0.1)]' : 'hover:bg-brand-bgSubtle hover:shadow-[inset_0_0_30px_rgba(212,168,83,0.05)]'} relative ${selectedIds.has(g.id) ? 'bg-brand-primary/10' : ''}`}>
+                    <tr key={g.id} className={`group transition-all duration-300 ${showDuplicatesOnly ? 'bg-brand-danger/10 hover:bg-brand-danger/20 shadow-[inset_0_0_30px_rgba(225,29,72,0.1)]' : 'hover:bg-brand-bgSubtle hover:shadow-[inset_0_0_30px_rgba(212,168,83,0.05)]'} relative ${selectedIds.has(g.id) ? 'bg-brand-primary/10' : ''}`}>
                       <td className="px-4 py-4 align-middle whitespace-nowrap">
                         {/* Glow Row Indicator */}
-                        <div className={`absolute left-0 top-0 bottom-0 w-1 ${showDuplicatesOnly ? 'bg-rose-500' : 'bg-brand-primary'} opacity-0 group-hover:opacity-100 transition-opacity`} />
+                        <div className={`absolute left-0 top-0 bottom-0 w-1 ${showDuplicatesOnly ? 'bg-brand-danger' : 'bg-brand-primary'} opacity-0 group-hover:opacity-100 transition-opacity`} />
                         <input
                           type="checkbox"
                           checked={selectedIds.has(g.id)}
@@ -784,7 +784,7 @@ export default function GuestsListPage() {
                       <td className="px-4 py-4 text-white font-medium align-middle">
                         <div className="group-hover:text-brand-primarySoft transition-colors flex items-center gap-2">
                           {g.name}
-                          {showDuplicatesOnly && <span className="px-2 py-0.5 rounded text-2xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">DUPLIKAT</span>}
+                          {showDuplicatesOnly && <span className="px-2 py-0.5 rounded text-2xs font-bold bg-brand-danger/20 text-brand-danger border border-brand-danger/30">DUPLIKAT</span>}
                         </div>
                         {g.notes && (
                           <div className="text-xs text-brand-warning/80 mt-1 px-2 py-1 bg-brand-warning/10 rounded border border-brand-warning/20 max-w-xs truncate">
@@ -894,7 +894,7 @@ export default function GuestsListPage() {
                           {g.email && (
                             <button
                               title="Kirim Email Undangan"
-                              className="p-1.5 rounded-lg text-brand-info hover:bg-cyan-400/10 hover:text-cyan-300 transition-colors"
+                              className="p-1.5 rounded-lg text-brand-info hover:bg-brand-info/10 hover:text-brand-info transition-colors"
                               onClick={() => openEmailModal([g.id])}
                             >
                               <Send size={18} />

@@ -66,7 +66,7 @@ export default function PublicRegistrationPage() {
   // Loading
   if (state === "loading") {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6">
+      <div className="min-h-[100dvh] flex items-center justify-center p-6">
         <Loader2 className="animate-spin text-brand-primary" size={32} />
       </div>
     );
@@ -74,7 +74,7 @@ export default function PublicRegistrationPage() {
   // Error
   if (state === "error") {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6">
+      <div className="min-h-[100dvh] flex items-center justify-center p-6">
         <Card variant="elevated" className="max-w-md w-full text-center space-y-4">
           <XCircle className="mx-auto text-brand-danger" size={48} />
           <h2 className="text-xl font-bold text-brand-text">Gagal Memuat</h2>
@@ -87,7 +87,7 @@ export default function PublicRegistrationPage() {
   // Closed
   if (state === "closed" && config) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6">
+      <div className="min-h-[100dvh] flex items-center justify-center p-6">
         <Card variant="elevated" className="max-w-md w-full text-center space-y-4">
           <Clock className="mx-auto text-brand-textMuted" size={48} />
           <h2 className="text-xl font-bold text-brand-text">{config.title}</h2>
@@ -99,7 +99,7 @@ export default function PublicRegistrationPage() {
   // Full
   if (state === "full" && config) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6">
+      <div className="min-h-[100dvh] flex items-center justify-center p-6">
         <Card variant="elevated" className="max-w-md w-full text-center space-y-4">
           <Users className="mx-auto text-brand-warning" size={48} />
           <h2 className="text-xl font-bold text-brand-text">{config.title}</h2>
@@ -111,7 +111,7 @@ export default function PublicRegistrationPage() {
   // Success
   if (state === "success" && successData) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6">
+      <div className="min-h-[100dvh] flex items-center justify-center p-6">
         <Card variant="elevated" className="max-w-md w-full text-center space-y-6">
           <CheckCircle className="mx-auto text-brand-success" size={56} />
           <div className="space-y-2">
@@ -138,7 +138,7 @@ export default function PublicRegistrationPage() {
     ? Math.min(100, (config.currentCount / config.maxQuota) * 100) : 0;
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 md:p-6">
+    <div className="min-h-[100dvh] flex items-center justify-center p-4 md:p-6">
       <div className="w-full max-w-lg space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">

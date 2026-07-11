@@ -153,15 +153,15 @@ export default function SouvenirsPage() {
         <RequireAuth>
             <div className="min-h-screen p-6 md:p-8 mx-auto max-w-6xl space-y-8">
                 <div className="flex items-center justify-between flex-wrap gap-4">
-                    <h1 className="text-2xl font-bold text-white flex items-center gap-3">
+                    <h1 className="text-2xl font-bold text-brand-text flex items-center gap-3">
                         <Package className="text-brand-primary" />
                         Kelola Souvenir
                     </h1>
                     {/* Summary Stats */}
                     <div className="flex gap-4">
                         <div className="bg-white/5 border border-white/10 rounded-xl px-4 py-2">
-                            <div className="text-xs text-white/60 uppercase tracking-wider">Total Stock</div>
-                            <div className="text-xl font-bold text-white">{totalStock}</div>
+                            <div className="text-xs text-brand-text/60 uppercase tracking-wider">Total Stock</div>
+                            <div className="text-xl font-bold text-brand-text">{totalStock}</div>
                         </div>
                         <div className="bg-brand-success/10 border border-brand-success/20 rounded-xl px-4 py-2">
                             <div className="text-xs text-brand-success uppercase tracking-wider">Sudah Diambil</div>
@@ -179,7 +179,7 @@ export default function SouvenirsPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Create Form */}
                     <Card variant="glass" className="h-fit">
-                        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                        <h2 className="text-lg font-semibold text-brand-text mb-4 flex items-center gap-2">
                             <Plus size={20} /> Tambah Souvenir
                         </h2>
                         <form onSubmit={createSouvenir} className="space-y-4">
@@ -218,10 +218,10 @@ export default function SouvenirsPage() {
 
                     {/* List */}
                     <div className="lg:col-span-2 space-y-4">
-                        {loading && <div className="text-white/50 text-center py-8">Memuat data...</div>}
+                        {loading && <div className="text-brand-text/50 text-center py-8">Memuat data...</div>}
 
                         {!loading && souvenirs.length === 0 && (
-                            <div className="text-white/30 text-center py-12 border-2 border-dashed border-white/10 rounded-xl">
+                            <div className="text-brand-text/30 text-center py-12 border-2 border-dashed border-white/10 rounded-xl">
                                 Belum ada souvenir yang ditambahkan
                             </div>
                         )}
@@ -261,14 +261,14 @@ export default function SouvenirsPage() {
                                         <div className="flex justify-end gap-2">
                                             <button
                                                 onClick={cancelEdit}
-                                                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-white/70 hover:bg-white/10 transition-colors"
+                                                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-brand-text/70 hover:bg-white/10 transition-colors"
                                             >
                                                 <X size={16} /> Batal
                                             </button>
                                             <button
                                                 onClick={saveEdit}
                                                 disabled={saving}
-                                                className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-brand-primary text-white hover:bg-brand-primary/80 transition-colors disabled:opacity-50"
+                                                className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-brand-primary text-brand-text hover:bg-brand-primary/80 transition-colors disabled:opacity-50"
                                             >
                                                 <Check size={16} /> {saving ? 'Menyimpan...' : 'Simpan'}
                                             </button>
@@ -279,7 +279,7 @@ export default function SouvenirsPage() {
                                     <div className="flex items-start justify-between gap-4">
                                         <div className="flex-1">
                                             <div className="flex items-center flex-wrap gap-2 mb-1">
-                                                <h3 className="font-bold text-lg text-white">{s.name}</h3>
+                                                <h3 className="font-bold text-lg text-brand-text">{s.name}</h3>
                                                 <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${s.remaining > 0
                                                         ? 'bg-brand-success/20 text-brand-success border-brand-success/30'
                                                         : 'bg-brand-danger/20 text-brand-danger border-brand-danger/30'
@@ -292,7 +292,7 @@ export default function SouvenirsPage() {
                                                     </span>
                                                 )}
                                             </div>
-                                            {s.description && <p className="text-sm text-white/60 mb-3">{s.description}</p>}
+                                            {s.description && <p className="text-sm text-brand-text/60 mb-3">{s.description}</p>}
 
                                             {/* Progress Bar */}
                                             <div className="mt-3">
@@ -302,7 +302,7 @@ export default function SouvenirsPage() {
                                                         style={{ width: `${(s.takenCount / s.quantity) * 100}%` }}
                                                     />
                                                 </div>
-                                                <div className="flex justify-between text-xs text-white/50 mt-1">
+                                                <div className="flex justify-between text-xs text-brand-text/50 mt-1">
                                                     <span>Sisa: {s.remaining}</span>
                                                     <span>{Math.round((s.takenCount / s.quantity) * 100)}%</span>
                                                 </div>
@@ -327,7 +327,7 @@ export default function SouvenirsPage() {
                                                             </div>
                                                         ))}
                                                         {s.takes.length > 5 && (
-                                                            <div className="text-xs text-white/50 flex items-center">
+                                                            <div className="text-xs text-brand-text/50 flex items-center">
                                                                 +{s.takes.length - 5} lainnya
                                                             </div>
                                                         )}

@@ -82,11 +82,11 @@ function GuestStatsChart({ stats }: GuestStatsChartProps) {
                 {/* Custom Legend Overlay */}
                 <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-6 text-sm">
                     <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-[#34d399]" />
+                        <div className="w-3 h-3 rounded-full bg-brand-success" />
                         <span className="text-white/80">Sudah Check-in</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-[#f472b6]" />
+                        <div className="w-3 h-3 rounded-full bg-brand-danger/80" />
                         <span className="text-white/80">Belum Check-in</span>
                     </div>
                 </div>

@@ -50,7 +50,7 @@ export default function LiveMatchPage() {
 
   if (loading) {
     return (
-      <div className="min-h-[100dvh] bg-black flex items-center justify-center text-white">
+      <div className="min-h-[100dvh] bg-brand-bg flex items-center justify-center text-white">
         <div className="animate-spin rounded-full h-10 w-10 border-4 border-brand-primary border-t-transparent" />
       </div>
     );
@@ -58,7 +58,7 @@ export default function LiveMatchPage() {
 
   if (notFound) {
     return (
-      <div className="min-h-[100dvh] bg-black flex flex-col items-center justify-center text-white gap-4">
+      <div className="min-h-[100dvh] bg-brand-bg flex flex-col items-center justify-center text-white gap-4">
         <Trophy className="w-16 h-16 text-white/30" />
         <p className="text-xl text-white/60">Match not found</p>
         <p className="text-sm text-white/40">The match may have been deleted or the link is invalid.</p>
@@ -68,7 +68,7 @@ export default function LiveMatchPage() {
 
   if (error && !match) {
     return (
-      <div className="min-h-[100dvh] bg-black flex flex-col items-center justify-center text-white gap-4">
+      <div className="min-h-[100dvh] bg-brand-bg flex flex-col items-center justify-center text-white gap-4">
         <AlertCircle className="w-16 h-16 text-brand-danger/60" />
         <p className="text-xl text-white/60">Error loading match</p>
         <p className="text-sm text-white/40">{error}</p>
@@ -83,7 +83,7 @@ export default function LiveMatchPage() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-black">
+    <div className="min-h-[100dvh] bg-brand-bg">
       <LiveMatchDisplay match={match!} />
     </div>
   );

@@ -87,7 +87,7 @@ export default function NewGuestPage() {
             <Button variant="secondary" size="sm" onClick={() => router.back()} className="rounded-full p-2 h-10 w-10 flex items-center justify-center">
               <ArrowLeft size={20} />
             </Button>
-            <h1 className="text-2xl md:text-3xl font-bold text-white text-shadow-lg flex items-center gap-3">
+            <h1 className="text-2xl md:text-3xl font-bold text-brand-text text-shadow-lg flex items-center gap-3">
               <UserPlus size={28} className="text-brand-primary" />
               Tambah Tamu
             </h1>
@@ -172,7 +172,7 @@ export default function NewGuestPage() {
                     id="category"
                     value={category}
                     onChange={(e) => setCategory(e.target.value as GuestCategory)}
-                    className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-white focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary"
+                    className="w-full rounded-lg border border-brand-border bg-brand-surface/5 px-3 py-2 text-brand-text focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary"
                   >
                     {CATEGORY_OPTIONS.map((opt) => (
                       <option key={opt.value} value={opt.value} className="bg-brand-bgElevated text-brand-text">
@@ -189,7 +189,7 @@ export default function NewGuestPage() {
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="Catatan tambahan tentang tamu..."
                     rows={3}
-                    className="text-white placeholder:text-white/40"
+                    className="text-brand-text placeholder:text-brand-text/40"
                   />
                 </div>
               </div>
@@ -203,13 +203,13 @@ export default function NewGuestPage() {
                         type="file"
                         accept="image/*"
                         capture="environment"
-                        className="text-sm text-white/70 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-brand-surface file:text-brand-text hover:file:bg-brand-surfaceMuted cursor-pointer"
+                        className="text-sm text-brand-text/70 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-brand-surface file:text-brand-text hover:file:bg-brand-surfaceMuted cursor-pointer"
                         onChange={(e) => {
                           const f = e.target.files?.[0] || null; setPhoto(f);
                           if (f) { const url = URL.createObjectURL(f); setPreview(url); } else { setPreview(null); }
                         }}
                       />
-                      <span className="text-white/40 text-sm">atau</span>
+                      <span className="text-brand-text/40 text-sm">atau</span>
                       <Button
                         type="button"
                         onClick={() => setWebcamOpen(true)}
@@ -224,7 +224,7 @@ export default function NewGuestPage() {
                   </div>
 
                   {preview && (
-                    <div className="h-32 w-32 rounded-lg overflow-hidden border border-white/20 bg-black/20 flex-shrink-0">
+                    <div className="h-32 w-32 rounded-lg overflow-hidden border border-brand-border bg-black/20 flex-shrink-0">
                       <img src={preview} alt="preview" className="h-full w-full object-cover" />
                     </div>
                   )}

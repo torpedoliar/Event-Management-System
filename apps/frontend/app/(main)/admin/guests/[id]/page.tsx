@@ -104,7 +104,7 @@ export default function EditGuestPage() {
     <RequireAuth>
       <div className="min-h-screen p-6 md:p-8">
         <div className="mx-auto max-w-2xl space-y-4">
-          <h1 className="text-2xl md:text-3xl font-bold text-white text-shadow-lg">Edit Tamu</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-brand-text text-shadow-lg">Edit Tamu</h1>
           {error && <div className="text-sm text-brand-danger">{error}</div>}
           {message && <div className="text-sm text-brand-primary">{message}</div>}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -197,7 +197,7 @@ export default function EditGuestPage() {
                   id="category"
                   value={guest.category || 'REGULAR'}
                   onChange={(e) => setGuest({ ...guest!, category: e.target.value as GuestCategory })}
-                  className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-white focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary"
+                  className="w-full rounded-lg border border-brand-border bg-brand-surface/5 px-3 py-2 text-brand-text focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary"
                 >
                   {CATEGORY_OPTIONS.map((opt) => (
                     <option key={opt.value} value={opt.value} className="bg-brand-bgElevated text-brand-text">
@@ -216,7 +216,7 @@ export default function EditGuestPage() {
                 />
               </div>
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                <label className="flex items-center gap-2 text-sm text-white">
+                <label className="flex items-center gap-2 text-sm text-brand-text">
                   <input
                     type="checkbox"
                     checked={guest.checkedIn}

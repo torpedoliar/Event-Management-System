@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState, useRef } from "react";
 import { apiBase, toApiUrl, parseErrorMessage } from "@/lib/api";
 import { Html5Qrcode } from "html5-qrcode";
-import { Search, QrCode, Loader2, CheckCircle, Clock, Users, X, XCircle, UserPlus, Settings, Camera, UserCheck, Trash2, Monitor } from 'lucide-react';
+import { Search, QrCode, Loader2, CheckCircle, Clock, Users, X, XCircle, UserPlus, Settings, Camera, UserCheck, Trash2, Monitor, HelpCircle } from 'lucide-react';
 import Label from '@/components/ui/Label';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
@@ -319,6 +319,9 @@ export default function CheckinPage() {
   const [showQueuePanel, setShowQueuePanel] = useState(false);
   const [stationConfig, setStationConfig] = useState<StationConfigType | null>(null);
   const [cachedGuestCount, setCachedGuestCount] = useState(0);
+  const [showClearCacheModal, setShowClearCacheModal] = useState(false);
+  const [eventChangeNotif, setEventChangeNotif] = useState<string | null>(null);
+  const [pendingSyncAlert, setPendingSyncAlert] = useState<number | null>(null);
 
   // Initialize offline mode on mount
   useEffect(() => {
@@ -478,14 +481,16 @@ export default function CheckinPage() {
   };
 
   const handleClearCache = async () => {
-    if (confirm('Apakah Anda yakin ingin menghapus semua cache tamu lokal di perangkat ini?')) {
-      try {
-        await indexedDBService.clearGuestCache();
-        setCachedGuestCount(0);
-        alert('Cache tamu berhasil dihapus.');
-      } catch (e: any) {
-        alert('Gagal menghapus cache: ' + e.message);
-      }
+    setShowClearCacheModal(true);
+  };
+
+  const executeClearCache = async () => {
+    setShowClearCacheModal(false);
+    try {
+      await indexedDBService.clearGuestCache();
+      setCachedGuestCount(0);
+    } catch (e: any) {
+      setError('Gagal menghapus cache: ' + e.message);
     }
   };
 
@@ -1207,13 +1212,15 @@ export default function CheckinPage() {
       indexedDBService.clearEventCaches().then(async () => {
         setCachedGuestCount(0);
 
-        // Alert the operator
-        alert("Event aktif telah diubah oleh Admin. Cache tamu lokal telah dikosongkan. Harap download ulang data tamu untuk akses offline event yang baru.");
+        // Notify the operator
+        setEventChangeNotif("Event aktif telah diubah oleh Admin. Cache tamu lokal telah dikosongkan. Harap download ulang data tamu untuk akses offline event yang baru.");
+        setTimeout(() => setEventChangeNotif(null), 8000);
 
         // Check for pending queue from previous event
         const pendingCount = await indexedDBService.getPendingCount();
         if (pendingCount > 0) {
-          alert(`Anda masih memiliki ${pendingCount} antrean sinkronisasi dari event sebelumnya. Harap pastikan perangkat terhubung ke internet agar sinkronisasi dapat selesai.`);
+          setPendingSyncAlert(pendingCount);
+          setTimeout(() => setPendingSyncAlert(null), 10000);
         }
       }).catch(err => {
         console.error('Failed to clear event caches:', err);
@@ -1436,7 +1443,7 @@ export default function CheckinPage() {
 
   return (
     <RequireAuth>
-      <div className="relative min-h-screen w-full overflow-hidden">
+      <div className="relative min-h-[100dvh] w-full overflow-hidden">
         {/* Header */}
         <div className="relative z-30 p-4 md:p-6 pb-6">
           <div className="max-w-4xl mx-auto">
@@ -1510,9 +1517,23 @@ export default function CheckinPage() {
                 />
               </div>
 
+              {/* Inline help hint */}
+              <div className="mt-3 flex items-center gap-2 text-xs text-brand-textDim">
+                <HelpCircle size={13} className="shrink-0" />
+                <span>Ketik ID atau nama tamu → Enter untuk check-in cepat. Bisa scan QR juga. Tamu tidak ditemukan? Aktifkan Auto-Create di Pengaturan.</span>
+              </div>
+
               {rapidLogs.length > 0 && (
                 <div className="mt-4 surface-elevated p-4 text-sm max-h-48 overflow-y-auto">
-                  <h3 className="text-brand-text font-semibold mb-3">Riwayat Scan</h3>
+                  <div className="flex items-center gap-2 mb-3">
+                    <h3 className="text-brand-text font-semibold">Riwayat Scan</h3>
+                    <div className="group relative">
+                      <HelpCircle size={13} className="text-brand-textDim cursor-help" />
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-brand-bgElevated border border-brand-border rounded-lg text-xs text-brand-text shadow-panel w-64 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity z-10">
+                        Log scan terakhir. Warna hijau = berhasil, kuning = sudah check-in, merah = error/tidak ditemukan.
+                      </div>
+                    </div>
+                  </div>
                   <ul className="space-y-2">
                     {rapidLogs.map((log) => (
                       <li key={log.id} className="flex justify-between items-center bg-brand-bgSubtle px-3 py-2 rounded-lg">
@@ -1586,6 +1607,14 @@ export default function CheckinPage() {
           }
         >
           <div className="space-y-3">
+            <div className="bg-brand-primary/5 border border-brand-primary/10 rounded-lg p-3 mb-2">
+              <div className="flex gap-2">
+                <HelpCircle size={14} className="text-brand-primary shrink-0 mt-0.5" />
+                <p className="text-xs text-brand-textMuted leading-relaxed">
+                  Atur perilaku check-in di station ini. Perubahan tersimpan otomatis dan berlaku hanya untuk perangkat ini.
+                </p>
+              </div>
+            </div>
             <Toggle
               icon={<UserPlus size={18} />}
               checked={autoCreateGuest}
@@ -1594,7 +1623,7 @@ export default function CheckinPage() {
                 localStorage.setItem('checkinAutoCreateGuest', String(checked));
               }}
               label="Buat tamu baru bila tidak ditemukan"
-              description="Saat pencarian tidak menemukan tamu, sistem membuat tamu baru lalu check-in."
+              description="Saat pencarian tidak menemukan tamu, sistem membuat tamu baru lalu check-in. Cocok untuk walk-in guests."
             />
             <Toggle
               icon={<Camera size={18} />}
@@ -2044,6 +2073,54 @@ export default function CheckinPage() {
           isOpen={showQueuePanel}
           onClose={() => setShowQueuePanel(false)}
         />
+
+        {/* Clear Cache Confirmation Modal */}
+        <Modal
+          open={showClearCacheModal}
+          onClose={() => setShowClearCacheModal(false)}
+          title="Hapus Cache Lokal"
+          className="max-w-md"
+          footer={
+            <div className="flex gap-3 w-full">
+              <Button variant="outline" className="flex-1" onClick={() => setShowClearCacheModal(false)}>
+                Batal
+              </Button>
+              <Button variant="danger" className="flex-1" onClick={executeClearCache}>
+                Ya, Hapus
+              </Button>
+            </div>
+          }
+        >
+          <p className="text-brand-textMuted">
+            Apakah Anda yakin ingin menghapus semua cache tamu lokal di perangkat ini? Data yang tersimpan di server tidak akan terpengaruh.
+          </p>
+        </Modal>
+
+        {/* Event Change Notification Banner */}
+        {eventChangeNotif && (
+          <div className="fixed bottom-4 right-4 z-[100] max-w-md p-4 rounded-xl bg-brand-warning/20 border border-brand-warning/30 backdrop-blur-xl">
+            <div className="flex items-start gap-3">
+              <div className="flex-1 text-sm text-brand-warning">{eventChangeNotif}</div>
+              <button onClick={() => setEventChangeNotif(null)} className="text-brand-warning/60 hover:text-brand-warning">
+                <X size={16} />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Pending Sync Alert Banner */}
+        {pendingSyncAlert !== null && (
+          <div className="fixed bottom-4 left-4 z-[100] max-w-md p-4 rounded-xl bg-brand-info/20 border border-brand-info/30 backdrop-blur-xl">
+            <div className="flex items-start gap-3">
+              <div className="flex-1 text-sm text-brand-info">
+                Anda masih memiliki {pendingSyncAlert} antrean sinkronisasi dari event sebelumnya. Harap pastikan perangkat terhubung ke internet agar sinkronisasi dapat selesai.
+              </div>
+              <button onClick={() => setPendingSyncAlert(null)} className="text-brand-info/60 hover:text-brand-info">
+                <X size={16} />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </RequireAuth>
   );
@@ -2165,7 +2242,7 @@ const Html5QrcodePlugin = ({ qrCodeSuccessCallback, onScanFailure, fps, qrbox }:
           });
       } catch (retryErr: any) {
         console.error("Retry scan error:", retryErr);
-        alert(`Gagal memindai QR Code: ${retryErr?.message || "Tidak ditemukan QR Code"}. Pastikan gambar jelas, pencahayaan cukup, dan QR Code terlihat utuh.`);
+        setStartError(`Gagal memindai QR Code: ${retryErr?.message || "Tidak ditemukan QR Code"}. Pastikan gambar jelas, pencahayaan cukup, dan QR Code terlihat utuh.`);
       }
     }
   };

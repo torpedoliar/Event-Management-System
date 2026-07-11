@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { apiFetch, apiBase, toApiUrl } from '@/lib/api';
-import { Trophy, PartyPopper, History, X, Users, Search, Award, Hash, Volume2, VolumeX, Monitor } from 'lucide-react';
+import { Trophy, PartyPopper, History, X, Users, Search, Award, Hash, Volume2, VolumeX, Monitor, HelpCircle } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Modal from '@/components/ui/Modal';
@@ -116,6 +116,7 @@ export default function LuckyDrawPage() {
     const [candidates, setCandidates] = useState<Guest[]>([]);
     const [displayCandidate, setDisplayCandidate] = useState<Guest | null>(null);
     const [loading, setLoading] = useState(true);
+    const [drawError, setDrawError] = useState<string | null>(null);
     const [eventCfg, setEventCfg] = useState<any>(null);
     const [showEligiblePanel, setShowEligiblePanel] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -645,7 +646,8 @@ export default function LuckyDrawPage() {
             setTickerSpeed(800);
             setTickerMood('normal');
             setIsGlitching(false);
-            alert(e.message || 'Gagal mengundi pemenang');
+            setDrawError(e.message || 'Gagal mengundi pemenang');
+            setTimeout(() => setDrawError(null), 5000);
         }
     };
 
@@ -722,7 +724,7 @@ export default function LuckyDrawPage() {
                     <h1 className="text-3xl md:text-5xl font-heading font-semibold text-brand-text tracking-tight">
                         Lucky Draw
                     </h1>
-                    <div className="flex justify-center">
+                    <div className="flex flex-col items-center gap-2">
                         <select
                             value={selectedPrizeId}
                             onChange={(e) => {
@@ -740,6 +742,7 @@ export default function LuckyDrawPage() {
                                 </option>
                             ))}
                         </select>
+                        <span className="text-xs text-brand-textDim">Pilih hadiah — angka di kurung = sudah dibagikan / total tersedia</span>
                     </div>
                 </div>
 
@@ -777,9 +780,20 @@ export default function LuckyDrawPage() {
                             </div>
 
                             <div className="flex flex-col items-center gap-4 w-full">
+                                {drawError && (
+                                    <div className="w-full p-3 rounded-xl bg-brand-danger/10 border border-brand-danger/20 text-brand-danger text-sm text-center">
+                                        {drawError}
+                                    </div>
+                                )}
                                 {selectedPrize?.category === 'HIBURAN' && !spinning && !isSoldOut && (
                                     <div className="flex items-center gap-3 p-2 rounded-xl border border-brand-border bg-black/30">
                                         <label className="text-sm text-brand-textMuted pl-3">Jumlah pemenang:</label>
+                                        <div className="group relative">
+                                            <HelpCircle size={14} className="text-brand-textDim cursor-help" />
+                                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-brand-bgElevated border border-brand-border rounded-lg text-xs text-brand-text shadow-panel w-56 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity z-10">
+                                                Berapa pemenang yang diundi sekaligus. Pilih cepat (1, 5, 10, 20) atau ketik angka custom. Grand Prize (UTAMA) selalu 1 pemenang.
+                                            </div>
+                                        </div>
                                         <div className="flex items-center gap-2">
                                             {[1, 5, 10, 20].map(n => (
                                                 <button
@@ -999,6 +1013,10 @@ export default function LuckyDrawPage() {
                         <TabButton active={activeTab === 'all'} onClick={() => setActiveTab('all')}>Semua ({eligibleMeta.totalCheckedIn})</TabButton>
                         <TabButton active={activeTab === 'eligible'} onClick={() => setActiveTab('eligible')}>Berhak ({eligibleMeta.eligible})</TabButton>
                         <TabButton active={activeTab === 'won'} onClick={() => setActiveTab('won')}>Menang ({eligibleMeta.won})</TabButton>
+                    </div>
+                    <div className="flex items-start gap-2 text-xs text-brand-textDim px-1">
+                        <HelpCircle size={13} className="shrink-0 mt-0.5" />
+                        <span>Semua = tamu yang sudah check-in. Berhak = bisa ikut undian (belum menang hadiah apapun). Menang = sudah pernah menang. Jika "allowMultipleWins" aktif, tamu yang sudah menang tetap berhak.</span>
                     </div>
 
                     <div className="max-h-[50vh] overflow-y-auto space-y-2 pt-1">

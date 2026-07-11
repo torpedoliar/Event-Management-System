@@ -519,10 +519,10 @@ export default function LiveDisplayPage() {
     const isSoldOut = selectedPrize ? selectedPrize.winners.length >= selectedPrize.quantity : false;
     const isUtama = selectedPrize?.category === 'UTAMA';
 
-    if (loading) return <div className="min-h-screen flex items-center justify-center text-brand-text">Loading...</div>;
+    if (loading) return <div className="min-h-[100dvh] flex items-center justify-center text-brand-text">Loading...</div>;
 
     return (
-        <div className={`min-h-screen flex flex-col p-8 relative overflow-hidden ${screenShake ? 'animate-screen-shake' : ''}`}>
+        <div className={`min-h-[100dvh] flex flex-col p-8 relative overflow-hidden ${screenShake ? 'animate-screen-shake' : ''}`}>
             {/* Mode Selector Dropdown */}
             <div className="fixed top-24 left-6 z-[70]">
                 <select
@@ -635,7 +635,7 @@ export default function LiveDisplayPage() {
                     </div>
                 </div>
 
-                <div className={`w-full max-w-[1400px] slot-frame relative transition-all duration-1000 bg-gradient-to-b from-brand-bgElevated to-brand-bgSubtle border border-brand-border rounded-xl border-t-brand-primary ${isUtama ? 'border-red-500/50 shadow-[0_0_100px_rgba(255,0,0,0.1)]' : ''}`}>
+                <div className={`w-full max-w-[1400px] slot-frame relative transition-all duration-1000 bg-gradient-to-b from-brand-bgElevated to-brand-bgSubtle border border-brand-border rounded-xl border-t-brand-primary ${isUtama ? 'border-brand-danger/50 shadow-[0_0_100px_rgba(212,168,83,0.12)]' : ''}`}>
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black px-8 py-2 rounded-full border border-brand-primary/40 font-mono text-brand-primary tracking-[0.3em] text-sm shadow-[0_0_20px_rgba(212,168,83,0.3)]">
                         {isUtama ? 'SINGLE WINNER MODE' : `MULTI WINNER MODE (${drawCount}x)`}
                     </div>
@@ -693,9 +693,9 @@ export default function LiveDisplayPage() {
                             ${spinning
                                 ? 'bg-brand-border/50 text-brand-textMuted cursor-not-allowed border border-brand-border'
                                 : isSoldOut
-                                    ? 'bg-red-500/20 text-red-500 cursor-not-allowed border border-red-500/30'
+                                    ? 'bg-brand-danger/20 text-brand-danger cursor-not-allowed border border-brand-danger/30'
                                     : isUtama 
-                                        ? 'bg-gradient-to-r from-red-600 to-red-800 text-brand-text shadow-[0_0_50px_rgba(255,0,0,0.5)] hover:shadow-[0_0_80px_rgba(255,0,0,0.8)] border border-red-400/50 animate-grand-pulse'
+                                        ? 'bg-gradient-to-r from-brand-danger to-brand-danger/70 text-brand-text shadow-[0_0_50px_rgba(255,0,0,0.5)] hover:shadow-[0_0_80px_rgba(255,0,0,0.8)] border border-brand-danger/50 animate-grand-pulse'
                                         : 'bg-gradient-to-r from-brand-primary to-brand-primarySoft text-brand-bg shadow-[0_0_50px_rgba(212,168,83,0.4)] hover:shadow-[0_0_80px_rgba(212,168,83,0.6)] border border-brand-primarySoft/50'
                             }
                         `}

@@ -9,6 +9,7 @@ import React, { useState, useEffect } from 'react';
 import { indexedDBService, StationConfig } from '../lib/indexeddb';
 import { offlineSyncService } from '../lib/offline-sync.service';
 import { generateUUID } from '../lib/utils';
+import { HelpCircle } from 'lucide-react';
 
 interface StationSetupModalProps {
   isOpen: boolean;
@@ -139,6 +140,19 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
 
         {/* Body */}
         <div className="px-6 py-6 space-y-6">
+          {/* Intro explanation */}
+          <div className="bg-brand-primary/5 border border-brand-primary/10 rounded-lg p-4">
+            <div className="flex gap-3">
+              <HelpCircle size={18} className="text-brand-primary shrink-0 mt-0.5" />
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-brand-text">Selamat datang!</p>
+                <p className="text-xs text-brand-textMuted leading-relaxed">
+                  Station adalah perangkat check-in Anda (HP, tablet, atau laptop). Beri nama yang mudah dikenali agar laporan check-in rapi. Jika venue punya internet tidak stabil, aktifkan mode offline agar check-in tetap jalan.
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* Station Name */}
           <div>
             <label className="block text-sm font-medium text-brand-textMuted mb-2">
@@ -155,22 +169,27 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
               className="w-full px-4 py-2 bg-brand-bg border border-brand-border rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent text-brand-text placeholder:text-brand-textDim"
               disabled={isLoading}
             />
-            <p className="mt-1 text-xs text-brand-textDim">
-              Nama ini akan muncul di laporan dan history check-in
+            <p className="mt-1.5 text-xs text-brand-textDim leading-relaxed">
+              Nama ini muncul di laporan dan history check-in. Gunakan nama lokasi agar mudah diingat, misalnya "Lobby Utama" atau "Pintu Timur".
             </p>
           </div>
 
           {/* Station ID Display */}
           <div className="bg-brand-bg/50 rounded-lg p-4 border border-brand-border">
-            <label className="block text-xs font-medium text-brand-textDim mb-1">
-              Station ID (Auto-generated)
-            </label>
+            <div className="flex items-center gap-2 mb-1">
+              <label className="text-xs font-medium text-brand-textDim">
+                Station ID (Otomatis)
+              </label>
+              <div className="group relative">
+                <HelpCircle size={12} className="text-brand-textDim cursor-help" />
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-brand-bgElevated border border-brand-border rounded-lg text-xs text-brand-text shadow-panel w-56 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity z-10">
+                  ID unik untuk perangkat ini. Dibuat otomatis — Anda tidak perlu mengubahnya. Digunakan sistem untuk membedakan data check-in antar perangkat.
+                </div>
+              </div>
+            </div>
             <code className="text-xs text-brand-textMuted break-all">
               {stationId}
             </code>
-            <p className="mt-2 text-xs text-brand-textDim">
-              ID ini unik dan digunakan untuk mengidentifikasi station saat sync
-            </p>
           </div>
 
           {/* Offline Mode Toggle */}
@@ -187,8 +206,8 @@ export default function StationSetupModal({ isOpen, onComplete, existingConfig }
               <span className="block text-sm font-medium text-brand-textMuted">
                 Aktifkan Mode Offline
               </span>
-              <span className="block text-xs text-brand-textDim">
-                Check-in tetap berjalan tanpa internet, otomatis sync saat koneksi kembali
+              <span className="block text-xs text-brand-textDim leading-relaxed mt-0.5">
+                Saat internet mati, check-in tetap jalan menggunakan data lokal. Begitu internet kembali, data otomatis tersync ke server. <strong className="text-brand-textMuted">Disarankan aktif</strong> untuk venue dengan koneksi tidak stabil.
               </span>
             </label>
           </div>

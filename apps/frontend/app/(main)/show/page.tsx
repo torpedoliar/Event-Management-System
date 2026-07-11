@@ -153,7 +153,7 @@ export default function ShowPage() {
             <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-brand-surface/50 border border-brand-border flex items-center justify-center">
               <Users size={40} className="text-brand-textMuted" />
             </div>
-            <h2 className="text-2xl md:text-4xl font-semibold text-brand-text mb-2 gradient-text">Selamat Datang</h2>
+            <h2 className="text-2xl md:text-4xl font-semibold text-brand-text mb-2 text-brand-primary">Selamat Datang</h2>
             <p className="text-base md:text-lg text-brand-textMuted">Menunggu tamu check-in...</p>
           </div>
         </div>

@@ -214,11 +214,11 @@ export default function LuckyDraw3DWheel({
          
          {/* Subtle glow behind the wheel */}
          <div className="absolute inset-0 rounded-3xl opacity-30 blur-3xl pointer-events-none"
-           style={{ background: 'radial-gradient(ellipse, rgba(212,168,83,0.35) 0%, rgba(124,92,252,0.1) 40%, transparent 70%)' }} />
+           style={{ background: 'radial-gradient(ellipse, rgba(212,168,83,0.35) 0%, rgba(212,168,83,0.15) 40%, transparent 70%)' }} />
 
          {/* ─── 3D Cylinder Viewport (overflow: hidden is the KEY fix) ─── */}
          <div className="absolute inset-x-4 top-4 bottom-4 rounded-2xl overflow-hidden z-20 border border-brand-primary/20"
-              style={{ background: 'linear-gradient(180deg, rgba(30,30,50,0.95) 0%, rgba(11,11,17,0.98) 50%, rgba(30,30,50,0.95) 100%)',
+              style={{ background: 'linear-gradient(180deg, rgba(18,18,26,0.95) 0%, rgba(11,11,17,0.98) 50%, rgba(18,18,26,0.95) 100%)',
                 boxShadow: 'inset 0 0 40px rgba(0,0,0,0.8), 0 0 30px rgba(0,0,0,0.5), 0 0 20px rgba(212,168,83,0.08)' }}>
            
            {/* 3D Cylinder */}
@@ -235,7 +235,7 @@ export default function LuckyDraw3DWheel({
                      style={{
                         transform: `rotateX(${i * theta}deg) translateZ(${radius}px)`,
                         backfaceVisibility: 'hidden',
-                        background: 'linear-gradient(180deg, rgba(245,236,215,0.12) 0%, rgba(30,30,50,0.95) 20%, rgba(30,30,50,0.95) 80%, rgba(245,236,215,0.12) 100%)',
+                        background: 'linear-gradient(180deg, rgba(245,236,215,0.12) 0%, rgba(18,18,26,0.95) 20%, rgba(18,18,26,0.95) 80%, rgba(245,236,215,0.12) 100%)',
                         border: '1px solid rgba(212,168,83,0.3)',
                         boxShadow: '0 4px 15px rgba(0,0,0,0.5), 0 0 8px rgba(212,168,83,0.1)'
                      }}
