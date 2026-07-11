@@ -15,7 +15,7 @@ export default function LiveMatchPage() {
   const [error, setError] = useState<string | null>(null);
   const [notFound, setNotFound] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const { lastEvent } = useSSE();
+  const { addEventListener, removeEventListener } = useSSE();
 
   const fetchMatch = async () => {
     if (!params.matchId) return;
@@ -51,19 +51,27 @@ export default function LiveMatchPage() {
   }, [params.matchId]);
 
   useEffect(() => {
-    if (!lastEvent || !params.matchId) return;
+    if (!params.matchId) return;
 
-    if (
-      (lastEvent.type === "match_score_update" || lastEvent.type === "match_completed") &&
-      lastEvent.data?.id === params.matchId
-    ) {
-      setMatch((prev) => {
-        if (!prev) return lastEvent.data as Match;
-        // Merge the new data, keeping nested relations like teamA/teamB if they are missing in SSE payload
-        return { ...prev, ...lastEvent.data } as Match;
-      });
-    }
-  }, [lastEvent, params.matchId]);
+    const onMatchEvent = (e: MessageEvent) => {
+      try {
+        const data = JSON.parse(e.data);
+        if (data?.id === params.matchId) {
+          setMatch((prev) => {
+            if (!prev) return data as Match;
+            return { ...prev, ...data } as Match;
+          });
+        }
+      } catch {}
+    };
+
+    addEventListener("match_score_update", onMatchEvent);
+    addEventListener("match_completed", onMatchEvent);
+    return () => {
+      removeEventListener("match_score_update", onMatchEvent);
+      removeEventListener("match_completed", onMatchEvent);
+    };
+  }, [params.matchId, addEventListener, removeEventListener]);
 
   if (loading) {
     return (
