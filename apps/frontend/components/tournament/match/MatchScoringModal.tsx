@@ -95,7 +95,7 @@ export function MatchScoringModal({
     try {
       await import("@/lib/tournament-api").then((m) => m.matchApi.updateScore(match.id, score));
       onUpdate();
-      onClose();
+      // onClose(); // Removed so modal stays open after saving score
     } catch (err: any) {
       setError(err.message || "Failed to update score");
     } finally {

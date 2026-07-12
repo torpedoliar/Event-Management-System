@@ -4,14 +4,34 @@
   "graph": {},
   "nodes": [
     {
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "apps/frontend/app/(main)/admin/tournaments/page.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "apps_frontend_app_main_admin_tournaments_page",
+      "community": 235,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "AdminTournamentsPage()",
+      "file_type": "code",
+      "source_file": "apps/frontend/app/(main)/admin/tournaments/page.tsx",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "apps_frontend_app_main_admin_tournaments_page_admintournamentspage",
+      "community": 235,
+      "norm_label": "admintournamentspage()"
+    },
+    {
       "label": "submit-registration.dto.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/public-registration/dto/submit-registration.dto.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_dto_submit_registration_dto",
       "community": 83,
-      "norm_label": "submit-registration.dto.ts"
+      "norm_label": "submit-registration.dto.ts",
+      "id": "apps_backend_src_public_registration_dto_submit_registration_dto"
     },
     {
       "label": "SubmitRegistrationDto",
@@ -19,9 +39,9 @@
       "source_file": "apps/backend/src/public-registration/dto/submit-registration.dto.ts",
       "source_location": "L3",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_dto_submit_registration_dto_submitregistrationdto",
       "community": 83,
-      "norm_label": "submitregistrationdto"
+      "norm_label": "submitregistrationdto",
+      "id": "apps_backend_src_public_registration_dto_submit_registration_dto_submitregistrationdto"
     },
     {
       "label": "public-registration.controller.ts",
@@ -29,9 +49,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.controller.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_controller",
       "community": 83,
-      "norm_label": "public-registration.controller.ts"
+      "norm_label": "public-registration.controller.ts",
+      "id": "apps_backend_src_public_registration_public_registration_controller"
     },
     {
       "label": "PublicRegistrationController",
@@ -39,9 +59,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.controller.ts",
       "source_location": "L11",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller",
       "community": 83,
-      "norm_label": "publicregistrationcontroller"
+      "norm_label": "publicregistrationcontroller",
+      "id": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller"
     },
     {
       "label": ".constructor()",
@@ -49,9 +69,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.controller.ts",
       "source_location": "L14",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_constructor",
       "community": 83,
-      "norm_label": ".constructor()"
+      "norm_label": ".constructor()",
+      "id": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_constructor"
     },
     {
       "label": ".getPublicEvents()",
@@ -59,9 +79,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.controller.ts",
       "source_location": "L19",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_getpublicevents",
       "community": 83,
-      "norm_label": ".getpublicevents()"
+      "norm_label": ".getpublicevents()",
+      "id": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_getpublicevents"
     },
     {
       "label": ".getPublicConfig()",
@@ -69,9 +89,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.controller.ts",
       "source_location": "L26",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_getpublicconfig",
       "community": 83,
-      "norm_label": ".getpublicconfig()"
+      "norm_label": ".getpublicconfig()",
+      "id": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_getpublicconfig"
     },
     {
       "label": ".submitRegistration()",
@@ -79,9 +99,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.controller.ts",
       "source_location": "L33",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_submitregistration",
       "community": 83,
-      "norm_label": ".submitregistration()"
+      "norm_label": ".submitregistration()",
+      "id": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_submitregistration"
     },
     {
       "label": ".getAdminConfig()",
@@ -89,9 +109,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.controller.ts",
       "source_location": "L46",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_getadminconfig",
       "community": 83,
-      "norm_label": ".getadminconfig()"
+      "norm_label": ".getadminconfig()",
+      "id": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_getadminconfig"
     },
     {
       "label": ".updateConfig()",
@@ -99,9 +119,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.controller.ts",
       "source_location": "L54",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_updateconfig",
       "community": 83,
-      "norm_label": ".updateconfig()"
+      "norm_label": ".updateconfig()",
+      "id": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_updateconfig"
     },
     {
       "label": ".getStats()",
@@ -109,9 +129,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.controller.ts",
       "source_location": "L65",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_getstats",
       "community": 83,
-      "norm_label": ".getstats()"
+      "norm_label": ".getstats()",
+      "id": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_getstats"
     },
     {
       "label": "public-registration.service.ts",
@@ -119,9 +139,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_service",
       "community": 83,
-      "norm_label": "public-registration.service.ts"
+      "norm_label": "public-registration.service.ts",
+      "id": "apps_backend_src_public_registration_public_registration_service"
     },
     {
       "label": "VALID_FIELD_KEYS",
@@ -129,9 +149,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L10",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_service_valid_field_keys",
       "community": 83,
-      "norm_label": "valid_field_keys"
+      "norm_label": "valid_field_keys",
+      "id": "apps_backend_src_public_registration_public_registration_service_valid_field_keys"
     },
     {
       "label": "RegistrationField",
@@ -139,9 +159,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L12",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_service_registrationfield",
       "community": 83,
-      "norm_label": "registrationfield"
+      "norm_label": "registrationfield",
+      "id": "apps_backend_src_public_registration_public_registration_service_registrationfield"
     },
     {
       "label": "PublicRegistrationService",
@@ -149,9 +169,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L21",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice",
       "community": 83,
-      "norm_label": "publicregistrationservice"
+      "norm_label": "publicregistrationservice",
+      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice"
     },
     {
       "label": ".constructor()",
@@ -159,9 +179,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L22",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_constructor",
       "community": 83,
-      "norm_label": ".constructor()"
+      "norm_label": ".constructor()",
+      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_constructor"
     },
     {
       "label": ".getActiveEventId()",
@@ -169,9 +189,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L29",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getactiveeventid",
       "community": 83,
-      "norm_label": ".getactiveeventid()"
+      "norm_label": ".getactiveeventid()",
+      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getactiveeventid"
     },
     {
       "label": ".getActiveEventInfoForPublic()",
@@ -179,9 +199,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L35",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getactiveeventinfoforpublic",
       "community": 83,
-      "norm_label": ".getactiveeventinfoforpublic()"
+      "norm_label": ".getactiveeventinfoforpublic()",
+      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getactiveeventinfoforpublic"
     },
     {
       "label": ".getPublicEvents()",
@@ -189,9 +209,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L47",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getpublicevents",
       "community": 83,
-      "norm_label": ".getpublicevents()"
+      "norm_label": ".getpublicevents()",
+      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getpublicevents"
     },
     {
       "label": ".getOrCreateConfig()",
@@ -199,9 +219,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L62",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getorcreateconfig",
       "community": 83,
-      "norm_label": ".getorcreateconfig()"
+      "norm_label": ".getorcreateconfig()",
+      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getorcreateconfig"
     },
     {
       "label": ".isRegistrationOpen()",
@@ -209,9 +229,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L79",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_isregistrationopen",
       "community": 83,
-      "norm_label": ".isregistrationopen()"
+      "norm_label": ".isregistrationopen()",
+      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_isregistrationopen"
     },
     {
       "label": ".countPublicRegistrants()",
@@ -219,9 +239,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L87",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_countpublicregistrants",
       "community": 83,
-      "norm_label": ".countpublicregistrants()"
+      "norm_label": ".countpublicregistrants()",
+      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_countpublicregistrants"
     },
     {
       "label": ".getPublicConfig()",
@@ -229,9 +249,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L94",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getpublicconfig",
       "community": 83,
-      "norm_label": ".getpublicconfig()"
+      "norm_label": ".getpublicconfig()",
+      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getpublicconfig"
     },
     {
       "label": ".getAdminConfig()",
@@ -239,9 +259,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L142",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getadminconfig",
       "community": 83,
-      "norm_label": ".getadminconfig()"
+      "norm_label": ".getadminconfig()",
+      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getadminconfig"
     },
     {
       "label": ".updateConfig()",
@@ -249,9 +269,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L148",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_updateconfig",
       "community": 83,
-      "norm_label": ".updateconfig()"
+      "norm_label": ".updateconfig()",
+      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_updateconfig"
     },
     {
       "label": ".submitRegistration()",
@@ -259,9 +279,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L202",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_submitregistration",
       "community": 83,
-      "norm_label": ".submitregistration()"
+      "norm_label": ".submitregistration()",
+      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_submitregistration"
     },
     {
       "label": ".getStats()",
@@ -269,9 +289,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L330",
       "_origin": "ast",
-      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getstats",
       "community": 83,
-      "norm_label": ".getstats()"
+      "norm_label": ".getstats()",
+      "id": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getstats"
     },
     {
       "label": "page.tsx",
@@ -279,9 +299,9 @@
       "source_file": "apps/frontend/app/(main)/register/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_frontend_app_main_register_page",
       "community": 206,
-      "norm_label": "page.tsx"
+      "norm_label": "page.tsx",
+      "id": "apps_frontend_app_main_register_page"
     },
     {
       "label": "RegistrationField",
@@ -289,9 +309,9 @@
       "source_file": "apps/frontend/app/(main)/register/page.tsx",
       "source_location": "L11",
       "_origin": "ast",
-      "id": "apps_frontend_app_main_register_page_registrationfield",
       "community": 206,
-      "norm_label": "registrationfield"
+      "norm_label": "registrationfield",
+      "id": "apps_frontend_app_main_register_page_registrationfield"
     },
     {
       "label": "PublicConfig",
@@ -299,9 +319,9 @@
       "source_file": "apps/frontend/app/(main)/register/page.tsx",
       "source_location": "L14",
       "_origin": "ast",
-      "id": "apps_frontend_app_main_register_page_publicconfig",
       "community": 206,
-      "norm_label": "publicconfig"
+      "norm_label": "publicconfig",
+      "id": "apps_frontend_app_main_register_page_publicconfig"
     },
     {
       "label": "PublicEvent",
@@ -309,9 +329,9 @@
       "source_file": "apps/frontend/app/(main)/register/page.tsx",
       "source_location": "L20",
       "_origin": "ast",
-      "id": "apps_frontend_app_main_register_page_publicevent",
       "community": 206,
-      "norm_label": "publicevent"
+      "norm_label": "publicevent",
+      "id": "apps_frontend_app_main_register_page_publicevent"
     },
     {
       "label": "PageState",
@@ -319,9 +339,9 @@
       "source_file": "apps/frontend/app/(main)/register/page.tsx",
       "source_location": "L23",
       "_origin": "ast",
-      "id": "apps_frontend_app_main_register_page_pagestate",
       "community": 206,
-      "norm_label": "pagestate"
+      "norm_label": "pagestate",
+      "id": "apps_frontend_app_main_register_page_pagestate"
     },
     {
       "label": "PublicRegistrationPage()",
@@ -329,9 +349,9 @@
       "source_file": "apps/frontend/app/(main)/register/page.tsx",
       "source_location": "L25",
       "_origin": "ast",
-      "id": "apps_frontend_app_main_register_page_publicregistrationpage",
       "community": 206,
-      "norm_label": "publicregistrationpage()"
+      "norm_label": "publicregistrationpage()",
+      "id": "apps_frontend_app_main_register_page_publicregistrationpage"
     },
     {
       "label": "TopNav.tsx",
@@ -339,9 +359,9 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "apps_frontend_components_topnav",
       "community": 224,
-      "norm_label": "topnav.tsx"
+      "norm_label": "topnav.tsx",
+      "id": "apps_frontend_components_topnav"
     },
     {
       "label": "AdminLink",
@@ -349,9 +369,9 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L34",
       "_origin": "ast",
-      "id": "apps_frontend_components_topnav_adminlink",
       "community": 224,
-      "norm_label": "adminlink"
+      "norm_label": "adminlink",
+      "id": "apps_frontend_components_topnav_adminlink"
     },
     {
       "label": "TopNav()",
@@ -359,9 +379,9 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L40",
       "_origin": "ast",
-      "id": "apps_frontend_components_topnav_topnav",
       "community": 224,
-      "norm_label": "topnav()"
+      "norm_label": "topnav()",
+      "id": "apps_frontend_components_topnav_topnav"
     },
     {
       "label": "cn()",
@@ -369,9 +389,9 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L390",
       "_origin": "ast",
-      "id": "apps_frontend_components_topnav_cn",
       "community": 224,
-      "norm_label": "cn()"
+      "norm_label": "cn()",
+      "id": "apps_frontend_components_topnav_cn"
     },
     {
       "label": "match-scoring.service.ts",
@@ -2899,7 +2919,7 @@
       "source_file": "apps/frontend/components/tournament/bracket/BracketMatchBox.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 28,
+      "community": 221,
       "norm_label": "bracketmatchbox.tsx",
       "id": "apps_frontend_components_tournament_bracket_bracketmatchbox"
     },
@@ -2909,7 +2929,7 @@
       "source_file": "apps/frontend/components/tournament/bracket/BracketMatchBox.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 28,
+      "community": 221,
       "norm_label": "bracketmatchboxprops",
       "id": "apps_frontend_components_tournament_bracket_bracketmatchbox_bracketmatchboxprops"
     },
@@ -2919,7 +2939,7 @@
       "source_file": "apps/frontend/components/tournament/bracket/BracketMatchBox.tsx",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 28,
+      "community": 221,
       "norm_label": "bracketmatchbox()",
       "id": "apps_frontend_components_tournament_bracket_bracketmatchbox_bracketmatchbox"
     },
@@ -2929,7 +2949,7 @@
       "source_file": "apps/frontend/components/tournament/bracket/BracketMatchBox.tsx",
       "source_location": "L85",
       "_origin": "ast",
-      "community": 28,
+      "community": 221,
       "norm_label": "cn()",
       "id": "apps_frontend_components_tournament_bracket_bracketmatchbox_cn"
     },
@@ -2939,7 +2959,7 @@
       "source_file": "apps/frontend/components/tournament/match/ScoreInput.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 90,
+      "community": 28,
       "norm_label": "scoreinput.tsx",
       "id": "apps_frontend_components_tournament_match_scoreinput"
     },
@@ -2949,7 +2969,7 @@
       "source_file": "apps/frontend/components/tournament/match/ScoreInput.tsx",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 90,
+      "community": 28,
       "norm_label": "scoreinputprops",
       "id": "apps_frontend_components_tournament_match_scoreinput_scoreinputprops"
     },
@@ -2959,7 +2979,7 @@
       "source_file": "apps/frontend/components/tournament/match/ScoreInput.tsx",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 90,
+      "community": 28,
       "norm_label": "scoreinput()",
       "id": "apps_frontend_components_tournament_match_scoreinput_scoreinput"
     },
@@ -2969,7 +2989,7 @@
       "source_file": "apps/frontend/components/tournament/match/ScoreInput.tsx",
       "source_location": "L236",
       "_origin": "ast",
-      "community": 90,
+      "community": 28,
       "norm_label": "cn()",
       "id": "apps_frontend_components_tournament_match_scoreinput_cn"
     },
@@ -3776,26 +3796,6 @@
     {
       "label": "page.tsx",
       "file_type": "code",
-      "source_file": "apps/frontend/app/(main)/admin/tournaments/page.tsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 222,
-      "norm_label": "page.tsx",
-      "id": "apps_frontend_app_main_admin_tournaments_page"
-    },
-    {
-      "label": "AdminTournamentsPage()",
-      "file_type": "code",
-      "source_file": "apps/frontend/app/(main)/admin/tournaments/page.tsx",
-      "source_location": "L13",
-      "_origin": "ast",
-      "community": 222,
-      "norm_label": "admintournamentspage()",
-      "id": "apps_frontend_app_main_admin_tournaments_page_admintournamentspage"
-    },
-    {
-      "label": "page.tsx",
-      "file_type": "code",
       "source_file": "apps/frontend/app/(main)/tournament/bracket/[id]/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
@@ -3839,7 +3839,7 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 222,
+      "community": 52,
       "norm_label": "tournamentform.tsx",
       "id": "apps_frontend_components_tournament_tournamentform"
     },
@@ -3849,7 +3849,7 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L20",
       "_origin": "ast",
-      "community": 222,
+      "community": 52,
       "norm_label": "tournamentformprops",
       "id": "apps_frontend_components_tournament_tournamentform_tournamentformprops"
     },
@@ -3859,7 +3859,7 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L27",
       "_origin": "ast",
-      "community": 222,
+      "community": 52,
       "norm_label": "sportoptions",
       "id": "apps_frontend_components_tournament_tournamentform_sportoptions"
     },
@@ -3869,7 +3869,7 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L28",
       "_origin": "ast",
-      "community": 222,
+      "community": 52,
       "norm_label": "formatoptions",
       "id": "apps_frontend_components_tournament_tournamentform_formatoptions"
     },
@@ -3879,7 +3879,7 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L29",
       "_origin": "ast",
-      "community": 222,
+      "community": 52,
       "norm_label": "participantoptions",
       "id": "apps_frontend_components_tournament_tournamentform_participantoptions"
     },
@@ -3889,7 +3889,7 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 222,
+      "community": 52,
       "norm_label": "scoringoptions",
       "id": "apps_frontend_components_tournament_tournamentform_scoringoptions"
     },
@@ -3899,7 +3899,7 @@
       "source_file": "apps/frontend/components/tournament/TournamentForm.tsx",
       "source_location": "L32",
       "_origin": "ast",
-      "community": 222,
+      "community": 52,
       "norm_label": "tournamentform()",
       "id": "apps_frontend_components_tournament_tournamentform_tournamentform"
     },
@@ -3909,7 +3909,7 @@
       "source_file": "apps/frontend/components/tournament/bracket/BracketView.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 28,
+      "community": 221,
       "norm_label": "bracketview.tsx",
       "id": "apps_frontend_components_tournament_bracket_bracketview"
     },
@@ -3919,7 +3919,7 @@
       "source_file": "apps/frontend/components/tournament/bracket/BracketView.tsx",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 28,
+      "community": 221,
       "norm_label": "bracketviewprops",
       "id": "apps_frontend_components_tournament_bracket_bracketview_bracketviewprops"
     },
@@ -3929,7 +3929,7 @@
       "source_file": "apps/frontend/components/tournament/bracket/BracketView.tsx",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 28,
+      "community": 221,
       "norm_label": "bracketview()",
       "id": "apps_frontend_components_tournament_bracket_bracketview_bracketview"
     },
@@ -3939,7 +3939,7 @@
       "source_file": "apps/frontend/components/tournament/bracket/BracketView.tsx",
       "source_location": "L109",
       "_origin": "ast",
-      "community": 28,
+      "community": 221,
       "norm_label": "getpreviousmatches()",
       "id": "apps_frontend_components_tournament_bracket_bracketview_getpreviousmatches"
     },
@@ -7599,7 +7599,7 @@
       "source_file": "apps/backend/src/email/email.service.ts",
       "source_location": "L31",
       "_origin": "ast",
-      "community": 77,
+      "community": 223,
       "norm_label": ".constructor()",
       "id": "apps_backend_src_email_email_service_emailservice_constructor"
     },
@@ -8859,7 +8859,7 @@
       "source_file": "apps/backend/src/prizes/prizes.controller.ts",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 44,
+      "community": 219,
       "norm_label": ".constructor()",
       "id": "apps_backend_src_prizes_prizes_controller_prizescontroller_constructor"
     },
@@ -8999,7 +8999,7 @@
       "source_file": "apps/backend/src/prizes/prizes.service.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 44,
+      "community": 77,
       "norm_label": ".constructor()",
       "id": "apps_backend_src_prizes_prizes_service_prizesservice_constructor"
     },
@@ -9539,7 +9539,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.controller.ts",
       "source_location": "L53",
       "_origin": "ast",
-      "community": 92,
+      "community": 196,
       "norm_label": ".reset()",
       "id": "apps_backend_src_souvenirs_souvenirs_controller_souvenirscontroller_reset"
     },
@@ -9549,7 +9549,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.controller.ts",
       "source_location": "L63",
       "_origin": "ast",
-      "community": 196,
+      "community": 92,
       "norm_label": ".givesouvenir()",
       "id": "apps_backend_src_souvenirs_souvenirs_controller_souvenirscontroller_givesouvenir"
     },
@@ -9569,7 +9569,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.controller.ts",
       "source_location": "L91",
       "_origin": "ast",
-      "community": 196,
+      "community": 92,
       "norm_label": ".removetake()",
       "id": "apps_backend_src_souvenirs_souvenirs_controller_souvenirscontroller_removetake"
     },
@@ -9619,7 +9619,7 @@
       "source_file": "apps/backend/src/souvenirs/souvenirs.controller.ts",
       "source_location": "L125",
       "_origin": "ast",
-      "community": 92,
+      "community": 196,
       "norm_label": ".collectprize()",
       "id": "apps_backend_src_souvenirs_souvenirs_controller_souvenirscontroller_collectprize"
     },
@@ -11579,7 +11579,7 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/edit/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 222,
+      "community": 52,
       "norm_label": "page.tsx",
       "id": "apps_frontend_app_main_admin_tournaments_id_edit_page"
     },
@@ -11589,7 +11589,7 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/[id]/edit/page.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 222,
+      "community": 52,
       "norm_label": "edittournamentpage()",
       "id": "apps_frontend_app_main_admin_tournaments_id_edit_page_edittournamentpage"
     },
@@ -11629,7 +11629,7 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/new/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 222,
+      "community": 52,
       "norm_label": "page.tsx",
       "id": "apps_frontend_app_main_admin_tournaments_new_page"
     },
@@ -11639,7 +11639,7 @@
       "source_file": "apps/frontend/app/(main)/admin/tournaments/new/page.tsx",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 222,
+      "community": 52,
       "norm_label": "newtournamentpage()",
       "id": "apps_frontend_app_main_admin_tournaments_new_page_newtournamentpage"
     },
@@ -12239,7 +12239,7 @@
       "source_file": "apps/frontend/components/tournament/TournamentTabs.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 52,
+      "community": 222,
       "norm_label": "tournamenttabs.tsx",
       "id": "apps_frontend_components_tournament_tournamenttabs"
     },
@@ -12249,7 +12249,7 @@
       "source_file": "apps/frontend/components/tournament/TournamentTabs.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 52,
+      "community": 222,
       "norm_label": "tabid",
       "id": "apps_frontend_components_tournament_tournamenttabs_tabid"
     },
@@ -12259,7 +12259,7 @@
       "source_file": "apps/frontend/components/tournament/TournamentTabs.tsx",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 52,
+      "community": 222,
       "norm_label": "tab",
       "id": "apps_frontend_components_tournament_tournamenttabs_tab"
     },
@@ -12269,7 +12269,7 @@
       "source_file": "apps/frontend/components/tournament/TournamentTabs.tsx",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 52,
+      "community": 222,
       "norm_label": "tabs",
       "id": "apps_frontend_components_tournament_tournamenttabs_tabs"
     },
@@ -12279,7 +12279,7 @@
       "source_file": "apps/frontend/components/tournament/TournamentTabs.tsx",
       "source_location": "L24",
       "_origin": "ast",
-      "community": 52,
+      "community": 222,
       "norm_label": "tournamenttabsprops",
       "id": "apps_frontend_components_tournament_tournamenttabs_tournamenttabsprops"
     },
@@ -12289,7 +12289,7 @@
       "source_file": "apps/frontend/components/tournament/TournamentTabs.tsx",
       "source_location": "L31",
       "_origin": "ast",
-      "community": 52,
+      "community": 222,
       "norm_label": "tournamenttabs()",
       "id": "apps_frontend_components_tournament_tournamenttabs_tournamenttabs"
     },
@@ -12299,7 +12299,7 @@
       "source_file": "apps/frontend/components/tournament/TournamentTabs.tsx",
       "source_location": "L75",
       "_origin": "ast",
-      "community": 52,
+      "community": 222,
       "norm_label": "tabpanelprops",
       "id": "apps_frontend_components_tournament_tournamenttabs_tabpanelprops"
     },
@@ -12309,7 +12309,7 @@
       "source_file": "apps/frontend/components/tournament/TournamentTabs.tsx",
       "source_location": "L82",
       "_origin": "ast",
-      "community": 52,
+      "community": 222,
       "norm_label": "tabpanel()",
       "id": "apps_frontend_components_tournament_tournamenttabs_tabpanel"
     },
@@ -12319,7 +12319,7 @@
       "source_file": "apps/frontend/components/tournament/TournamentTabs.tsx",
       "source_location": "L87",
       "_origin": "ast",
-      "community": 52,
+      "community": 222,
       "norm_label": "cn()",
       "id": "apps_frontend_components_tournament_tournamenttabs_cn"
     },
@@ -12329,7 +12329,7 @@
       "source_file": "apps/frontend/components/tournament/bracket/BracketConnector.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 28,
+      "community": 221,
       "norm_label": "bracketconnector.tsx",
       "id": "apps_frontend_components_tournament_bracket_bracketconnector"
     },
@@ -12339,7 +12339,7 @@
       "source_file": "apps/frontend/components/tournament/bracket/BracketConnector.tsx",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 28,
+      "community": 221,
       "norm_label": "bracketconnectorprops",
       "id": "apps_frontend_components_tournament_bracket_bracketconnector_bracketconnectorprops"
     },
@@ -12349,7 +12349,7 @@
       "source_file": "apps/frontend/components/tournament/bracket/BracketConnector.tsx",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 28,
+      "community": 221,
       "norm_label": "bracketconnector()",
       "id": "apps_frontend_components_tournament_bracket_bracketconnector_bracketconnector"
     },
@@ -12359,7 +12359,7 @@
       "source_file": "apps/frontend/components/tournament/bracket/index.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 28,
+      "community": 221,
       "norm_label": "index.ts",
       "id": "apps_frontend_components_tournament_bracket_index"
     },
@@ -12409,7 +12409,7 @@
       "source_file": "apps/frontend/components/tournament/match/LiveMatchDisplay.tsx",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 90,
+      "community": 202,
       "norm_label": "livematchdisplayprops",
       "id": "apps_frontend_components_tournament_match_livematchdisplay_livematchdisplayprops"
     },
@@ -12439,7 +12439,7 @@
       "source_file": "apps/frontend/components/tournament/match/MatchScoringModal.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 90,
+      "community": 202,
       "norm_label": "matchscoringmodal.tsx",
       "id": "apps_frontend_components_tournament_match_matchscoringmodal"
     },
@@ -12449,7 +12449,7 @@
       "source_file": "apps/frontend/components/tournament/match/MatchScoringModal.tsx",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 90,
+      "community": 202,
       "norm_label": "matchscoringmodalprops",
       "id": "apps_frontend_components_tournament_match_matchscoringmodal_matchscoringmodalprops"
     },
@@ -12459,7 +12459,7 @@
       "source_file": "apps/frontend/components/tournament/match/MatchScoringModal.tsx",
       "source_location": "L22",
       "_origin": "ast",
-      "community": 90,
+      "community": 202,
       "norm_label": "matchscoringmodal()",
       "id": "apps_frontend_components_tournament_match_matchscoringmodal_matchscoringmodal"
     },
@@ -12509,7 +12509,7 @@
       "source_file": "apps/frontend/components/tournament/team/GuestPicker.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 222,
+      "community": 227,
       "norm_label": "guestpicker.tsx",
       "id": "apps_frontend_components_tournament_team_guestpicker"
     },
@@ -12519,7 +12519,7 @@
       "source_file": "apps/frontend/components/tournament/team/GuestPicker.tsx",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 222,
+      "community": 227,
       "norm_label": "guestpickerprops",
       "id": "apps_frontend_components_tournament_team_guestpicker_guestpickerprops"
     },
@@ -12529,7 +12529,7 @@
       "source_file": "apps/frontend/components/tournament/team/GuestPicker.tsx",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 222,
+      "community": 227,
       "norm_label": "guestpicker()",
       "id": "apps_frontend_components_tournament_team_guestpicker_guestpicker"
     },
@@ -12599,7 +12599,7 @@
       "source_file": "apps/frontend/components/tournament/team/TeamMemberList.tsx",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 221,
+      "community": 37,
       "norm_label": "teammemberlist.tsx",
       "id": "apps_frontend_components_tournament_team_teammemberlist"
     },
@@ -12609,7 +12609,7 @@
       "source_file": "apps/frontend/components/tournament/team/TeamMemberList.tsx",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 221,
+      "community": 37,
       "norm_label": "teammemberlistprops",
       "id": "apps_frontend_components_tournament_team_teammemberlist_teammemberlistprops"
     },
@@ -12619,7 +12619,7 @@
       "source_file": "apps/frontend/components/tournament/team/TeamMemberList.tsx",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 221,
+      "community": 37,
       "norm_label": "teammemberlist()",
       "id": "apps_frontend_components_tournament_team_teammemberlist_teammemberlist"
     },
@@ -12629,7 +12629,7 @@
       "source_file": "apps/frontend/components/tournament/team/TeamMemberList.tsx",
       "source_location": "L90",
       "_origin": "ast",
-      "community": 221,
+      "community": 37,
       "norm_label": "cn()",
       "id": "apps_frontend_components_tournament_team_teammemberlist_cn"
     },
@@ -13249,7 +13249,7 @@
       "source_file": "apps/frontend/hooks/useTournamentSSE.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 37,
+      "community": 222,
       "norm_label": "usetournamentsse.ts",
       "id": "apps_frontend_hooks_usetournamentsse"
     },
@@ -13259,7 +13259,7 @@
       "source_file": "apps/frontend/hooks/useTournamentSSE.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 37,
+      "community": 222,
       "norm_label": "tournamenteventhandler",
       "id": "apps_frontend_hooks_usetournamentsse_tournamenteventhandler"
     },
@@ -13269,7 +13269,7 @@
       "source_file": "apps/frontend/hooks/useTournamentSSE.ts",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 37,
+      "community": 222,
       "norm_label": "tournamentssehandlers",
       "id": "apps_frontend_hooks_usetournamentsse_tournamentssehandlers"
     },
@@ -14569,7 +14569,7 @@
       "source_file": "apps/frontend/lib/tournament-api.ts",
       "source_location": "L28",
       "_origin": "ast",
-      "community": 222,
+      "community": 227,
       "norm_label": "eligibleguestapi",
       "id": "apps_frontend_lib_tournament_api_eligibleguestapi"
     },
@@ -16589,7 +16589,7 @@
       "source_file": "apps/frontend/types/tournament.types.ts",
       "source_location": "L32",
       "_origin": "ast",
-      "community": 90,
+      "community": 202,
       "norm_label": "scoringmode",
       "id": "apps_frontend_types_tournament_types_scoringmode"
     },
@@ -16609,7 +16609,7 @@
       "source_file": "apps/frontend/types/tournament.types.ts",
       "source_location": "L43",
       "_origin": "ast",
-      "community": 52,
+      "community": 222,
       "norm_label": "tournamentstatus",
       "id": "apps_frontend_types_tournament_types_tournamentstatus"
     },
@@ -16619,7 +16619,7 @@
       "source_file": "apps/frontend/types/tournament.types.ts",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 90,
+      "community": 202,
       "norm_label": "matchstatus",
       "id": "apps_frontend_types_tournament_types_matchstatus"
     },
@@ -16629,7 +16629,7 @@
       "source_file": "apps/frontend/types/tournament.types.ts",
       "source_location": "L62",
       "_origin": "ast",
-      "community": 222,
+      "community": 227,
       "norm_label": "eligibleguest",
       "id": "apps_frontend_types_tournament_types_eligibleguest"
     },
@@ -16649,7 +16649,7 @@
       "source_file": "apps/frontend/types/tournament.types.ts",
       "source_location": "L82",
       "_origin": "ast",
-      "community": 222,
+      "community": 52,
       "norm_label": "createtournamentdto",
       "id": "apps_frontend_types_tournament_types_createtournamentdto"
     },
@@ -16689,7 +16689,7 @@
       "source_file": "apps/frontend/types/tournament.types.ts",
       "source_location": "L118",
       "_origin": "ast",
-      "community": 90,
+      "community": 202,
       "norm_label": "updatescoredto",
       "id": "apps_frontend_types_tournament_types_updatescoredto"
     },
@@ -16739,7 +16739,7 @@
       "source_file": "apps/frontend/types/tournament.types.ts",
       "source_location": "L179",
       "_origin": "ast",
-      "community": 221,
+      "community": 37,
       "norm_label": "teammember",
       "id": "apps_frontend_types_tournament_types_teammember"
     },
@@ -16749,7 +16749,7 @@
       "source_file": "apps/frontend/types/tournament.types.ts",
       "source_location": "L190",
       "_origin": "ast",
-      "community": 90,
+      "community": 202,
       "norm_label": "match",
       "id": "apps_frontend_types_tournament_types_match"
     },
@@ -16879,7 +16879,7 @@
       "source_file": "apps/frontend/types/tournament.types.ts",
       "source_location": "L336",
       "_origin": "ast",
-      "community": 222,
+      "community": 37,
       "norm_label": "teamcheckinstatus",
       "id": "apps_frontend_types_tournament_types_teamcheckinstatus"
     },
@@ -16889,7 +16889,7 @@
       "source_file": "apps/frontend/types/tournament.types.ts",
       "source_location": "L345",
       "_origin": "ast",
-      "community": 37,
+      "community": 222,
       "norm_label": "tournamentevent",
       "id": "apps_frontend_types_tournament_types_tournamentevent"
     },
@@ -30114,12 +30114,22 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "apps/frontend/app/(main)/admin/tournaments/page.tsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "apps_frontend_app_main_admin_tournaments_page",
+      "target": "apps_frontend_app_main_admin_tournaments_page_admintournamentspage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "apps/backend/src/public-registration/dto/submit-registration.dto.ts",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_dto_submit_registration_dto",
-      "target": "apps_backend_src_public_registration_dto_submit_registration_dto_submitregistrationdto",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_dto_submit_registration_dto_submitregistrationdto"
     },
     {
       "relation": "imports_from",
@@ -30128,9 +30138,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.controller.ts",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_controller",
-      "target": "apps_backend_src_public_registration_dto_submit_registration_dto",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_dto_submit_registration_dto"
     },
     {
       "relation": "imports_from",
@@ -30139,9 +30149,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service",
-      "target": "apps_backend_src_public_registration_dto_submit_registration_dto",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_dto_submit_registration_dto"
     },
     {
       "relation": "imports",
@@ -30150,9 +30160,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.controller.ts",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_controller",
-      "target": "apps_backend_src_public_registration_dto_submit_registration_dto_submitregistrationdto",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_dto_submit_registration_dto_submitregistrationdto"
     },
     {
       "relation": "references",
@@ -30161,9 +30171,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.controller.ts",
       "source_location": "L33",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_submitregistration",
-      "target": "apps_backend_src_public_registration_dto_submit_registration_dto_submitregistrationdto",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_dto_submit_registration_dto_submitregistrationdto"
     },
     {
       "relation": "imports",
@@ -30172,9 +30182,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service",
-      "target": "apps_backend_src_public_registration_dto_submit_registration_dto_submitregistrationdto",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_dto_submit_registration_dto_submitregistrationdto"
     },
     {
       "relation": "references",
@@ -30183,9 +30193,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L202",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_submitregistration",
-      "target": "apps_backend_src_public_registration_dto_submit_registration_dto_submitregistrationdto",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_dto_submit_registration_dto_submitregistrationdto"
     },
     {
       "relation": "contains",
@@ -30193,9 +30203,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.controller.ts",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_controller",
-      "target": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller"
     },
     {
       "relation": "imports_from",
@@ -30204,9 +30214,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.controller.ts",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_controller",
-      "target": "apps_backend_src_public_registration_public_registration_service",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service"
     },
     {
       "relation": "imports",
@@ -30215,9 +30225,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.controller.ts",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_controller",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice"
     },
     {
       "relation": "imports_from",
@@ -30236,9 +30246,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.controller.ts",
       "source_location": "L14",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller",
-      "target": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_constructor",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_constructor"
     },
     {
       "relation": "method",
@@ -30246,9 +30256,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.controller.ts",
       "source_location": "L46",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller",
-      "target": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_getadminconfig",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_getadminconfig"
     },
     {
       "relation": "method",
@@ -30256,9 +30266,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.controller.ts",
       "source_location": "L26",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller",
-      "target": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_getpublicconfig",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_getpublicconfig"
     },
     {
       "relation": "method",
@@ -30266,9 +30276,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.controller.ts",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller",
-      "target": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_getpublicevents",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_getpublicevents"
     },
     {
       "relation": "method",
@@ -30276,9 +30286,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.controller.ts",
       "source_location": "L65",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller",
-      "target": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_getstats",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_getstats"
     },
     {
       "relation": "method",
@@ -30286,9 +30296,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.controller.ts",
       "source_location": "L33",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller",
-      "target": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_submitregistration",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_submitregistration"
     },
     {
       "relation": "method",
@@ -30296,9 +30306,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.controller.ts",
       "source_location": "L54",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller",
-      "target": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_updateconfig",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_updateconfig"
     },
     {
       "relation": "imports",
@@ -30318,9 +30328,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.controller.ts",
       "source_location": "L14",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_controller_publicregistrationcontroller_constructor",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice"
     },
     {
       "relation": "imports_from",
@@ -30339,9 +30349,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L21",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice"
     },
     {
       "relation": "contains",
@@ -30349,9 +30359,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service",
-      "target": "apps_backend_src_public_registration_public_registration_service_registrationfield",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_registrationfield"
     },
     {
       "relation": "contains",
@@ -30359,9 +30369,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service",
-      "target": "apps_backend_src_public_registration_public_registration_service_valid_field_keys",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_valid_field_keys"
     },
     {
       "relation": "imports",
@@ -30380,9 +30390,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_constructor",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_constructor"
     },
     {
       "relation": "method",
@@ -30390,9 +30400,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L87",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_countpublicregistrants",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_countpublicregistrants"
     },
     {
       "relation": "method",
@@ -30400,9 +30410,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L29",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getactiveeventid",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getactiveeventid"
     },
     {
       "relation": "method",
@@ -30410,9 +30420,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L35",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getactiveeventinfoforpublic",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getactiveeventinfoforpublic"
     },
     {
       "relation": "method",
@@ -30420,9 +30430,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L142",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getadminconfig",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getadminconfig"
     },
     {
       "relation": "method",
@@ -30430,9 +30440,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L62",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getorcreateconfig",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getorcreateconfig"
     },
     {
       "relation": "method",
@@ -30440,9 +30450,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L94",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getpublicconfig",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getpublicconfig"
     },
     {
       "relation": "method",
@@ -30450,9 +30460,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L47",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getpublicevents",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getpublicevents"
     },
     {
       "relation": "method",
@@ -30460,9 +30470,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L330",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getstats",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getstats"
     },
     {
       "relation": "method",
@@ -30470,9 +30480,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L79",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_isregistrationopen",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_isregistrationopen"
     },
     {
       "relation": "method",
@@ -30480,9 +30490,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L202",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_submitregistration",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_submitregistration"
     },
     {
       "relation": "method",
@@ -30490,9 +30500,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L148",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_updateconfig",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_updateconfig"
     },
     {
       "relation": "calls",
@@ -30501,9 +30511,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L143",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getadminconfig",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getactiveeventid",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getactiveeventid"
     },
     {
       "relation": "calls",
@@ -30512,9 +30522,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L331",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getstats",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getactiveeventid",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getactiveeventid"
     },
     {
       "relation": "calls",
@@ -30523,9 +30533,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L149",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_updateconfig",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getactiveeventid",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getactiveeventid"
     },
     {
       "relation": "calls",
@@ -30534,9 +30544,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L109",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getpublicconfig",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getactiveeventinfoforpublic",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getactiveeventinfoforpublic"
     },
     {
       "relation": "calls",
@@ -30545,9 +30555,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L220",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_submitregistration",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getactiveeventinfoforpublic",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getactiveeventinfoforpublic"
     },
     {
       "relation": "calls",
@@ -30556,9 +30566,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L144",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getadminconfig",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getorcreateconfig",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getorcreateconfig"
     },
     {
       "relation": "calls",
@@ -30567,9 +30577,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L114",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getpublicconfig",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getorcreateconfig",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getorcreateconfig"
     },
     {
       "relation": "calls",
@@ -30578,9 +30588,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L332",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getstats",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getorcreateconfig",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getorcreateconfig"
     },
     {
       "relation": "calls",
@@ -30589,9 +30599,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L227",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_submitregistration",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getorcreateconfig",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getorcreateconfig"
     },
     {
       "relation": "calls",
@@ -30600,9 +30610,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L150",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_updateconfig",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getorcreateconfig",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getorcreateconfig"
     },
     {
       "relation": "calls",
@@ -30611,9 +30621,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L116",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getpublicconfig",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_isregistrationopen",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_isregistrationopen"
     },
     {
       "relation": "calls",
@@ -30622,9 +30632,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L334",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getstats",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_isregistrationopen",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_isregistrationopen"
     },
     {
       "relation": "calls",
@@ -30633,9 +30643,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L229",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_submitregistration",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_isregistrationopen",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_isregistrationopen"
     },
     {
       "relation": "calls",
@@ -30644,9 +30654,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L115",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getpublicconfig",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_countpublicregistrants",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_countpublicregistrants"
     },
     {
       "relation": "calls",
@@ -30655,9 +30665,9 @@
       "source_file": "apps/backend/src/public-registration/public-registration.service.ts",
       "source_location": "L333",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_getstats",
-      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_countpublicregistrants",
-      "confidence_score": 1.0
+      "target": "apps_backend_src_public_registration_public_registration_service_publicregistrationservice_countpublicregistrants"
     },
     {
       "relation": "contains",
@@ -30665,9 +30675,9 @@
       "source_file": "apps/frontend/app/(main)/register/page.tsx",
       "source_location": "L23",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_register_page",
-      "target": "apps_frontend_app_main_register_page_pagestate",
-      "confidence_score": 1.0
+      "target": "apps_frontend_app_main_register_page_pagestate"
     },
     {
       "relation": "contains",
@@ -30675,9 +30685,9 @@
       "source_file": "apps/frontend/app/(main)/register/page.tsx",
       "source_location": "L14",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_register_page",
-      "target": "apps_frontend_app_main_register_page_publicconfig",
-      "confidence_score": 1.0
+      "target": "apps_frontend_app_main_register_page_publicconfig"
     },
     {
       "relation": "contains",
@@ -30685,9 +30695,9 @@
       "source_file": "apps/frontend/app/(main)/register/page.tsx",
       "source_location": "L20",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_register_page",
-      "target": "apps_frontend_app_main_register_page_publicevent",
-      "confidence_score": 1.0
+      "target": "apps_frontend_app_main_register_page_publicevent"
     },
     {
       "relation": "contains",
@@ -30695,9 +30705,9 @@
       "source_file": "apps/frontend/app/(main)/register/page.tsx",
       "source_location": "L25",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_register_page",
-      "target": "apps_frontend_app_main_register_page_publicregistrationpage",
-      "confidence_score": 1.0
+      "target": "apps_frontend_app_main_register_page_publicregistrationpage"
     },
     {
       "relation": "contains",
@@ -30705,9 +30715,9 @@
       "source_file": "apps/frontend/app/(main)/register/page.tsx",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_app_main_register_page",
-      "target": "apps_frontend_app_main_register_page_registrationfield",
-      "confidence_score": 1.0
+      "target": "apps_frontend_app_main_register_page_registrationfield"
     },
     {
       "relation": "imports_from",
@@ -30726,9 +30736,9 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L34",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_topnav",
-      "target": "apps_frontend_components_topnav_adminlink",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_topnav_adminlink"
     },
     {
       "relation": "contains",
@@ -30736,9 +30746,9 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L390",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_topnav",
-      "target": "apps_frontend_components_topnav_cn",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_topnav_cn"
     },
     {
       "relation": "contains",
@@ -30746,9 +30756,9 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L40",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_topnav",
-      "target": "apps_frontend_components_topnav_topnav",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_topnav_topnav"
     },
     {
       "relation": "calls",
@@ -30757,9 +30767,9 @@
       "source_file": "apps/frontend/components/TopNav.tsx",
       "source_location": "L203",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "apps_frontend_components_topnav_topnav",
-      "target": "apps_frontend_components_topnav_cn",
-      "confidence_score": 1.0
+      "target": "apps_frontend_components_topnav_cn"
     },
     {
       "relation": "calls",
@@ -34959,38 +34969,6 @@
       "confidence_score": 1.0,
       "source": "product_product",
       "target": "product_users"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/tournaments/page.tsx",
-      "source_location": "L13",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_tournaments_page",
-      "target": "apps_frontend_app_main_admin_tournaments_page_admintournamentspage"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/tournaments/page.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_tournaments_page",
-      "target": "apps_frontend_components_tournament_tournamentform"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/frontend/app/(main)/admin/tournaments/page.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "apps_frontend_app_main_admin_tournaments_page",
-      "target": "apps_frontend_components_tournament_tournamentform_tournamentform"
     },
     {
       "relation": "contains",
@@ -69741,5 +69719,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "c8d43a7bf94fcb267d2fcb231126344ec2333687"
+  "built_at_commit": "d454ae42a92301e9ea78f82feaf9910eefa7bb5b"
 }

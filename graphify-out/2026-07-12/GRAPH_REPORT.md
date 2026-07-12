@@ -1,16 +1,16 @@
-# Graph Report - Registrasi Tamu  (2026-07-11)
+# Graph Report - Registrasi Tamu  (2026-07-12)
 
 ## Corpus Check
-- 311 files · ~256,177 words
+- 311 files · ~256,179 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 3009 nodes · 3849 edges · 246 communities (198 shown, 48 thin omitted)
+- 3009 nodes · 3847 edges · 248 communities (200 shown, 48 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 18 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c8d43a7b`
+- Built from commit: `d454ae42`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -233,6 +233,7 @@
 - [[_COMMUNITY_Community 224|Community 224]]
 - [[_COMMUNITY_Community 225|Community 225]]
 - [[_COMMUNITY_Community 226|Community 226]]
+- [[_COMMUNITY_Community 227|Community 227]]
 - [[_COMMUNITY_Community 228|Community 228]]
 - [[_COMMUNITY_Community 229|Community 229]]
 - [[_COMMUNITY_Community 232|Community 232]]
@@ -277,7 +278,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (246 total, 48 thin omitted)
+## Communities (248 total, 48 thin omitted)
 
 ### Community 0 - "Guest Management"
 Cohesion: 0.05
@@ -372,8 +373,8 @@ Cohesion: 0.29
 Nodes (6): m(), s, st(), T(), U(), v
 
 ### Community 28 - "Authentication"
-Cohesion: 0.13
-Nodes (15): BracketConnector(), BracketConnectorProps, BracketMatchBox(), BracketMatchBoxProps, cn(), BracketView(), BracketViewProps, cn() (+7 more)
+Cohesion: 0.18
+Nodes (10): ScoreInput(), ScoreInputProps, cn(), TeamCard(), TeamCardProps, sizeMap, TeamLogo(), TeamLogoProps (+2 more)
 
 ### Community 29 - "SSE & Souvenirs"
 Cohesion: 0.05
@@ -405,7 +406,7 @@ Nodes (25): Backend Files (Phase 1-3), Code Quality Checklist (Run Before Each C
 
 ### Community 37 - "Events Controller"
 Cohesion: 0.08
-Nodes (24): TournamentEventHandler, TournamentSSEHandlers, BracketMatchView, BracketRoundView, BracketTeamView, CheckinResult, CreateTeamMemberDto, ImportTeamDto (+16 more)
+Nodes (26): cn(), TeamMemberList(), TeamMemberListProps, BracketMatchView, BracketRoundView, BracketTeamView, CheckinResult, CreateTeamMemberDto (+18 more)
 
 ### Community 38 - "Lucky Draw Page"
 Cohesion: 0.05
@@ -452,8 +453,8 @@ Cohesion: 0.40
 Nodes (4): main, name, private, version
 
 ### Community 52 - "Audit Controller"
-Cohesion: 0.20
-Nodes (8): Tab, TabId, TabPanel(), TabPanelProps, tabs, TournamentTabs(), TournamentTabsProps, TournamentStatus
+Cohesion: 0.21
+Nodes (7): formatOptions, participantOptions, scoringOptions, sportOptions, TournamentForm(), TournamentFormProps, CreateTournamentDto
 
 ### Community 53 - "Events DTOs"
 Cohesion: 0.09
@@ -528,8 +529,8 @@ Cohesion: 0.09
 Nodes (21): File Structure, Global Constraints, Landing Page Customization Implementation Plan, Summary, Task 10: Create Features Component, Task 11: Create Gallery Component, Task 12: Update Footer Component, Task 13: Update Landing Page (page.tsx) (+13 more)
 
 ### Community 90 - "Community 90"
-Cohesion: 0.12
-Nodes (19): CreateMatchModal(), LiveMatchCard(), LiveMatchCardProps, cn(), LiveMatchDisplay(), LiveMatchDisplayProps, cn(), MatchCard() (+11 more)
+Cohesion: 0.21
+Nodes (10): CreateMatchModal(), LiveMatchCard(), LiveMatchCardProps, cn(), LiveMatchDisplay(), cn(), MatchCard(), MatchCardProps (+2 more)
 
 ### Community 91 - "Community 91"
 Cohesion: 0.21
@@ -936,8 +937,8 @@ Cohesion: 0.11
 Nodes (9): cinzel, inter, jetbrainsMono, metadata, ErrorBoundary, Props, State, QueryProvider() (+1 more)
 
 ### Community 202 - "Community 202"
-Cohesion: 0.50
-Nodes (4): getConfigKey(), statusMap, StatusPill(), StatusPillProps
+Cohesion: 0.21
+Nodes (11): LiveMatchDisplayProps, MatchScoringModal(), MatchScoringModalProps, getConfigKey(), statusMap, StatusPill(), StatusPillProps, Match (+3 more)
 
 ### Community 203 - "Community 203"
 Cohesion: 0.17
@@ -972,15 +973,15 @@ Cohesion: 0.13
 Nodes (4): LocalGuest, LocalSouvenirCache, StationConfig, generateUUID()
 
 ### Community 221 - "Community 221"
-Cohesion: 0.60
-Nodes (4): cn(), TeamMemberList(), TeamMemberListProps, TeamMember
+Cohesion: 0.26
+Nodes (7): BracketConnector(), BracketConnectorProps, BracketMatchBox(), BracketMatchBoxProps, cn(), BracketView(), BracketViewProps
 
 ### Community 222 - "Community 222"
-Cohesion: 0.10
-Nodes (23): TabId, TournamentDetailPage(), GuestPickerProps, formatOptions, participantOptions, scoringOptions, sportOptions, TournamentForm() (+15 more)
+Cohesion: 0.11
+Nodes (23): TabId, TournamentDetailPage(), Tab, TabId, TabPanel(), TabPanelProps, tabs, TournamentTabs() (+15 more)
 
 ### Community 223 - "Community 223"
-Cohesion: 0.14
+Cohesion: 0.13
 Nodes (3): HealthController, HealthStatus, PrismaService
 
 ### Community 224 - "Community 224"
@@ -990,6 +991,10 @@ Nodes (5): AdminLink, cn(), TopNav(), Tooltip(), TooltipProps
 ### Community 226 - "Community 226"
 Cohesion: 0.18
 Nodes (10): Accessibility & Inclusion, Anti-references, Brand Personality, Design Principles, Platform, Positioning, Product, Product Purpose (+2 more)
+
+### Community 227 - "Community 227"
+Cohesion: 0.50
+Nodes (3): GuestPickerProps, eligibleGuestApi, EligibleGuest
 
 ### Community 232 - "Community 232"
 Cohesion: 0.38
@@ -1034,9 +1039,9 @@ _Questions this graph is uniquely positioned to answer:_
 - **Why does `PrismaService` connect `Community 223` to `Reports`, `Landing Page Backend`, `Public Checkin API`, `Stations & Users`, `Community 76`, `Community 77`, `NestJS App Modules`, `Prizes Service`, `Logger Service`, `Souvenirs Backend`, `Community 91`?**
   _High betweenness centrality (0.011) - this node is a cross-community bridge._
 - **Why does `IndexedDBService` connect `IndexedDB Service` to `Community 218`, `Frontend Core Layout`, `Offline Sync Service`?**
-  _High betweenness centrality (0.009) - this node is a cross-community bridge._
+  _High betweenness centrality (0.008) - this node is a cross-community bridge._
 - **Why does `apiFetch()` connect `Community 234` to `Frontend Hooks`, `Frontend Core Layout`, `Community 205`, `Community 222`?**
-  _High betweenness centrality (0.006) - this node is a cross-community bridge._
+  _High betweenness centrality (0.005) - this node is a cross-community bridge._
 - **What connects `VALID_FIELD_KEYS`, `RegistrationField`, `RegistrationField` to the rest of the system?**
   _1477 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Guest Management` be split into smaller, more focused modules?**
