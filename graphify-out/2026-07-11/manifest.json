@@ -530,8 +530,8 @@
     "semantic_hash": "4deaa0e9060ee75b9cbb33388730abf9"
   },
   "apps/frontend/components/TopNav.tsx": {
-    "mtime": 1783763957.0393357,
-    "ast_hash": "ffecdc282d6097c02c4dbe4d159389d3",
+    "mtime": 1783755525.204672,
+    "ast_hash": "85f81dc841949f7817467fd6549ad45b",
     "semantic_hash": ""
   },
   "apps/frontend/components/WebcamCapture.tsx": {
@@ -1335,8 +1335,8 @@
     "semantic_hash": ""
   },
   "apps/frontend/app/(main)/admin/tournaments/page.tsx": {
-    "mtime": 1783815091.1064525,
-    "ast_hash": "5fc5192b5c3796327b2cab33bede2033",
+    "mtime": 1783698752.8093688,
+    "ast_hash": "75a9e5b7765431c20d7e66b787efb0c1",
     "semantic_hash": ""
   },
   "apps/frontend/app/(main)/live/page.tsx": {
@@ -1490,8 +1490,8 @@
     "semantic_hash": ""
   },
   "apps/backend/src/public-registration/dto/submit-registration.dto.ts": {
-    "mtime": 1783763978.574917,
-    "ast_hash": "95745040216ecab2baec64b05caf63e1",
+    "mtime": 1783651876.637841,
+    "ast_hash": "f460d18a76167752d980ad4abc1a142e",
     "semantic_hash": ""
   },
   "apps/backend/src/public-registration/dto/update-registration-config.dto.ts": {
@@ -1500,8 +1500,8 @@
     "semantic_hash": ""
   },
   "apps/backend/src/public-registration/public-registration.controller.ts": {
-    "mtime": 1783764008.54197,
-    "ast_hash": "ae5f24066dfb572dc1dd09c8b88bcd7b",
+    "mtime": 1783666279.661362,
+    "ast_hash": "06d4d2b7ae53600a0a5b6b9096c52bce",
     "semantic_hash": ""
   },
   "apps/backend/src/public-registration/public-registration.module.ts": {
@@ -1510,8 +1510,8 @@
     "semantic_hash": ""
   },
   "apps/backend/src/public-registration/public-registration.service.ts": {
-    "mtime": 1783763999.7216947,
-    "ast_hash": "1bd73fa4fb389324600d38dfeedd7ab0",
+    "mtime": 1783694611.4422944,
+    "ast_hash": "a3ca699194eb8803fa48dbbe6d0d2914",
     "semantic_hash": ""
   },
   "apps/frontend/app/(main)/admin/settings/public-registration/page.tsx": {
@@ -1520,8 +1520,8 @@
     "semantic_hash": ""
   },
   "apps/frontend/app/(main)/register/page.tsx": {
-    "mtime": 1783764090.0508437,
-    "ast_hash": "4cb16e043e5d04598a73c80b7e596da5",
+    "mtime": 1783752706.1677835,
+    "ast_hash": "9477f194eabd8d58cdb0ffeb7308d337",
     "semantic_hash": ""
   },
   ".impeccable/design.json": {

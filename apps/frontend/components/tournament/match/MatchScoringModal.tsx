@@ -7,7 +7,7 @@ import { Modal } from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import { ScoreInput } from "./ScoreInput";
 import { StatusPill } from "../StatusPill";
-import { Play, XCircle, Flag, Swords, Square, RotateCcw, Trash2, Save } from "lucide-react";
+import { Play, XCircle, Flag, Swords, Square, RotateCcw, Trash2, Save, AlertCircle } from "lucide-react";
 import { toLocalDatetimeString, toUTCDateString } from "@/lib/utils";
 
 interface MatchScoringModalProps {
@@ -233,28 +233,30 @@ export function MatchScoringModal({
             <h4 className="text-sm font-semibold text-brand-text">Match Details</h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs text-brand-textMuted mb-1">Jadwal Pertandingan</label>
+                <label className="block text-xs font-mono uppercase text-brand-textMuted mb-1.5">Schedule</label>
                 <input
                   type="datetime-local"
                   value={scheduledAt}
                   onChange={(e) => setScheduledAt(e.target.value)}
-                  className="w-full px-3 py-2 bg-brand-bg border border-brand-border rounded-lg text-brand-text text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                  className="w-full px-3 py-2 bg-brand-bg border border-white/5 rounded-lg text-brand-text text-sm focus:outline-none focus:border-brand-primary"
                 />
               </div>
               <div>
-                <label className="block text-xs text-brand-textMuted mb-1">Court / Lapangan</label>
+                <label className="block text-xs font-mono uppercase text-brand-textMuted mb-1.5">Court</label>
                 <input
                   type="text"
                   value={court}
                   onChange={(e) => setCourt(e.target.value)}
-                  placeholder="Contoh: Court A"
-                  className="w-full px-3 py-2 bg-brand-bg border border-brand-border rounded-lg text-brand-text text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                  placeholder="e.g. Court A"
+                  className="w-full px-3 py-2 bg-brand-bg border border-white/5 rounded-lg text-brand-text text-sm focus:outline-none focus:border-brand-primary"
                 />
               </div>
             </div>
-            <Button size="sm" onClick={handleSaveDetails} loading={savingDetails}>
-              Save Details
-            </Button>
+            <div className="pt-2">
+              <Button size="sm" onClick={handleSaveDetails} loading={savingDetails} className="w-full sm:w-auto">
+                <Save size={14} className="mr-2" /> Save Details
+              </Button>
+            </div>
           </div>
         )}
 
@@ -264,11 +266,11 @@ export function MatchScoringModal({
             <h4 className="text-sm font-semibold text-brand-text">Reassign Teams</h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs text-brand-textMuted mb-1">Team A</label>
+                <label className="block text-xs font-mono uppercase text-brand-textMuted mb-1.5">Team A</label>
                 <select
                   value={selectedTeamA}
                   onChange={(e) => setSelectedTeamA(e.target.value)}
-                  className="w-full px-3 py-2 bg-brand-bg border border-brand-border rounded-lg text-brand-text text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                  className="w-full px-3 py-2 bg-brand-bg border border-white/5 rounded-lg text-brand-text text-sm focus:outline-none focus:border-brand-primary"
                 >
                   <option value="">Kosong</option>
                   {teams!.map((t) => (
@@ -279,11 +281,11 @@ export function MatchScoringModal({
                 </select>
               </div>
               <div>
-                <label className="block text-xs text-brand-textMuted mb-1">Team B</label>
+                <label className="block text-xs font-mono uppercase text-brand-textMuted mb-1.5">Team B</label>
                 <select
                   value={selectedTeamB}
                   onChange={(e) => setSelectedTeamB(e.target.value)}
-                  className="w-full px-3 py-2 bg-brand-bg border border-brand-border rounded-lg text-brand-text text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                  className="w-full px-3 py-2 bg-brand-bg border border-white/5 rounded-lg text-brand-text text-sm focus:outline-none focus:border-brand-primary"
                 >
                   <option value="">Kosong</option>
                   {teams!
@@ -296,83 +298,96 @@ export function MatchScoringModal({
                 </select>
               </div>
             </div>
-            <Button size="sm" variant="secondary" onClick={handleReassign} loading={reassigning}>
-              <Save size={14} className="mr-1" /> Reassign
-            </Button>
+            <div className="pt-2">
+              <Button size="sm" variant="secondary" onClick={handleReassign} loading={reassigning} className="w-full sm:w-auto bg-white/5">
+                <Save size={14} className="mr-2" /> Reassign
+              </Button>
+            </div>
           </div>
         )}
 
-        {/* Action bar */}
-        <div className="flex flex-wrap gap-2">
+        {/* Action bar (Top level controls before Score Input) */}
+        <div className="flex flex-wrap gap-3">
           {canStart && (
-            <Button onClick={handleStart} loading={isSubmitting}>
-              <Play size={16} /> Start Match
+            <Button onClick={handleStart} loading={isSubmitting} className="flex-1 py-4 text-base font-bold">
+              <Play size={18} className="mr-2" /> Start Match
             </Button>
           )}
           {canScore && (
-            <Button variant="success" onClick={handleFinish} loading={isSubmitting}>
-              <Square size={16} /> Finish Match
+            <Button variant="success" onClick={handleFinish} loading={isSubmitting} className="flex-1 py-4 text-base font-bold bg-brand-success hover:bg-brand-success/90">
+              <Square size={18} className="mr-2" /> Finish Match
             </Button>
           )}
           {canCancel && (
-            <Button variant="danger" onClick={handleCancel} loading={isSubmitting}>
-              <XCircle size={16} /> Cancel
+            <Button variant="danger" onClick={handleCancel} loading={isSubmitting} className="flex-1 py-4 text-base font-bold bg-brand-danger/20 text-brand-danger hover:bg-brand-danger/30 border border-brand-danger/30">
+              <XCircle size={18} className="mr-2" /> Cancel
             </Button>
           )}
-          {canReset && (
-            <Button variant="secondary" onClick={handleReset} loading={resetting}>
-              <RotateCcw size={16} /> Reset Match
-            </Button>
-          )}
-          {canWalkover && (
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-brand-textMuted">Walkover:</span>
+        </div>
+
+        {canWalkover && (
+          <div className="p-4 rounded-xl border border-white/5 bg-white/[0.02]">
+            <span className="text-xs font-mono uppercase text-brand-textMuted block mb-3">Award Walkover To:</span>
+            <div className="flex gap-3">
               {teamOptions.map((team) => (
                 <Button
                   key={team.value}
                   variant="secondary"
-                  size="sm"
                   onClick={() => handleWalkover(team.value)}
                   loading={isSubmitting}
+                  className="flex-1 bg-white/5 hover:bg-brand-success/20 hover:text-brand-success hover:border-brand-success/50 transition-colors"
                 >
-                  <Flag size={14} /> {team.label}
+                  <Flag size={16} className="mr-2" /> {team.label}
                 </Button>
               ))}
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Score input for ongoing matches */}
         {canScore && (
-          <ScoreInput
-            match={match}
-            scoringMode={scoringMode}
-            maxSets={maxSets}
-            onSubmit={handleScoreSubmit}
-            onCancel={onClose}
-          />
+          <div className="pt-2">
+            <ScoreInput
+              match={match}
+              scoringMode={scoringMode}
+              maxSets={maxSets}
+              onSubmit={handleScoreSubmit}
+              onCancel={onClose}
+            />
+          </div>
         )}
 
-        {!canScore && !canStart && (
-          <div className="text-center py-8 text-brand-textMuted text-sm">
+        {canReset && (
+          <div className="p-4 rounded-xl border border-white/5 bg-white/[0.02] flex items-center justify-between">
+            <span className="text-sm text-brand-textMuted">Match is finalized.</span>
+            <Button variant="secondary" onClick={handleReset} loading={resetting} className="bg-white/5 hover:bg-white/10">
+              <RotateCcw size={16} className="mr-2" /> Reset Match
+            </Button>
+          </div>
+        )}
+
+        {!canScore && !canStart && !canReset && (
+          <div className="text-center py-8 text-brand-textMuted text-sm font-medium">
             This match is {match.status.toLowerCase().replace("_", " ")}.
           </div>
         )}
 
         {/* Danger Zone */}
-        <div className="border-t border-brand-border pt-4">
-          <div className="flex items-center justify-between">
+        <div className="mt-8 pt-6 border-t border-brand-danger/20">
+          <div className="bg-brand-danger/10 border border-brand-danger/20 rounded-xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <p className="text-sm font-medium text-brand-text">Danger Zone</p>
-              <p className="text-xs text-brand-textMuted">Irreversible actions</p>
+              <p className="text-brand-danger font-bold uppercase tracking-wider text-sm flex items-center gap-2">
+                <AlertCircle size={16} /> Danger Zone
+              </p>
+              <p className="text-xs text-brand-danger/70 mt-1 font-medium">Permanently delete this match. Irreversible.</p>
             </div>
             <Button
               variant="danger"
-              size="sm"
               onClick={handleDelete}
               loading={deleting}
+              className="w-full sm:w-auto font-bold shadow-[0_0_15px_rgba(239,68,68,0.3)]"
             >
-              <Trash2 size={14} className="mr-1" /> Delete Match
+              <Trash2 size={16} className="mr-2" /> Delete Match
             </Button>
           </div>
         </div>

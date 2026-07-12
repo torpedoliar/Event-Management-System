@@ -1,0 +1,312 @@
+[
+  {
+    "antipattern": "design-system-font",
+    "name": "Font outside DESIGN.md",
+    "description": "A font is used that is not declared in DESIGN.md typography. Use the documented type system or update DESIGN.md if this is an intentional brand addition.",
+    "severity": "warning",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 47,
+    "snippet": "font-family: Arial is not declared in DESIGN.md typography",
+    "ignoreValue": "Arial"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 55,
+    "snippet": "Undocumented color #667eea is outside DESIGN.md colors",
+    "ignoreValue": "#667eea"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 55,
+    "snippet": "Undocumented color #764ba2 is outside DESIGN.md colors",
+    "ignoreValue": "#764ba2"
+  },
+  {
+    "antipattern": "design-system-font-size",
+    "name": "Font size outside DESIGN.md",
+    "description": "A literal font-size is off the type ramp documented in DESIGN.md typography. Use a documented size step or update the design system if the new step is intentional.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 56,
+    "snippet": "font-size: 28px is off the DESIGN.md type ramp",
+    "ignoreValue": "28px"
+  },
+  {
+    "antipattern": "design-system-font-size",
+    "name": "Font size outside DESIGN.md",
+    "description": "A literal font-size is off the type ramp documented in DESIGN.md typography. Use a documented size step or update the design system if the new step is intentional.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 57,
+    "snippet": "font-size: 14px is off the DESIGN.md type ramp",
+    "ignoreValue": "14px"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 64,
+    "snippet": "Undocumented color #333333 is outside DESIGN.md colors",
+    "ignoreValue": "#333333"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 65,
+    "snippet": "Undocumented color #667eea is outside DESIGN.md colors",
+    "ignoreValue": "#667eea"
+  },
+  {
+    "antipattern": "design-system-font-size",
+    "name": "Font size outside DESIGN.md",
+    "description": "A literal font-size is off the type ramp documented in DESIGN.md typography. Use a documented size step or update the design system if the new step is intentional.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 68,
+    "snippet": "font-size: 15px is off the DESIGN.md type ramp",
+    "ignoreValue": "15px"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 73,
+    "snippet": "Undocumented color #e8eaff is outside DESIGN.md colors",
+    "ignoreValue": "#e8eaff"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 76,
+    "snippet": "Undocumented color #667eea is outside DESIGN.md colors",
+    "ignoreValue": "#667eea"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 78,
+    "snippet": "Undocumented color #666 is outside DESIGN.md colors",
+    "ignoreValue": "#666"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 78,
+    "snippet": "Undocumented color #333 is outside DESIGN.md colors",
+    "ignoreValue": "#333"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 79,
+    "snippet": "Undocumented color #e8eaff is outside DESIGN.md colors",
+    "ignoreValue": "#e8eaff"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 81,
+    "snippet": "Undocumented color #666 is outside DESIGN.md colors",
+    "ignoreValue": "#666"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 81,
+    "snippet": "Undocumented color #333 is outside DESIGN.md colors",
+    "ignoreValue": "#333"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 88,
+    "snippet": "Undocumented color #667eea is outside DESIGN.md colors",
+    "ignoreValue": "#667eea"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 88,
+    "snippet": "Undocumented color #764ba2 is outside DESIGN.md colors",
+    "ignoreValue": "#764ba2"
+  },
+  {
+    "antipattern": "design-system-font-size",
+    "name": "Font size outside DESIGN.md",
+    "description": "A literal font-size is off the type ramp documented in DESIGN.md typography. Use a documented size step or update the design system if the new step is intentional.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 92,
+    "snippet": "font-size: 24px is off the DESIGN.md type ramp",
+    "ignoreValue": "24px"
+  },
+  {
+    "antipattern": "design-system-font-size",
+    "name": "Font size outside DESIGN.md",
+    "description": "A literal font-size is off the type ramp documented in DESIGN.md typography. Use a documented size step or update the design system if the new step is intentional.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 93,
+    "snippet": "font-size: 14px is off the DESIGN.md type ramp",
+    "ignoreValue": "14px"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 99,
+    "snippet": "Undocumented color #667eea is outside DESIGN.md colors",
+    "ignoreValue": "#667eea"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 102,
+    "snippet": "Undocumented color #667eea is outside DESIGN.md colors",
+    "ignoreValue": "#667eea"
+  },
+  {
+    "antipattern": "design-system-font-size",
+    "name": "Font size outside DESIGN.md",
+    "description": "A literal font-size is off the type ramp documented in DESIGN.md typography. Use a documented size step or update the design system if the new step is intentional.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 102,
+    "snippet": "font-size: 14px is off the DESIGN.md type ramp",
+    "ignoreValue": "14px"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 104,
+    "snippet": "Undocumented color #666666 is outside DESIGN.md colors",
+    "ignoreValue": "#666666"
+  },
+  {
+    "antipattern": "design-system-font-size",
+    "name": "Font size outside DESIGN.md",
+    "description": "A literal font-size is off the type ramp documented in DESIGN.md typography. Use a documented size step or update the design system if the new step is intentional.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 104,
+    "snippet": "font-size: 13px is off the DESIGN.md type ramp",
+    "ignoreValue": "13px"
+  },
+  {
+    "antipattern": "design-system-font-size",
+    "name": "Font size outside DESIGN.md",
+    "description": "A literal font-size is off the type ramp documented in DESIGN.md typography. Use a documented size step or update the design system if the new step is intentional.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 111,
+    "snippet": "font-size: 15px is off the DESIGN.md type ramp",
+    "ignoreValue": "15px"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 112,
+    "snippet": "Undocumented color #333333 is outside DESIGN.md colors",
+    "ignoreValue": "#333333"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 118,
+    "snippet": "Undocumented color #f1f1f1 is outside DESIGN.md colors",
+    "ignoreValue": "#f1f1f1"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\app\\(main)\\admin\\settings\\email\\page.tsx",
+    "line": 119,
+    "snippet": "Undocumented color #888888 is outside DESIGN.md colors",
+    "ignoreValue": "#888888"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\components\\LuckyDraw3DWheel.tsx",
+    "line": 217,
+    "snippet": "Undocumented color rgba(124,92,252,0.1) is outside DESIGN.md colors",
+    "ignoreValue": "rgba(124,92,252,0.1)"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\components\\LuckyDraw3DWheel.tsx",
+    "line": 221,
+    "snippet": "Undocumented color rgba(30,30,50,0.95) is outside DESIGN.md colors",
+    "ignoreValue": "rgba(30,30,50,0.95)"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "file": "E:\\Vibe\\Registrasi Tamu\\apps\\frontend\\components\\LuckyDraw3DWheel.tsx",
+    "line": 238,
+    "snippet": "Undocumented color rgba(30,30,50,0.95) is outside DESIGN.md colors",
+    "ignoreValue": "rgba(30,30,50,0.95)"
+  }
+]
