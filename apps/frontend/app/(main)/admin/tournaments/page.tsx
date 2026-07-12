@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { Tournament } from "@/types/tournament.types";
 import { tournamentApi } from "@/lib/tournament-api";
 import { StatusPill } from "@/components/tournament/StatusPill";
@@ -11,6 +12,7 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 
 export default function AdminTournamentsPage() {
+  const router = useRouter();
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -48,6 +50,7 @@ export default function AdminTournamentsPage() {
       const newTournament = await tournamentApi.create(data);
       setTournaments((prev) => [...prev, newTournament]);
       setShowCreateModal(false);
+      router.push(`/admin/tournaments/${newTournament.id}`);
     } catch (err: any) {
       throw new Error(err.message || "Failed to create tournament");
     } finally {
@@ -217,7 +220,6 @@ export default function AdminTournamentsPage() {
           aria-modal="true"
           aria-labelledby="create-tournament-title"
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
-          onClick={(e) => { if (e.target === e.currentTarget) setShowCreateModal(false); }}
         >
           <div className="bg-brand-surface rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-brand-border animate-scaleIn">
             <div className="flex items-center justify-between p-6 border-b border-brand-border sticky top-0 bg-brand-surface/90 backdrop-blur z-10">
