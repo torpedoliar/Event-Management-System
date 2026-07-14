@@ -72,15 +72,24 @@ export function BracketView({ bracket, onMatchClick, highlightedMatchId }: Brack
                   {round.matches.map((match, matchIndex) => {
                     const previousMatches = getPreviousMatches(roundIndex, matchIndex, rounds);
                     const hasPreviousMatches = roundIndex > 0 && previousMatches.length > 0;
+                    
+                    const hasRealPreviousMatches = hasPreviousMatches && previousMatches.some(prev => {
+                      const prevMatch = rounds[roundIndex - 1].matches[prev.matchIndex];
+                      const isPrevBye = prevMatch.status === 'WALKOVER' && (!prevMatch.teamA || !prevMatch.teamB) && (roundIndex - 1) === 0;
+                      return !isPrevBye;
+                    });
+                    
                     const hasNextMatch = !isLastRound;
+                    
+                    const isByeMatch = match.status === 'WALKOVER' && (!match.teamA || !match.teamB) && roundIndex === 0;
 
                     return (
                       <div key={match.id} className="relative z-10 flex items-center justify-center">
-                        {hasPreviousMatches && (
+                        {hasRealPreviousMatches && (
                           <div className="absolute top-1/2 -left-4 w-4 h-0 border-t-2 border-brand-border z-0" />
                         )}
 
-                        {hasNextMatch && (
+                        {hasNextMatch && !isByeMatch && (
                           <BracketConnector
                             matchIndex={matchIndex}
                             matchesInRound={matchesInRound}
@@ -88,11 +97,13 @@ export function BracketView({ bracket, onMatchClick, highlightedMatchId }: Brack
                           />
                         )}
 
-                        <BracketMatchBox
-                          match={match}
-                          onClick={() => onMatchClick?.(match.id)}
-                          isHighlighted={highlightedMatchId === match.id}
-                        />
+                        <div className={isByeMatch ? "opacity-0 pointer-events-none" : ""}>
+                          <BracketMatchBox
+                            match={match}
+                            onClick={() => onMatchClick?.(match.id)}
+                            isHighlighted={highlightedMatchId === match.id}
+                          />
+                        </div>
                       </div>
                     );
                   })}
