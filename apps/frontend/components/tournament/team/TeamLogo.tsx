@@ -6,7 +6,7 @@ import Image from 'next/image';
 interface TeamLogoProps {
   src?: string | null;
   name: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
 }
 
@@ -14,6 +14,7 @@ const sizeMap = {
   sm: 24,
   md: 32,
   lg: 48,
+  xl: 96,
 };
 
 export function TeamLogo({ src, name, size = 'md', className = '' }: TeamLogoProps) {
