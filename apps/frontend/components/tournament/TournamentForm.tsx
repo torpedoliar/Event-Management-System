@@ -234,7 +234,7 @@ export function TournamentForm({ initialData, onSubmit, onCancel, isLoading }: T
               aria-pressed={formData.enableMatchCheckin}
               aria-label="Enable Match Check-in"
               onClick={() => updateField("enableMatchCheckin", !formData.enableMatchCheckin)}
-              className="text-brand-primary"
+              className="text-brand-primary p-2 -m-2"
             >
               {formData.enableMatchCheckin ? <ToggleRight size={32} /> : <ToggleLeft size={32} />}
             </button>

@@ -78,7 +78,7 @@ export function LiveMatchCard({ match, tournamentName, onMatchClick }: LiveMatch
                 </span>
               )}
             </div>
-            <h3 className="font-bold text-brand-text text-lg leading-tight mb-1">
+            <h3 className="font-bold text-brand-text text-lg leading-tight mb-1 truncate">
               {teamAName}
             </h3>
             {match.setsA != null && (
@@ -119,7 +119,7 @@ export function LiveMatchCard({ match, tournamentName, onMatchClick }: LiveMatch
                 </span>
               )}
             </div>
-            <h3 className="font-bold text-brand-text text-lg leading-tight mb-1">
+            <h3 className="font-bold text-brand-text text-lg leading-tight mb-1 truncate">
               {teamBName}
             </h3>
             {match.setsB != null && (

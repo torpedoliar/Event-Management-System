@@ -15,6 +15,7 @@ export default {
           primarySoft: '#F5ECD7',
           primaryMuted: '#B8934A',
           primaryGlow: 'rgba(212,168,83,0.20)',
+          accent: '#D4A853',
           // Neutral foundation
           bg: '#09090B',
           bgElevated: '#12121A',

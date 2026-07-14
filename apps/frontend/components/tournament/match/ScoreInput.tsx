@@ -59,7 +59,7 @@ export function ScoreInput({
   };
 
   return (
-    <div className="bg-[#111827] rounded-xl border border-white/10 shadow-2xl p-6">
+    <div className="bg-[#111827] rounded-xl border border-white/10 shadow-2xl p-4 md:p-6">
       <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/5">
         <h3 className="font-mono text-xs uppercase tracking-widest text-white/50">Score Panel // Match #{match.matchNumber}</h3>
         {scoringMode === ScoringModeEnum.SETS && (
@@ -78,7 +78,7 @@ export function ScoreInput({
               size="md"
               className="mb-4"
             />
-            <p className="font-bold text-white text-center mb-6 h-12 flex items-center justify-center leading-tight">
+            <p className="font-bold text-white text-center mb-6 h-12 flex items-center justify-center leading-tight truncate max-w-full px-1">
               {match.teamA?.name || "Team A"}
             </p>
             
@@ -147,7 +147,7 @@ export function ScoreInput({
               size="md"
               className="mb-4"
             />
-            <p className="font-bold text-white text-center mb-6 h-12 flex items-center justify-center leading-tight">
+            <p className="font-bold text-white text-center mb-6 h-12 flex items-center justify-center leading-tight truncate max-w-full px-1">
               {match.teamB?.name || "Team B"}
             </p>
             

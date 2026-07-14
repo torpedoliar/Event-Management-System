@@ -24,7 +24,7 @@ export function BracketMatchBox({
   const isTeamAWinner = hasWinner && match.winner?.id === match.teamA?.id;
   const isTeamBWinner = hasWinner && match.winner?.id === match.teamB?.id;
 
-  const baseClasses = compact ? "w-44" : "w-56";
+  const baseClasses = compact ? "w-36 md:w-44" : "w-40 md:w-56";
 
   return (
     <div className="relative group">

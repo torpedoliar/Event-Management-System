@@ -140,12 +140,12 @@ export default function PublicBracketViewerPage() {
           isDarkMode ? "bg-brand-bg/95 border-brand-border" : "bg-white/95 border-gray-200"
         } backdrop-blur-sm`}
       >
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+        <div className="max-w-7xl mx-auto px-3 md:px-4 py-3 md:py-4">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 md:gap-4 min-w-0">
               <Link
                 href="/"
-                className={`p-2 rounded-lg transition-colors ${
+                className={`p-2.5 rounded-lg transition-colors shrink-0 ${
                   isDarkMode
                     ? "hover:bg-white/[0.04] text-brand-textMuted hover:text-brand-text"
                     : "hover:bg-gray-100 text-gray-500 hover:text-gray-700"
@@ -154,15 +154,15 @@ export default function PublicBracketViewerPage() {
                 <ChevronLeft className="w-5 h-5" />
               </Link>
 
-              <div>
-                <div className="flex items-center gap-3">
-                  <Trophy className="w-6 h-6 text-brand-warning" />
-                  <h1 className={`text-xl font-bold ${isDarkMode ? "text-brand-text" : "text-gray-900"}`}>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 md:gap-3">
+                  <Trophy className="w-5 h-5 md:w-6 md:h-6 text-brand-warning shrink-0" />
+                  <h1 className={`text-base md:text-xl font-bold truncate ${isDarkMode ? "text-brand-text" : "text-gray-900"}`}>
                     {tournament.name}
                   </h1>
                   <StatusPill status={tournament.status} size="sm" />
                 </div>
-                <div className={`flex items-center gap-4 mt-1 text-sm font-medium ${
+                <div className={`hidden sm:flex items-center gap-4 mt-1 text-sm font-medium ${
                   isDarkMode ? "text-brand-textMuted" : "text-gray-500"
                 }`}>
                   {tournament.sportType && (
@@ -184,11 +184,11 @@ export default function PublicBracketViewerPage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 md:gap-2 shrink-0">
               <button
                 onClick={toggleDarkMode}
                 aria-label={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-                className={`p-2 rounded-lg transition-colors ${
+                className={`p-2.5 rounded-lg transition-colors ${
                   isDarkMode
                     ? "hover:bg-white/[0.04] text-brand-textMuted hover:text-brand-text"
                     : "hover:bg-gray-100 text-gray-500 hover:text-gray-700"
@@ -200,7 +200,7 @@ export default function PublicBracketViewerPage() {
               <button
                 onClick={toggleFullscreen}
                 aria-label="Toggle Fullscreen"
-                className={`p-2 rounded-lg transition-colors ${
+                className={`p-2.5 rounded-lg transition-colors ${
                   isDarkMode
                     ? "hover:bg-white/[0.04] text-brand-textMuted hover:text-brand-text"
                     : "hover:bg-gray-100 text-gray-500 hover:text-gray-700"

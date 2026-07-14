@@ -43,23 +43,23 @@ export function BracketView({ bracket, onMatchClick, highlightedMatchId }: Brack
     <div className="relative">
       {/* Left fade */}
       <div
-        className={`absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-brand-bg to-transparent pointer-events-none z-20 transition-opacity duration-300 ${canScrollLeft ? 'opacity-100' : 'opacity-0'}`}
+        className={`absolute left-0 top-0 bottom-0 w-8 md:w-16 bg-gradient-to-r from-brand-bg to-transparent pointer-events-none z-20 transition-opacity duration-300 ${canScrollLeft ? 'opacity-100' : 'opacity-0'}`}
       />
 
       {/* Right fade */}
       <div
-        className={`absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-brand-bg to-transparent pointer-events-none z-20 transition-opacity duration-300 ${canScrollRight ? 'opacity-100' : 'opacity-0'}`}
+        className={`absolute right-0 top-0 bottom-0 w-8 md:w-16 bg-gradient-to-l from-brand-bg to-transparent pointer-events-none z-20 transition-opacity duration-300 ${canScrollRight ? 'opacity-100' : 'opacity-0'}`}
       />
 
       <div ref={scrollRef} className="w-full overflow-x-auto pb-4 scrollbar-hide">
-        <div className="flex gap-10 min-w-max p-4 items-stretch">
+        <div className="flex gap-6 md:gap-10 min-w-max p-3 md:p-4 items-stretch">
           {rounds.map((round, roundIndex) => {
             const isLastRound = roundIndex === rounds.length - 1;
             const isFirstRound = roundIndex === 0;
             const matchesInRound = round.matches.length;
 
             return (
-              <div key={round.id} className="flex flex-col w-56 shrink-0">
+              <div key={round.id} className="flex flex-col w-44 md:w-56 shrink-0">
                 {/* Round Header Badge */}
                 <div className="text-center mb-8 h-8 flex-shrink-0 flex items-center justify-center">
                   <div className={cn(

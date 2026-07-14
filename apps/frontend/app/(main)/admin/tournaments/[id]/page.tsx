@@ -198,27 +198,27 @@ export default function TournamentDetailPage() {
   const completedMatches = matches.filter((m) => m.status === "COMPLETED");
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <div className="flex items-start justify-between mb-8">
-        <div className="flex items-start gap-4">
+    <div className="px-4 py-6 md:p-6 max-w-7xl mx-auto">
+      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between mb-6 md:mb-8">
+        <div className="flex items-start gap-3 md:gap-4 min-w-0">
           <Link
             href="/admin/tournaments"
-            className="p-2 hover:bg-white/[0.04] text-brand-textMuted hover:text-brand-text transition-colors rounded-lg"
+            className="p-2.5 hover:bg-white/[0.04] text-brand-textMuted hover:text-brand-text transition-colors rounded-lg shrink-0"
           >
             <ChevronLeft className="w-5 h-5" />
           </Link>
-          <div className="flex items-center gap-4">
-            <div className="p-4 bg-brand-warning/10 rounded-2xl">
-              <Trophy className="w-8 h-8 text-brand-warning" />
+          <div className="flex items-start gap-3 md:gap-4 min-w-0">
+            <div className="p-3 md:p-4 bg-brand-warning/10 rounded-2xl shrink-0">
+              <Trophy className="w-6 h-6 md:w-8 md:h-8 text-brand-warning" />
             </div>
-            <div>
-              <div className="flex items-center gap-3 mb-1">
-                <h1 className="text-3xl font-bold text-brand-text">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-1">
+                <h1 className="text-2xl md:text-3xl font-bold text-brand-text truncate">
                   {tournament.name}
                 </h1>
                 <StatusPill status={tournament.status} />
               </div>
-              <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-brand-textMuted">
+              <div className="flex flex-wrap items-center gap-3 md:gap-4 text-sm font-medium text-brand-textMuted">
                 <span className="capitalize">
                   {tournament.sportType?.toLowerCase().replace("_", " ")}
                 </span>
@@ -237,14 +237,15 @@ export default function TournamentDetailPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           {tournament.status === "DRAFT" && teams.length >= 2 && (
             <Button
               onClick={handleGenerateBracket}
-              className="gap-2 bg-brand-accent hover:bg-brand-accent/90 text-brand-surface"
+              className="gap-2 bg-brand-accent hover:bg-brand-accent/90 text-brand-bg"
             >
               <BarChart3 className="w-4 h-4" />
-              Generate Bracket
+              <span className="hidden sm:inline">Generate Bracket</span>
+              <span className="sm:hidden">Generate</span>
             </Button>
           )}
           {tournament.status === "DRAFT" && (
@@ -253,12 +254,13 @@ export default function TournamentDetailPage() {
               className="gap-2 bg-brand-success hover:bg-brand-success/90 text-white"
             >
               <Play className="w-4 h-4" />
-              Start Tournament
+              <span className="hidden sm:inline">Start Tournament</span>
+              <span className="sm:hidden">Start</span>
             </Button>
           )}
           <Link
             href={"/admin/tournaments/" + tournamentId + "/edit"}
-            className="p-2 border border-brand-border rounded-lg hover:bg-white/[0.04] text-brand-textMuted hover:text-brand-primary transition-colors"
+            className="p-2.5 border border-brand-border rounded-lg hover:bg-white/[0.04] text-brand-textMuted hover:text-brand-primary transition-colors"
           >
             <Edit className="w-4 h-4" />
           </Link>
@@ -572,7 +574,7 @@ export default function TournamentDetailPage() {
                 {tournament.status === "DRAFT" && teams.length >= 2 && (
                   <Button
                     onClick={handleGenerateBracket}
-                    className="mt-6 bg-brand-accent hover:bg-brand-accent/90 text-brand-surface"
+                    className="mt-6 bg-brand-accent hover:bg-brand-accent/90 text-brand-bg"
                   >
                     Generate Bracket
                   </Button>

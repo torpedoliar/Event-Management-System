@@ -52,8 +52,8 @@ export function LiveMatchDisplay({ match, showTimer = true }: LiveMatchDisplayPr
       {/* Cinematic Header Bar */}
       <div className="w-full relative z-10">
         {isLive ? (
-          <div className="bg-gradient-to-r from-brand-danger/80 via-brand-danger to-brand-danger/80 border-b border-white/10 px-6 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-3">
+          <div className="bg-gradient-to-r from-brand-danger/80 via-brand-danger to-brand-danger/80 border-b border-white/10 px-3 md:px-6 py-3 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 md:gap-3 shrink-0">
               <span className="relative flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-white" />
@@ -61,7 +61,7 @@ export function LiveMatchDisplay({ match, showTimer = true }: LiveMatchDisplayPr
               <span className="font-black uppercase tracking-[0.25em] text-white text-xs">LIVE</span>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="hidden sm:flex items-center gap-4">
               {match.round?.name && (
                 <span className="text-white/80 text-xs font-semibold uppercase tracking-wider">
                   {match.round.name}
@@ -69,13 +69,13 @@ export function LiveMatchDisplay({ match, showTimer = true }: LiveMatchDisplayPr
               )}
               {match.round?.name && <span className="w-px h-3 bg-white/20" />}
               <span className="text-white/60 text-xs uppercase tracking-wider font-medium">
-                {match.tournamentId ? "Match" : ""} #{match.matchNumber}
+                #{match.matchNumber}
               </span>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 md:gap-3 shrink-0">
               {showTimer && match.startedAt && (
-                <span className="font-mono text-base font-bold text-white tracking-wider tabular-nums">
+                <span className="font-mono text-sm md:text-base font-bold text-white tracking-wider tabular-nums">
                   <MatchTimer startTime={match.startedAt} />
                 </span>
               )}
@@ -90,13 +90,13 @@ export function LiveMatchDisplay({ match, showTimer = true }: LiveMatchDisplayPr
             </div>
           </div>
         ) : (
-          <div className="bg-brand-surface/80 border-b border-white/5 px-6 py-3 flex items-center justify-between">
+          <div className="bg-brand-surface/80 border-b border-white/5 px-3 md:px-6 py-3 flex items-center justify-between gap-2">
             <div className="flex items-center gap-3">
               <span className="text-brand-textMuted text-xs uppercase tracking-[0.2em] font-semibold">
-                {isCompleted ? "Final Score" : isScheduled ? "Upcoming Match" : "Match"}
+                {isCompleted ? "Final Score" : isScheduled ? "Upcoming" : "Match"}
               </span>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 md:gap-4">
               {match.round?.name && (
                 <span className="text-brand-textMuted text-xs font-semibold uppercase tracking-wider">
                   {match.round.name}
@@ -119,17 +119,17 @@ export function LiveMatchDisplay({ match, showTimer = true }: LiveMatchDisplayPr
       <div className="relative z-10">
         {isScheduled ? (
           /* Scheduled State — VS Countdown */
-          <div className="py-16 md:py-24 flex flex-col items-center justify-center gap-8">
-            <div className="flex items-center gap-8 md:gap-16">
-              <div className="flex flex-col items-center gap-4">
-                <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-white/5 border border-white/10 flex items-center justify-center p-3 shadow-inner">
+          <div className="py-12 md:py-24 flex flex-col items-center justify-center gap-6 md:gap-8 px-4">
+            <div className="flex items-center gap-4 md:gap-8 lg:gap-16">
+              <div className="flex flex-col items-center gap-3 md:gap-4 min-w-0">
+                <div className="w-20 h-20 md:w-32 md:h-32 rounded-full bg-white/5 border border-white/10 flex items-center justify-center p-2 md:p-3 shadow-inner">
                   <TeamLogo src={match.teamA?.logoUrl} name={match.teamA?.name || "TBD"} size="xl" className="w-full h-full object-contain" />
                 </div>
-                <span className="font-bold text-xl md:text-2xl text-white">{match.teamA?.name || "TBD"}</span>
+                <span className="font-bold text-base md:text-2xl text-white truncate max-w-[100px] md:max-w-[160px]">{match.teamA?.name || "TBD"}</span>
               </div>
 
-              <div className="flex flex-col items-center">
-                <span className="text-7xl md:text-9xl font-black text-white/10 font-mono tracking-tighter">VS</span>
+              <div className="flex flex-col items-center shrink-0">
+                <span className="text-5xl md:text-7xl lg:text-9xl font-black text-white/10 font-mono tracking-tighter">VS</span>
                 {match.scheduledAt && (
                   <span className="mt-2 text-brand-textMuted text-sm font-mono">
                     {new Date(match.scheduledAt).toLocaleString('id-ID', {
@@ -139,11 +139,11 @@ export function LiveMatchDisplay({ match, showTimer = true }: LiveMatchDisplayPr
                 )}
               </div>
 
-              <div className="flex flex-col items-center gap-4">
-                <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-white/5 border border-white/10 flex items-center justify-center p-3 shadow-inner">
+              <div className="flex flex-col items-center gap-3 md:gap-4 min-w-0">
+                <div className="w-20 h-20 md:w-32 md:h-32 rounded-full bg-white/5 border border-white/10 flex items-center justify-center p-2 md:p-3 shadow-inner">
                   <TeamLogo src={match.teamB?.logoUrl} name={match.teamB?.name || "TBD"} size="xl" className="w-full h-full object-contain" />
                 </div>
-                <span className="font-bold text-xl md:text-2xl text-white">{match.teamB?.name || "TBD"}</span>
+                <span className="font-bold text-base md:text-2xl text-white truncate max-w-[100px] md:max-w-[160px]">{match.teamB?.name || "TBD"}</span>
               </div>
             </div>
           </div>
@@ -154,13 +154,13 @@ export function LiveMatchDisplay({ match, showTimer = true }: LiveMatchDisplayPr
             <div className="flex-1 relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/20 via-transparent to-transparent" />
               <div className={cn(
-                "relative z-10 flex flex-col items-center text-center py-12 md:py-16 px-6",
+                "relative z-10 flex flex-col items-center text-center py-8 md:py-16 px-3 md:px-6",
                 isCompleted && match.winnerId === match.teamAId && "bg-brand-success/5"
               )}>
                 {/* Winner Crown */}
                 {isCompleted && match.winnerId === match.teamAId && (
-                  <div className="mb-3 animate-crown-bounce">
-                    <svg className="w-8 h-8 text-brand-warning drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
+                  <div className="mb-2 md:mb-3 animate-crown-bounce">
+                    <svg className="w-6 h-6 md:w-8 md:h-8 text-brand-warning drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z" />
                     </svg>
                   </div>
@@ -168,10 +168,10 @@ export function LiveMatchDisplay({ match, showTimer = true }: LiveMatchDisplayPr
 
                 {/* Team Logo with Glow Ring */}
                 <div className={cn(
-                  "relative mb-6",
+                  "relative mb-4 md:mb-6",
                   match.winnerId === match.teamAId && "ring-2 ring-brand-success/30 rounded-full"
                 )}>
-                  <div className="w-28 h-28 md:w-36 md:h-36 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shadow-inner p-3">
+                  <div className="w-20 h-20 md:w-36 md:h-36 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shadow-inner p-2 md:p-3">
                     <TeamLogo src={match.teamA?.logoUrl} name={match.teamA?.name || "TBD"} size="xl" className="w-full h-full object-contain" />
                   </div>
                   {match.winnerId === match.teamAId && (
@@ -180,15 +180,15 @@ export function LiveMatchDisplay({ match, showTimer = true }: LiveMatchDisplayPr
                 </div>
 
                 {/* Team Name */}
-                <h3 className="font-bold text-2xl md:text-3xl text-white tracking-tight mb-1">
+                <h3 className="font-bold text-lg md:text-3xl text-white tracking-tight mb-1 truncate max-w-full px-2">
                   {match.teamA?.name || "TBD"}
                 </h3>
                 <span className="text-[10px] uppercase tracking-[0.2em] text-brand-textDim font-semibold">Home</span>
 
                 {/* Score */}
                 <div className={cn(
-                  "mt-6 font-mono font-black tabular-nums leading-none text-white transition-all duration-300",
-                  "text-[6rem] md:text-[9rem] tracking-tighter drop-shadow-2xl",
+                  "mt-4 md:mt-6 font-mono font-black tabular-nums leading-none text-white transition-all duration-300",
+                  "text-[3.5rem] sm:text-[5rem] md:text-[7rem] lg:text-[9rem] tracking-tighter drop-shadow-2xl",
                   match.winnerId === match.teamAId && "text-brand-success",
                   isLive && "animate-score-pulse"
                 )}>
@@ -222,13 +222,13 @@ export function LiveMatchDisplay({ match, showTimer = true }: LiveMatchDisplayPr
             <div className="flex-1 relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-bl from-blue-900/20 via-transparent to-transparent" />
               <div className={cn(
-                "relative z-10 flex flex-col items-center text-center py-12 md:py-16 px-6",
+                "relative z-10 flex flex-col items-center text-center py-8 md:py-16 px-3 md:px-6",
                 isCompleted && match.winnerId === match.teamBId && "bg-brand-success/5"
               )}>
                 {/* Winner Crown */}
                 {isCompleted && match.winnerId === match.teamBId && (
-                  <div className="mb-3 animate-crown-bounce">
-                    <svg className="w-8 h-8 text-brand-warning drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
+                  <div className="mb-2 md:mb-3 animate-crown-bounce">
+                    <svg className="w-6 h-6 md:w-8 md:h-8 text-brand-warning drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z" />
                     </svg>
                   </div>
@@ -236,10 +236,10 @@ export function LiveMatchDisplay({ match, showTimer = true }: LiveMatchDisplayPr
 
                 {/* Team Logo with Glow Ring */}
                 <div className={cn(
-                  "relative mb-6",
+                  "relative mb-4 md:mb-6",
                   match.winnerId === match.teamBId && "ring-2 ring-brand-success/30 rounded-full"
                 )}>
-                  <div className="w-28 h-28 md:w-36 md:h-36 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shadow-inner p-3">
+                  <div className="w-20 h-20 md:w-36 md:h-36 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shadow-inner p-2 md:p-3">
                     <TeamLogo src={match.teamB?.logoUrl} name={match.teamB?.name || "TBD"} size="xl" className="w-full h-full object-contain" />
                   </div>
                   {match.winnerId === match.teamBId && (
@@ -248,15 +248,15 @@ export function LiveMatchDisplay({ match, showTimer = true }: LiveMatchDisplayPr
                 </div>
 
                 {/* Team Name */}
-                <h3 className="font-bold text-2xl md:text-3xl text-white tracking-tight mb-1">
+                <h3 className="font-bold text-lg md:text-3xl text-white tracking-tight mb-1 truncate max-w-full px-2">
                   {match.teamB?.name || "TBD"}
                 </h3>
                 <span className="text-[10px] uppercase tracking-[0.2em] text-brand-textDim font-semibold">Away</span>
 
                 {/* Score */}
                 <div className={cn(
-                  "mt-6 font-mono font-black tabular-nums leading-none text-white transition-all duration-300",
-                  "text-[6rem] md:text-[9rem] tracking-tighter drop-shadow-2xl",
+                  "mt-4 md:mt-6 font-mono font-black tabular-nums leading-none text-white transition-all duration-300",
+                  "text-[3.5rem] sm:text-[5rem] md:text-[7rem] lg:text-[9rem] tracking-tighter drop-shadow-2xl",
                   match.winnerId === match.teamBId && "text-brand-success",
                   isLive && "animate-score-pulse"
                 )}>
@@ -270,7 +270,7 @@ export function LiveMatchDisplay({ match, showTimer = true }: LiveMatchDisplayPr
 
       {/* Completed Overlay */}
       {isCompleted && match.winner && (
-        <div className="relative z-10 bg-gradient-to-r from-brand-success/10 via-brand-success/5 to-brand-success/10 border-t border-brand-success/20 px-8 py-4 flex items-center justify-center gap-3">
+        <div className="relative z-10 bg-gradient-to-r from-brand-success/10 via-brand-success/5 to-brand-success/10 border-t border-brand-success/20 px-4 md:px-8 py-3 md:py-4 flex items-center justify-center gap-2 md:gap-3">
           <svg className="w-5 h-5 text-brand-warning" fill="currentColor" viewBox="0 0 24 24">
             <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z" />
           </svg>

@@ -49,7 +49,7 @@ export function TeamCard({ team, onClick, onEdit, onDelete, onManageMembers, sho
             {onEdit && (
               <button
                 type="button"
-                className="p-1.5 rounded-md text-brand-textMuted hover:text-brand-text hover:bg-white/[0.05]"
+                className="p-2.5 rounded-md text-brand-textMuted hover:text-brand-text hover:bg-white/[0.05]"
                 onClick={(e) => {
                   e.stopPropagation();
                   onEdit();
@@ -62,7 +62,7 @@ export function TeamCard({ team, onClick, onEdit, onDelete, onManageMembers, sho
             {onDelete && (
               <button
                 type="button"
-                className="p-1.5 rounded-md text-brand-danger hover:bg-brand-danger/10"
+                className="p-2.5 rounded-md text-brand-danger hover:bg-brand-danger/10"
                 onClick={(e) => {
                   e.stopPropagation();
                   onDelete();
