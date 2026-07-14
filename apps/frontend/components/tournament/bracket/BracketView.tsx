@@ -43,26 +43,35 @@ export function BracketView({ bracket, onMatchClick, highlightedMatchId }: Brack
     <div className="relative">
       {/* Left fade */}
       <div
-        className={`absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-brand-bg to-transparent pointer-events-none z-20 transition-opacity duration-300 ${canScrollLeft ? 'opacity-100' : 'opacity-0'}`}
+        className={`absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-brand-bg to-transparent pointer-events-none z-20 transition-opacity duration-300 ${canScrollLeft ? 'opacity-100' : 'opacity-0'}`}
       />
 
       {/* Right fade */}
       <div
-        className={`absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-brand-bg to-transparent pointer-events-none z-20 transition-opacity duration-300 ${canScrollRight ? 'opacity-100' : 'opacity-0'}`}
+        className={`absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-brand-bg to-transparent pointer-events-none z-20 transition-opacity duration-300 ${canScrollRight ? 'opacity-100' : 'opacity-0'}`}
       />
 
       <div ref={scrollRef} className="w-full overflow-x-auto pb-4 scrollbar-hide">
-        <div className="flex gap-8 min-w-max p-4 items-stretch">
+        <div className="flex gap-10 min-w-max p-4 items-stretch">
           {rounds.map((round, roundIndex) => {
             const isLastRound = roundIndex === rounds.length - 1;
+            const isFirstRound = roundIndex === 0;
             const matchesInRound = round.matches.length;
 
             return (
-              <div key={round.id} className="flex flex-col w-48 shrink-0">
-                <div className="text-center mb-6 h-6 flex-shrink-0">
-                  <h3 className="font-semibold text-brand-text">
+              <div key={round.id} className="flex flex-col w-56 shrink-0">
+                {/* Round Header Badge */}
+                <div className="text-center mb-8 h-8 flex-shrink-0 flex items-center justify-center">
+                  <div className={cn(
+                    "px-4 py-1 rounded-full text-xs font-bold uppercase tracking-[0.15em] border",
+                    isFirstRound
+                      ? "bg-brand-surface border-brand-border/60 text-brand-textMuted"
+                      : isLastRound
+                        ? "bg-gradient-to-r from-brand-primary/20 via-brand-primary/10 to-brand-primary/20 border-brand-primary/30 text-brand-primary"
+                        : "bg-brand-surface border-brand-border/40 text-brand-textMuted"
+                  )}>
                     {round.name || `Round ${round.roundNumber}`}
-                  </h3>
+                  </div>
                 </div>
 
                 <div
@@ -72,23 +81,35 @@ export function BracketView({ bracket, onMatchClick, highlightedMatchId }: Brack
                   {round.matches.map((match, matchIndex) => {
                     const previousMatches = getPreviousMatches(roundIndex, matchIndex, rounds);
                     const hasPreviousMatches = roundIndex > 0 && previousMatches.length > 0;
-                    
+
                     const hasRealPreviousMatches = hasPreviousMatches && previousMatches.some(prev => {
                       const prevMatch = rounds[roundIndex - 1].matches[prev.matchIndex];
                       const isPrevBye = prevMatch.status === 'WALKOVER' && (!prevMatch.teamA || !prevMatch.teamB) && (roundIndex - 1) === 0;
                       return !isPrevBye;
                     });
-                    
+
                     const hasNextMatch = !isLastRound;
-                    
+
                     const isByeMatch = match.status === 'WALKOVER' && (!match.teamA || !match.teamB) && roundIndex === 0;
 
                     return (
-                      <div key={match.id} className="relative z-10 flex items-center justify-center">
+                      <div key={match.id} className="relative z-10 flex items-center justify-center group">
+                        {/* Inbound connector line */}
                         {hasRealPreviousMatches && (
-                          <div className="absolute top-1/2 -left-4 w-4 h-0 border-t-2 border-brand-border z-0" />
+                          <div className="absolute top-1/2 -left-5 w-5 h-0 z-0">
+                            <svg width="20" height="2" viewBox="0 0 20 2" className="overflow-visible">
+                              <defs>
+                                <linearGradient id={`inbound-${match.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
+                                  <stop offset="0%" stopColor="rgba(255,255,255,0.06)" />
+                                  <stop offset="100%" stopColor="rgba(255,255,255,0.12)" />
+                                </linearGradient>
+                              </defs>
+                              <line x1="0" y1="1" x2="20" y2="1" stroke={`url(#inbound-${match.id})`} strokeWidth="2" strokeLinecap="round" />
+                            </svg>
+                          </div>
                         )}
 
+                        {/* Outbound connector */}
                         {hasNextMatch && !isByeMatch && (
                           <BracketConnector
                             matchIndex={matchIndex}
@@ -140,4 +161,8 @@ function getPreviousMatches(
   }
 
   return previousMatches;
+}
+
+function cn(...classes: (string | false | null | undefined)[]) {
+  return classes.filter(Boolean).join(" ");
 }

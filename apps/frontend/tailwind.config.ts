@@ -94,6 +94,30 @@ export default {
           '0%': { opacity: '0', transform: 'translateX(100%)' },
           '100%': { opacity: '1', transform: 'translateX(0)' },
         },
+        scorePulse: {
+          '0%, 100%': { transform: 'scale(1)', filter: 'brightness(1)' },
+          '50%': { transform: 'scale(1.08)', filter: 'brightness(1.3)' },
+        },
+        liveBreathe: {
+          '0%, 100%': { opacity: '1', boxShadow: '0 0 8px rgba(239,68,68,0.8)' },
+          '50%': { opacity: '0.6', boxShadow: '0 0 20px rgba(239,68,68,0.4)' },
+        },
+        borderGlow: {
+          '0%, 100%': { borderColor: 'rgba(239,68,68,0.5)' },
+          '50%': { borderColor: 'rgba(239,68,68,0.2)' },
+        },
+        crownBounce: {
+          '0%, 100%': { transform: 'translateY(0) rotate(-5deg)' },
+          '50%': { transform: 'translateY(-6px) rotate(5deg)' },
+        },
+        fadeInUp: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        connectorDraw: {
+          '0%': { strokeDashoffset: '100' },
+          '100%': { strokeDashoffset: '0' },
+        },
       },
       animation: {
         fadeIn: 'fadeIn 0.2s ease-out',
@@ -101,6 +125,12 @@ export default {
         slideUp: 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
         shimmer: 'shimmer 2s infinite linear',
         slideInRight: 'slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+        'score-pulse': 'scorePulse 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+        'live-breathe': 'liveBreathe 2s ease-in-out infinite',
+        'border-glow': 'borderGlow 2s ease-in-out infinite',
+        'crown-bounce': 'crownBounce 2s ease-in-out infinite',
+        'fade-in-up': 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+        'connector-draw': 'connectorDraw 0.6s ease-out forwards',
       },
       transitionDuration: {
         fast: '150ms',
