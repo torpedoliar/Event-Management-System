@@ -314,11 +314,12 @@ export default function TopNav() {
 
       {/* Mobile slide-out drawer */}
       <div
-        className={`fixed inset-y-0 right-0 z-50 w-80 bg-brand-bgElevated/95 backdrop-blur-xl border-l border-brand-border shadow-panel transition-transform duration-300 ease-expo lg:hidden ${
+        className={`fixed inset-y-0 right-0 z-50 w-[min(80vw,320px)] bg-brand-bgElevated/95 backdrop-blur-xl border-l border-brand-border shadow-panel transition-transform duration-300 ease-expo lg:hidden ${
           mobileMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between p-4 border-b border-brand-border">
+        <div className="flex flex-col h-full">
+        <div className="flex items-center justify-between p-4 border-b border-brand-border shrink-0">
           <span className="font-semibold text-brand-text text-sm">Menu</span>
           <IconButton
             onClick={() => setMobileMenuOpen(false)}
@@ -328,7 +329,7 @@ export default function TopNav() {
           </IconButton>
         </div>
 
-        <div className="p-3 space-y-1 overflow-y-auto">
+        <div className="flex-1 min-h-0 p-3 space-y-1 overflow-y-auto overscroll-contain">
           {/* Public / primary */}
           {!isRegisterPage && (
             <Link className={mobileLinkCls("/checkin")} href="/checkin">
@@ -381,6 +382,7 @@ export default function TopNav() {
               </Button>
             )}
           </div>
+        </div>
         </div>
       </div>
     </>
