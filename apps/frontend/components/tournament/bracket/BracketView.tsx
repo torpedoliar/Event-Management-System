@@ -115,6 +115,7 @@ export function BracketView({ bracket, onMatchClick, highlightedMatchId }: Brack
                             matchIndex={matchIndex}
                             matchesInRound={matchesInRound}
                             containerHeight={containerHeight}
+                            roundIndex={roundIndex}
                           />
                         )}
 
