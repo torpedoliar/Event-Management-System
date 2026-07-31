@@ -603,7 +603,7 @@ export default function LuckyDrawPage() {
             <audio ref={audioGrandWinRef} src={toApiUrl(eventCfg?.grandWinSoundUrl || "/sounds/grand-win.mp3")} preload="auto" />
 
             {/* Controls */}
-            <div className="fixed top-6 right-6 z-[60] flex flex-col gap-2">
+            <div className={`fixed ${isFullscreen ? 'top-6' : 'top-24'} right-6 z-[60] flex flex-col gap-2`}>
                 <Button size="sm" variant={isFullscreen ? 'primary' : 'outline'} onClick={() => setIsFullscreen(!isFullscreen)} aria-label={isFullscreen ? 'Tampilkan navigasi' : 'Sembunyikan navigasi'}>
                     <Monitor size={20} />
                 </Button>
@@ -613,7 +613,7 @@ export default function LuckyDrawPage() {
             </div>
 
             {/* Mode Selector Dropdown */}
-            <div className="fixed top-6 left-6 z-[60]">
+            <div className={`fixed ${isFullscreen ? 'top-6' : 'top-24'} left-6 z-[60]`}>
                 <select
                     onChange={(e) => {
                         if (e.target.value === 'slot') {

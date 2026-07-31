@@ -483,7 +483,7 @@ export default function LiveDisplayPage() {
     return (
         <div className={`min-h-[100dvh] flex flex-col p-8 relative overflow-hidden ${screenShake ? 'animate-screen-shake' : ''}`}>
             {/* Mode Selector Dropdown */}
-            <div className="fixed top-24 left-6 z-[70]">
+            <div className={`fixed ${isFullscreen ? 'top-6' : 'top-24'} left-6 z-[70]`}>
                 <select
                     onChange={(e) => {
                         if (e.target.value === 'classic') {

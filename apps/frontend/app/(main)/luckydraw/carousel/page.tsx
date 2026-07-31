@@ -160,8 +160,8 @@ export default function CarouselDrawPage() {
     return (
         <div className={`min-h-screen flex flex-col relative overflow-hidden ${screenShake ? 'animate-screen-shake' : ''}`}>
 
-            {/* Mode Selector */}
-            <div className="fixed top-24 left-6 z-[70]">
+            {/* Mode Selector Dropdown */}
+            <div className={`fixed ${isFullscreen ? 'top-6' : 'top-24'} left-6 z-[70]`}>
                 <select onChange={(e) => { if (e.target.value === 'classic') window.location.href = '/luckydraw'; else if (e.target.value === 'slot') window.location.href = '/luckydraw/display'; }} value="carousel"
                     className="bg-brand-bgElevated/80 border border-brand-primary/50 text-brand-primarySoft text-sm rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary backdrop-blur-xl shadow-lg font-mono tracking-wider cursor-pointer">
                     <option value="classic">🎲 Classic Mode</option>
