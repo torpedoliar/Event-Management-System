@@ -1,19 +1,12 @@
 "use client";
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { apiFetch, toApiUrl } from '@/lib/api';
-import { Trophy, Volume2, VolumeX, Monitor, History } from 'lucide-react';
-import confetti from 'canvas-confetti';
+import { Volume2, VolumeX, Monitor, History } from 'lucide-react';
+import { popWinner, finale, grandFinale } from '@/lib/celebrate';
 import { useSSE } from '@/lib/sse-context';
 import WinnerHistoryModal from '@/components/WinnerHistoryModal';
 
 const SLOT_CHARSET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-// Festive confetti palette aligned with new theme
-const REGULAR_CONFETTI = ['#D4A853', '#E86A92', '#F9A8C4'];
-const FINALE_CONFETTI = ['#D4A853', '#E86A92', '#F9A8C4', '#7C5CFC', '#B4A0FF'];
-const GRAND_CONFETTI = ['#D4A853', '#F5ECD7', '#E86A92', '#7C5CFC', '#FFFFFF'];
-const TICKER_COLORS = ['#D4A853', '#F5ECD7'];
-const SHIMMER_CONFETTI = ['#D4A853', '#F5ECD7', '#F9A8C4'];
 
 interface Prize {
     id: string;
@@ -64,6 +57,8 @@ const SlotReel: React.FC<{
     const speedRef = useRef(0);
     const animFrameRef = useRef<number>(0);
     const isLockedRef = useRef(false);
+    // Gold flash the instant this reel snaps — the payoff beat per column.
+    const [flash, setFlash] = useState(false);
     
     const chars = SLOT_CHARSET.split('');
     const totalChars = chars.length;
@@ -72,7 +67,8 @@ const SlotReel: React.FC<{
     useEffect(() => {
         if (spinning && !locked) {
             isLockedRef.current = false;
-            speedRef.current = 15 + (reelIndex * 2); 
+            setFlash(false);
+            speedRef.current = 15 + (reelIndex * 2);
             
             const animate = () => {
                 positionRef.current = (positionRef.current + speedRef.current) % stripHeight;
@@ -107,8 +103,7 @@ const SlotReel: React.FC<{
             if (dist < charSize * 15) {
                 dist += stripHeight;
             }
-            const endPos = startPos + dist;
-            
+
             const easeOutElastic = (t: number): number => {
                 if (t === 0 || t === 1) return t;
                 const p = 0.4;
@@ -136,6 +131,7 @@ const SlotReel: React.FC<{
                     if (stripRef.current) {
                          stripRef.current.style.transform = `translateY(-${positionRef.current}px)`;
                     }
+                    setFlash(true);
                 }
             };
             
@@ -144,7 +140,7 @@ const SlotReel: React.FC<{
     }, [locked, targetChar, charSize, stripHeight]);
     
     return (
-        <div className={`slot-reel-container relative overflow-hidden ${locked ? 'slot-locked' : ''}`}
+        <div className={`slot-reel-container relative overflow-hidden ${locked ? 'slot-locked' : ''} ${flash ? 'slot-lock-flash' : ''}`}
              style={{ height: `${charSize * 3}px`, width: charSize * 0.75 + 'px' }}>
             <div className="absolute top-0 left-0 right-0 h-1/3 bg-gradient-to-b from-black/90 to-transparent z-10 pointer-events-none" />
             <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black/90 to-transparent z-10 pointer-events-none" />
@@ -188,6 +184,7 @@ export default function LiveDisplayPage() {
     const [darkReveal, setDarkReveal] = useState(false);
     const [screenShake, setScreenShake] = useState(false);
     const [grandWinner, setGrandWinner] = useState<Guest | null>(null);
+    const [drawError, setDrawError] = useState('');
 
     const [soundEnabled, setSoundEnabled] = useState(false);
     const [isFullscreen, setIsFullscreen] = useState(false);
@@ -328,26 +325,22 @@ export default function LiveDisplayPage() {
         
         await sleep(2000);
         
-        const lockDelay = 400; 
+        const lockDelay = 400;
         for (let col = 9; col >= 0; col--) {
-            setGlobalLockedCount(10 - col); 
-            
-            confetti({ particleCount: 10 * rows.length, spread: 40, origin: { x: 0.20 + (col * 0.08), y: 0.5 } });
-            
+            setGlobalLockedCount(10 - col);
+
+            // Burst tracks the column being locked, left to right.
+            popWinner({ x: 0.20 + (col * 0.08), y: 0.5 }, 10 * rows.length);
+
             await sleep(lockDelay);
         }
-        
+
         stopSound(audioRollRef);
         playSound(audioWinRef);
-        
+
         setRevealedWinners(winners);
-        
-        confetti({
-            particleCount: 100 * rows.length,
-            spread: 120,
-            origin: { y: 0.6 },
-            colors: FINALE_CONFETTI
-        });
+
+        finale(rows.length);
     };
 
     const GRAND_PRIZE_LOCK_DELAYS = [
@@ -373,7 +366,6 @@ export default function LiveDisplayPage() {
         setScreenShake(true);
         
         for (let i = 0; i < 10; i++) {
-            const col = 9 - i;
             const delay = GRAND_PRIZE_LOCK_DELAYS[i];
             
             await sleep(delay);
@@ -400,35 +392,11 @@ export default function LiveDisplayPage() {
         setScreenShake(false);
         setGrandWinner(winnerGuest);
         setRevealedWinners([winnerGuest]);
-        
-        confetti({
-            particleCount: 800,
-            spread: 160,
-            startVelocity: 70,
-            origin: { y: 0.5, x: 0.5 },
-            colors: GRAND_CONFETTI,
-            ticks: 400
-        });
 
-        const end = Date.now() + (3 * 1000);
-        const colors = TICKER_COLORS;
-        (function frame() {
-            confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0, y: 0.6 }, colors: colors });
-            confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1, y: 0.6 }, colors: colors });
-            if (Date.now() < end) requestAnimationFrame(frame);
-        }());
-
-        setTimeout(() => {
-            confetti({
-                particleCount: 300,
-                spread: 360,
-                startVelocity: 30,
-                origin: { y: 0.2, x: 0.5 },
-                colors: SHIMMER_CONFETTI
-            });
-        }, 1000);
+        const cancelFinale = grandFinale();
 
         await sleep(5000);
+        cancelFinale();
         setDarkReveal(false);
     };
 
@@ -445,6 +413,7 @@ export default function LiveDisplayPage() {
         spinningRef.current = true;
         setRevealedWinners([]);
         setGrandWinner(null);
+        setDrawError('');
         
         const fallbackRows = Array(actualDrawCount).fill(0).map(() => ({
             winnerId: '----------',
@@ -480,7 +449,7 @@ export default function LiveDisplayPage() {
         } catch (e: any) {
             stopSound(audioRollRef);
             stopSound(audioTensionRef);
-            alert(e.message || 'Gagal mengundi pemenang');
+            setDrawError(e.message || 'Gagal mengundi pemenang');
         } finally {
             setSpinning(false);
             spinningRef.current = false;
@@ -498,16 +467,6 @@ export default function LiveDisplayPage() {
         return 24;
     };
 
-    const getTextSizeClass = () => {
-        const count = slotRows.length || (isUtama ? 1 : drawCount);
-        if (count === 1) return 'text-6xl';
-        if (count <= 3) return 'text-5xl';
-        if (count <= 5) return 'text-4xl';
-        if (count <= 10) return 'text-3xl';
-        if (count <= 20) return 'text-2xl';
-        return 'text-xl';
-    };
-    
     const getGridClass = () => {
         const count = slotRows.length || (isUtama ? 1 : drawCount);
         if (count <= 5) return 'grid-cols-1';
@@ -635,7 +594,7 @@ export default function LiveDisplayPage() {
                     </div>
                 </div>
 
-                <div className={`w-full max-w-[1400px] slot-frame relative transition-all duration-1000 bg-gradient-to-b from-brand-bgElevated to-brand-bgSubtle border border-brand-border rounded-xl border-t-brand-primary ${isUtama ? 'border-brand-danger/50 shadow-[0_0_100px_rgba(212,168,83,0.12)]' : ''}`}>
+                <div className={`w-full max-w-[1400px] slot-frame relative transition-all duration-1000 bg-gradient-to-b from-brand-bgElevated to-brand-bgSubtle border border-brand-border rounded-xl border-t-brand-primary ${isUtama ? 'border-brand-primary/50 shadow-[0_0_100px_rgba(212,168,83,0.12)]' : ''}`}>
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black px-8 py-2 rounded-full border border-brand-primary/40 font-mono text-brand-primary tracking-[0.3em] text-sm shadow-[0_0_20px_rgba(212,168,83,0.3)]">
                         {isUtama ? 'SINGLE WINNER MODE' : `MULTI WINNER MODE (${drawCount}x)`}
                     </div>
@@ -671,9 +630,12 @@ export default function LiveDisplayPage() {
                 </div>
 
                 {grandWinner && isUtama && (
-                    <div className="w-full max-w-4xl mx-auto mt-4 animate-winner-reveal relative z-[70]">
-                        <div className="bg-brand-bg/80 backdrop-blur-md border-2 border-brand-primary rounded-[3rem] p-8 text-center shadow-gold">
+                    <div className="w-full max-w-4xl mx-auto mt-4 relative z-[70]">
+                        <div className="winner-card bg-brand-bg/80 backdrop-blur-md border-2 border-brand-primary rounded-[3rem] p-8 text-center shadow-gold">
                             <h3 className="text-2xl font-mono text-brand-primary mb-2 tracking-[0.5em] uppercase">GRAND PRIZE WINNER</h3>
+                            {grandWinner.photoUrl && (
+                                <img src={toApiUrl(grandWinner.photoUrl)} alt="" className="mx-auto mb-4 h-28 w-28 rounded-full object-cover border-2 border-brand-primary" />
+                            )}
                             <div className="text-5xl md:text-7xl font-black text-brand-text mb-4 uppercase tracking-tighter drop-shadow-2xl">
                                 {grandWinner.name}
                             </div>
@@ -684,7 +646,21 @@ export default function LiveDisplayPage() {
                     </div>
                 )}
 
-                <div className="mt-8 flex justify-center w-full">
+                {/* Screen readers get the result without watching the animation */}
+                <p aria-live="polite" className="sr-only">
+                    {grandWinner
+                        ? `Pemenang ${selectedPrize?.name}: ${grandWinner.name}`
+                        : revealedWinners.length > 0
+                            ? `Pemenang ${selectedPrize?.name}: ${revealedWinners.map(w => w.name).join(', ')}`
+                            : ''}
+                </p>
+
+                <div className="mt-8 flex flex-col items-center gap-4 w-full">
+                    {drawError && (
+                        <div role="alert" className="px-6 py-3 rounded-xl border border-brand-danger/40 bg-brand-danger/10 text-brand-danger text-sm text-center max-w-xl">
+                            {drawError}
+                        </div>
+                    )}
                     <button
                         onClick={handleSpin}
                         disabled={spinning || isSoldOut || !selectedPrizeId}
@@ -694,8 +670,8 @@ export default function LiveDisplayPage() {
                                 ? 'bg-brand-border/50 text-brand-textMuted cursor-not-allowed border border-brand-border'
                                 : isSoldOut
                                     ? 'bg-brand-danger/20 text-brand-danger cursor-not-allowed border border-brand-danger/30'
-                                    : isUtama 
-                                        ? 'bg-gradient-to-r from-brand-danger to-brand-danger/70 text-brand-text shadow-[0_0_50px_rgba(255,0,0,0.5)] hover:shadow-[0_0_80px_rgba(255,0,0,0.8)] border border-brand-danger/50 animate-grand-pulse'
+                                    : isUtama
+                                        ? 'bg-gradient-to-r from-brand-primary to-brand-primaryMuted text-brand-bg border border-brand-primary/50 animate-grand-pulse'
                                         : 'bg-gradient-to-r from-brand-primary to-brand-primarySoft text-brand-bg shadow-[0_0_50px_rgba(212,168,83,0.4)] hover:shadow-[0_0_80px_rgba(212,168,83,0.6)] border border-brand-primarySoft/50'
                             }
                         `}
@@ -708,8 +684,12 @@ export default function LiveDisplayPage() {
                     <div className="w-full max-w-6xl mt-12 bg-brand-surface/50 backdrop-blur-md rounded-3xl border border-brand-border p-6">
                         <div className="text-center text-brand-primary font-mono tracking-[0.3em] mb-6 text-sm">DAFTAR PEMENANG BARU</div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {revealedWinners.map(w => (
-                                <div key={w.id} className="flex items-center gap-4 bg-brand-text/5 rounded-xl p-4 border border-brand-border animate-in slide-in-from-bottom duration-500">
+                            {revealedWinners.map((w, i) => (
+                                <div
+                                    key={w.id}
+                                    className="flex items-center gap-4 bg-brand-text/5 rounded-xl p-4 border border-brand-border animate-slideUp"
+                                    style={{ animationDelay: `${i * 40}ms`, animationFillMode: 'backwards' }}
+                                >
                                     <div className="font-bold text-brand-primary text-sm font-mono shrink-0">
                                         {w.guestId || w.queueNumber}
                                     </div>

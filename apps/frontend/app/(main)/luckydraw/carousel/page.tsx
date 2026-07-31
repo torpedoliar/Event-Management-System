@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { apiFetch, toApiUrl } from '@/lib/api';
 import { Trophy, Volume2, VolumeX, History, Monitor } from 'lucide-react';
-import confetti from 'canvas-confetti';
+import { popWinner, finale, grandFinale } from '@/lib/celebrate';
 import { useSSE } from '@/lib/sse-context';
 import LuckyDraw3DWheel, { Guest } from '@/components/LuckyDraw3DWheel';
 import WinnerHistoryModal from '@/components/WinnerHistoryModal';
@@ -19,13 +19,6 @@ interface Prize {
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-// Festive confetti palette aligned with new theme (gold, coral, violet, soft cream)
-const FESTIVE_COLORS = ['#D4A853', '#E86A92', '#7C5CFC', '#F5ECD7', '#F9A8C4'];
-const GRAND_CONFETTI = ['#D4A853', '#F5ECD7', '#E86A92', '#7C5CFC', '#FFFFFF'];
-const TICKER_COLORS = ['#D4A853', '#F5ECD7'];
-const REGULAR_CONFETTI = ['#D4A853', '#E86A92', '#F9A8C4'];
-const FINALE_CONFETTI = ['#D4A853', '#E86A92', '#F9A8C4', '#7C5CFC', '#B4A0FF'];
-
 export default function CarouselDrawPage() {
     const [prizes, setPrizes] = useState<Prize[]>([]);
     const [selectedPrizeId, setSelectedPrizeId] = useState<string>('');
@@ -33,9 +26,13 @@ export default function CarouselDrawPage() {
     const [loading, setLoading] = useState(true);
     const [eventCfg, setEventCfg] = useState<any>(null);
     const [spinning, setSpinning] = useState(false);
+    // SSE handlers close over state; the ref is what they can trust.
+    const spinningRef = useRef(false);
     const [showHistory, setShowHistory] = useState(false);
     const [drawCount, setDrawCount] = useState(1);
     const [winners, setWinners] = useState<Guest[]>([]);
+    const [wonWheels, setWonWheels] = useState<number[]>([]);
+    const [drawError, setDrawError] = useState('');
     const [screenFlash, setScreenFlash] = useState(false);
     const [darkReveal, setDarkReveal] = useState(false);
     const [screenShake, setScreenShake] = useState(false);
@@ -92,7 +89,7 @@ export default function CarouselDrawPage() {
 
     useEffect(() => {
         loadData();
-        const onPD = (e: MessageEvent) => { const d = JSON.parse(e.data); if (d.prizeId === selectedPrizeId && !spinning) loadData(); };
+        const onPD = (e: MessageEvent) => { const d = JSON.parse(e.data); if (d.prizeId === selectedPrizeId && !spinningRef.current) loadData(); };
         const onCfg = (e: MessageEvent) => { try { setEventCfg((p: any) => ({ ...p, ...JSON.parse(e.data) })); } catch {} };
         const onEC = () => { setLoading(true); setSelectedPrizeId(''); loadData(); };
         addEventListener('prize_draw', onPD); addEventListener('config', onCfg); addEventListener('event_change', onEC);
@@ -105,9 +102,9 @@ export default function CarouselDrawPage() {
         if (!prize) return;
         const isU = prize.category === 'UTAMA';
         const ac = isU ? 1 : drawCount;
-        setWinners([]); stoppedWheelsRef.current = 0; totalWheelsRef.current = ac;
+        setWinners([]); setWonWheels([]); setDrawError(''); stoppedWheelsRef.current = 0; totalWheelsRef.current = ac;
         setScreenShake(false); setScreenFlash(false); setDarkReveal(false);
-        setSpinning(true);
+        setSpinning(true); spinningRef.current = true;
         playSound(audioRollRef, true);
         if (isU) setScreenShake(true);
         try {
@@ -118,26 +115,25 @@ export default function CarouselDrawPage() {
             if (isU) playSound(audioTensionRef, true);
             if (!prize.allowMultipleWins) { const wids = new Set(results.map(r => r.id)); setCandidates(prev => prev.filter(c => !wids.has(c.id))); }
         } catch (e: any) {
-            stopSound(audioRollRef); stopSound(audioTensionRef); setSpinning(false); setScreenShake(false);
-            alert(e.message || 'Gagal mengundi pemenang');
+            stopSound(audioRollRef); stopSound(audioTensionRef); setSpinning(false); spinningRef.current = false; setScreenShake(false);
+            setDrawError(e.message || 'Gagal mengundi pemenang');
         }
     };
 
-    const handleWheelStop = (index: number, totalWheels: number, isGP: boolean) => {
+    const handleWheelStop = (index: number, isGP: boolean) => {
         stoppedWheelsRef.current += 1;
         const allStopped = stoppedWheelsRef.current >= totalWheelsRef.current;
+        setWonWheels(prev => [...prev, index]);
         if (isGP) {
             setScreenShake(false); stopSound(audioRollRef); stopSound(audioTensionRef); playSound(audioGrandWinRef);
             setScreenFlash(true); setTimeout(() => setScreenFlash(false), 400); setDarkReveal(true);
-            confetti({ particleCount: 800, spread: 160, startVelocity: 70, origin: { y: 0.5, x: 0.5 }, colors: GRAND_CONFETTI, ticks: 400 });
-            const end = Date.now() + 3000; const cols = TICKER_COLORS;
-            (function frame() { confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0, y: 0.6 }, colors: cols }); confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1, y: 0.6 }, colors: cols }); if (Date.now() < end) requestAnimationFrame(frame); }());
-            setTimeout(() => { confetti({ particleCount: 300, spread: 360, startVelocity: 30, origin: { y: 0.2, x: 0.5 }, colors: ['#D4A853', '#F5ECD7', '#F9A8C4'] }); setDarkReveal(false); }, 5000);
-            setSpinning(false); loadData();
+            const cancelFinale = grandFinale();
+            setTimeout(() => { cancelFinale(); setDarkReveal(false); }, 5000);
+            setSpinning(false); spinningRef.current = false; loadData();
         } else {
             playSound(audioWinRef);
-            confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 }, colors: REGULAR_CONFETTI });
-            if (allStopped) { stopSound(audioRollRef); confetti({ particleCount: 200, spread: 120, origin: { y: 0.6 }, colors: FINALE_CONFETTI }); setSpinning(false); loadData(); }
+            popWinner({ x: 0.5, y: 0.6 }, 50);
+            if (allStopped) { stopSound(audioRollRef); finale(totalWheelsRef.current); setSpinning(false); spinningRef.current = false; loadData(); }
         }
     };
 
@@ -250,25 +246,37 @@ export default function CarouselDrawPage() {
                 </div>
 
                 {/* ─── Center: Wheels Area ─── */}
-                <div className={`w-full flex items-center justify-center py-2 ${isUtama ? 'scale-[1.02]' : ''} transition-transform duration-500 shadow-festive rounded-2xl`}>
+                <div className={`w-full flex items-center justify-center py-2 ${isUtama ? 'scale-[1.02]' : ''} transition-all duration-500 rounded-2xl ${wonWheels.length > 0 ? 'shadow-festive' : ''}`}>
                     <div className={`grid ${getGridClass()} gap-4 justify-items-center w-full mx-auto`}>
                         {displayWheels.map((winner, idx) => (
-                            <div key={idx} className="w-full">
+                            <div key={idx} className={`w-full ${wonWheels.includes(idx) ? 'wheel-won' : ''}`}>
                                 <LuckyDraw3DWheel
                                     candidates={candidates}
                                     winner={winner}
                                     spinning={spinning}
                                     isGrandPrize={!!isUtama}
                                     stopDelay={isUtama ? 0 : idx * 600}
-                                    onStop={() => handleWheelStop(idx, displayWheels.length, !!isUtama)}
+                                    onStop={() => handleWheelStop(idx, !!isUtama)}
                                 />
                             </div>
                         ))}
                     </div>
                 </div>
 
+                {/* Screen readers get the result without watching the animation */}
+                <p aria-live="polite" className="sr-only">
+                    {wonWheels.length > 0 && winners.length > 0
+                        ? `Pemenang ${selectedPrize?.name}: ${winners.map(w => w.name).join(', ')}`
+                        : ''}
+                </p>
+
                 {/* ─── Bottom: Spin Button ─── */}
-                <div className="pb-4 flex justify-center w-full">
+                <div className="pb-4 flex flex-col items-center gap-4 w-full">
+                    {drawError && (
+                        <div role="alert" className="px-6 py-3 rounded-xl border border-brand-danger/40 bg-brand-danger/10 text-brand-danger text-sm text-center max-w-xl">
+                            {drawError}
+                        </div>
+                    )}
                     <button onClick={handleSpin} disabled={spinning || isSoldOut || !selectedPrizeId}
                         className={`
                             relative px-12 py-5 rounded-full font-bold text-xl md:text-2xl font-mono tracking-[0.2em] uppercase transition-all duration-300 transform hover:scale-105 active:scale-95

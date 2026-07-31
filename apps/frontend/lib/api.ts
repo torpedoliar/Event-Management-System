@@ -84,6 +84,11 @@ export function toApiUrl(path?: string | null): string {
     return `${apiBase()}${p.substring(4)}`;
   }
   
+  // Served by Next from apps/frontend/public, not by the API.
+  // Uploaded sounds come back as /api/uploads/branding/sounds/... and are
+  // handled by the branch above, so /sounds/ is always a local static asset.
+  if (p.startsWith('/sounds/')) return p;
+
   // For local paths like 'uploads/...' or '/uploads/...'
   const cleanPath = p.startsWith('/') ? p : `/${p}`;
   return `${apiBase()}${cleanPath}`;

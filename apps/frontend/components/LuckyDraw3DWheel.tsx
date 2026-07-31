@@ -262,7 +262,7 @@ export default function LuckyDraw3DWheel({
            {/* ─── Selection Highlight Frame ─── */}
            <div className="absolute left-3 right-3 top-1/2 -translate-y-1/2 h-[130px] z-30 rounded-xl border-4 border-brand-primary/80 pointer-events-none"
                 style={{
-                  boxShadow: '0 0 25px rgba(212,168,83,0.35), inset 0 0 25px rgba(212,168,83,0.15), 0 0 40px rgba(232,106,146,0.1)',
+                  boxShadow: '0 0 25px rgba(212,168,83,0.35), inset 0 0 25px rgba(212,168,83,0.15), 0 0 40px rgba(212,168,83,0.10)',
                   background: 'linear-gradient(90deg, rgba(212,168,83,0.08), transparent, rgba(212,168,83,0.08))'
                 }}>
              
@@ -281,11 +281,11 @@ export default function LuckyDraw3DWheel({
              <div className="absolute -bottom-px -right-px w-3 h-3 border-b-2 border-r-2 border-brand-text/80" />
            </div>
 
-           {/* Fade Gradients — blend with app theme using brand-bgElevated hex */}
+           {/* Fade Gradients — brand-bgElevated (#12121A) */}
            <div className="absolute inset-x-0 top-0 h-[90px] z-40 pointer-events-none"
-                style={{ background: 'linear-gradient(to bottom, #16162A, rgba(22,22,42,0.7), transparent)' }} />
+                style={{ background: 'linear-gradient(to bottom, #12121A, rgba(18,18,26,0.7), transparent)' }} />
            <div className="absolute inset-x-0 bottom-0 h-[90px] z-40 pointer-events-none"
-                style={{ background: 'linear-gradient(to top, #16162A, rgba(22,22,42,0.7), transparent)' }} />
+                style={{ background: 'linear-gradient(to top, #12121A, rgba(18,18,26,0.7), transparent)' }} />
          </div>
        </div>
      </div>

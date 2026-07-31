@@ -5,15 +5,8 @@ import { Trophy, PartyPopper, History, X, Users, Search, Award, Hash, Volume2, V
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Modal from '@/components/ui/Modal';
-import confetti from 'canvas-confetti';
+import { popWinner, finale, grandFinale } from '@/lib/celebrate';
 import WinnerHistoryModal from '@/components/WinnerHistoryModal';
-
-// Festive confetti palette aligned with new theme (gold, coral, violet, soft cream)
-const GRAND_CONFETTI = ['#D4A853', '#F5ECD7', '#E86A92', '#7C5CFC', '#FFFFFF'];
-const TICKER_COLORS = ['#D4A853', '#F5ECD7'];
-const SHIMMER_CONFETTI = ['#D4A853', '#F5ECD7', '#F9A8C4'];
-const REGULAR_CONFETTI = ['#D4A853', '#E86A92', '#F9A8C4'];
-const FINALE_CONFETTI = ['#D4A853', '#E86A92', '#F9A8C4', '#7C5CFC', '#B4A0FF'];
 
 interface Prize {
     id: string;
@@ -64,7 +57,6 @@ interface DramaConfig {
     tickerSpeedStart: number;
     tickerSpeedMin: number;
     slowdownStages: number[];
-    confettiCount: number;
     enableScreenFlash: boolean;
     enableDarkReveal: boolean;
     enableScreenShake: boolean;
@@ -79,7 +71,6 @@ const DRAMA_CONFIGS: Record<string, DramaConfig> = {
         tickerSpeedStart: 120,
         tickerSpeedMin: 80,
         slowdownStages: [300, 800],
-        confettiCount: 100,
         enableScreenFlash: false,
         enableDarkReveal: false,
         enableScreenShake: false,
@@ -92,13 +83,12 @@ const DRAMA_CONFIGS: Record<string, DramaConfig> = {
         tickerSpeedStart: 60,
         tickerSpeedMin: 40,
         slowdownStages: [100, 200, 400, 800, 2000],
-        confettiCount: 300,
         enableScreenFlash: true,
         enableDarkReveal: true,
         enableScreenShake: true,
         enableScanlines: true,
         buttonLabel: '◆ GRAND PRIZE ◆',
-        buttonExtraClass: 'animate-grand-pulse ring-2 ring-red-500/50',
+        buttonExtraClass: 'animate-grand-pulse ring-2 ring-brand-primary/50',
     },
 };
 
@@ -250,8 +240,6 @@ export default function LuckyDrawPage() {
     }, [candidates, tickerSpeed]);
 
     const executeGrandPrizeSlowdown = async (winnerGuest: Guest, drawInterval: NodeJS.Timeout) => {
-        const drama = DRAMA_CONFIGS.UTAMA;
-
         // Stage 1: Intense start
         setTickerSpeed(80);
         await sleep(2000);
@@ -299,55 +287,10 @@ export default function LuckyDrawPage() {
         setDarkReveal(true);
         await sleep(500);
 
-        // --- EPIC CELEBRATION SEQUENCES ---
-        
-        // 1. Center Blast
-        confetti({
-            particleCount: 800,
-            spread: 160,
-            startVelocity: 70,
-            origin: { y: 0.5, x: 0.5 },
-            colors: GRAND_CONFETTI,
-            ticks: 400
-        });
-
-        // 2. Left & Right Side Cannons
-        const end = Date.now() + (3 * 1000);
-        const colors = TICKER_COLORS;
-
-        (function frame() {
-            confetti({
-                particleCount: 5,
-                angle: 60,
-                spread: 55,
-                origin: { x: 0, y: 0.6 },
-                colors: colors
-            });
-            confetti({
-                particleCount: 5,
-                angle: 120,
-                spread: 55,
-                origin: { x: 1, y: 0.6 },
-                colors: colors
-            });
-
-            if (Date.now() < end) {
-                requestAnimationFrame(frame);
-            }
-        }());
-
-        // 3. Gold Dust Rain
-        setTimeout(() => {
-            confetti({
-                particleCount: 300,
-                spread: 360,
-                startVelocity: 30,
-                origin: { y: 0.2, x: 0.5 },
-                colors: SHIMMER_CONFETTI
-            });
-        }, 1000);
+        const cancelFinale = grandFinale();
 
         await sleep(5000);
+        cancelFinale();
         setDarkReveal(false);
         setTickerMood('normal');
         setTickerSpeed(800);
@@ -593,16 +536,9 @@ export default function LuckyDrawPage() {
                         await sleep(revealInterval);
                         setMultiWinners(prev => [...prev, results[i]]);
                         setDisplayCandidate(results[i]);
-                        
-                        // Mini confetti setiap pemenang
-                        confetti({
-                            particleCount: 30,
-                            spread: 50,
-                            origin: { y: 0.6 },
-                            colors: REGULAR_CONFETTI
-                        });
+                        popWinner({ x: 0.5, y: 0.6 }, 40);
                     }
-                    
+
                     setIsRevealing(false);
                 } else {
                     setDisplayCandidate(result);
@@ -614,12 +550,7 @@ export default function LuckyDrawPage() {
                     setHighlightedId(result.id);
                 }
 
-                confetti({
-                    particleCount: drama.confettiCount * (results.length > 1 ? 2 : 1),
-                    spread: 70,
-                    origin: { y: 0.6 },
-                    colors: FINALE_CONFETTI
-                });
+                finale(results.length);
 
                 // Resume ticker after 5 seconds
                 setTimeout(() => {
@@ -756,9 +687,21 @@ export default function LuckyDrawPage() {
                                 </div>
                             )}
 
-                            <div className="w-full min-h-[260px] bg-black rounded-2xl border border-brand-border flex flex-col items-center justify-center p-6 mb-6">
+                            <div className={`w-full min-h-[260px] bg-black rounded-2xl border flex flex-col items-center justify-center p-6 mb-6 transition-colors ${winner ? 'border-brand-primary winner-card' : 'border-brand-border'}`}>
                                 {displayCandidate ? (
-                                    <div className={`text-center space-y-4 transition-transform ${winner ? 'scale-105' : ''}`}>
+                                    <div className="text-center space-y-4">
+                                        {winner && (
+                                            <div className="text-label uppercase tracking-[0.35em] text-brand-primary">
+                                                Pemenang
+                                            </div>
+                                        )}
+                                        {winner && displayCandidate.photoUrl && (
+                                            <img
+                                                src={toApiUrl(displayCandidate.photoUrl)}
+                                                alt=""
+                                                className="mx-auto h-24 w-24 rounded-full object-cover border-2 border-brand-primary"
+                                            />
+                                        )}
                                         <div className="text-4xl md:text-6xl font-bold text-brand-primary tracking-wider">
                                             {displayCandidate.guestId || displayCandidate.queueNumber}
                                         </div>
@@ -778,6 +721,11 @@ export default function LuckyDrawPage() {
                                     </div>
                                 )}
                             </div>
+
+                            {/* Screen readers get the result without watching the animation */}
+                            <p aria-live="polite" className="sr-only">
+                                {winner ? `Pemenang ${selectedPrize?.name}: ${winner.name}` : ''}
+                            </p>
 
                             <div className="flex flex-col items-center gap-4 w-full">
                                 {drawError && (
@@ -893,7 +841,7 @@ export default function LuckyDrawPage() {
 
                 {/* Right panel: ticker + winners */}
                 <div className="w-full lg:w-[45%] flex flex-col gap-6">
-                    <div className={`bg-brand-surface/80 backdrop-blur-xl border border-white/10 rounded-xl flex flex-col h-[520px] ${tickerMood === 'tension' ? 'border-brand-danger/50' : ''}`}>
+                    <div className={`bg-brand-surface/80 backdrop-blur-xl border border-white/10 rounded-xl flex flex-col h-[520px] ${tickerMood === 'tension' ? 'border-brand-primary/40 ticker-mood-tension' : ''}`}>
                         <div className="px-4 py-3 border-b border-brand-border flex justify-between items-center">
                             <div className="flex items-center gap-2">
                                 <span className="w-2 h-2 rounded-full bg-brand-danger animate-pulse" />
@@ -907,13 +855,16 @@ export default function LuckyDrawPage() {
                         <div className="flex-1 min-h-[280px] relative p-3 space-y-2 overflow-hidden flex flex-col justify-center">
                             {tickerNames.map((g, idx) => {
                                 const isHighlighted = highlightedId === g.id;
+                                // On reveal, everything except the winner row recedes.
+                                const recede = !!winner && !isHighlighted;
                                 return (
                                     <div
                                         key={`${g.id}-${idx}`}
-                                        className={`px-3 py-2.5 rounded-lg border flex items-center gap-3 transition-all animate-ticker-swap
+                                        className={`px-3 py-2.5 rounded-lg border flex items-center gap-3 transition-all duration-smooth animate-ticker-swap
                                             ${isHighlighted
-                                                ? 'bg-brand-primary/10 border-brand-primary scale-[1.02] z-10'
+                                                ? 'bg-brand-primary/10 border-brand-primary z-10 animate-winner-glow'
                                                 : 'bg-brand-text/5 border-brand-border opacity-80'}
+                                            ${recede ? 'blur-[2px] opacity-30' : ''}
                                         `}
                                     >
                                         <div className={`font-bold text-xs font-mono flex-shrink-0 ${isHighlighted ? 'text-brand-primary' : 'text-brand-primary/70'}`}>

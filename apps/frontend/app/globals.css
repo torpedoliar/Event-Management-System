@@ -204,3 +204,150 @@
   -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
   mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
 }
+
+/* =============================================
+   Lucky Draw — Celebration Layer
+   Restored after commit 23f18ab dropped it. Gold-only per
+   .docs/redesign-fix-spec.md (no pink/violet/blue accents).
+   Reduced motion: the blanket rule above already collapses every animation
+   here to its end state, and confetti opts out via disableForReducedMotion.
+   ============================================= */
+@layer components {
+  /* ── Grand prize button breathing ── */
+  @keyframes grand-pulse {
+    0%, 100% { box-shadow: 0 0 30px rgba(212,168,83,0.35), 0 0 60px rgba(212,168,83,0.15); }
+    50%      { box-shadow: 0 0 50px rgba(212,168,83,0.65), 0 0 100px rgba(212,168,83,0.30); }
+  }
+  .animate-grand-pulse { animation: grand-pulse 2s ease-in-out infinite; }
+
+  /* ── Reveal flash (used via animate-[screen-flash_0.3s_ease-out]) ── */
+  @keyframes screen-flash {
+    0%   { opacity: 0; }
+    50%  { opacity: 0.75; }
+    100% { opacity: 0; }
+  }
+
+  /* ── Tension shake — sub-pixel, text stays legible on a projector ── */
+  @keyframes screen-shake {
+    0%, 100% { transform: translate(0); }
+    10% { transform: translate(-2px, 1px); }
+    20% { transform: translate(2px, -1px); }
+    30% { transform: translate(-1px, 2px); }
+    40% { transform: translate(1px, -2px); }
+    50% { transform: translate(-2px, 0); }
+    60% { transform: translate(2px, 1px); }
+    70% { transform: translate(-1px, -1px); }
+    80% { transform: translate(1px, 2px); }
+    90% { transform: translate(0, -2px); }
+  }
+  .animate-screen-shake { animation: screen-shake 0.35s ease-in-out infinite; }
+
+  /* ── Spotlight overlay for the reveal ── */
+  @keyframes dark-reveal-in { 0% { opacity: 0; } 100% { opacity: 1; } }
+  @keyframes dark-reveal-pulse {
+    0%, 100% { filter: brightness(1); }
+    50%      { filter: brightness(1.12); }
+  }
+  .dark-reveal {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(55vw 55vh at 50% 50%, transparent 50%, rgba(0,0,0,0.95) 100%);
+    z-index: 45;
+    animation: dark-reveal-in 0.6s ease-out, dark-reveal-pulse 3s ease-in-out 0.6s infinite;
+  }
+
+  /* ── Ticker row swap ── */
+  @keyframes ticker-swap {
+    0%   { opacity: 1; transform: translateY(0); }
+    45%  { opacity: 0; transform: translateY(-100%); }
+    55%  { opacity: 0; transform: translateY(100%); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .animate-ticker-swap { animation: ticker-swap 0.15s ease-in-out; }
+
+  /* ── Tension mood tint on the candidate panel ── */
+  @keyframes tension-pulse {
+    0%, 100% { background-color: rgba(212,168,83,0); }
+    50%      { background-color: rgba(212,168,83,0.06); }
+  }
+  .ticker-mood-tension { animation: tension-pulse 1s ease-in-out infinite; }
+
+  /* ── Winner name pop — spring overshoot ── */
+  @keyframes winner-name-reveal {
+    0%   { opacity: 0; transform: translateY(30px) scale(0.9); }
+    60%  { opacity: 1; transform: translateY(-5px) scale(1.05); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .animate-winner-reveal { animation: winner-name-reveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+  /* ── Winner card sustained glow ── */
+  @keyframes winner-glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(212,168,83,0.30); border-color: rgba(212,168,83,0.50); }
+    50%      { box-shadow: 0 0 50px rgba(212,168,83,0.70), 0 0 80px rgba(212,168,83,0.30); border-color: rgba(212,168,83,1); }
+  }
+  .animate-winner-glow { animation: winner-glow 1.5s ease-in-out infinite; }
+
+  /* ── Classic: winner card takes focus, ticker recedes ── */
+  .winner-card {
+    animation: winner-name-reveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1),
+               winner-glow 1.5s ease-in-out 0.8s infinite;
+  }
+
+  /* ── Slot reels ── */
+  .slot-reel-container {
+    background: rgba(0,0,0,0.85);
+    border: 2px solid rgba(212,168,83,0.30);
+    border-radius: 0.5rem;
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.9), 0 0 15px rgba(212,168,83,0.10);
+    position: relative;
+    overflow: hidden;
+  }
+  .slot-reel-container.slot-locked {
+    border-color: rgba(212,168,83,0.70);
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.9), 0 0 25px rgba(212,168,83,0.40);
+  }
+  @keyframes slot-lock-flash {
+    0%   { background-color: rgba(212,168,83,0); }
+    30%  { background-color: rgba(212,168,83,0.35); }
+    100% { background-color: rgba(212,168,83,0); }
+  }
+  .slot-lock-flash::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    pointer-events: none;
+    animation: slot-lock-flash 0.4s ease-out;
+  }
+  .slot-frame {
+    background: linear-gradient(145deg, #272735 0%, #1A1A24 50%, #151520 100%);
+    border: 3px solid rgba(212,168,83,0.40);
+    border-radius: 1.5rem;
+    box-shadow: 0 0 60px rgba(212,168,83,0.15), inset 0 2px 0 rgba(255,255,255,0.05);
+    padding: 2rem;
+  }
+
+  /* ── Carousel: gold bloom around the winning wheel ── */
+  .shadow-festive { box-shadow: 0 0 80px rgba(212,168,83,0.18); }
+  .wheel-won {
+    animation: winner-glow 1.5s ease-in-out infinite;
+    border-radius: 1rem;
+  }
+}
+
+/* Degrade the celebration gracefully instead of killing it outright:
+   keep the state changes, drop the repeating motion. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-screen-shake,
+  .animate-grand-pulse,
+  .animate-ticker-swap,
+  .ticker-mood-tension,
+  .animate-winner-glow,
+  .winner-card,
+  .wheel-won,
+  .dark-reveal,
+  .slot-lock-flash::before {
+    animation: none !important;
+  }
+  .animate-winner-reveal { animation: fadeIn 0.2s ease-out !important; }
+}
