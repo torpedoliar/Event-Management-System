@@ -8,6 +8,7 @@ import Button from '@/components/ui/Button';
 import Link from 'next/link';
 import { LogIn, Users, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import Alert from '@/components/ui/Alert';
+import { useSSE } from '@/lib/sse-context';
 
 type EventConfig = {
   name?: string;
@@ -22,6 +23,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [eventCfg, setEventCfg] = useState<EventConfig | null>(null);
   const router = useRouter();
+  const { connect } = useSSE();
 
   useEffect(() => {
     // Redirect to dashboard if already logged in
@@ -52,6 +54,7 @@ export default function LoginPage() {
       }
       const data = await res.json();
       localStorage.setItem('token', data.access_token);
+      connect();
       router.replace('/admin/dashboard');
     } catch (err: any) {
       setError(err.message || 'Login gagal. Silakan coba lagi.');

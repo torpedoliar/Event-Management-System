@@ -7,6 +7,7 @@ type SSEContextType = {
     addEventListener: (type: string, listener: (event: MessageEvent) => void) => void;
     removeEventListener: (type: string, listener: (event: MessageEvent) => void) => void;
     connected: boolean;
+    connect: () => void;
 };
 
 const SSEContext = createContext<SSEContextType | null>(null);
@@ -138,7 +139,7 @@ export function SSEProvider({ children }: { children: ReactNode }) {
     }, []);
 
     return (
-        <SSEContext.Provider value={{ addEventListener, removeEventListener, connected }}>
+        <SSEContext.Provider value={{ addEventListener, removeEventListener, connected, connect }}>
             {children}
         </SSEContext.Provider>
     );
