@@ -210,7 +210,9 @@
    Restored after commit 23f18ab dropped it. Gold-only per
    .docs/redesign-fix-spec.md (no pink/violet/blue accents).
    Reduced motion: the blanket rule above already collapses every animation
-   here to its end state, and confetti opts out via disableForReducedMotion.
+   here to its end state. Confetti is not muted outright — lib/celebrate.ts
+   halves the particle count instead, since the burst is a deliberate response
+   to the operator's button press, not ambient motion.
    ============================================= */
 @layer components {
   /* ── Grand prize button breathing ── */
@@ -350,4 +352,16 @@
     animation: none !important;
   }
   .animate-winner-reveal { animation: fadeIn 0.2s ease-out !important; }
+
+  /* Without the pulse the winner would look identical to a losing row.
+     Pin the glow to the animation's bright frame so the payoff still reads. */
+  .winner-card,
+  .animate-winner-glow,
+  .wheel-won {
+    box-shadow: 0 0 50px rgba(212,168,83,0.70), 0 0 80px rgba(212,168,83,0.30);
+    border-color: rgba(212,168,83,1);
+  }
+  .animate-grand-pulse {
+    box-shadow: 0 0 50px rgba(212,168,83,0.65), 0 0 100px rgba(212,168,83,0.30);
+  }
 }
