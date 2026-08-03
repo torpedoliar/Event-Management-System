@@ -232,23 +232,7 @@ export class PublicController {
       res.write(`data: ${JSON.stringify(data)}\n\n`);
     };
 
-    const off = onEvent((ev) => {
-      if (ev.type === 'checkin') send('checkin', ev.data);
-      if (ev.type === 'uncheckin') send('uncheckin', ev.data);
-      if (ev.type === 'config') send('config', ev.data);
-      if (ev.type === 'preview') send('preview', ev.data);
-      if (ev.type === 'prize_draw') send('prize_draw', ev.data);
-      if (ev.type === 'prize_reset') send('prize_reset', ev.data);
-      if (ev.type === 'prize_collected') send('prize_collected', ev.data);
-      if (ev.type === 'prize_uncollected') send('prize_uncollected', ev.data);
-      if (ev.type === 'guest-update') send('guest-update', ev.data);
-      if (ev.type === 'guest_created_souvenir') send('guest_created_souvenir', ev.data);
-      if (ev.type === 'souvenir_given') send('souvenir_given', ev.data);
-      if (ev.type === 'souvenir_removed') send('souvenir_removed', ev.data);
-      if (ev.type === 'souvenir_reset') send('souvenir_reset', ev.data);
-      if (ev.type === 'event_change') send('event_change', ev.data);
-      if (ev.type === 'sync_complete') send('sync_complete', ev.data);
-    });
+    const off = onEvent((ev) => send(ev.type, ev.data));
 
     const heartbeat = setInterval(() => {
       res.write(`event: ping\n`);

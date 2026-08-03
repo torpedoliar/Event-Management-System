@@ -333,7 +333,10 @@ export default function CheckinPage() {
           setStationConfig(config);
 
           // Initialize sync service
-          await offlineSyncService.init(config.stationId, config.stationName, 30);
+          const health = await fetch(`${apiBase()}/public/health`)
+            .then(r => r.ok ? r.json() : null)
+            .catch(() => null);
+          await offlineSyncService.init(config.stationId, config.stationName, health?.offlineSyncInterval ?? 30);
         } else {
           // Show station setup on first visit
           setShowStationSetup(true);

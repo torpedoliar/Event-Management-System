@@ -18,7 +18,7 @@ const EVENT_TYPES = [
     'prize_draw', 'prize_reset', 'prize_collected', 'prize_uncollected',
     'guest-update', 'guest_created_souvenir',
     'souvenir_given', 'souvenir_removed', 'souvenir_reset',
-    'event_change',
+    'event_change', 'sync_complete',
     // Tournament events
     'match_score_update', 'match_started', 'match_completed', 'match_cancelled',
     'match_updated', 'bracket_updated', 'tournament_updated', 'tournament_checkin'
@@ -42,7 +42,7 @@ export function SSEProvider({ children }: { children: ReactNode }) {
         // R-001: Stream requires authentication. Do not connect without a token.
         const token = localStorage.getItem('token');
         if (!token) {
-            console.log('[SSE] No auth token found, skipping connection');
+            console.warn('[SSE] No auth token found; realtime stream disabled for this page');
             setConnected(false);
             return;
         }

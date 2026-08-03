@@ -250,9 +250,9 @@
     "semantic_hash": "cf021eef63d9e99a8a391b298f438511"
   },
   "apps/backend/src/public/public.controller.ts": {
-    "mtime": 1778663327.626564,
-    "ast_hash": "45dfe75d3f2d2d025afb5d38300a9c18",
-    "semantic_hash": "45dfe75d3f2d2d025afb5d38300a9c18"
+    "mtime": 1785724546.1123118,
+    "ast_hash": "cf3c9eddeaa387cc82458048e8fc46d1",
+    "semantic_hash": ""
   },
   "apps/backend/src/public/public.module.ts": {
     "mtime": 1776670938.4404304,
@@ -370,9 +370,9 @@
     "semantic_hash": "f81b6227e1a668454c5bba9dda4e5a22"
   },
   "apps/frontend/app/(main)/admin/login/page.tsx": {
-    "mtime": 1783694134.9108908,
-    "ast_hash": "9b4b250c3ac0bbeba7d4aa1bf1f2c99d",
-    "semantic_hash": "9b4b250c3ac0bbeba7d4aa1bf1f2c99d"
+    "mtime": 1785478465.186821,
+    "ast_hash": "6e9de6a2bf92011be6ef05dd340120c9",
+    "semantic_hash": ""
   },
   "apps/frontend/app/(main)/admin/prizes/page.tsx": {
     "mtime": 1783755704.2036314,
@@ -415,29 +415,29 @@
     "semantic_hash": "2d55402dbd1b4305d6bf1dfd831841d4"
   },
   "apps/frontend/app/(main)/checkin/page.tsx": {
-    "mtime": 1783755545.2943816,
-    "ast_hash": "1a5d6c767d1209cf44692876247f2183",
-    "semantic_hash": "1a5d6c767d1209cf44692876247f2183"
+    "mtime": 1785724546.113314,
+    "ast_hash": "d3143c27c2c0f138ef1c1043ca115a9a",
+    "semantic_hash": ""
   },
   "apps/frontend/app/(main)/layout.tsx": {
-    "mtime": 1782479175.3162866,
-    "ast_hash": "1bcc3985256d17fbd6fd50b0b66b14c2",
-    "semantic_hash": "1bcc3985256d17fbd6fd50b0b66b14c2"
+    "mtime": 1785478501.2741182,
+    "ast_hash": "29e471f142296b887472ee8d972477c7",
+    "semantic_hash": ""
   },
   "apps/frontend/app/(main)/luckydraw/carousel/page.tsx": {
-    "mtime": 1783700621.2775338,
-    "ast_hash": "a03629f3f2852dcfa746caca9997c3d7",
-    "semantic_hash": "a03629f3f2852dcfa746caca9997c3d7"
+    "mtime": 1785464273.1575809,
+    "ast_hash": "c5a03d541d5f4b2f20cac0c399bc6695",
+    "semantic_hash": ""
   },
   "apps/frontend/app/(main)/luckydraw/display/page.tsx": {
-    "mtime": 1783753081.172471,
-    "ast_hash": "5d2d072892ab45f995df72026777098d",
-    "semantic_hash": "5d2d072892ab45f995df72026777098d"
+    "mtime": 1785464280.44772,
+    "ast_hash": "6281d1a29fa90f305e1590d09faae5a3",
+    "semantic_hash": ""
   },
   "apps/frontend/app/(main)/luckydraw/page.tsx": {
-    "mtime": 1783753960.7270806,
-    "ast_hash": "50ce61516a0d27db600951237aebc8fe",
-    "semantic_hash": "50ce61516a0d27db600951237aebc8fe"
+    "mtime": 1785464252.2265687,
+    "ast_hash": "7aafa783ba60f8ccf2ae54c5b9981e6a",
+    "semantic_hash": ""
   },
   "apps/frontend/app/(main)/luckydraw/winners/page.tsx": {
     "mtime": 1783700625.6001449,
@@ -500,9 +500,9 @@
     "semantic_hash": "a8a382fc13671169276c73f7ca71f60e"
   },
   "apps/frontend/components/LuckyDraw3DWheel.tsx": {
-    "mtime": 1783752756.6560695,
-    "ast_hash": "dc1795d4a95ee4fcb6673cc560c12f33",
-    "semantic_hash": "dc1795d4a95ee4fcb6673cc560c12f33"
+    "mtime": 1785461189.8675306,
+    "ast_hash": "5c55bb692169ec21aba2dedcb8c6f5ae",
+    "semantic_hash": ""
   },
   "apps/frontend/components/PrizeReceiptModal.tsx": {
     "mtime": 1783700918.3321984,
@@ -530,9 +530,9 @@
     "semantic_hash": "4deaa0e9060ee75b9cbb33388730abf9"
   },
   "apps/frontend/components/TopNav.tsx": {
-    "mtime": 1783763957.0393357,
-    "ast_hash": "ffecdc282d6097c02c4dbe4d159389d3",
-    "semantic_hash": "ffecdc282d6097c02c4dbe4d159389d3"
+    "mtime": 1784036884.3218865,
+    "ast_hash": "b4f38121fce22aebfb701ab655ffb754",
+    "semantic_hash": ""
   },
   "apps/frontend/components/WebcamCapture.tsx": {
     "mtime": 1783700939.2365203,
@@ -685,9 +685,9 @@
     "semantic_hash": "a04f8d04422001647c72c8675f5c2359"
   },
   "apps/frontend/lib/api.ts": {
-    "mtime": 1783694584.6525059,
-    "ast_hash": "715e24d584d15c2ed6d2d401e5e46217",
-    "semantic_hash": "715e24d584d15c2ed6d2d401e5e46217"
+    "mtime": 1785426222.3796093,
+    "ast_hash": "b998b8ff9275ea92e751614c3d456e05",
+    "semantic_hash": ""
   },
   "apps/frontend/lib/connection-status.ts": {
     "mtime": 1776946547.7564266,
@@ -720,9 +720,9 @@
     "semantic_hash": "76b34d155858025e00cd069fb1df69b1"
   },
   "apps/frontend/lib/sse-context.tsx": {
-    "mtime": 1783567982.0213094,
-    "ast_hash": "6dcc4201da39b16cc72239d36b28dba4",
-    "semantic_hash": "6dcc4201da39b16cc72239d36b28dba4"
+    "mtime": 1785724546.1052413,
+    "ast_hash": "1d2ce88310b9e3a4193c6c309e9f7e7d",
+    "semantic_hash": ""
   },
   "apps/frontend/lib/utils.ts": {
     "mtime": 1783698090.1805847,
@@ -755,12 +755,12 @@
     "semantic_hash": "8640f9b2e6475cc3f5b1ff4548925765"
   },
   "apps/frontend/public/sw.js": {
-    "mtime": 1783754205.166077,
-    "ast_hash": "edd6a8a2e0c6ffb822695032a3e93d55",
-    "semantic_hash": "edd6a8a2e0c6ffb822695032a3e93d55"
+    "mtime": 1785725118.6323538,
+    "ast_hash": "5f907a650c5492f8a53cc00e4d0125e6",
+    "semantic_hash": ""
   },
   "apps/frontend/public/workbox-c2c0676f.js": {
-    "mtime": 1783754205.166077,
+    "mtime": 1785725118.6323538,
     "ast_hash": "80e63d1bc987fbb9f079f9d6a8c9a60e",
     "semantic_hash": "80e63d1bc987fbb9f079f9d6a8c9a60e"
   },
@@ -770,14 +770,14 @@
     "semantic_hash": "bdfa5a1f2f630d466178985e66aafec9"
   },
   "apps/frontend/tailwind.config.ts": {
-    "mtime": 1783754154.6534736,
-    "ast_hash": "3fd3ef1e34867b11e9ad3f321336b9a9",
-    "semantic_hash": "3fd3ef1e34867b11e9ad3f321336b9a9"
+    "mtime": 1784036687.8540113,
+    "ast_hash": "550e43b07da1d902052494b9912dea30",
+    "semantic_hash": ""
   },
   "apps/frontend/tsconfig.json": {
-    "mtime": 1782478436.6179595,
-    "ast_hash": "f3b5683b5551abdad550cf0df6115fd7",
-    "semantic_hash": "f3b5683b5551abdad550cf0df6115fd7"
+    "mtime": 1785426954.9949753,
+    "ast_hash": "2feb02baa45c425d9e9b765d868717b2",
+    "semantic_hash": ""
   },
   "apps/frontend/types/offline.types.ts": {
     "mtime": 1776497086.5421422,
@@ -785,9 +785,9 @@
     "semantic_hash": "0d211e481a3556e3ca526c05615d0a35"
   },
   "deploy-prod.sh": {
-    "mtime": 1776657677.1187072,
-    "ast_hash": "710dd541ba41717db9c17161ad4fa91c",
-    "semantic_hash": "710dd541ba41717db9c17161ad4fa91c"
+    "mtime": 1785420423.367522,
+    "ast_hash": "cfd4111ce1d7aee0f6a13379cc7d716e",
+    "semantic_hash": ""
   },
   "scripts/apply-rapid-scan-souvenir.js": {
     "mtime": 1776564900.09172,
@@ -918,11 +918,6 @@
     "mtime": 1763563851.0000582,
     "ast_hash": "8e5db222b3800b698965f9c42c023c52",
     "semantic_hash": "8e5db222b3800b698965f9c42c023c52"
-  },
-  "docs/DEPLOY_PRODUCTION.md": {
-    "mtime": 1765167209.9967678,
-    "ast_hash": "791ab38e52134000e35ab5b70176e97d",
-    "semantic_hash": "791ab38e52134000e35ab5b70176e97d"
   },
   "docs/DOCKER_DEPLOY.md": {
     "mtime": 1763564331.583259,
@@ -1235,19 +1230,19 @@
     "semantic_hash": "c30723d16421b84557da4ddd44a0988a"
   },
   "apps/frontend/components/tournament/bracket/BracketConnector.tsx": {
-    "mtime": 1782799893.2253375,
-    "ast_hash": "d74afe8671876725181c708062352fbe",
-    "semantic_hash": "d74afe8671876725181c708062352fbe"
+    "mtime": 1784013873.9721391,
+    "ast_hash": "a73c50835988849391c63fb7909a5ffa",
+    "semantic_hash": ""
   },
   "apps/frontend/components/tournament/bracket/BracketMatchBox.tsx": {
-    "mtime": 1783816847.5080283,
-    "ast_hash": "b0d2e802465f8880ef50eddadcec4665",
-    "semantic_hash": "b0d2e802465f8880ef50eddadcec4665"
+    "mtime": 1784014256.7781742,
+    "ast_hash": "7011b939139621671c1ecb61d14a0a13",
+    "semantic_hash": ""
   },
   "apps/frontend/components/tournament/bracket/BracketView.tsx": {
-    "mtime": 1783698793.820031,
-    "ast_hash": "6faf8cbdaffa4317e2cf6271f4501c8b",
-    "semantic_hash": "6faf8cbdaffa4317e2cf6271f4501c8b"
+    "mtime": 1784014247.253803,
+    "ast_hash": "e833815a74991cf85ae1ece7dc647845",
+    "semantic_hash": ""
   },
   "apps/frontend/components/tournament/bracket/index.ts": {
     "mtime": 1782784445.988615,
@@ -1255,14 +1250,14 @@
     "semantic_hash": "5fb77f4ac368b6e29447e5d36cd18e9f"
   },
   "apps/frontend/components/tournament/team/TeamCard.tsx": {
-    "mtime": 1783700851.6925688,
-    "ast_hash": "88432977b73ec595c6a0ac4848c2db38",
-    "semantic_hash": "88432977b73ec595c6a0ac4848c2db38"
+    "mtime": 1784014436.901713,
+    "ast_hash": "a205684882ba361f12e8ac8d6095ee0a",
+    "semantic_hash": ""
   },
   "apps/frontend/components/tournament/team/TeamLogo.tsx": {
-    "mtime": 1783700692.0434601,
-    "ast_hash": "285cf9b0d36ca7e74c9a4af3603fa40f",
-    "semantic_hash": "285cf9b0d36ca7e74c9a4af3603fa40f"
+    "mtime": 1783991494.1952577,
+    "ast_hash": "29a766bd72bde1cb25c795e41fb661c3",
+    "semantic_hash": ""
   },
   "apps/frontend/components/tournament/team/TeamMemberList.tsx": {
     "mtime": 1783568176.1597242,
@@ -1275,9 +1270,9 @@
     "semantic_hash": "7431456f7c63b219aabe2d30dc1a1a59"
   },
   "apps/frontend/components/tournament/match/LiveMatchDisplay.tsx": {
-    "mtime": 1783816828.0720844,
-    "ast_hash": "27a9c7071630943395b611446806c03a",
-    "semantic_hash": "27a9c7071630943395b611446806c03a"
+    "mtime": 1784014358.0215173,
+    "ast_hash": "9f217cf72181ec2b83ce1b87240a39eb",
+    "semantic_hash": ""
   },
   "apps/frontend/components/tournament/match/MatchCard.tsx": {
     "mtime": 1783699638.737357,
@@ -1290,9 +1285,9 @@
     "semantic_hash": "e8412511394b762d60286e63884d6a24"
   },
   "apps/frontend/components/tournament/match/ScoreInput.tsx": {
-    "mtime": 1783816889.4702902,
-    "ast_hash": "99fcbbc54fafb79833fd8ac8baea19ac",
-    "semantic_hash": "99fcbbc54fafb79833fd8ac8baea19ac"
+    "mtime": 1784014481.5102186,
+    "ast_hash": "312bf651a3a3097042e496da337b1c5f",
+    "semantic_hash": ""
   },
   "apps/frontend/components/tournament/match/index.ts": {
     "mtime": 1783520535.11226,
@@ -1305,9 +1300,9 @@
     "semantic_hash": "c7ef1c8af5b11f5a0c5bd4b1d08c65ec"
   },
   "apps/frontend/components/tournament/TournamentForm.tsx": {
-    "mtime": 1783699312.2746928,
-    "ast_hash": "b7f7e03aa86e8dbe9a0d0146f082154d",
-    "semantic_hash": "b7f7e03aa86e8dbe9a0d0146f082154d"
+    "mtime": 1784014490.4686692,
+    "ast_hash": "e723d1f8635badf354e7878faaf97bb6",
+    "semantic_hash": ""
   },
   "apps/frontend/components/tournament/TournamentTabs.tsx": {
     "mtime": 1782799350.383829,
@@ -1315,9 +1310,9 @@
     "semantic_hash": "4b23b6c979ba40f74991d13e703f0586"
   },
   "apps/frontend/app/(main)/tournament/bracket/[id]/page.tsx": {
-    "mtime": 1783699553.8632216,
-    "ast_hash": "6def1decbee8fd6446c27352d287982a",
-    "semantic_hash": "6def1decbee8fd6446c27352d287982a"
+    "mtime": 1784014410.8755195,
+    "ast_hash": "690fdf9ec6ad04579060ceaa583ad9b9",
+    "semantic_hash": ""
   },
   "apps/frontend/app/(main)/admin/tournaments/[id]/edit/page.tsx": {
     "mtime": 1783571199.6608217,
@@ -1325,9 +1320,9 @@
     "semantic_hash": "9f782b356a8c051a7a7ac0c5ae30b0e6"
   },
   "apps/frontend/app/(main)/admin/tournaments/[id]/page.tsx": {
-    "mtime": 1783571186.4961765,
-    "ast_hash": "397daaca878e43a112953e8a222f7d7a",
-    "semantic_hash": "397daaca878e43a112953e8a222f7d7a"
+    "mtime": 1784036698.775795,
+    "ast_hash": "d44ba4a4219f1fdae0fcc176cc261fdb",
+    "semantic_hash": ""
   },
   "apps/frontend/app/(main)/admin/tournaments/new/page.tsx": {
     "mtime": 1782800116.2573938,
@@ -1335,9 +1330,9 @@
     "semantic_hash": "f28b928fb19d54d2179ff2638956c2c6"
   },
   "apps/frontend/app/(main)/admin/tournaments/page.tsx": {
-    "mtime": 1783815091.1064525,
-    "ast_hash": "5fc5192b5c3796327b2cab33bede2033",
-    "semantic_hash": "5fc5192b5c3796327b2cab33bede2033"
+    "mtime": 1784014216.2824697,
+    "ast_hash": "dedce28189cba9198b4a7e01a7fafc1b",
+    "semantic_hash": ""
   },
   "apps/frontend/app/(main)/live/page.tsx": {
     "mtime": 1783700608.0751884,
@@ -1350,9 +1345,9 @@
     "semantic_hash": "3ab024f7af7f481d2c2694e66760ee11"
   },
   "apps/frontend/components/tournament/match/LiveMatchCard.tsx": {
-    "mtime": 1783699663.5727386,
-    "ast_hash": "817d78444019d975178fc30becc266f7",
-    "semantic_hash": "817d78444019d975178fc30becc266f7"
+    "mtime": 1784014451.989866,
+    "ast_hash": "afc6e55874d80688cd65bd032f0ffa44",
+    "semantic_hash": ""
   },
   "apps/backend/test/landing-page/landing-page.service.spec.ts": {
     "mtime": 1782793029.631987,
@@ -1365,14 +1360,14 @@
     "semantic_hash": "5d552002d87d5a0b22afd4d52176a206"
   },
   "apps/frontend/components/tournament/match/MatchScoringModal.tsx": {
-    "mtime": 1783816943.9482665,
-    "ast_hash": "db9ad1c02f65dc46d24bb7aa703cc0e3",
-    "semantic_hash": "db9ad1c02f65dc46d24bb7aa703cc0e3"
+    "mtime": 1783859366.813763,
+    "ast_hash": "73dd1fe142c56e7d191823d0170a4e1a",
+    "semantic_hash": ""
   },
   "apps/frontend/components/tournament/team/TeamFormModal.tsx": {
-    "mtime": 1783415544.2362971,
-    "ast_hash": "cc71d4c0c46e6a5647f6c6fccaf51b77",
-    "semantic_hash": "cc71d4c0c46e6a5647f6c6fccaf51b77"
+    "mtime": 1784014504.6749861,
+    "ast_hash": "ef1ddef0bfeb123456ef6b565176a547",
+    "semantic_hash": ""
   },
   "apps/frontend/components/tournament/team/TeamMemberFormModal.tsx": {
     "mtime": 1783656429.9953816,
@@ -1583,5 +1578,45 @@
     "mtime": 1783755181.065063,
     "ast_hash": "8fcdd5f2de60b489b099a197fb039bea",
     "semantic_hash": "8fcdd5f2de60b489b099a197fb039bea"
+  },
+  "apps/frontend/lib/api.check.ts": {
+    "mtime": 1785426948.4339676,
+    "ast_hash": "4af51bd30432ebf4d276da0ac959f523",
+    "semantic_hash": ""
+  },
+  "apps/frontend/lib/celebrate.check.ts": {
+    "mtime": 1785483012.0582194,
+    "ast_hash": "2ed667740a15556685e67ca50347ded1",
+    "semantic_hash": ""
+  },
+  "apps/frontend/lib/celebrate.ts": {
+    "mtime": 1785482815.3012319,
+    "ast_hash": "7110eae8dcc659f55d09a8320aaf14e6",
+    "semantic_hash": ""
+  },
+  "scripts/check-sse-realtime.mjs": {
+    "mtime": 1785724531.5570464,
+    "ast_hash": "80077b0f8519e6882e7fce75b68f43fe",
+    "semantic_hash": ""
+  },
+  "Cara Setup Document/1. DEPLOY_PRODUCTION.md": {
+    "mtime": 1765167209.9967678,
+    "ast_hash": "791ab38e52134000e35ab5b70176e97d",
+    "semantic_hash": ""
+  },
+  "Cara Setup Document/2. nginx-proxy-manager-setup.md": {
+    "mtime": 1776349973.2648282,
+    "ast_hash": "925a4e0407b4162187ac8e9543a82734",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-08-03-fix-sse-realtime.md": {
+    "mtime": 1785723673.3638868,
+    "ast_hash": "6ee4bc1d976eb222e914524fd413f321",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/implementation_plan.md": {
+    "mtime": 1784012304.432072,
+    "ast_hash": "d207b2fe306c7aa2de3b8ee4c981ca1b",
+    "semantic_hash": ""
   }
 }
