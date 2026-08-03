@@ -415,8 +415,8 @@
     "semantic_hash": "2d55402dbd1b4305d6bf1dfd831841d4"
   },
   "apps/frontend/app/(main)/checkin/page.tsx": {
-    "mtime": 1785724546.113314,
-    "ast_hash": "d3143c27c2c0f138ef1c1043ca115a9a",
+    "mtime": 1785727504.324057,
+    "ast_hash": "599eee2d36aed323acee5f1af71a2ad5",
     "semantic_hash": ""
   },
   "apps/frontend/app/(main)/layout.tsx": {
@@ -755,12 +755,12 @@
     "semantic_hash": "8640f9b2e6475cc3f5b1ff4548925765"
   },
   "apps/frontend/public/sw.js": {
-    "mtime": 1785725118.6323538,
-    "ast_hash": "5f907a650c5492f8a53cc00e4d0125e6",
+    "mtime": 1785729192.6382935,
+    "ast_hash": "62e95391ce413a72ace50570bf1f1b1a",
     "semantic_hash": ""
   },
   "apps/frontend/public/workbox-c2c0676f.js": {
-    "mtime": 1785725118.6323538,
+    "mtime": 1785729192.6372943,
     "ast_hash": "80e63d1bc987fbb9f079f9d6a8c9a60e",
     "semantic_hash": "80e63d1bc987fbb9f079f9d6a8c9a60e"
   },
@@ -1617,6 +1617,11 @@
   "docs/superpowers/plans/implementation_plan.md": {
     "mtime": 1784012304.432072,
     "ast_hash": "d207b2fe306c7aa2de3b8ee4c981ca1b",
+    "semantic_hash": ""
+  },
+  "scripts/check-checkin-name-confirm.mjs": {
+    "mtime": 1785727530.4270806,
+    "ast_hash": "6fce250122ccc986fa35b85968f76a60",
     "semantic_hash": ""
   }
 }

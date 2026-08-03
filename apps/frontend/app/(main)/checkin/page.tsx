@@ -80,6 +80,11 @@ function cleanQrContent(text: string): string {
   return text;
 }
 
+function isNameSearchQuery(text: string): boolean {
+  const query = text.trim();
+  return !!query && !/[\d\-]/.test(query) && !/^[A-Z0-9_\-]+$/.test(query);
+}
+
 import { useSSE } from "@/lib/sse-context";
 import RequireAuth from "@/components/RequireAuth";
 
@@ -185,6 +190,11 @@ export default function CheckinPage() {
           if (!res.ok) throw new Error('Search failed');
           const data = await res.json();
           if (data.length === 1) {
+            if (isNameSearchQuery(activeQuery)) {
+              setResults([data[0]]);
+              setPendingNameCheckin({ guest: data[0], source: activeQuery, fromQueue: true });
+              break;
+            }
             await doCheckinWrapperForQueue(data[0], false, activeQuery);
           } else if (data.length === 0) {
             if (autoCreateGuest) {
@@ -273,6 +283,7 @@ export default function CheckinPage() {
   const [q, setQ] = useState("");
   const [results, setResults] = useState<Guest[]>([]);
   const [selected, setSelected] = useState<Guest | null>(null);
+  const [pendingNameCheckin, setPendingNameCheckin] = useState<{ guest: Guest; source: string; fromQueue: boolean } | null>(null);
   const [checkedGuest, setCheckedGuest] = useState<Guest | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [history, setHistory] = useState<Guest[]>([]);
@@ -543,17 +554,19 @@ export default function CheckinPage() {
     setError(null);
     setSelected(null);
     setCheckedGuest(null);
+    setPendingNameCheckin(null);
     setResults([]); // Clear stale results before new search
     clearPopupTimeout(); // Clear any existing popup
     const params = new URLSearchParams();
-    if (!q.trim()) return;
+    const searchQuery = q.trim();
+    if (!searchQuery) return;
     // gunakan q untuk keduanya agar mendukung ID atau Nama
-    const cleanQ = cleanQrContent(q.trim());
+    const cleanQ = cleanQrContent(searchQuery);
     params.set('guestId', cleanQ);
-    params.set('name', q.trim());
+    params.set('name', searchQuery);
     // Detect if input looks like a QR code / ID (contains digits, dashes, or is all uppercase)
     // Pure alphabetic names like "Budi" should still trigger fuzzy search
-    const looksLikeId = /[\d\-]/.test(q.trim()) || /^[A-Z0-9_\-]+$/.test(q.trim());
+    const looksLikeId = !isNameSearchQuery(searchQuery);
     if (looksLikeId) {
       params.set('exact', 'true');
     }
@@ -582,6 +595,10 @@ export default function CheckinPage() {
       setQ(""); // Auto clear input after search
       // auto check-in hasil pertama bila ada HANYA JIKA hasil cuma 1
       if (data.length === 1) {
+        if (isNameSearchQuery(searchQuery)) {
+          setPendingNameCheckin({ guest: data[0], source: searchQuery, fromQueue: false });
+          return;
+        }
         await doCheckin(data[0]);
       } else if (data.length === 0) {
         // Guest not found - offer to create if setting is enabled
@@ -856,6 +873,22 @@ export default function CheckinPage() {
     setUncheckTarget(null);
     setUncheckPassword('');
     setUncheckReason('');
+  };
+
+  const confirmNameCheckin = async () => {
+    if (!pendingNameCheckin) return;
+    const pending = pendingNameCheckin;
+    setPendingNameCheckin(null);
+    if (pending.fromQueue) {
+      await doCheckinWrapperForQueue(pending.guest, false, pending.source);
+    } else {
+      await doCheckin(pending.guest);
+    }
+  };
+
+  const cancelNameCheckin = () => {
+    setPendingNameCheckin(null);
+    setTimeout(() => inputRef.current?.focus(), 100);
   };
 
   const doUncheckin = async () => {
@@ -1798,6 +1831,52 @@ export default function CheckinPage() {
             )}
           </div>
         </div>
+
+        <Modal
+          open={!!pendingNameCheckin}
+          onClose={cancelNameCheckin}
+          title="Konfirmasi nama tamu"
+          description={`Pencarian "${pendingNameCheckin?.source ?? ''}" menemukan satu tamu. Pastikan nama sudah benar sebelum check-in.`}
+          footer={
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Button variant="outline" className="flex-1" onClick={cancelNameCheckin} disabled={checking}>
+                Batal
+              </Button>
+              <Button className="flex-1" onClick={confirmNameCheckin} loading={checking}>
+                <CheckCircle size={18} />
+                Konfirmasi Check-in
+              </Button>
+            </div>
+          }
+        >
+          {pendingNameCheckin && (
+            <div className="space-y-4">
+              <div className="rounded-xl border border-brand-warning/30 bg-brand-warning/10 p-4">
+                <div className="text-xs uppercase tracking-wider text-brand-warning font-medium">Periksa ulang</div>
+                <div className="mt-2 text-2xl font-semibold text-brand-text leading-tight">{pendingNameCheckin.guest.name}</div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                <div>
+                  <div className="text-xs uppercase tracking-wider text-brand-textMuted">ID Tamu</div>
+                  <div className="font-mono font-semibold text-brand-primary mt-1">{pendingNameCheckin.guest.guestId}</div>
+                </div>
+                <div>
+                  <div className="text-xs uppercase tracking-wider text-brand-textMuted">Meja / Ruangan</div>
+                  <div className="font-semibold text-brand-text mt-1">{pendingNameCheckin.guest.tableLocation || '-'}</div>
+                </div>
+                {pendingNameCheckin.guest.company && (
+                  <div className="sm:col-span-2">
+                    <div className="text-xs uppercase tracking-wider text-brand-textMuted">Perusahaan</div>
+                    <div className="font-semibold text-brand-text mt-1">
+                      {pendingNameCheckin.guest.company}
+                      {pendingNameCheckin.guest.division && <span className="text-brand-textMuted"> - {pendingNameCheckin.guest.division}</span>}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </Modal>
 
         {/* Confirmation full display */}
         {checkedGuest && (
