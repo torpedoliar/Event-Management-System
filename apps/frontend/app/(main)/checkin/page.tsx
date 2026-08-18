@@ -203,7 +203,9 @@ export default function CheckinPage() {
               appendLog(activeQuery, 'NOT_FOUND', 'Tamu tidak ditemukan server.');
             }
           } else {
-            appendLog(activeQuery, 'ERROR', `Ditemukan ${data.length}. Butuh manual klik.`);
+            setResults(data);
+            appendLog(activeQuery, 'DUPLICATE', `Ditemukan ${data.length} tamu. Silakan pilih tamu di bawah.`);
+            break;
           }
         } catch (e: any) {
           const cleanSearchQ = cleanQrContent(activeQuery);
@@ -221,24 +223,29 @@ export default function CheckinPage() {
           }
           if (matchedGuests.length === 1) {
              const matchedGuest = matchedGuests[0];
+             const guestFromCache: Guest = {
+               id: matchedGuest.id,
+               guestId: matchedGuest.guestId,
+               name: matchedGuest.name,
+               queueNumber: 0,
+               tableLocation: '',
+               checkedIn: matchedGuest.checkedIn,
+               checkedInAt: matchedGuest.lastCheckinAt,
+               checkinCount: matchedGuest.checkinCount,
+               photoUrl: matchedGuest.photoUrl,
+             };
+
+             if (isNameSearchQuery(activeQuery)) {
+               setResults([guestFromCache]);
+               setPendingNameCheckin({ guest: guestFromCache, source: activeQuery, fromQueue: true });
+               break;
+             }
              
              // Check for duplicate check-in offline
              if (matchedGuest.checkedIn && !cfg?.allowMultipleCheckinPerCounter) {
                appendLog(activeQuery, 'DUPLICATE', 'Tamu sudah Check-In Offline sebelumnya.');
-               // Show popup for duplicate too
-               const dupGuest: Guest = {
-                 id: matchedGuest.id,
-                 guestId: matchedGuest.guestId,
-                 name: matchedGuest.name,
-                 queueNumber: 0,
-                 tableLocation: '',
-                 checkedIn: matchedGuest.checkedIn,
-                 checkedInAt: matchedGuest.lastCheckinAt,
-                 checkinCount: matchedGuest.checkinCount,
-                 photoUrl: matchedGuest.photoUrl,
-               };
-               setCheckedGuest(dupGuest);
-               setSelected(dupGuest);
+               setCheckedGuest(guestFromCache);
+               setSelected(guestFromCache);
                setIsDuplicateCheckIn(true);
                startPopupTimeout();
                continue;
@@ -252,23 +259,33 @@ export default function CheckinPage() {
              
              // Show popup for successful offline check-in
              const offlineGuest: Guest = {
-               id: matchedGuest.id,
-               guestId: matchedGuest.guestId,
-               name: matchedGuest.name,
-               queueNumber: 0,
-               tableLocation: '',
+               ...guestFromCache,
                checkedIn: true,
                checkedInAt: new Date().toISOString(),
                checkinCount: (matchedGuest.checkinCount || 0) + 1,
-               photoUrl: matchedGuest.photoUrl,
              };
              setCheckedGuest(offlineGuest);
              setSelected(offlineGuest);
              setIsDuplicateCheckIn(false);
              refreshHistory();
              startPopupTimeout();
+          } else if (matchedGuests.length > 1) {
+             const guestResults: Guest[] = matchedGuests.map(g => ({
+               id: g.id,
+               guestId: g.guestId,
+               name: g.name,
+               queueNumber: 0,
+               tableLocation: '',
+               checkedIn: g.checkedIn,
+               checkedInAt: g.lastCheckinAt,
+               checkinCount: g.checkinCount,
+               photoUrl: g.photoUrl,
+             }));
+             setResults(guestResults);
+             appendLog(activeQuery, 'DUPLICATE', `Ditemukan ${matchedGuests.length} tamu (offline). Silakan pilih tamu di bawah.`);
+             break;
           } else {
-             appendLog(activeQuery, 'NOT_FOUND', 'Offline ID tidak dikenali atau multiple.');
+             appendLog(activeQuery, 'NOT_FOUND', 'Tamu tidak ditemukan dalam cache offline.');
           }
         }
         await new Promise(res => setTimeout(res, 50));
@@ -654,6 +671,24 @@ export default function CheckinPage() {
           if (matchedGuests.length === 1) {
             // Found single match - proceed with offline check-in
             const matchedGuest = matchedGuests[0];
+            const guestFromCache: Guest = {
+              id: matchedGuest.id,
+              guestId: matchedGuest.guestId,
+              name: matchedGuest.name,
+              queueNumber: 0,
+              tableLocation: '',
+              checkedIn: matchedGuest.checkedIn,
+              checkedInAt: matchedGuest.lastCheckinAt,
+              checkinCount: matchedGuest.checkinCount,
+              photoUrl: matchedGuest.photoUrl,
+            };
+
+            if (isNameSearchQuery(searchQuery)) {
+              setResults([guestFromCache]);
+              setPendingNameCheckin({ guest: guestFromCache, source: searchQuery, fromQueue: false });
+              return;
+            }
+
             const queueLimit = cfg?.offlineQueueLimit || 500;
             const pendingCount = await offlineSyncService.getPendingCount();
 
@@ -668,16 +703,6 @@ export default function CheckinPage() {
 
             // Check for duplicate check-in offline
             if (matchedGuest.checkedIn && !cfg?.allowMultipleCheckinPerCounter) {
-              const guestFromCache: Guest = {
-                id: matchedGuest.id,
-                guestId: matchedGuest.guestId,
-                name: matchedGuest.name,
-                queueNumber: 0,
-                tableLocation: '',
-                checkedIn: matchedGuest.checkedIn,
-                checkedInAt: matchedGuest.lastCheckinAt,
-                checkinCount: matchedGuest.checkinCount,
-              };
               setResults([guestFromCache]);
               setSelected(guestFromCache);
               setCheckedGuest(guestFromCache);
@@ -686,18 +711,6 @@ export default function CheckinPage() {
               startPopupTimeout();
               return;
             }
-
-            // Create a Guest object from cached data
-            const guestFromCache: Guest = {
-              id: matchedGuest.id,
-              guestId: matchedGuest.guestId,
-              name: matchedGuest.name,
-              queueNumber: 0,
-              tableLocation: '',
-              checkedIn: true,
-              checkedInAt: new Date().toISOString(),
-              checkinCount: matchedGuest.checkinCount + 1,
-            };
 
             await offlineSyncService.addToQueue(guestFromCache.guestId);
             
@@ -727,9 +740,9 @@ export default function CheckinPage() {
               checkedIn: g.checkedIn,
               checkedInAt: g.lastCheckinAt,
               checkinCount: g.checkinCount,
+              photoUrl: g.photoUrl,
             }));
             setResults(guestResults);
-            setError(`Ditemukan ${matchedGuests.length} tamu secara lokal. Pilih satu untuk check-in.`);
             return;
           }
 
@@ -880,9 +893,9 @@ export default function CheckinPage() {
     const pending = pendingNameCheckin;
     setPendingNameCheckin(null);
     if (pending.fromQueue) {
-      await doCheckinWrapperForQueue(pending.guest, false, pending.source);
+      await doCheckinWrapperForQueue(pending.guest, true, pending.source);
     } else {
-      await doCheckin(pending.guest);
+      await doCheckin(pending.guest, true);
     }
   };
 
@@ -1734,19 +1747,28 @@ export default function CheckinPage() {
             )}
             {!!results.length && (
               <div className="space-y-3">
-                <div className="text-sm text-brand-textMuted font-medium mb-2">
-                  {results.length} tamu ditemukan
+                <div className="flex items-center justify-between text-sm font-medium mb-3">
+                  <div className="flex items-center gap-2 text-brand-text">
+                    <Users size={16} className="text-brand-primary" />
+                    <span>{results.length} tamu ditemukan</span>
+                  </div>
                   {results.length > 1 && (
-                    <span className="ml-2 text-brand-warning">- Pilih tamu untuk check-in</span>
+                    <span className="px-2.5 py-1 rounded-full bg-brand-warning/15 border border-brand-warning/30 text-brand-warning text-xs font-semibold animate-pulse">
+                      Pilih tamu di bawah untuk Check-in
+                    </span>
                   )}
                 </div>
                 {results.map((g) => (
                   <div
                     key={g.id}
-                    className={`flex items-center justify-between rounded-xl p-4 transition-colors ${selected?.id === g.id ? 'bg-brand-primary/10 border border-brand-primary/30' : 'surface-interactive'}`}
+                    className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl p-4 transition-all border ${
+                      selected?.id === g.id
+                        ? 'bg-brand-primary/10 border-brand-primary/50 shadow-gold'
+                        : 'border-brand-border surface-interactive hover:border-brand-primary/30'
+                    }`}
                   >
-                    <div className="flex items-center gap-4">
-                      <div className="h-14 w-14 rounded-xl bg-brand-text/5 overflow-hidden flex-shrink-0">
+                    <div className="flex items-start sm:items-center gap-4 min-w-0 flex-1">
+                      <div className="h-14 w-14 rounded-xl bg-brand-text/5 overflow-hidden flex-shrink-0 border border-brand-border">
                         {g.photoUrl ? (
                           <img src={toApiUrl(g.photoUrl)} className="h-full w-full object-cover" alt={g.name} />
                         ) : (
@@ -1755,28 +1777,42 @@ export default function CheckinPage() {
                           </div>
                         )}
                       </div>
-                      <div>
-                        <div className="font-semibold text-brand-text text-lg">{g.name}</div>
-                        <div className="text-sm text-brand-textMuted flex items-center gap-2 mt-0.5">
-                          <span className="font-mono text-brand-primary">{g.guestId}</span>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="font-semibold text-brand-text text-lg">{g.name}</span>
+                          {g.checkedIn ? (
+                            <span className="text-[11px] px-2 py-0.5 rounded-full bg-brand-warning/15 text-brand-warning border border-brand-warning/30 font-medium">
+                              Sudah Check-in {(g.checkinCount ?? 0) > 1 ? `(${g.checkinCount}x)` : ''}
+                            </span>
+                          ) : (
+                            <span className="text-[11px] px-2 py-0.5 rounded-full bg-brand-success/15 text-brand-success border border-brand-success/30 font-medium">
+                              Belum Check-in
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-xs sm:text-sm text-brand-textMuted flex flex-wrap items-center gap-2 mt-1">
+                          <span className="font-mono text-brand-primary font-medium">{g.guestId}</span>
                           <span>•</span>
-                          <span>{g.tableLocation}</span>
+                          <span>Meja: <strong className="text-brand-text font-medium">{g.tableLocation || '-'}</strong></span>
                         </div>
                         {g.company && (
-                          <div className="text-sm text-brand-warning/90 mt-0.5">
-                            {g.company}
-                            {g.division && <span className="text-brand-textMuted"> - {g.division}</span>}
+                          <div className="text-xs sm:text-sm text-brand-warning/90 mt-1 font-medium flex items-center gap-1.5">
+                            <span className="px-1.5 py-0.5 rounded bg-brand-warning/10 border border-brand-warning/20">
+                              {g.company}
+                              {g.division && <span className="text-brand-textMuted"> • {g.division}</span>}
+                            </span>
                           </div>
                         )}
                       </div>
                     </div>
                     <Button
+                      className="shrink-0 w-full sm:w-auto"
                       disabled={checking}
                       loading={checking && checkingId === g.id}
                       onClick={() => doCheckin(g, true)}
                     >
                       {!checking && <CheckCircle size={16} />}
-                      Check-in
+                      {g.checkedIn && cfg?.allowMultipleCheckinPerCounter ? 'Check-in Ulang' : 'Check-in'}
                     </Button>
                   </div>
                 ))}
@@ -1835,11 +1871,12 @@ export default function CheckinPage() {
         <Modal
           open={!!pendingNameCheckin}
           onClose={cancelNameCheckin}
-          title="Konfirmasi nama tamu"
-          description={`Pencarian "${pendingNameCheckin?.source ?? ''}" menemukan satu tamu. Pastikan nama sudah benar sebelum check-in.`}
+          title="Konfirmasi Check-in Tamu"
+          description={`Hasil pencarian untuk "${pendingNameCheckin?.source ?? ''}". Pastikan identitas tamu sudah sesuai.`}
           footer={
             <div className="flex flex-col sm:flex-row gap-3">
               <Button variant="outline" className="flex-1" onClick={cancelNameCheckin} disabled={checking}>
+                <X size={18} />
                 Batal
               </Button>
               <Button className="flex-1" onClick={confirmNameCheckin} loading={checking}>
@@ -1851,26 +1888,61 @@ export default function CheckinPage() {
         >
           {pendingNameCheckin && (
             <div className="space-y-4">
-              <div className="rounded-xl border border-brand-warning/30 bg-brand-warning/10 p-4">
-                <div className="text-xs uppercase tracking-wider text-brand-warning font-medium">Periksa ulang</div>
-                <div className="mt-2 text-2xl font-semibold text-brand-text leading-tight">{pendingNameCheckin.guest.name}</div>
+              <div className="flex items-center gap-4 rounded-xl border border-brand-primary/30 bg-brand-primary/10 p-4">
+                <div className="h-16 w-16 rounded-xl bg-brand-text/5 overflow-hidden flex-shrink-0 border border-brand-primary/20">
+                  {pendingNameCheckin.guest.photoUrl ? (
+                    <img src={toApiUrl(pendingNameCheckin.guest.photoUrl)} className="h-full w-full object-cover" alt={pendingNameCheckin.guest.name} />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center">
+                      <Users size={28} className="text-brand-primary" />
+                    </div>
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="text-xs uppercase tracking-wider text-brand-primary font-semibold">Tamu Ditemukan</div>
+                  <div className="text-xl md:text-2xl font-bold text-brand-text leading-tight truncate">{pendingNameCheckin.guest.name}</div>
+                  <div className="mt-1 flex items-center gap-2">
+                    {pendingNameCheckin.guest.checkedIn ? (
+                      <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-md bg-brand-warning/20 text-brand-warning border border-brand-warning/30 font-medium">
+                        Sudah Pernah Check-in ({pendingNameCheckin.guest.checkinCount || 1}x)
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-md bg-brand-success/20 text-brand-success border border-brand-success/30 font-medium">
+                        Belum Check-in
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+
+              <div className="p-3 bg-brand-bgSubtle rounded-xl border border-brand-border text-center">
+                <p className="text-sm font-medium text-brand-text">
+                  Apakah benar <span className="font-bold text-brand-primary">{pendingNameCheckin.guest.name}</span> ini yang mau check-in?
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm bg-brand-bgSubtle/50 p-3 rounded-xl border border-brand-border/60">
                 <div>
                   <div className="text-xs uppercase tracking-wider text-brand-textMuted">ID Tamu</div>
-                  <div className="font-mono font-semibold text-brand-primary mt-1">{pendingNameCheckin.guest.guestId}</div>
+                  <div className="font-mono font-semibold text-brand-primary mt-0.5">{pendingNameCheckin.guest.guestId}</div>
                 </div>
                 <div>
                   <div className="text-xs uppercase tracking-wider text-brand-textMuted">Meja / Ruangan</div>
-                  <div className="font-semibold text-brand-text mt-1">{pendingNameCheckin.guest.tableLocation || '-'}</div>
+                  <div className="font-semibold text-brand-text mt-0.5">{pendingNameCheckin.guest.tableLocation || '-'}</div>
                 </div>
                 {pendingNameCheckin.guest.company && (
-                  <div className="sm:col-span-2">
-                    <div className="text-xs uppercase tracking-wider text-brand-textMuted">Perusahaan</div>
-                    <div className="font-semibold text-brand-text mt-1">
+                  <div className="sm:col-span-2 pt-1 border-t border-brand-border/40">
+                    <div className="text-xs uppercase tracking-wider text-brand-textMuted">Perusahaan / Instansi</div>
+                    <div className="font-semibold text-brand-text mt-0.5">
                       {pendingNameCheckin.guest.company}
-                      {pendingNameCheckin.guest.division && <span className="text-brand-textMuted"> - {pendingNameCheckin.guest.division}</span>}
+                      {pendingNameCheckin.guest.division && <span className="text-brand-textMuted font-normal"> • {pendingNameCheckin.guest.division}</span>}
                     </div>
+                  </div>
+                )}
+                {pendingNameCheckin.guest.notes && (
+                  <div className="sm:col-span-2 pt-1 border-t border-brand-border/40">
+                    <div className="text-xs uppercase tracking-wider text-brand-warning font-medium">Catatan</div>
+                    <div className="text-xs text-brand-warning italic mt-0.5">{pendingNameCheckin.guest.notes}</div>
                   </div>
                 )}
               </div>
