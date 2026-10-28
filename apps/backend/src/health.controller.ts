@@ -1,4 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
+import { getHeapStatistics } from 'v8';
 import { PrismaService } from './prisma/prisma.service';
 
 interface HealthStatus {
@@ -16,11 +17,23 @@ interface HealthStatus {
       status: string;
       heapUsed: number;
       heapTotal: number;
+      heapLimit: number;
       rss: number;
       percentUsed: number;
     };
   };
 }
+
+/**
+ * Ambang pemakaian heap terhadap batas maksimum V8.
+ *
+ * Dipakai `heapUsed / heap_size_limit`, bukan `heapUsed / heapTotal`: V8
+ * menumbuhkan `heapTotal` secara malas, sehingga tepat setelah boot rasio
+ * terhadap `heapTotal` selalu mendekati 100% dan health check melaporkan
+ * "critical" pada server yang sebenarnya sehat.
+ */
+const MEMORY_WARNING_PERCENT = 75;
+const MEMORY_CRITICAL_PERCENT = 90;
 
 @Controller('health')
 export class HealthController {
@@ -32,10 +45,16 @@ export class HealthController {
   async check(): Promise<HealthStatus> {
     const dbHealth = await this.prisma.healthCheck();
     const memUsage = process.memoryUsage();
-    const heapPercentUsed = Math.round((memUsage.heapUsed / memUsage.heapTotal) * 100);
+    const heapLimit = getHeapStatistics().heap_size_limit;
+    const heapPercentUsed = heapLimit > 0 ? Math.round((memUsage.heapUsed / heapLimit) * 100) : 0;
 
-    const memoryStatus = heapPercentUsed > 90 ? 'critical' : heapPercentUsed > 70 ? 'warning' : 'healthy';
-    
+    const memoryStatus =
+      heapPercentUsed > MEMORY_CRITICAL_PERCENT
+        ? 'critical'
+        : heapPercentUsed > MEMORY_WARNING_PERCENT
+          ? 'warning'
+          : 'healthy';
+
     let overallStatus: 'healthy' | 'unhealthy' | 'degraded' = 'healthy';
     if (dbHealth.status === 'unhealthy') {
       overallStatus = 'unhealthy';
@@ -54,6 +73,7 @@ export class HealthController {
           status: memoryStatus,
           heapUsed: Math.round(memUsage.heapUsed / 1024 / 1024),
           heapTotal: Math.round(memUsage.heapTotal / 1024 / 1024),
+          heapLimit: Math.round(heapLimit / 1024 / 1024),
           rss: Math.round(memUsage.rss / 1024 / 1024),
           percentUsed: heapPercentUsed,
         },

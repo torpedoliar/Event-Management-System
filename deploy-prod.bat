@@ -139,7 +139,7 @@ REM ==========================================
 echo.
 echo [2/11] Deploying Nginx Proxy Manager...
 
-%DOCKER_COMPOSE_CMD% -f docker-compose.npm.yml up -d
+%DOCKER_COMPOSE_CMD% -f docker-compose.npm.yml --env-file .env.production up -d
 echo   - NPM container started/verified
 echo   - Waiting for NPM to be ready...
 set RETRY=0
@@ -151,7 +151,7 @@ if !RETRY! gtr 30 (
     echo   - [WARNING] NPM health check timeout, continuing...
     goto npm_ready
 )
-timeout /t 2 /nobreak >nul
+ping -n 3 127.0.0.1 >nul
 goto npm_wait
 :npm_ready
 echo   - NPM ready
@@ -163,13 +163,28 @@ echo.
 echo [3/11] Checking for existing EMS deployment...
 
 set "HAS_DB="
-for /f %%i in ('docker ps -q -f name^=guest-db-prod') do set "HAS_DB=%%i"
+for /f "delims=" %%i in ('docker ps -q -f "name=guest-db-prod"') do set "HAS_DB=%%i"
+
+REM Container bisa tidak ada sementara volume datanya tertinggal dari deploy
+REM sebelumnya. Tanpa peringatan ini skrip mengira "fresh install" padahal
+REM migrasi akan bertabrakan dengan skema lama.
+set "HAS_DB_VOLUME="
+for /f "delims=" %%i in ('docker volume ls -q -f "name=postgres_data_prod"') do set "HAS_DB_VOLUME=%%i"
+
+if not defined HAS_DB if defined HAS_DB_VOLUME (
+    echo   - [WARNING] Volume database lama ditemukan tanpa container berjalan:
+    echo       !HAS_DB_VOLUME!
+    echo     Skema di dalamnya bisa lebih lama daripada migrasi saat ini.
+    echo     - Pertahankan data : bash scripts/baseline-db.sh --apply, lalu deploy ulang
+    echo     - Mulai dari bersih: docker volume rm !HAS_DB_VOLUME!
+    echo     Deploy diteruskan; tahap 7 akan berhenti bila migrasi tidak cocok.
+)
 
 if defined HAS_DB (
     echo   - Existing deployment found
-    REM Backup selalu dibuat (tidak lagi opsional). Deploy yang mengubah skema
+    REM Backup selalu dibuat - tidak lagi opsional. Deploy yang mengubah skema
     REM tanpa backup adalah cara tercepat kehilangan data produksi.
-    echo   - Creating pre-deploy backup (wajib)...
+    echo   - Creating pre-deploy backup [wajib]...
     for /f "tokens=*" %%d in ('powershell -c "Get-Date -Format 'yyyyMMdd_HHmmss'"') do set "DATETIME=%%d"
     set "BACKUP_FILE=backup_pre_deploy_!DATETIME!.sql"
     docker exec guest-db-prod pg_dump -U postgres -d guest_registry --no-owner --no-privileges > "!BACKUP_FILE!" 2>nul
@@ -181,7 +196,7 @@ if defined HAS_DB (
     if !ERRORLEVEL! neq 0 goto deploy_backup_failed
     echo   - Backup saved & verified: !BACKUP_FILE!
 ) else (
-    echo   - No existing EMS deployment (fresh install^)
+    echo   - No existing EMS deployment [fresh install]
 )
 goto deploy_backup_ok
 
@@ -237,7 +252,7 @@ if !RETRY! gtr 60 (
     pause
     exit /b 1
 )
-timeout /t 2 /nobreak >nul
+ping -n 3 127.0.0.1 >nul
 goto db_wait
 :db_ready
 echo   - Database ready
@@ -252,7 +267,7 @@ if !RETRY! gtr 30 (
     echo   - [WARNING] Redis timeout, continuing...
     goto redis_ready
 )
-timeout /t 2 /nobreak >nul
+ping -n 3 127.0.0.1 >nul
 goto redis_wait
 :redis_ready
 echo   - Redis ready
@@ -270,7 +285,7 @@ if !ERRORLEVEL! neq 0 (
     echo   - [ERROR] Migrasi database GAGAL. Deploy dibatalkan.
     echo     Database berhenti pada migrasi yang gagal; tidak ada penghapusan otomatis.
     echo     Backup pra-deploy tersedia di: !BACKUP_FILE!
-    echo     Jika ini instalasi LAMA (dibuat sebelum sistem migrasi baseline),
+    echo     Jika ini instalasi LAMA - dibuat sebelum sistem migrasi baseline -
     echo     jalankan sekali: bash scripts/baseline-db.sh --apply
     echo     lalu ulangi deploy ini.
     pause
@@ -293,7 +308,7 @@ if %ERRORLEVEL% equ 0 goto backend_ready
 set /a RETRY+=1
 if !RETRY! gtr 45 (
     echo   - [WARNING] Backend health check timeout
-    for /f %%i in ('docker ps -q -f name^=guest-backend-prod') do set "BE_UP=%%i"
+    for /f "delims=" %%i in ('docker ps -q -f "name=guest-backend-prod"') do set "BE_UP=%%i"
     if not defined BE_UP (
         echo [ERROR] Backend container failed!
         pause
@@ -302,7 +317,7 @@ if !RETRY! gtr 45 (
     echo   - Container running, continuing...
     goto backend_ready
 )
-timeout /t 2 /nobreak >nul
+ping -n 3 127.0.0.1 >nul
 goto backend_wait
 :backend_ready
 echo   - Backend ready
@@ -314,12 +329,12 @@ echo.
 echo [9/11] Starting frontend...
 %DOCKER_COMPOSE_CMD% -f docker-compose.prod.yml --env-file .env.production up -d frontend
 
-timeout /t 5 /nobreak >nul
-for /f %%i in ('docker ps -q -f name^=guest-frontend-prod') do set "FE_UP=%%i"
+ping -n 6 127.0.0.1 >nul
+for /f "delims=" %%i in ('docker ps -q -f "name=guest-frontend-prod"') do set "FE_UP=%%i"
 if not defined FE_UP (
     echo   - Retrying frontend start...
     docker start guest-frontend-prod >nul 2>&1
-    timeout /t 3 /nobreak >nul
+    ping -n 4 127.0.0.1 >nul
 )
 echo   - Frontend started
 
@@ -335,12 +350,12 @@ if %ERRORLEVEL% equ 0 (
 ) else (
     echo   - NPM - Frontend: Checking...
     docker network connect proxy-network guest-frontend-prod >nul 2>&1
-    timeout /t 3 /nobreak >nul
+    ping -n 4 127.0.0.1 >nul
     docker exec nginx-proxy-manager wget -q -O /dev/null --timeout=5 http://guest-frontend-prod:3000 >nul 2>&1
     if %ERRORLEVEL% equ 0 (
-        echo   - NPM - Frontend: Connected (after retry^)
+        echo   - NPM - Frontend: Connected [after retry]
     ) else (
-        echo   - NPM - Frontend: Not verified (configure in NPM dashboard^)
+        echo   - NPM - Frontend: Not verified [configure in NPM dashboard]
     )
 )
 
@@ -349,7 +364,7 @@ REM [11/11] Final Verification
 REM ==========================================
 echo.
 echo [11/11] Final verification...
-timeout /t 3 /nobreak >nul
+ping -n 4 127.0.0.1 >nul
 
 set "ALL_OK=1"
 set "NPM_ST=FAIL"
@@ -358,11 +373,11 @@ set "REDIS_ST=FAIL"
 set "BE_ST=FAIL"
 set "FE_ST=FAIL"
 
-for /f %%i in ('docker ps -q -f name^=nginx-proxy-manager') do set "NPM_ST=OK"
-for /f %%i in ('docker ps -q -f name^=guest-db-prod') do set "DB_ST=OK"
-for /f %%i in ('docker ps -q -f name^=guest-redis-prod') do set "REDIS_ST=OK"
-for /f %%i in ('docker ps -q -f name^=guest-backend-prod') do set "BE_ST=OK"
-for /f %%i in ('docker ps -q -f name^=guest-frontend-prod') do set "FE_ST=OK"
+for /f "delims=" %%i in ('docker ps -q -f "name=nginx-proxy-manager"') do set "NPM_ST=OK"
+for /f "delims=" %%i in ('docker ps -q -f "name=guest-db-prod"') do set "DB_ST=OK"
+for /f "delims=" %%i in ('docker ps -q -f "name=guest-redis-prod"') do set "REDIS_ST=OK"
+for /f "delims=" %%i in ('docker ps -q -f "name=guest-backend-prod"') do set "BE_ST=OK"
+for /f "delims=" %%i in ('docker ps -q -f "name=guest-frontend-prod"') do set "FE_ST=OK"
 
 if "!NPM_ST!"=="FAIL" set "ALL_OK=0"
 if "!DB_ST!"=="FAIL" set "ALL_OK=0"

@@ -140,6 +140,21 @@ echo "  - NPM ready"
 echo ""
 echo -e "${YELLOW}[3/11] Checking for existing EMS deployment...${NC}"
 
+# Container bisa tidak ada sementara volume datanya tertinggal dari deploy
+# sebelumnya. Tanpa peringatan ini skrip mengira "fresh install" padahal
+# migrasi akan bertabrakan dengan skema lama.
+if ! docker ps -q -f name=guest-db-prod | grep -q .; then
+    LEGACY_VOLUME=$(docker volume ls -q -f "name=postgres_data_prod" | head -1)
+    if [ -n "$LEGACY_VOLUME" ]; then
+        echo -e "${YELLOW}  - [WARNING] Volume database lama ditemukan tanpa container berjalan:${NC}"
+        echo "      $LEGACY_VOLUME"
+        echo "    Skema di dalamnya bisa lebih lama daripada migrasi saat ini."
+        echo "    - Pertahankan data : bash scripts/baseline-db.sh --apply, lalu deploy ulang"
+        echo "    - Mulai dari bersih: docker volume rm $LEGACY_VOLUME"
+        echo "    Deploy diteruskan; tahap 7 akan berhenti bila migrasi tidak cocok."
+    fi
+fi
+
 if docker ps -q -f name=guest-db-prod | grep -q .; then
     echo "  - Existing deployment found"
     # Backup selalu dibuat (tidak lagi opsional). Deploy yang mengubah skema
