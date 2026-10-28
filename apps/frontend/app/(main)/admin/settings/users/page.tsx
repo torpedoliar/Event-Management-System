@@ -155,7 +155,7 @@ export default function UsersManagementPage() {
                   <UserCog size={24} className="text-brand-bg" />
                 </div>
                 <div>
-                  <h1 className="text-2xl md:text-3xl font-bold text-brand-text">User Management</h1>
+                  <h1 className="admin-title">User Management</h1>
                   <div className="flex items-center gap-2 mt-1">
                     <Radio size={12} className={`${connected ? 'text-brand-success pulse-live' : 'text-brand-danger'}`} />
                     <span className="text-sm text-brand-text/60">Kelola akun admin</span>

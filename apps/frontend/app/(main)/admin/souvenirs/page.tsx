@@ -5,6 +5,7 @@ import { apiFetch, parseErrorMessage } from '@/lib/api';
 import Card from '@/components/ui/Card';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
+import { AdminPageHeader, AdminStats } from '@/components/admin/AdminPage';
 import { Package, Trash2, Plus, RefreshCw, Users, Edit2, X, Check } from 'lucide-react';
 
 interface SouvenirTake {
@@ -151,28 +152,20 @@ export default function SouvenirsPage() {
 
     return (
         <RequireAuth>
-            <div className="min-h-screen p-6 md:p-8 mx-auto max-w-6xl space-y-8">
-                <div className="flex items-center justify-between flex-wrap gap-4">
-                    <h1 className="text-2xl font-bold text-brand-text flex items-center gap-3">
-                        <Package className="text-brand-primary" />
-                        Kelola Souvenir
-                    </h1>
-                    {/* Summary Stats */}
-                    <div className="flex gap-4">
-                        <div className="bg-white/5 border border-white/10 rounded-xl px-4 py-2">
-                            <div className="text-xs text-brand-text/60 uppercase tracking-wider">Total Stock</div>
-                            <div className="text-xl font-bold text-brand-text">{totalStock}</div>
-                        </div>
-                        <div className="bg-brand-success/10 border border-brand-success/20 rounded-xl px-4 py-2">
-                            <div className="text-xs text-brand-success uppercase tracking-wider">Sudah Diambil</div>
-                            <div className="text-xl font-bold text-brand-success">{totalTaken}</div>
-                        </div>
-                        <div className="bg-brand-warning/10 border border-brand-warning/20 rounded-xl px-4 py-2">
-                            <div className="text-xs text-brand-warning uppercase tracking-wider">Sisa</div>
-                            <div className="text-xl font-bold text-brand-warning">{totalRemaining}</div>
-                        </div>
-                    </div>
-                </div>
+            <div className="admin-page">
+            <AdminPageHeader
+                icon={<Package size={16} />}
+                title="Kelola Souvenir"
+                description="Stok, pembagian, dan reset souvenir untuk event aktif."
+            />
+
+            <AdminStats
+                items={[
+                    { label: 'Total stok', value: totalStock },
+                    { label: 'Sudah diambil', value: totalTaken, tone: 'ok' },
+                    { label: 'Sisa', value: totalRemaining, tone: 'warn' },
+                ]}
+            />
 
                 {error && <div className="p-4 rounded-lg bg-brand-danger/10 border border-brand-danger/20 text-brand-danger">{error}</div>}
 

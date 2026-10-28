@@ -260,9 +260,9 @@ export default function PrizesPage() {
 
     return (
         <RequireAuth>
-            <div className="min-h-screen p-6 md:p-8 mx-auto max-w-5xl space-y-8">
+            <div className="admin-page">
                 <div className="flex items-center justify-between flex-wrap gap-4">
-                    <h1 className="text-2xl font-bold text-brand-text flex items-center gap-3">
+                    <h1 className="admin-title">
                         <Trophy className="text-brand-primary" />
                         Kelola Lucky Draw
                     </h1>

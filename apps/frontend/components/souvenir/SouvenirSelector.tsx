@@ -21,49 +21,42 @@ export default function SouvenirSelector({
   disabled: boolean;
 }) {
   const available = souvenirs.filter((s) => s.remaining > 0);
-  const hasStock = available.length > 0;
 
   if (souvenirs.length === 0) return null;
 
-  if (!hasStock) {
+  if (available.length === 0) {
     return (
-      <div className="mb-4 flex items-center gap-3 rounded-lg border border-brand-danger/30 bg-brand-danger/10 p-4 text-brand-danger">
-        <AlertTriangle size={20} className="text-brand-danger flex-shrink-0" />
-        <span className="text-sm">
-          Semua stok souvenir sudah habis. Tidak dapat memberikan souvenir.
-        </span>
-      </div>
+      <p className="kiosk-error" role="status">
+        <AlertTriangle size={15} aria-hidden="true" />
+        Stok souvenir habis. Tidak ada yang bisa diberikan.
+      </p>
     );
   }
 
   return (
-    <div className="mb-4">
-      <label className="text-sm text-brand-textMuted mb-2 flex items-center gap-2">
-        <Package size={16} className="text-brand-primary" />
-        Pilih Souvenir untuk Check-in:
+    <div className="kiosk-select">
+      <label htmlFor="souvenir-select">
+        <Package size={14} aria-hidden="true" />
+        Souvenir yang diberikan
       </label>
-
       <select
+        id="souvenir-select"
         value={selectedId}
         onChange={(e) => onSelect(e.target.value)}
-        className="w-full rounded-lg border border-brand-primary/50 bg-brand-primary/10 px-3 py-3 text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-primary/70 appearance-none cursor-pointer"
         disabled={disabled}
       >
-        <option value="" className="bg-brand-bgElevated text-brand-text">
-          -- Pilih Souvenir --
-        </option>
+        <option value="">— pilih souvenir —</option>
         {available.map((s) => (
-          <option key={s.id} value={s.id} className="bg-brand-bgElevated text-brand-text">
-            {s.name} (Sisa: {s.remaining}/{s.quantity})
+          <option key={s.id} value={s.id}>
+            {s.name} · sisa {s.remaining}/{s.quantity}
           </option>
         ))}
       </select>
-
       {selectedId && (
-        <div className="mt-2 text-sm text-brand-primarySoft flex items-center gap-2">
-          <CheckCircle size={14} />
-          <span>Pencarian akan otomatis memberikan souvenir ini</span>
-        </div>
+        <span className="kiosk-select-note">
+          <CheckCircle size={13} aria-hidden="true" />
+          Pencarian berikutnya otomatis memberikan souvenir ini
+        </span>
       )}
     </div>
   );

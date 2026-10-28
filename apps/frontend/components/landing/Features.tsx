@@ -43,7 +43,7 @@ function FeatureItem({ feature, index }: { feature: Feature; index: number }) {
       }`}
     >
       <div className={isReversed ? 'lg:order-2' : ''}>
-        <h3 className="text-heading-lg font-heading text-brand-text mb-4">
+        <h3 className="text-heading-2 font-heading text-brand-text mb-4">
           {feature.title}
         </h3>
         <p className="text-body text-brand-textMuted max-w-[60ch]">
@@ -74,7 +74,7 @@ function FeatureCentered({ feature }: { feature: Feature }) {
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       className="max-w-3xl mx-auto text-center"
     >
-      <h3 className="text-heading-lg font-heading text-brand-text mb-4">
+      <h3 className="text-heading-2 font-heading text-brand-text mb-4">
         {feature.title}
       </h3>
       <p className="text-body text-brand-textMuted max-w-[60ch] mx-auto mb-8">
@@ -97,8 +97,8 @@ export default function Features({ features, title, subtext, compact = false }: 
       <div className={cn("max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", compact ? "space-y-16" : "space-y-24")}>
         {(title || subtext) && (
           <div className="text-center max-w-3xl mx-auto mb-16">
-            {title && <h2 className="text-heading-xl font-heading text-brand-text mb-4">{title}</h2>}
-            {subtext && <p className="text-body-lg text-brand-textMuted">{subtext}</p>}
+            {title && <h2 className="text-heading-1 font-heading text-brand-text mb-4">{title}</h2>}
+            {subtext && <p className="text-body text-brand-textMuted">{subtext}</p>}
           </div>
         )}
         {features.map((feature, index) =>

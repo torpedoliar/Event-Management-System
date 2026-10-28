@@ -6,7 +6,8 @@ import Input from "@/components/ui/Input";
 import Textarea from "@/components/ui/Textarea";
 import Label from "@/components/ui/Label";
 import Button from "@/components/ui/Button";
-import { UserPlus, Loader2, CheckCircle, XCircle, Users, Clock, CalendarDays, MapPin, ArrowLeft } from "lucide-react";
+import { RegistrationShell, RegistrationTicket } from "@/components/register/RegistrationShell";
+import { UserPlus, Loader2, XCircle, Users, Clock, CalendarDays, MapPin, ArrowLeft } from "lucide-react";
 
 interface RegistrationField {
   key: string; label: string; required: boolean; type: string; placeholder?: string;
@@ -237,29 +238,15 @@ export default function PublicRegistrationPage() {
       </div>
     );
   }
-
   // Success
   if (state === "success" && successData) {
     return (
-      <div className="min-h-[100dvh] flex items-center justify-center p-6">
-        <Card variant="elevated" className="max-w-md w-full text-center space-y-6">
-          <CheckCircle className="mx-auto text-brand-success" size={56} />
-          <div className="space-y-2">
-            <h2 className="text-2xl font-bold text-brand-text">Registrasi Berhasil!</h2>
-            <p className="text-brand-textMuted">{successData.message}</p>
-          </div>
-          {successData.guestId && (
-            <div className="p-4 rounded-xl bg-brand-primary/10 border border-brand-primary/20 space-y-2">
-              <div className="text-xs text-brand-textMuted uppercase tracking-wider">ID Peserta</div>
-              <div className="text-2xl font-bold font-mono text-brand-primary">{successData.guestId}</div>
-              {successData.queueNumber !== null && (
-                <div className="text-sm text-brand-textMuted">No. Antrian: {successData.queueNumber}</div>
-              )}
-            </div>
-          )}
-          <p className="text-xs text-brand-textMuted">Simpan ID Peserta Anda untuk check-in di lokasi acara.</p>
-        </Card>
-      </div>
+      <RegistrationTicket
+        eventName={selectedEvent?.name}
+        message={successData.message}
+        guestId={successData.guestId}
+        queueNumber={successData.queueNumber}
+      />
     );
   }
 
@@ -268,79 +255,51 @@ export default function PublicRegistrationPage() {
     ? Math.min(100, (config.currentCount / config.maxQuota) * 100) : 0;
 
   return (
-    <div className="min-h-[100dvh] flex items-center justify-center p-4 md:p-6">
-      <div className="w-full max-w-lg space-y-6">
-        {/* Back button when multiple events */}
-        {events.length > 1 && (
-          <button
-            onClick={handleBackToSelection}
-            className="flex items-center gap-2 text-sm text-brand-textMuted hover:text-brand-text transition-colors"
-          >
-            <ArrowLeft size={16} />
-            Pilih event lain
-          </button>
-        )}
-
-        {/* Header */}
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-brand-primary/10 border border-brand-primary/20">
-            <UserPlus className="text-brand-primary" size={28} />
-          </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-brand-text">{config?.title}</h1>
-          {selectedEvent && (
-            <p className="text-sm text-brand-primary font-medium">{selectedEvent.name}</p>
-          )}
-          {config?.description && <p className="text-brand-textMuted text-sm">{config.description}</p>}
-        </div>
-
-        {/* Quota progress */}
-        {config && config.maxQuota > 0 && (
-          <Card variant="glass" className="space-y-2">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-brand-textMuted flex items-center gap-2"><Users size={16} /> Kuota</span>
-              <span className="text-brand-text font-medium">{config.currentCount} / {config.maxQuota}</span>
-            </div>
-            <div className="h-2 rounded-full bg-white/10 overflow-hidden">
-              <div className="h-full bg-brand-primary transition-all duration-500" style={{ width: `${quotaPct}%` }} />
-            </div>
-            {config.remainingQuota !== null && config.remainingQuota > 0 && (
-              <p className="text-xs text-brand-textMuted">Tersisa {config.remainingQuota} slot</p>
+    <RegistrationShell
+      eventName={selectedEvent?.name}
+      title={config?.title}
+      description={config?.description}
+      quota={
+        config && config.maxQuota > 0
+          ? {
+              current: config.currentCount,
+              max: config.maxQuota,
+              percent: quotaPct,
+              remaining: config.remainingQuota,
+            }
+          : null
+      }
+      onBack={events.length > 1 ? handleBackToSelection : undefined}
+      error={errorMsg}
+    >
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {config?.fields.map((field) => (
+          <div key={field.key} className="reg-field">
+            <Label htmlFor={`field-${field.key}`}>
+              {field.label}
+              {field.required && <span className="reg-required">*</span>}
+            </Label>
+            {field.type === "textarea" ? (
+              <Textarea id={`field-${field.key}`} value={formData[field.key] || ""}
+                onChange={(e) => setFormData({ ...formData, [field.key]: e.target.value })}
+                placeholder={field.placeholder || ""} required={field.required} rows={3} />
+            ) : (
+              <Input id={`field-${field.key}`} type="text" value={formData[field.key] || ""}
+                onChange={(e) => setFormData({ ...formData, [field.key]: e.target.value })}
+                placeholder={field.placeholder || ""} required={field.required} />
             )}
-          </Card>
-        )}
-
-        {/* Form */}
-        <Card variant="elevated" className="space-y-5">
-          {errorMsg && (
-            <div className="text-sm text-brand-danger bg-brand-danger/10 p-3 rounded-lg border border-brand-danger/20">{errorMsg}</div>
-          )}
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {config?.fields.map((field) => (
-              <div key={field.key}>
-                <Label htmlFor={`field-${field.key}`} className="mb-2">
-                  {field.label}{field.required && <span className="text-brand-danger ml-1">*</span>}
-                </Label>
-                {field.type === "textarea" ? (
-                  <Textarea id={`field-${field.key}`} value={formData[field.key] || ""}
-                    onChange={(e) => setFormData({ ...formData, [field.key]: e.target.value })}
-                    placeholder={field.placeholder || ""} required={field.required} rows={3} />
-                ) : (
-                  <Input id={`field-${field.key}`} type="text" value={formData[field.key] || ""}
-                    onChange={(e) => setFormData({ ...formData, [field.key]: e.target.value })}
-                    placeholder={field.placeholder || ""} required={field.required} />
-                )}
-              </div>
-            ))}
-            {/* Honeypot (hidden from humans) */}
-            <input type="text" name="website" value={honeypot}
-              onChange={(e) => setHoneypot(e.target.value)}
-              style={{ position: "absolute", left: "-9999px", opacity: 0 }} tabIndex={-1} autoComplete="off" />
-            <Button type="submit" size="lg" loading={submitting} className="w-full">
-              {submitting ? "Mendaftarkan..." : "Daftar Sekarang"}
-            </Button>
-          </form>
-        </Card>
-      </div>
-    </div>
+          </div>
+        ))}
+        {/* Honeypot (hidden from humans) */}
+        <input type="text" name="website" value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
+          style={{ position: "absolute", left: "-9999px", opacity: 0 }} tabIndex={-1} autoComplete="off" />
+        <div className="reg-actions">
+          <Button type="submit" size="lg" loading={submitting} className="w-full">
+            {submitting ? "Mendaftarkan..." : "Daftar sekarang"}
+          </Button>
+        </div>
+      </form>
+    </RegistrationShell>
   );
 }

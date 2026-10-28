@@ -29,7 +29,7 @@ describe('SouvenirSelector', () => {
   it('hanya menawarkan souvenir yang masih tersisa', () => {
     render(<SouvenirSelector {...baseProps()} />);
 
-    expect(screen.getByRole('option', { name: /Tote Bag \(Sisa: 8\/10\)/ })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: /Tote Bag · sisa 8\/10/ })).toBeInTheDocument();
     expect(screen.queryByRole('option', { name: /Kaos/ })).not.toBeInTheDocument();
   });
 
@@ -42,7 +42,7 @@ describe('SouvenirSelector', () => {
     );
 
     expect(
-      screen.getByText(/Semua stok souvenir sudah habis/),
+      screen.getByText(/Stok souvenir habis/),
     ).toBeInTheDocument();
     expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
   });
@@ -50,14 +50,14 @@ describe('SouvenirSelector', () => {
   it('menampilkan keterangan saat souvenir sudah dipilih', () => {
     render(<SouvenirSelector {...baseProps()} selectedId="s1" />);
     expect(
-      screen.getByText('Pencarian akan otomatis memberikan souvenir ini'),
+      screen.getByText('Pencarian berikutnya otomatis memberikan souvenir ini'),
     ).toBeInTheDocument();
   });
 
   it('tidak menampilkan keterangan saat belum dipilih', () => {
     render(<SouvenirSelector {...baseProps()} />);
     expect(
-      screen.queryByText('Pencarian akan otomatis memberikan souvenir ini'),
+      screen.queryByText('Pencarian berikutnya otomatis memberikan souvenir ini'),
     ).not.toBeInTheDocument();
   });
 

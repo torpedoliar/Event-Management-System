@@ -1,0 +1,1103 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup · Front of House &amp; Backstage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+@property --spot { syntax: '<percentage>'; inherits: false; initial-value: 100%; }
+
+:root {
+  --bg: #09090B; --bg-elev: #12121A; --bg-subtle: #1A1A24;
+  --surface: #151520; --surface-muted: #1E1E2A; --surface-bright: #272735;
+  --text: #FAFAF9; --muted: #A1A1AA; --dim: #8B8B95;
+  --gold: #D4A853; --gold-hover: #C49A4A; --gold-soft: #F5ECD7; --gold-deep: #B8934A;
+  --success: #4ADE80; --warning: #FBBF24; --danger: #F87171; --info: #60A5FA;
+  --line: rgba(255,255,255,.07); --line-strong: rgba(255,255,255,.13);
+  --ease-out: cubic-bezier(.16,1,.3,1); --ease-in-out: cubic-bezier(.65,0,.35,1);
+  --t-instant: 120ms; --t-fast: 200ms; --t-smooth: 320ms;
+  --r-sm: 8px; --r: 12px; --r-lg: 16px;
+  --font-display: 'Cinzel', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --chrome: 52px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font-family: var(--font-sans); font-size: 15px; line-height: 1.55;
+  -webkit-font-smoothing: antialiased; overflow: hidden;
+}
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; border: 0; background: none; padding: 0; }
+::selection { background: rgba(212,168,83,.32); color: var(--gold-soft); }
+input { caret-color: var(--gold); }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 6px; }
+* { scrollbar-width: thin; scrollbar-color: #2E2E3C transparent; }
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-thumb { background: #2E2E3C; border-radius: 10px; border: 3px solid var(--bg); }
+.num { font-variant-numeric: tabular-nums; }
+.ico { width: 1em; height: 1em; flex: none; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ───────── Chrome mockup ───────── */
+.chrome {
+  position: fixed; inset: 0 0 auto 0; height: var(--chrome); z-index: 50;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 0 20px; background: rgba(9,9,11,.82); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.chrome-title { font-size: 13px; color: var(--muted); white-space: nowrap; }
+.chrome-title b { color: var(--text); font-weight: 600; }
+.tabs { display: flex; gap: 2px; padding: 3px; background: var(--bg-subtle); border-radius: 10px; }
+.tab {
+  height: 32px; padding: 0 14px; border-radius: 8px; font-size: 13px; font-weight: 500;
+  color: var(--muted); display: flex; align-items: center; gap: 8px;
+  transition: color var(--t-fast) var(--ease-out), background-color var(--t-fast) var(--ease-out);
+}
+.tab:hover { color: var(--text); }
+.tab[aria-selected="true"] { background: var(--surface-bright); color: var(--text); }
+.tab kbd { font-family: var(--font-sans); font-size: 11px; color: var(--dim); }
+.chrome-note { font-size: 12px; color: var(--dim); white-space: nowrap; }
+
+.screen { position: fixed; inset: var(--chrome) 0 0 0; display: none; }
+.screen.active { display: block; }
+
+/* ════════════ PANGGUNG ════════════ */
+#stage {
+  overflow: hidden;
+  background:
+    radial-gradient(90% 60% at 50% -12%, rgba(212,168,83,.13), transparent 62%),
+    radial-gradient(60% 50% at 50% 110%, rgba(212,168,83,.05), transparent 70%),
+    #050506;
+}
+.beam {
+  position: absolute; top: -18%; width: 36vw; height: 150%; z-index: 1;
+  background: linear-gradient(180deg, rgba(245,236,215,.16), rgba(245,236,215,.03) 55%, transparent 80%);
+  clip-path: polygon(47% 0, 53% 0, 100% 100%, 0 100%);
+  transform-origin: 50% 0; opacity: 0; filter: blur(10px); mix-blend-mode: screen;
+  transition: opacity 900ms var(--ease-out);
+}
+.beam.l { left: 4%; transform: rotate(20deg); }
+.beam.r { right: 4%; transform: rotate(-20deg); }
+#stage.drawing .beam { opacity: 1; }
+#stage.drawing .beam.l { animation: sweepL 2.6s var(--ease-in-out) infinite alternate; }
+#stage.drawing .beam.r { animation: sweepR 2.6s var(--ease-in-out) infinite alternate; }
+@keyframes sweepL { from { transform: rotate(26deg); } to { transform: rotate(-6deg); } }
+@keyframes sweepR { from { transform: rotate(-26deg); } to { transform: rotate(6deg); } }
+
+.stage-wrap {
+  position: relative; z-index: 2; height: 100%;
+  display: grid; grid-template-rows: auto auto 1fr auto;
+  padding: clamp(18px, 3vh, 40px) clamp(20px, 4vw, 64px) clamp(18px, 3vh, 36px);
+}
+.event-mark {
+  display: flex; align-items: center; gap: 14px; color: var(--muted);
+  font-family: var(--font-display); font-weight: 500;
+  font-size: clamp(.82rem, 1vw, 1rem); letter-spacing: .08em;
+}
+.event-mark .rule { width: 32px; height: 1px; background: var(--gold); }
+.event-mark .when { margin-left: auto; font-family: var(--font-sans); letter-spacing: 0; font-size: 13px; color: var(--dim); }
+
+.prize { text-align: center; margin-top: clamp(8px, 2.4vh, 30px); position: relative; z-index: 4; transition: opacity 700ms var(--ease-out); }
+.prize h1 {
+  margin: 0; font-family: var(--font-display); font-weight: 600;
+  font-size: clamp(2rem, 4.6vw, 4.4rem); line-height: 1.04; letter-spacing: -.02em; text-wrap: balance;
+}
+.prize .meta { margin-top: 14px; display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 10px 14px; align-items: center; color: var(--muted); font-size: clamp(.85rem, 1vw, 1rem); }
+.tier { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 13px; border-radius: 999px; background: rgba(212,168,83,.13); color: var(--gold-soft); font-weight: 500; }
+.tier .ico { color: var(--gold); }
+
+.arena { position: relative; display: grid; place-items: center; min-height: 0; }
+.reel {
+  --row: clamp(54px, 8.6vh, 92px);
+  position: relative; width: min(900px, 92vw); height: calc(var(--row) * 5); overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent);
+          mask-image: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent);
+  transition: opacity 600ms var(--ease-out);
+}
+.reel-track { position: absolute; inset: 0 0 auto 0; will-change: transform; filter: url(#mblur); }
+.reel-row {
+  height: var(--row); display: flex; align-items: center; justify-content: center; gap: 20px;
+  font-family: var(--font-display); font-weight: 500; white-space: nowrap;
+  font-size: clamp(1.2rem, 2.4vw, 2.15rem); letter-spacing: -.01em; color: rgba(250,250,249,.46);
+  transition: color 500ms var(--ease-out), transform 700ms var(--ease-out);
+}
+.reel-row .gid { font-family: var(--font-mono); font-size: .5em; color: var(--dim); letter-spacing: 0; }
+.reel-row.hit { color: var(--gold-soft); transform: scale(1.07); }
+.reel-row.hit .gid { color: var(--gold); }
+.reel-frame { position: absolute; left: 0; right: 0; top: calc(var(--row) * 2); height: var(--row); pointer-events: none; }
+.reel-frame::before, .reel-frame::after {
+  content: ''; position: absolute; left: 12%; right: 12%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212,168,83,.55), transparent);
+  transition: left 700ms var(--ease-out), right 700ms var(--ease-out), opacity 500ms;
+}
+.reel-frame::before { top: 0; } .reel-frame::after { bottom: 0; }
+#stage.landed .reel-frame::before, #stage.landed .reel-frame::after { left: 2%; right: 2%; }
+
+.dim {
+  position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0;
+  background: radial-gradient(circle farthest-corner at var(--cx, 50%) var(--cy, 55%), transparent var(--spot), rgba(2,2,3,.92) calc(var(--spot) + 18%));
+  transition: opacity 800ms var(--ease-out), --spot 1100ms var(--ease-out);
+}
+#stage.hush .dim { opacity: 1; --spot: 15%; }
+#stage.revealed .dim { --spot: 30%; }
+
+.reveal { position: absolute; inset: 0; z-index: 4; display: grid; place-items: center; text-align: center; pointer-events: none; visibility: hidden; }
+#stage.revealed .reveal { visibility: visible; }
+.bloom {
+  position: absolute; width: min(1200px, 120vw); aspect-ratio: 2 / 1; opacity: 0;
+  background: radial-gradient(closest-side, rgba(212,168,83,.30), rgba(212,168,83,.09) 52%, transparent);
+}
+.winner { position: relative; padding: 0 20px; }
+.winner-name {
+  margin: 0; font-family: var(--font-display); font-weight: 600; color: var(--gold-soft);
+  font-size: clamp(2.6rem, 7.2vw, 6rem); line-height: 1; letter-spacing: -.02em; text-wrap: balance; opacity: 0;
+}
+.winner-meta { margin-top: clamp(14px, 2.2vh, 24px); display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 22px; color: var(--muted); font-size: clamp(.95rem, 1.35vw, 1.25rem); opacity: 0; }
+.winner-meta b { color: var(--text); font-weight: 500; }
+.winner-meta .gid { font-family: var(--font-mono); color: var(--gold); }
+
+.multi { position: absolute; inset: 0; z-index: 4; display: none; place-content: center; padding: 0 clamp(16px, 4vw, 64px); }
+#stage.multi-on .multi { display: grid; }
+.multi-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(10px, 1.4vw, 20px); width: min(1240px, 100%); }
+.mcard {
+  background: var(--bg-elev); border-radius: var(--r-lg); padding: clamp(16px, 2vw, 26px) clamp(14px, 1.6vw, 22px);
+  box-shadow: 0 24px 50px -28px rgba(0,0,0,.9); opacity: 0; text-align: left;
+}
+.mcard .n { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.05rem, 1.65vw, 1.55rem); line-height: 1.15; color: var(--gold-soft); text-wrap: balance; }
+.mcard .g { margin-top: 10px; font-family: var(--font-mono); font-size: 13px; color: var(--gold); }
+.mcard .c { margin-top: 2px; font-size: 13px; color: var(--muted); }
+.mcard .ord { font-size: 12px; color: var(--dim); margin-bottom: 14px; }
+
+canvas#dust { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
+
+.controls { position: relative; z-index: 6; display: flex; align-items: center; justify-content: center; gap: 14px; padding-top: 10px; min-height: 64px; }
+.btn-stage {
+  height: 58px; padding: 0 34px; border-radius: 14px; font-weight: 600; font-size: 16px;
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--gold); color: #1A1305;
+  box-shadow: 0 14px 34px -16px rgba(212,168,83,.7);
+  transition: background-color var(--t-fast) var(--ease-out), transform var(--t-instant) var(--ease-out), opacity 400ms var(--ease-out);
+}
+.btn-stage:hover { background: var(--gold-hover); }
+.btn-stage:active { transform: scale(.98); }
+.btn-stage .k { font-weight: 500; font-size: 12px; padding: 2px 7px; border-radius: 6px; background: rgba(26,19,5,.14); }
+.btn-quiet {
+  height: 58px; padding: 0 22px; border-radius: 14px; font-weight: 500; color: var(--muted);
+  display: inline-flex; align-items: center; gap: 9px; background: rgba(255,255,255,.04);
+  transition: color var(--t-fast), background-color var(--t-fast);
+}
+.btn-quiet:hover { color: var(--text); background: rgba(255,255,255,.08); }
+.controls [hidden] { display: none; }
+.mode {
+  position: absolute; right: 0; bottom: 6px; display: flex; gap: 2px; padding: 3px;
+  background: rgba(255,255,255,.04); border-radius: 10px; font-size: 12.5px;
+}
+.mode button { height: 30px; padding: 0 12px; border-radius: 8px; color: var(--muted); transition: color var(--t-fast), background-color var(--t-fast); }
+.mode button[aria-pressed="true"] { background: rgba(212,168,83,.16); color: var(--gold-soft); }
+#stage.busy .mode { opacity: .35; pointer-events: none; }
+
+/* ════════════ KIOSK ════════════ */
+#kiosk { background: var(--bg); display: none; }
+#kiosk.active { display: grid; grid-template-rows: auto 1fr; }
+.k-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  padding: 14px clamp(16px, 2.6vw, 32px); border-bottom: 1px solid var(--line);
+}
+.k-event { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.k-event .ev { font-family: var(--font-display); font-weight: 600; font-size: 16px; letter-spacing: .02em; white-space: nowrap; }
+.k-event .st { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; white-space: nowrap; }
+.k-event .sep { width: 1px; height: 18px; background: var(--line-strong); }
+.k-status { display: flex; align-items: center; gap: 18px; font-size: 13.5px; color: var(--muted); flex-wrap: wrap; }
+.conn {
+  display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 12px; border-radius: 999px;
+  background: rgba(74,222,128,.10); color: var(--success); font-weight: 500;
+  transition: background-color var(--t-smooth) var(--ease-out), color var(--t-smooth) var(--ease-out);
+}
+.conn .ico { font-size: 15px; }
+.conn.off { background: rgba(251,191,36,.12); color: var(--warning); }
+
+.k-body { display: grid; grid-template-columns: minmax(0, 1fr) 380px; min-height: 0; }
+.k-main { padding: clamp(18px, 3vh, 32px) clamp(16px, 2.6vw, 36px); display: grid; grid-template-rows: auto auto 1fr; gap: 14px; min-height: 0; overflow: auto; }
+.k-input { position: relative; display: flex; align-items: center; gap: 14px; height: 76px; padding: 0 22px; border-radius: var(--r-lg); background: var(--bg-elev); box-shadow: inset 0 0 0 1px var(--line-strong); transition: box-shadow var(--t-fast) var(--ease-out); }
+.k-input:focus-within { box-shadow: inset 0 0 0 1px rgba(212,168,83,.55), 0 0 0 4px rgba(212,168,83,.10); }
+.k-input > .ico { font-size: 24px; color: var(--muted); }
+.k-input input { flex: 1; min-width: 0; height: 100%; border: 0; outline: 0; background: transparent; font-size: clamp(1.15rem, 1.8vw, 1.5rem); font-weight: 500; }
+.k-input input::placeholder { color: var(--dim); font-weight: 400; }
+.k-input kbd { font-family: var(--font-sans); font-size: 12px; color: var(--dim); padding: 4px 9px; border-radius: 7px; background: var(--surface-muted); }
+.k-input .load { position: absolute; left: 18px; right: 18px; bottom: 0; height: 2px; border-radius: 2px; overflow: hidden; opacity: 0; }
+.k-input .load::after { content: ''; position: absolute; inset: 0; width: 40%; background: linear-gradient(90deg, transparent, var(--gold), transparent); animation: sweep 700ms linear infinite; }
+.k-input.loading .load { opacity: 1; }
+@keyframes sweep { from { transform: translateX(-100%); } to { transform: translateX(260%); } }
+.k-try { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 13px; color: var(--dim); }
+.k-try button { height: 30px; padding: 0 11px; border-radius: 8px; background: var(--surface); color: var(--muted); font-size: 13px; transition: color var(--t-fast), background-color var(--t-fast); }
+.k-try button:hover { color: var(--text); background: var(--surface-muted); }
+
+.k-result { position: relative; min-height: 360px; }
+.k-idle { height: 100%; min-height: 360px; display: grid; place-items: center; text-align: center; color: var(--muted); }
+.k-idle .vf { width: 132px; height: 132px; color: rgba(212,168,83,.6); position: relative; margin: 0 auto 22px; }
+.k-idle .vf svg { width: 100%; height: 100%; }
+.k-idle .vf .scan { position: absolute; left: 18px; right: 18px; height: 2px; top: 22px; border-radius: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); animation: scanline 2.4s var(--ease-in-out) infinite alternate; }
+@keyframes scanline { to { top: 108px; } }
+.k-idle .t { margin: 0; font-size: 20px; font-weight: 600; color: var(--text); }
+.k-idle .s { margin: 6px 0 0; font-size: 15px; }
+
+.stamp {
+  --tone: var(--success);
+  position: relative; overflow: hidden; border-radius: 20px; padding: clamp(22px, 3vw, 36px);
+  background: color-mix(in oklab, var(--tone) 8%, var(--bg-elev));
+  box-shadow: 0 30px 60px -34px rgba(0,0,0,.95);
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 32px; align-items: end;
+}
+.stamp.dup { --tone: var(--warning); }
+.stamp.err { --tone: var(--danger); }
+.stamp.off { --tone: var(--info); }
+.stamp.pick { --tone: var(--gold); grid-template-columns: 1fr; }
+.s-head { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; margin-bottom: clamp(10px, 2vh, 22px); }
+.s-ico { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: color-mix(in oklab, var(--tone) 20%, transparent); color: var(--tone); flex: none; }
+.s-ico .ico { width: 24px; height: 24px; stroke-width: 2.2; }
+.s-ico .draw { stroke-dasharray: 24; stroke-dashoffset: 24; animation: draw 380ms 140ms var(--ease-out) forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.s-status { font-size: 18px; font-weight: 600; color: var(--tone); }
+.s-time { margin-left: auto; color: var(--muted); font-size: 14px; }
+.s-name { margin: 0; font-size: clamp(2rem, 4.2vw, 3.4rem); line-height: 1.05; font-weight: 700; letter-spacing: -.025em; text-wrap: balance; }
+.s-sub { margin-top: 8px; color: color-mix(in oklab, var(--tone) 30%, var(--muted)); font-size: clamp(15px, 1.3vw, 17px); }
+.s-sub .gid { font-family: var(--font-mono); font-size: .92em; color: var(--text); }
+.s-note { margin-top: 14px; font-size: 15px; color: color-mix(in oklab, var(--tone) 22%, var(--muted)); max-width: 56ch; }
+.s-table { text-align: right; }
+.s-table .lbl { display: block; font-size: 14px; color: var(--muted); font-weight: 500; }
+.s-table .v { display: block; font-size: clamp(4rem, 8.4vw, 6rem); line-height: .9; font-weight: 700; letter-spacing: -.04em; font-variant-numeric: tabular-nums; color: var(--text); }
+.s-actions { grid-column: 1 / -1; display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+.btn { height: 44px; padding: 0 18px; border-radius: 11px; font-weight: 500; font-size: 14.5px; display: inline-flex; align-items: center; gap: 8px; transition: background-color var(--t-fast) var(--ease-out), color var(--t-fast), transform var(--t-instant); }
+.btn:active { transform: scale(.98); }
+.btn.gold { background: var(--gold); color: #1A1305; font-weight: 600; }
+.btn.gold:hover { background: var(--gold-hover); }
+.btn.ghost { background: rgba(255,255,255,.05); color: var(--text); }
+.btn.ghost:hover { background: rgba(255,255,255,.09); }
+.timer { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: rgba(255,255,255,.04); }
+.timer i { display: block; height: 100%; background: var(--tone); opacity: .7; transform-origin: left; animation: drain 6s linear forwards; }
+.stamp:hover .timer i { animation-play-state: paused; }
+@keyframes drain { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+
+.pick-list { display: grid; gap: 8px; margin-top: 4px; }
+.pick-item {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 18px; text-align: left;
+  padding: 16px 18px; border-radius: 12px; background: rgba(255,255,255,.035);
+  transition: background-color var(--t-fast) var(--ease-out);
+}
+.pick-item:hover, .pick-item.on { background: rgba(212,168,83,.12); }
+.pick-item .pn { font-size: 19px; font-weight: 600; }
+.pick-item .pc { color: var(--muted); font-size: 14px; }
+.pick-item .pt { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.pick-item .pt b { font-size: 22px; color: var(--text); }
+.pick-item .gid { font-family: var(--font-mono); font-size: 13px; color: var(--gold); }
+.pick-hint { margin-top: 12px; font-size: 13px; color: var(--dim); }
+
+.k-log { border-left: 1px solid var(--line); display: grid; grid-template-rows: auto 1fr auto; min-height: 0; }
+.k-log h2 { margin: 0; padding: 22px 24px 12px; font-size: 14px; font-weight: 600; color: var(--muted); }
+.k-log ol { list-style: none; margin: 0; padding: 0 12px; overflow: auto; }
+.k-log li {
+  display: grid; grid-template-columns: 46px minmax(0, 1fr) auto; align-items: center; gap: 12px;
+  padding: 11px 12px; border-radius: 10px; font-size: 14px;
+}
+.k-log li + li { box-shadow: inset 0 1px 0 var(--line); }
+.k-log time { color: var(--dim); font-variant-numeric: tabular-nums; font-size: 13px; }
+.k-log .ln { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.k-log .ls { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; }
+.k-log .ok .ls { color: var(--success); } .k-log .dup .ls { color: var(--warning); }
+.k-log .err .ls { color: var(--danger); } .k-log .off .ls { color: var(--info); }
+.k-tally { padding: 16px 24px 20px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-size: 13.5px; color: var(--muted); }
+.k-tally b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* ════════════ ADMIN ════════════ */
+#admin.active { display: grid; grid-template-columns: 236px minmax(0, 1fr); }
+.a-side { border-right: 1px solid var(--line); padding: 20px 12px; display: flex; flex-direction: column; gap: 2px; overflow: auto; }
+.a-brand { display: flex; align-items: center; gap: 12px; padding: 4px 10px 22px; }
+.a-brand .mk { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: rgba(212,168,83,.14); color: var(--gold); font-family: var(--font-display); font-weight: 700; font-size: 15px; }
+.a-brand .b1 { font-family: var(--font-display); font-weight: 600; font-size: 14px; line-height: 1.2; }
+.a-brand .b2 { font-size: 12px; color: var(--dim); }
+.a-nav {
+  display: flex; align-items: center; gap: 11px; height: 38px; padding: 0 10px; border-radius: 9px;
+  color: var(--muted); font-size: 14px; font-weight: 500; text-decoration: none;
+  transition: color var(--t-fast) var(--ease-out), background-color var(--t-fast) var(--ease-out);
+}
+.a-nav .ico { font-size: 17px; }
+.a-nav:hover { color: var(--text); background: rgba(255,255,255,.04); }
+.a-nav[aria-current="page"] { color: var(--text); background: rgba(255,255,255,.06); }
+.a-nav[aria-current="page"] .ico { color: var(--gold); }
+.a-nav .cnt { margin-left: auto; font-size: 12px; color: var(--dim); font-variant-numeric: tabular-nums; }
+.a-grp { font-size: 12px; color: var(--dim); padding: 18px 10px 6px; }
+.a-side-foot { margin-top: auto; padding: 14px 10px 0; font-size: 12.5px; color: var(--dim); display: flex; align-items: center; gap: 8px; }
+.a-side-foot .live { width: 7px; height: 7px; border-radius: 50%; background: var(--success); }
+
+.a-main { min-width: 0; overflow: auto; padding: 26px clamp(16px, 2.6vw, 36px) 90px; }
+.a-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.a-head h1 { margin: 0; font-size: 26px; font-weight: 650; letter-spacing: -.02em; }
+.a-sub { margin: 6px 0 0; color: var(--muted); font-size: 14px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.a-sub b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+.meter { width: 120px; height: 5px; border-radius: 5px; background: var(--surface-bright); overflow: hidden; }
+.meter i { display: block; height: 100%; background: var(--gold); border-radius: 5px; }
+.a-actions { display: flex; gap: 8px; }
+.a-alert {
+  margin-top: 20px; display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px;
+  background: rgba(251,191,36,.08); color: #F3D58A; font-size: 14px;
+}
+.a-alert .ico { color: var(--warning); font-size: 18px; }
+.a-alert a { margin-left: auto; color: var(--warning); font-weight: 500; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+.a-toolbar { margin-top: 20px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.a-search { position: relative; flex: 1 1 260px; max-width: 380px; }
+.a-search .ico { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--dim); font-size: 16px; }
+.a-search input { width: 100%; height: 40px; padding: 0 12px 0 38px; border-radius: 10px; border: 0; outline: 0; background: var(--bg-elev); box-shadow: inset 0 0 0 1px var(--line-strong); font-size: 14px; transition: box-shadow var(--t-fast); }
+.a-search input:focus { box-shadow: inset 0 0 0 1px rgba(212,168,83,.55); }
+.a-search input::placeholder { color: var(--dim); }
+.seg { display: flex; gap: 2px; padding: 3px; border-radius: 10px; background: var(--bg-elev); }
+.seg button { height: 34px; padding: 0 12px; border-radius: 8px; font-size: 13.5px; font-weight: 500; color: var(--muted); display: inline-flex; gap: 7px; align-items: center; transition: color var(--t-fast), background-color var(--t-fast); }
+.seg button span { color: var(--dim); font-variant-numeric: tabular-nums; font-weight: 400; }
+.seg button[aria-pressed="true"] { background: var(--surface-bright); color: var(--text); }
+.seg button:hover { color: var(--text); }
+
+.a-table-wrap { margin-top: 16px; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 820px; }
+thead th { text-align: left; font-weight: 500; color: var(--dim); font-size: 12.5px; padding: 0 12px 10px; white-space: nowrap; border-bottom: 1px solid var(--line); }
+thead th.r, td.r { text-align: right; }
+th button.sort { display: inline-flex; align-items: center; gap: 5px; color: inherit; font-weight: 500; }
+th button.sort:hover { color: var(--text); }
+th button.sort .ico { font-size: 13px; opacity: .6; }
+tbody td { padding: 11px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tbody tr { transition: background-color var(--t-instant) var(--ease-out); }
+tbody tr:hover { background: rgba(255,255,255,.025); }
+tbody tr.sel { background: rgba(212,168,83,.07); }
+td .gid { font-family: var(--font-mono); font-size: 12.5px; color: var(--gold); }
+td .nm { font-weight: 500; }
+td .co { color: var(--dim); font-size: 13px; }
+td.mj { font-variant-numeric: tabular-nums; font-weight: 600; }
+td .tm { font-variant-numeric: tabular-nums; }
+td .stn { color: var(--dim); font-size: 13px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 999px; font-size: 12.5px; font-weight: 500; white-space: nowrap; }
+.pill.in { background: rgba(74,222,128,.10); color: var(--success); }
+.pill.no { background: rgba(255,255,255,.05); color: var(--muted); }
+.pill.dup { background: rgba(251,191,36,.10); color: var(--warning); }
+.chk { width: 18px; height: 18px; border-radius: 5px; box-shadow: inset 0 0 0 1.5px var(--line-strong); display: grid; place-items: center; color: #1A1305; transition: background-color var(--t-instant), box-shadow var(--t-instant); }
+.chk .ico { font-size: 13px; stroke-width: 3; opacity: 0; }
+.chk[aria-checked="true"] { background: var(--gold); box-shadow: none; }
+.chk[aria-checked="true"] .ico { opacity: 1; }
+.sv { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+.sv.y { color: var(--text); } .sv.y .ico { color: var(--gold); }
+.a-empty { padding: 56px 0; text-align: center; color: var(--muted); }
+.a-empty b { display: block; color: var(--text); font-size: 16px; margin-bottom: 4px; }
+.a-foot { margin-top: 14px; display: flex; justify-content: space-between; align-items: center; color: var(--dim); font-size: 13px; }
+.pager { display: flex; gap: 4px; }
+.pager button { width: 32px; height: 32px; border-radius: 8px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.pager button[aria-current="true"] { background: var(--surface-bright); color: var(--text); }
+.pager button:hover { color: var(--text); }
+
+.bulk {
+  position: fixed; left: 50%; bottom: 22px; z-index: 40; transform: translate(-50%, 140%);
+  display: flex; align-items: center; gap: 6px; padding: 8px 8px 8px 18px; border-radius: 14px;
+  background: var(--surface-bright); box-shadow: 0 24px 50px -20px rgba(0,0,0,.9);
+  transition: transform var(--t-smooth) var(--ease-out), opacity var(--t-smooth) var(--ease-out); opacity: 0; font-size: 14px;
+}
+.bulk.on { transform: translate(-50%, 0); opacity: 1; }
+.bulk .c { font-weight: 600; margin-right: 10px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bulk .btn { height: 38px; }
+.bulk .x { width: 38px; justify-content: center; padding: 0; color: var(--muted); }
+
+/* ═══ Responsif ═══ */
+@media (max-width: 1080px) {
+  .k-body { grid-template-columns: 1fr; }
+  .k-log { border-left: 0; border-top: 1px solid var(--line); max-height: 300px; }
+  .multi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 900px) {
+  #admin.active { grid-template-columns: 1fr; }
+  .a-side { display: none; }
+  .chrome-note { display: none; }
+}
+@media (max-width: 640px) {
+  .chrome { padding: 0 10px; gap: 8px; }
+  .chrome-title { display: none; }
+  .tab { padding: 0 11px; }
+  .tab kbd { display: none; }
+  .tabs { margin: 0 auto; }
+  .event-mark .when { display: none; }
+  .mode { position: static; }
+  .controls { flex-wrap: wrap; }
+  .multi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stamp { grid-template-columns: 1fr; }
+  .s-table { text-align: left; display: flex; align-items: baseline; gap: 12px; }
+  .s-table .v { font-size: 4rem; }
+  #kiosk.active { overflow-y: auto; grid-template-rows: auto auto; align-content: start; }
+  .k-bar { align-items: flex-start; }
+  .k-event { flex-wrap: wrap; row-gap: 5px; }
+  .k-event .ev { white-space: normal; font-size: 14px; }
+  .k-event .st { white-space: normal; font-size: 12.5px; }
+  .k-event .sep { display: none; }
+  .k-status { width: 100%; justify-content: space-between; }
+  .k-status .op, .k-status .cache { display: none; }
+  .k-body { display: block; }
+  .k-main { overflow: visible; padding: 18px 16px 22px; grid-template-rows: auto auto minmax(260px, auto); }
+  .k-input { height: 64px; padding: 0 16px; }
+  .k-input kbd { display: none; }
+  .k-log { max-height: 238px; }
+  .pick-item { grid-template-columns: minmax(0, 1fr) auto; }
+  .pick-item .gid { display: none; }
+  .a-main { padding: 22px 16px 90px; }
+  .a-alert { flex-wrap: wrap; }
+  .a-alert a { margin-left: 30px; }
+  .a-toolbar { align-items: stretch; }
+  .a-search { flex-basis: 100%; max-width: none; }
+  .seg { max-width: 100%; overflow-x: auto; }
+  .seg button { flex: none; }
+  table { min-width: 0; }
+  thead { display: none; }
+  tbody tr { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; align-items: center; gap: 2px 10px; padding: 10px 8px; }
+  tbody td { padding: 2px 0; border: 0; }
+  tbody td:nth-child(1) { grid-column: 1; grid-row: 1 / span 2; }
+  tbody td:nth-child(2) { display: block; grid-column: 2; grid-row: 2; }
+  tbody td:nth-child(3) { grid-column: 2; grid-row: 1; }
+  tbody td:nth-child(5) { grid-column: 3; grid-row: 1 / span 2; }
+  tbody td:nth-child(4), tbody td:nth-child(6), tbody td:nth-child(7) { display: none; }
+  td .gid { font-size: 11.5px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; }
+  .k-idle .vf .scan { display: none; }
+  .timer i { animation-duration: 6s !important; }
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="mblur" x="0" y="-20%" width="100%" height="140%"><feGaussianBlur id="mblurStd" stdDeviation="0 0"/></filter>
+  </defs>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.86a10 10 0 0 1 14 0"/><path d="M8.5 16.43a5 5 0 0 1 7 0"/></symbol>
+  <symbol id="i-wifioff" viewBox="0 0 24 24"><path d="M12 20h.01"/><path d="M8.5 16.43a5 5 0 0 1 7 0"/><path d="M5 12.86a10 10 0 0 1 5.17-2.69"/><path d="M19 12.86a10 10 0 0 0-2-1.52"/><path d="M2 8.82a15 15 0 0 1 4.18-2.64"/><path d="M22 8.82a15 15 0 0 0-11.29-3.76"/><path d="m2 2 20 20"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-scan" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-monitor" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M12 13v8"/><path d="M4 14.9A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.24"/><path d="m8 17 4-4 4 4"/></symbol>
+  <symbol id="i-dash" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol>
+  <symbol id="i-gift" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C9.5 3 11 5.5 12 8c1-2.5 2.5-5 4.5-5a2.5 2.5 0 0 1 0 5"/></symbol>
+  <symbol id="i-swords" viewBox="0 0 24 24"><path d="M14.5 17.5 3 6V3h3l11.5 11.5"/><path d="m13 19 6-6"/><path d="m16 16 4 4"/><path d="m19 21 2-2"/><path d="M14.5 6.5 18 3h3v3l-3.5 3.5"/><path d="m5 14 4 4"/><path d="m7 17-3 3"/><path d="m3 19 2 2"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-sort" viewBox="0 0 24 24"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></symbol>
+  <symbol id="i-rotate" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+  <symbol id="i-print" viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14" rx="1"/></symbol>
+  <symbol id="i-userplus" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6"/><path d="M22 11h-6"/></symbol>
+  <symbol id="i-dashed" viewBox="0 0 24 24"><path d="M10.1 2.18a9.93 9.93 0 0 1 3.8 0"/><path d="M17.6 3.71a9.95 9.95 0 0 1 2.69 2.7"/><path d="M21.82 10.1a9.93 9.93 0 0 1 0 3.8"/><path d="M20.29 17.6a9.95 9.95 0 0 1-2.7 2.69"/><path d="M13.9 21.82a9.94 9.94 0 0 1-3.8 0"/><path d="M6.4 20.29a9.95 9.95 0 0 1-2.69-2.7"/><path d="M2.18 13.9a9.93 9.93 0 0 1 0-3.8"/><path d="M3.71 6.4a9.95 9.95 0 0 1 2.7-2.69"/></symbol>
+</svg>
+
+<header class="chrome">
+  <div class="chrome-title"><b>Mockup</b> · Front of House &amp; Backstage</div>
+  <div class="tabs" role="tablist" aria-label="Layar">
+    <button class="tab" role="tab" data-screen="stage" aria-selected="true">Panggung <kbd>1</kbd></button>
+    <button class="tab" role="tab" data-screen="kiosk" aria-selected="false">Kiosk <kbd>2</kbd></button>
+    <button class="tab" role="tab" data-screen="admin" aria-selected="false">Admin <kbd>3</kbd></button>
+  </div>
+  <div class="chrome-note">Data contoh · bukan data acara</div>
+</header>
+
+<!-- ═════════ PANGGUNG ═════════ -->
+<section id="stage" class="screen active" aria-label="Layar panggung lucky draw">
+  <div class="beam l"></div><div class="beam r"></div>
+  <div class="stage-wrap">
+    <div class="event-mark"><span class="rule"></span>Gathering Nasional 2026<span class="when">Jakarta Convention Center · 28 Oktober</span></div>
+
+    <div class="prize">
+      <h1 id="prizeName">Mobil Listrik</h1>
+      <div class="meta">
+        <span class="tier"><svg class="ico"><use href="#i-trophy"/></svg><span id="prizeTier">Hadiah Utama</span></span>
+        <span id="prizeCount">1 pemenang · 312 peserta berhak</span>
+      </div>
+    </div>
+
+    <div class="arena" id="arena">
+      <div class="reel" id="reel"><div class="reel-track" id="track"></div><div class="reel-frame"></div></div>
+    </div>
+
+    <div class="controls">
+      <button class="btn-stage" id="drawBtn">Mulai undian <span class="k">Spasi</span></button>
+      <button class="btn-quiet" id="againBtn" hidden><svg class="ico"><use href="#i-rotate"/></svg>Undian berikutnya <span class="k" style="font-size:12px;color:var(--dim)">R</span></button>
+      <div class="mode" role="group" aria-label="Tingkat hadiah">
+        <button aria-pressed="true" data-mode="utama">Hadiah utama</button>
+        <button aria-pressed="false" data-mode="hiburan">Hiburan ×5</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="dim"></div>
+  <div class="reveal" aria-live="polite">
+    <div class="bloom"></div>
+    <div class="winner">
+      <p class="winner-name" id="winnerName"></p>
+      <div class="winner-meta" id="winnerMeta"></div>
+    </div>
+  </div>
+  <div class="multi"><div class="multi-grid" id="multiGrid"></div></div>
+  <canvas id="dust"></canvas>
+</section>
+
+<!-- ═════════ KIOSK ═════════ -->
+<section id="kiosk" class="screen" aria-label="Kiosk check-in">
+  <header class="k-bar">
+    <div class="k-event">
+      <span class="ev">Gathering Nasional 2026</span><span class="sep"></span>
+      <span class="st"><svg class="ico"><use href="#i-monitor"/></svg>Meja Registrasi 2</span>
+    </div>
+    <div class="k-status">
+      <button class="conn" id="conn" aria-pressed="false" title="Klik untuk simulasi offline"><svg class="ico"><use href="#i-wifi"/></svg><span id="connLbl">Online</span></button>
+      <span class="cache"><span class="num">480</span> tamu tersimpan di perangkat</span>
+      <span class="op">Operator: Nadia</span>
+    </div>
+  </header>
+  <div class="k-body">
+    <main class="k-main">
+      <form class="k-input" id="kForm" autocomplete="off">
+        <svg class="ico"><use href="#i-scan"/></svg>
+        <label for="kInput" class="sr-only">ID atau nama tamu</label>
+        <input id="kInput" placeholder="Pindai QR, atau ketik ID / nama tamu" spellcheck="false">
+        <kbd>Enter</kbd>
+        <span class="load"></span>
+      </form>
+      <div class="k-try">Simulasi:
+        <button data-q="G-0142">G-0142</button>
+        <button data-q="G-0007">G-0007 · sudah hadir</button>
+        <button data-q="sari">“sari” · 2 tamu</button>
+        <button data-q="G-9999">G-9999 · tidak ada</button>
+      </div>
+      <div class="k-result" id="kResult" aria-live="polite"></div>
+    </main>
+    <aside class="k-log">
+      <h2>Riwayat stasiun ini</h2>
+      <ol id="kLog"></ol>
+      <div class="k-tally"><span>Masuk di stasiun ini <b id="kIn">41</b></span><span>Antrean offline <b id="kQ">0</b></span></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ═════════ ADMIN ═════════ -->
+<section id="admin" class="screen" aria-label="Admin tamu">
+  <nav class="a-side" aria-label="Navigasi admin">
+    <div class="a-brand"><span class="mk">G</span><div><div class="b1">Gathering Nasional</div><div class="b2">2026 · Jakarta</div></div></div>
+    <a class="a-nav" href="#"><svg class="ico"><use href="#i-dash"/></svg>Dasbor</a>
+    <a class="a-nav" href="#" aria-current="page"><svg class="ico"><use href="#i-users"/></svg>Tamu<span class="cnt">480</span></a>
+    <a class="a-nav" href="#"><svg class="ico"><use href="#i-cal"/></svg>Event</a>
+    <div class="a-grp">Acara</div>
+    <a class="a-nav" href="#"><svg class="ico"><use href="#i-trophy"/></svg>Hadiah &amp; undian</a>
+    <a class="a-nav" href="#"><svg class="ico"><use href="#i-gift"/></svg>Souvenir</a>
+    <a class="a-nav" href="#"><svg class="ico"><use href="#i-swords"/></svg>Turnamen</a>
+    <a class="a-nav" href="#"><svg class="ico"><use href="#i-monitor"/></svg>Stasiun<span class="cnt">12</span></a>
+    <div class="a-grp">Lainnya</div>
+    <a class="a-nav" href="#"><svg class="ico"><use href="#i-chart"/></svg>Statistik</a>
+    <a class="a-nav" href="#"><svg class="ico"><use href="#i-sliders"/></svg>Pengaturan</a>
+    <div class="a-side-foot"><span class="live"></span>Hari-H · acara berlangsung</div>
+  </nav>
+  <main class="a-main">
+    <header class="a-head">
+      <div>
+        <h1>Tamu</h1>
+        <p class="a-sub"><span><b>312</b> hadir dari <b>480</b> undangan</span><span class="meter" aria-hidden="true"><i style="width:65%"></i></span><span class="num">65%</span></p>
+      </div>
+      <div class="a-actions">
+        <button class="btn ghost"><svg class="ico"><use href="#i-upload"/></svg>Impor Excel</button>
+        <button class="btn gold"><svg class="ico"><use href="#i-plus"/></svg>Tambah tamu</button>
+      </div>
+    </header>
+    <div class="a-alert" role="status"><svg class="ico"><use href="#i-alert"/></svg><span>Meja Registrasi 4 belum sinkron selama 34 menit. Check-in di sana mungkin belum terlihat di daftar ini.</span><a href="#">Periksa stasiun</a></div>
+    <div class="a-toolbar">
+      <div class="a-search"><svg class="ico"><use href="#i-search"/></svg><label for="aSearch" class="sr-only">Cari tamu</label><input id="aSearch" placeholder="Cari nama, ID, atau perusahaan"></div>
+      <div class="seg" role="group" aria-label="Filter status" id="aSeg">
+        <button aria-pressed="true" data-f="all">Semua <span>480</span></button>
+        <button aria-pressed="false" data-f="in">Hadir <span>312</span></button>
+        <button aria-pressed="false" data-f="no">Belum <span>168</span></button>
+        <button aria-pressed="false" data-f="dup">Duplikat <span>6</span></button>
+      </div>
+    </div>
+    <div class="a-table-wrap">
+      <table>
+        <thead><tr>
+          <th style="width:42px"><button class="chk" role="checkbox" aria-checked="false" aria-label="Pilih semua" id="chkAll"><svg class="ico"><use href="#i-check"/></svg></button></th>
+          <th>ID</th>
+          <th><button class="sort" data-sort="name">Tamu <svg class="ico"><use href="#i-sort"/></svg></button></th>
+          <th class="r">Meja</th>
+          <th>Status</th>
+          <th><button class="sort" data-sort="time">Check-in <svg class="ico"><use href="#i-sort"/></svg></button></th>
+          <th>Souvenir</th>
+        </tr></thead>
+        <tbody id="aBody"></tbody>
+      </table>
+    </div>
+    <footer class="a-foot"><span id="aCount">Menampilkan 1–24 dari 480</span><div class="pager"><button aria-current="true">1</button><button>2</button><button>3</button><button>…</button><button>20</button></div></footer>
+  </main>
+  <div class="bulk" id="bulk" role="region" aria-label="Aksi massal">
+    <span class="c" id="bulkC">0 dipilih</span>
+    <button class="btn ghost"><svg class="ico"><use href="#i-send"/></svg>Kirim ulang undangan</button>
+    <button class="btn ghost"><svg class="ico"><use href="#i-print"/></svg>Cetak kartu</button>
+    <button class="btn ghost x" id="bulkX" aria-label="Batalkan pilihan"><svg class="ico"><use href="#i-close"/></svg></button>
+  </div>
+</section>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const EASE = 'cubic-bezier(.16,1,.3,1)';
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const ico = (id, cls = 'ico') => `<svg class="${cls}"><use href="#i-${id}"/></svg>`;
+  const pad = n => String(n).padStart(2, '0');
+  const now = () => { const d = new Date(); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+  const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+  /* ── Data contoh ── */
+  const GUESTS = [
+    ['G-0142','Rahmat Hidayat','PT Sinar Mas Agro','12'], ['G-0007','Budi Santoso','Bank Mandiri','03'],
+    ['G-0218','Dewi Lestari','PT Nusantara Energi','07'], ['G-0031','Sari Wulandari','Telkom Indonesia','09'],
+    ['G-0264','Sari Ayu Pratiwi','PT Astra International','15'], ['G-0089','Andi Pratama','Pertamina','04'],
+    ['G-0115','Siti Nurhaliza','Garuda Indonesia','11'], ['G-0176','Agus Setiawan','PT Unilever Indonesia','06'],
+    ['G-0203','Rina Marlina','BCA','08'], ['G-0057','Hendra Gunawan','PT Indofood','02'],
+    ['G-0298','Maya Sari','Kalbe Farma','14'], ['G-0331','Fajar Nugroho','PLN','10'],
+    ['G-0045','Putri Ayu','Tokopedia','05'], ['G-0187','Yoga Prasetyo','PT Adaro Energy','13'],
+    ['G-0309','Indah Permata','BRI','01'], ['G-0122','Rudi Hartono','Semen Indonesia','16'],
+    ['G-0250','Nadia Kusuma','PT XL Axiata','07'], ['G-0073','Eko Purnomo','Bukit Asam','12'],
+    ['G-0196','Lestari Wijaya','PT Gudang Garam','09'], ['G-0277','Bayu Saputra','Traveloka','03'],
+    ['G-0101','Fitri Handayani','PT Bio Farma','11'], ['G-0233','Galih Ramadhan','Pegadaian','06'],
+    ['G-0158','Wulan Septiani','PT Wika','15'], ['G-0319','Dimas Aditya','Angkasa Pura','04'],
+  ].map(([id, name, co, table]) => ({ id, name, co, table }));
+
+  /* ── Tab ── */
+  const screens = { stage: $('#stage'), kiosk: $('#kiosk'), admin: $('#admin') };
+  function show(name) {
+    Object.entries(screens).forEach(([k, el]) => el.classList.toggle('active', k === name));
+    $$('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.screen === name)));
+    if (name === 'kiosk') setTimeout(() => $('#kInput').focus(), 30);
+    if (name === 'stage') sizeDust();
+  }
+  $$('.tab').forEach(t => t.addEventListener('click', () => show(t.dataset.screen)));
+  document.addEventListener('keydown', e => {
+    if (e.target.matches('input')) return;
+    if (e.key === '1') show('stage'); if (e.key === '2') show('kiosk'); if (e.key === '3') show('admin');
+  });
+
+  /* ════════ PANGGUNG ════════ */
+  const stage = $('#stage'), track = $('#track'), reel = $('#reel');
+  const blurStd = $('#mblurStd');
+  const drawBtn = $('#drawBtn'), againBtn = $('#againBtn');
+  let mode = 'utama', state = 'idle', currentY = 0, target = 0, winners = [], running = [];
+
+  const PRIZES = {
+    utama: { name: 'Mobil Listrik', tier: 'Hadiah Utama', count: '1 pemenang · 312 peserta berhak', icon: 'trophy' },
+    hiburan: { name: 'Voucher Belanja Rp 500.000', tier: 'Hadiah Hiburan', count: '5 pemenang sekaligus · 307 peserta berhak', icon: 'gift' },
+  };
+
+  function rowH() { return track.firstElementChild ? track.firstElementChild.getBoundingClientRect().height : 80; }
+  function setY(y) { currentY = y; track.style.transform = `translate3d(0, ${y}px, 0)`; }
+
+  function buildReel() {
+    const pool = shuffle(GUESTS.slice());
+    winners = pool.slice(0, mode === 'utama' ? 1 : 5);
+    const total = mode === 'utama' ? 74 : 40;
+    target = total - 6;
+    const items = Array.from({ length: total }, (_, i) => pool[(i + 5) % pool.length]);
+    items[target] = winners[0];
+    track.innerHTML = items.map(g => `<div class="reel-row"><span>${g.name}</span><span class="gid">${g.id}</span></div>`).join('');
+    setY(0);
+  }
+
+  function applyPrize() {
+    const p = PRIZES[mode];
+    $('#prizeName').textContent = p.name;
+    $('#prizeTier').textContent = p.tier;
+    $('#prizeCount').textContent = p.count;
+    $('.tier use').setAttribute('href', '#i-' + p.icon);
+  }
+
+  const easeOutQuint = t => 1 - Math.pow(1 - t, 5);
+  function spin(duration) {
+    return new Promise(resolve => {
+      const h = rowH(), start = currentY, end = -(target - 2) * h;
+      if (reduce) { setY(end); resolve(); return; }
+      let t0 = null, prev = start;
+      const frame = ts => {
+        if (state === 'idle') return resolve();
+        if (t0 === null) t0 = ts;
+        const p = Math.min(1, (ts - t0) / duration);
+        const y = start + (end - start) * easeOutQuint(p);
+        const v = Math.abs(y - prev); prev = y;
+        setY(y);
+        blurStd.setAttribute('stdDeviation', `0 ${Math.min(14, v * 0.55).toFixed(2)}`);
+        if (p < 1) requestAnimationFrame(frame);
+        else { blurStd.setAttribute('stdDeviation', '0 0'); resolve(); }
+      };
+      requestAnimationFrame(frame);
+    });
+  }
+  const wait = ms => new Promise(r => setTimeout(r, reduce ? Math.min(ms, 60) : ms));
+
+  function placeSpot() {
+    const s = stage.getBoundingClientRect(), r = reel.getBoundingClientRect();
+    stage.style.setProperty('--cx', `${((r.left + r.width / 2 - s.left) / s.width * 100).toFixed(2)}%`);
+    stage.style.setProperty('--cy', `${((r.top + r.height / 2 - s.top) / s.height * 100).toFixed(2)}%`);
+  }
+
+  function anim(el, frames, opts) {
+    const a = el.animate(frames, { easing: EASE, fill: 'forwards', ...opts, duration: reduce ? 1 : opts.duration, delay: reduce ? 0 : (opts.delay || 0) });
+    running.push(a); return a;
+  }
+
+  async function draw() {
+    if (state !== 'idle') return;
+    state = 'drawing';
+    stage.classList.add('busy', 'drawing');
+    drawBtn.style.opacity = '0'; drawBtn.style.pointerEvents = 'none';
+    const hit = track.children[target];
+
+    if (mode === 'utama') {
+      await spin(5600);
+      if (state === 'idle') return;
+      stage.classList.remove('drawing'); stage.classList.add('landed');
+      hit.classList.add('hit');
+      await wait(650);
+      placeSpot(); stage.classList.add('hush');
+      await wait(1100);
+      revealSingle(winners[0]);
+    } else {
+      await spin(1700);
+      if (state === 'idle') return;
+      stage.classList.remove('drawing');
+      hit.classList.add('hit');
+      await wait(260);
+      revealMulti();
+    }
+  }
+
+  function revealSingle(g) {
+    stage.classList.add('revealed');
+    reel.style.opacity = '0';
+    const name = $('#winnerName'), meta = $('#winnerMeta'), bloom = $('.bloom');
+    name.textContent = g.name;
+    meta.innerHTML = `<span class="gid">${g.id}</span><b>${g.co}</b><span>Meja ${g.table}</span>`;
+    anim(bloom, [{ opacity: 0, transform: 'scale(.55)' }, { opacity: 1, transform: 'scale(1)' }], { duration: 1800 });
+    anim(name, [
+      { opacity: 0, filter: 'blur(20px)', transform: 'scale(.94)', letterSpacing: '.14em' },
+      { opacity: 1, filter: 'blur(0px)', transform: 'scale(1)', letterSpacing: '-.02em' },
+    ], { duration: 1500 });
+    anim(meta, [{ opacity: 0, transform: 'translateY(14px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 700, delay: 900 });
+    if (!reduce) startDust();
+    setTimeout(finish, reduce ? 50 : 1500);
+  }
+
+  function revealMulti() {
+    reel.style.opacity = '0';
+    stage.classList.add('multi-on');
+    $('#multiGrid').innerHTML = winners.map((g, i) => `
+      <div class="mcard"><div class="ord">Pemenang ${i + 1}</div><div class="n">${g.name}</div><div class="g">${g.id}</div><div class="c">${g.co} · Meja ${g.table}</div></div>`).join('');
+    $$('.mcard').forEach((c, i) => anim(c, [
+      { opacity: 0, transform: 'translateY(22px)', filter: 'blur(8px)' },
+      { opacity: 1, transform: 'translateY(0)', filter: 'blur(0px)' },
+    ], { duration: 620, delay: i * 95 }));
+    setTimeout(finish, reduce ? 50 : 900);
+  }
+
+  function finish() {
+    if (state === 'idle') return;
+    state = 'done';
+    stage.classList.remove('busy');
+    againBtn.hidden = false;
+    anim(againBtn, [{ opacity: 0 }, { opacity: 1 }], { duration: 400 });
+  }
+
+  function resetStage() {
+    state = 'idle';
+    running.forEach(a => a.cancel()); running = [];
+    stopDust();
+    stage.classList.remove('busy', 'drawing', 'landed', 'hush', 'revealed', 'multi-on');
+    blurStd.setAttribute('stdDeviation', '0 0');
+    reel.style.opacity = '';
+    drawBtn.style.opacity = ''; drawBtn.style.pointerEvents = '';
+    againBtn.hidden = true;
+    applyPrize(); buildReel();
+  }
+
+  drawBtn.addEventListener('click', draw);
+  againBtn.addEventListener('click', resetStage);
+  $$('.mode button').forEach(b => b.addEventListener('click', () => {
+    if (state === 'drawing') return;
+    mode = b.dataset.mode;
+    $$('.mode button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    resetStage();
+  }));
+  document.addEventListener('keydown', e => {
+    if (!stage.classList.contains('active') || e.target.matches('input')) return;
+    if (e.code === 'Space') { e.preventDefault(); if (state === 'idle') draw(); }
+    if (e.key === 'r' || e.key === 'R') { if (state === 'done') resetStage(); }
+  });
+
+  /* Debu emas: hanya untuk hadiah utama, berhenti sendiri */
+  const cv = $('#dust'), cx = cv.getContext('2d');
+  let parts = [], dustRaf = 0, dustT0 = 0;
+  function sizeDust() { const r = stage.getBoundingClientRect(); const d = devicePixelRatio || 1; cv.width = r.width * d; cv.height = r.height * d; cv.style.width = r.width + 'px'; cv.style.height = r.height + 'px'; cx.setTransform(d, 0, 0, d, 0, 0); }
+  function startDust() {
+    sizeDust();
+    const w = cv.clientWidth, h = cv.clientHeight;
+    parts = Array.from({ length: 150 }, () => ({
+      x: w * (.2 + Math.random() * .6), y: -20 - Math.random() * h * .6,
+      r: .6 + Math.random() * 1.9, vy: .35 + Math.random() * 1.1, vx: (Math.random() - .5) * .5,
+      ph: Math.random() * 6.28, sp: .02 + Math.random() * .05,
+    }));
+    dustT0 = performance.now();
+    const loop = t => {
+      const life = (t - dustT0) / 1000;
+      const fade = life < 6 ? 1 : Math.max(0, 1 - (life - 6) / 2.5);
+      cx.clearRect(0, 0, w, h);
+      for (const p of parts) {
+        p.y += p.vy; p.x += p.vx + Math.sin(p.ph) * .25; p.ph += p.sp;
+        const tw = .45 + .55 * Math.abs(Math.sin(p.ph * 1.7));
+        cx.globalAlpha = tw * fade * .9;
+        cx.fillStyle = p.r > 1.8 ? '#F5ECD7' : '#D4A853';
+        cx.beginPath(); cx.arc(p.x, p.y, p.r, 0, 6.283); cx.fill();
+      }
+      if (fade > 0) dustRaf = requestAnimationFrame(loop); else cx.clearRect(0, 0, w, h);
+    };
+    dustRaf = requestAnimationFrame(loop);
+  }
+  function stopDust() { cancelAnimationFrame(dustRaf); cx.clearRect(0, 0, cv.width, cv.height); }
+  addEventListener('resize', () => { if (screens.stage.classList.contains('active')) sizeDust(); });
+
+  applyPrize(); buildReel();
+
+  /* ════════ KIOSK ════════ */
+  const kInput = $('#kInput'), kForm = $('#kForm'), kResult = $('#kResult'), kLog = $('#kLog');
+  const checked = new Map([['G-0007', { at: '08:12', where: 'Meja Registrasi 1', by: 'Rudi' }]]);
+  let offline = false, inCount = 41, queue = 0, pickState = null;
+
+  const IDLE = `<div class="k-idle"><div>
+      <div class="vf"><svg viewBox="0 0 132 132" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M10 38V18a8 8 0 0 1 8-8h20M94 10h20a8 8 0 0 1 8 8v20M122 94v20a8 8 0 0 1-8 8H94M38 122H18a8 8 0 0 1-8-8V94"/></svg><span class="scan"></span></div>
+      <p class="t">Siap memindai</p>
+      <p class="s">Arahkan QR tamu ke kamera, atau ketik ID lalu tekan Enter.</p>
+    </div></div>`;
+
+  function setResult(html, tone) {
+    kResult.innerHTML = html;
+    const card = kResult.firstElementChild;
+    if (!card || !card.classList.contains('stamp')) return;
+    if (!reduce) {
+      card.animate([
+        { clipPath: 'circle(0% at 46px 46px)', transform: 'scale(.985)' },
+        { clipPath: 'circle(160% at 46px 46px)', transform: 'scale(1)' },
+      ], { duration: 460, easing: EASE });
+    }
+    const bar = card.querySelector('.timer i');
+    if (bar) bar.addEventListener('animationend', () => { if (kResult.firstElementChild === card) kResult.innerHTML = IDLE; });
+  }
+
+  function logRow(cls, name, label, icon) {
+    const li = document.createElement('li');
+    li.className = cls;
+    li.innerHTML = `<time>${now()}</time><span class="ln">${name}</span><span class="ls">${ico(icon)}${label}</span>`;
+    kLog.prepend(li);
+    if (!reduce) li.animate([{ opacity: 0, transform: 'translateY(-8px)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: EASE });
+    while (kLog.children.length > 12) kLog.lastElementChild.remove();
+  }
+
+  function success(g) {
+    const t = now();
+    if (offline) {
+      queue++; $('#kQ').textContent = queue;
+      checked.set(g.id, { at: t, where: 'Meja Registrasi 2', by: 'Nadia' });
+      setResult(`<div class="stamp off">
+        <div class="s-head"><span class="s-ico">${ico('cloud')}</span><span class="s-status">Tersimpan di perangkat</span><span class="s-time num">${t}</span></div>
+        <div><p class="s-name">${g.name}</p><div class="s-sub">${g.co} · <span class="gid">${g.id}</span></div>
+        <div class="s-note">Tamu boleh masuk. Data akan disinkronkan otomatis saat koneksi kembali.</div></div>
+        <div class="s-table"><span class="lbl">Meja</span><span class="v">${g.table}</span></div>
+        <div class="timer"><i></i></div></div>`);
+      logRow('off', g.name, 'Offline', 'cloud');
+      return;
+    }
+    checked.set(g.id, { at: t, where: 'Meja Registrasi 2', by: 'Nadia' });
+    inCount++; $('#kIn').textContent = inCount;
+    setResult(`<div class="stamp ok">
+      <div class="s-head"><span class="s-ico"><svg class="ico"><path class="draw" d="M20 6 9 17l-5-5"/></svg></span><span class="s-status">Check-in berhasil</span><span class="s-time num">${t}</span></div>
+      <div><p class="s-name">${g.name}</p><div class="s-sub">${g.co} · <span class="gid">${g.id}</span></div></div>
+      <div class="s-table"><span class="lbl">Meja</span><span class="v">${g.table}</span></div>
+      <div class="timer"><i></i></div></div>`);
+    logRow('ok', g.name, 'Masuk', 'check');
+  }
+
+  function duplicate(g) {
+    const c = checked.get(g.id);
+    setResult(`<div class="stamp dup">
+      <div class="s-head"><span class="s-ico">${ico('alert')}</span><span class="s-status">Sudah check-in sebelumnya</span><span class="s-time num">${now()}</span></div>
+      <div><p class="s-name">${g.name}</p><div class="s-sub">${g.co} · <span class="gid">${g.id}</span></div>
+      <div class="s-note">Masuk pukul <b class="num">${c.at}</b> di ${c.where}, dicatat oleh ${c.by}. Jika ini orang yang berbeda, panggil koordinator.</div></div>
+      <div class="s-table"><span class="lbl">Meja</span><span class="v">${g.table}</span></div>
+      <div class="timer"><i></i></div></div>`);
+    logRow('dup', g.name, 'Duplikat', 'alert');
+  }
+
+  function notFound(q) {
+    setResult(`<div class="stamp err">
+      <div class="s-head"><span class="s-ico">${ico('x')}</span><span class="s-status">Tamu tidak ditemukan</span><span class="s-time num">${now()}</span></div>
+      <div><p class="s-name">${q}</p>
+      <div class="s-note">Tidak ada tamu dengan ID atau nama ini. Periksa ejaannya, atau cari dengan nama. Tamu tanpa undangan bisa didaftarkan sebagai walk-in.</div></div>
+      <div class="s-actions"><button class="btn gold" type="button">${ico('userplus')}Daftarkan walk-in</button><button class="btn ghost" type="button" data-refocus>Cari lagi</button></div>
+      <div class="timer"><i></i></div></div>`);
+    logRow('err', q, 'Tidak ada', 'x');
+  }
+
+  function pick(list, q) {
+    pickState = { list, i: 0 };
+    kResult.innerHTML = `<div class="stamp pick">
+      <div class="s-head"><span class="s-ico">${ico('users')}</span><span class="s-status">${list.length} tamu cocok dengan “${q}”</span></div>
+      <div class="pick-list">${list.map((g, i) => `<button class="pick-item${i === 0 ? ' on' : ''}" data-i="${i}" type="button">
+        <span><span class="pn">${g.name}</span><br><span class="pc">${g.co}</span></span>
+        <span class="gid">${g.id}</span><span class="pt">Meja <b>${g.table}</b></span></button>`).join('')}</div>
+      <div class="pick-hint">Pilih tamu yang benar · ↑ ↓ lalu Enter</div></div>`;
+    if (!reduce) kResult.firstElementChild.animate([{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: 240, easing: EASE });
+  }
+  function choose(i) {
+    const g = pickState.list[i]; pickState = null;
+    checked.has(g.id) ? duplicate(g) : success(g);
+    kInput.focus();
+  }
+  kResult.addEventListener('click', e => {
+    const it = e.target.closest('.pick-item');
+    if (it && pickState) choose(+it.dataset.i);
+    if (e.target.closest('[data-refocus]')) { kResult.innerHTML = IDLE; kInput.focus(); }
+  });
+
+  function lookup(raw) {
+    const q = raw.trim();
+    if (!q) return;
+    pickState = null;
+    kForm.classList.add('loading');
+    setTimeout(() => {
+      kForm.classList.remove('loading');
+      const byId = GUESTS.find(g => g.id.toLowerCase() === q.toLowerCase());
+      if (byId) return checked.has(byId.id) ? duplicate(byId) : success(byId);
+      const byName = GUESTS.filter(g => g.name.toLowerCase().includes(q.toLowerCase()));
+      if (byName.length === 1) return checked.has(byName[0].id) ? duplicate(byName[0]) : success(byName[0]);
+      if (byName.length > 1) return pick(byName, q);
+      notFound(q.toUpperCase().startsWith('G-') ? q.toUpperCase() : q);
+    }, reduce ? 0 : 180);
+  }
+
+  kForm.addEventListener('submit', e => { e.preventDefault(); lookup(kInput.value); kInput.value = ''; });
+  kInput.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { kResult.innerHTML = IDLE; pickState = null; }
+    if (!pickState || kInput.value) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      const n = pickState.list.length;
+      pickState.i = (pickState.i + (e.key === 'ArrowDown' ? 1 : n - 1)) % n;
+      $$('.pick-item', kResult).forEach((b, i) => b.classList.toggle('on', i === pickState.i));
+    }
+    if (e.key === 'Enter') { e.preventDefault(); choose(pickState.i); }
+  });
+  $$('.k-try button').forEach(b => b.addEventListener('click', () => { lookup(b.dataset.q); kInput.focus(); }));
+
+  $('#conn').addEventListener('click', () => {
+    offline = !offline;
+    const c = $('#conn');
+    c.classList.toggle('off', offline);
+    c.setAttribute('aria-pressed', String(offline));
+    $('use', c).setAttribute('href', offline ? '#i-wifioff' : '#i-wifi');
+    $('#connLbl').textContent = offline ? 'Offline · mode cadangan' : 'Online';
+    if (!offline && queue) { logRow('ok', `${queue} check-in offline`, 'Tersinkron', 'check'); queue = 0; $('#kQ').textContent = 0; }
+    kInput.focus();
+  });
+
+  kResult.innerHTML = IDLE;
+  [['08:39', 'Hendra Gunawan', 'ok'], ['08:38', 'Maya Sari', 'ok'], ['08:36', 'Fajar Nugroho', 'dup'], ['08:35', 'Putri Ayu', 'ok'], ['08:31', 'Galih Ramadhan', 'ok']].reverse()
+    .forEach(([t, n, c]) => { const li = document.createElement('li'); li.className = c;
+      li.innerHTML = `<time>${t}</time><span class="ln">${n}</span><span class="ls">${ico(c === 'ok' ? 'check' : 'alert')}${c === 'ok' ? 'Masuk' : 'Duplikat'}</span>`; kLog.prepend(li); });
+
+  /* ════════ ADMIN ════════ */
+  const STN = ['Meja Registrasi 1', 'Meja Registrasi 2', 'Meja Registrasi 3', 'Meja Registrasi 4'];
+  const ROWS = GUESTS.map((g, i) => {
+    const status = i % 9 === 4 ? 'dup' : (i % 3 === 2 ? 'no' : 'in');
+    const time = status === 'no' ? null : `08:${pad(5 + ((i * 7) % 50))}`;
+    return { ...g, status, time, stn: STN[i % 4], sv: status !== 'no' && i % 2 === 0 };
+  });
+  let filter = 'all', query = '', sortKey = null, sortDir = 1;
+  const sel = new Set();
+  const STATUS = {
+    in: `<span class="pill in">${ico('check')}Hadir</span>`,
+    no: `<span class="pill no">${ico('dashed')}Belum hadir</span>`,
+    dup: `<span class="pill dup">${ico('alert')}Duplikat</span>`,
+  };
+
+  function renderTable(animate) {
+    let rows = ROWS.filter(r => (filter === 'all' || r.status === filter) &&
+      (!query || `${r.name} ${r.id} ${r.co}`.toLowerCase().includes(query)));
+    if (sortKey) rows = rows.slice().sort((a, b) => {
+      const A = sortKey === 'name' ? a.name : (a.time || '99'), B = sortKey === 'name' ? b.name : (b.time || '99');
+      return A.localeCompare(B) * sortDir;
+    });
+    const body = $('#aBody');
+    if (!rows.length) {
+      body.innerHTML = `<tr><td colspan="7"><div class="a-empty"><b>Tidak ada tamu yang cocok</b>Coba kata kunci lain, atau ubah filter status.</div></td></tr>`;
+    } else {
+      body.innerHTML = rows.map(r => `<tr data-id="${r.id}" class="${sel.has(r.id) ? 'sel' : ''}">
+        <td><button class="chk" role="checkbox" aria-checked="${sel.has(r.id)}" aria-label="Pilih ${r.name}">${ico('check')}</button></td>
+        <td><span class="gid">${r.id}</span></td>
+        <td><div class="nm">${r.name}</div><div class="co">${r.co}</div></td>
+        <td class="r mj">${r.table}</td>
+        <td>${STATUS[r.status]}</td>
+        <td>${r.time ? `<div class="tm">${r.time}</div><div class="stn">${r.stn}</div>` : '<span class="stn">—</span>'}</td>
+        <td>${r.sv ? `<span class="sv y">${ico('gift')}Diambil</span>` : '<span class="sv">Belum</span>'}</td></tr>`).join('');
+      if (animate && !reduce) $$('tr', body).slice(0, 12).forEach((tr, i) =>
+        tr.animate([{ opacity: 0, transform: 'translateY(4px)' }, { opacity: 1, transform: 'none' }], { duration: 180, delay: i * 14, easing: EASE, fill: 'backwards' }));
+    }
+    $('#aCount').textContent = rows.length ? `Menampilkan 1–${rows.length} dari ${filter === 'all' && !query ? 480 : rows.length}` : 'Tidak ada hasil';
+    syncBulk();
+  }
+  function syncBulk() {
+    $('#bulk').classList.toggle('on', sel.size > 0);
+    $('#bulkC').textContent = `${sel.size} dipilih`;
+    $('#chkAll').setAttribute('aria-checked', String(sel.size > 0 && sel.size === ROWS.length));
+  }
+  $('#aBody').addEventListener('click', e => {
+    const b = e.target.closest('.chk'); if (!b) return;
+    const id = b.closest('tr').dataset.id;
+    sel.has(id) ? sel.delete(id) : sel.add(id);
+    b.setAttribute('aria-checked', String(sel.has(id)));
+    b.closest('tr').classList.toggle('sel', sel.has(id));
+    syncBulk();
+  });
+  $('#chkAll').addEventListener('click', () => { if (sel.size === ROWS.length) sel.clear(); else ROWS.forEach(r => sel.add(r.id)); renderTable(false); });
+  $('#bulkX').addEventListener('click', () => { sel.clear(); renderTable(false); });
+  $('#aSearch').addEventListener('input', e => { query = e.target.value.trim().toLowerCase(); renderTable(true); });
+  $$('#aSeg button').forEach(b => b.addEventListener('click', () => {
+    filter = b.dataset.f;
+    $$('#aSeg button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    renderTable(true);
+  }));
+  $$('.sort').forEach(b => b.addEventListener('click', () => {
+    sortDir = sortKey === b.dataset.sort ? -sortDir : 1; sortKey = b.dataset.sort; renderTable(true);
+  }));
+  renderTable(false);
+})();
+</script>
+</body>
+</html>

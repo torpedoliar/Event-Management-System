@@ -42,7 +42,7 @@ export default function NewTournamentPage() {
             <Trophy className="w-6 h-6 text-brand-warning" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-brand-text mb-1">Create Tournament</h1>
+            <h1 className="admin-title">Create Tournament</h1>
             <p className="text-brand-textMuted font-medium">Set up a new tournament event</p>
           </div>
         </div>

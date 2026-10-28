@@ -297,7 +297,7 @@ export default function EventCalendarPage() {
           {/* Header */}
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-white">Event Calendar</h1>
+              <h1 className="admin-title">Event Calendar</h1>
               <p className="text-white/60 text-sm mt-1">Lihat dan kelola jadwal event</p>
             </div>
             <div className="flex items-center gap-2">

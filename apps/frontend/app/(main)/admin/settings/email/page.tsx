@@ -258,7 +258,7 @@ export default function EmailSettingsPage() {
             <ArrowLeft size={20} />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-white">Email Settings</h1>
+            <h1 className="admin-title">Email Settings</h1>
             <p className="text-white/60 text-sm">Konfigurasi SMTP untuk mengirim email undangan</p>
           </div>
         </div>

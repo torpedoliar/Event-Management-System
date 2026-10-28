@@ -58,13 +58,13 @@ describe('SouvenirResults', () => {
     render(<SouvenirResults {...baseResults()} />);
 
     expect(screen.getByText('Budi')).toBeInTheDocument();
-    expect(screen.getByText('(TAMU-001)')).toBeInTheDocument();
+    expect(screen.getByText('TAMU-001')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /ambil souvenir/i })).toBeEnabled();
   });
 
   it('menandai tamu yang sudah mengambil souvenir', () => {
     render(<SouvenirResults {...baseResults()} results={[guest({ souvenirTaken: true })]} />);
-    expect(screen.getByRole('button', { name: /sudah diambil/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^sudah diambil$/i })).toBeInTheDocument();
   });
 
   it('menyembunyikan tombol saat stok habis, tetapi tetap menandai yang sudah diambil', () => {
@@ -77,7 +77,7 @@ describe('SouvenirResults', () => {
     );
 
     expect(screen.queryByRole('button', { name: /ambil souvenir/i })).not.toBeInTheDocument();
-    expect(screen.getByText('Sudah Diambil')).toBeInTheDocument();
+    expect(screen.getByText('Sudah diambil')).toBeInTheDocument();
   });
 
   it('memanggil onSelect saat kartu diklik dan onToggleSouvenir saat tombol ditekan', async () => {

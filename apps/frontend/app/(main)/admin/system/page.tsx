@@ -257,7 +257,7 @@ function SystemPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-white">System Monitor</h1>
+            <h1 className="admin-title">System Monitor</h1>
             <p className="text-white/60">Health, logs, dan audit trail sistem</p>
           </div>
           <div className="flex gap-3">
@@ -468,28 +468,28 @@ function SystemPage() {
                     Tidak ada log entries
                   </div>
                 ) : (
-                  <table className="w-full text-sm">
-                    <thead className="bg-white/5 sticky top-0">
+                  <table className="admin-table">
+                    <thead>
                       <tr>
-                        <th className="px-4 py-3 text-left text-white/60 font-medium">Timestamp</th>
-                        <th className="px-4 py-3 text-left text-white/60 font-medium">Level</th>
-                        <th className="px-4 py-3 text-left text-white/60 font-medium">Context</th>
-                        <th className="px-4 py-3 text-left text-white/60 font-medium">Message</th>
+                        <th className="">Timestamp</th>
+                        <th className="">Level</th>
+                        <th className="">Context</th>
+                        <th className="">Message</th>
                       </tr>
                     </thead>
                     <tbody>
                       {logEntries.map((entry, i) => (
-                        <tr key={i} className="border-t border-brand-border hover:bg-brand-bgSubtle">
-                          <td className="px-4 py-2 text-white/60 whitespace-nowrap font-mono text-xs">
+                        <tr key={i} className="">
+                          <td className="mono dim">
                             {entry.timestamp}
                           </td>
-                          <td className="px-4 py-2">
+                          <td>
                             <span className={`px-2 py-0.5 rounded text-xs ${getLevelColor(entry.level)}`}>
                               {entry.level}
                             </span>
                           </td>
-                          <td className="px-4 py-2 text-white/60">{entry.context || '-'}</td>
-                          <td className="px-4 py-2 text-white">{entry.message}</td>
+                          <td className="dim">{entry.context || '-'}</td>
+                          <td className="strong">{entry.message}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -530,30 +530,30 @@ function SystemPage() {
                     Tidak ada audit logs
                   </div>
                 ) : (
-                  <table className="w-full text-sm">
-                    <thead className="bg-white/5 sticky top-0">
+                  <table className="admin-table">
+                    <thead>
                       <tr>
-                        <th className="px-4 py-3 text-left text-white/60 font-medium">Waktu</th>
-                        <th className="px-4 py-3 text-left text-white/60 font-medium">Action</th>
-                        <th className="px-4 py-3 text-left text-white/60 font-medium">User</th>
-                        <th className="px-4 py-3 text-left text-white/60 font-medium">Details</th>
+                        <th className="">Waktu</th>
+                        <th className="">Action</th>
+                        <th className="">User</th>
+                        <th className="">Details</th>
                       </tr>
                     </thead>
                     <tbody>
                       {auditLogs.map((log) => (
-                        <tr key={log.id} className="border-t border-brand-border hover:bg-brand-bgSubtle">
-                          <td className="px-4 py-2 text-brand-textDim whitespace-nowrap text-xs">
+                        <tr key={log.id} className="">
+                          <td className="dim">
                             {new Date(log.createdAt).toLocaleString('id-ID')}
                           </td>
-                          <td className="px-4 py-2">
+                          <td>
                             <span className="px-2 py-0.5 rounded text-xs bg-brand-primary/20 text-brand-primary">
                               {log.action}
                             </span>
                           </td>
-                          <td className="px-4 py-2 text-white/60">
+                          <td className="dim">
                             {log.metadata?.adminUsername || log.adminUserId || 'System'}
                           </td>
-                          <td className="px-4 py-2 text-white text-xs">
+                          <td className="strong">
                             {log.metadata?.targetName && (
                               <span className="text-white/60">
                                 Target: {log.metadata.targetName}

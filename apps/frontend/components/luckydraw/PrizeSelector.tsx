@@ -4,52 +4,58 @@ import { toApiUrl } from '@/lib/api';
 import type { Prize } from '@/lib/luckydraw/types';
 
 /**
- * Kepala halaman undian: logo event, judul, dan pemilih hadiah.
+ * Kepala halaman undian: identitas event, judul, dan pemilih hadiah.
  *
  * Pemilihan hadiah dikembalikan ke halaman lewat `onSelectPrize` karena
  * pemanggil juga perlu mereset status undian (pemenang, kandidat, sorotan).
  */
 export default function PrizeSelector({
   logoUrl,
+  eventName,
   prizes,
   selectedPrizeId,
   onSelectPrize,
 }: {
   logoUrl?: string | null;
+  eventName?: string | null;
   prizes: Prize[];
   selectedPrizeId: string;
   onSelectPrize: (prizeId: string) => void;
 }) {
   return (
-    <div className="w-full text-center space-y-4 pt-2">
-      {logoUrl && (
-        <img src={toApiUrl(logoUrl)} className="h-16 md:h-24 mx-auto mb-4" alt="logo" />
-      )}
+    <section className="draw-head" aria-label="Pilih hadiah undian">
+      <div className="draw-event-mark">
+        {logoUrl ? (
+          <img src={toApiUrl(logoUrl)} alt="" />
+        ) : (
+          <span className="draw-event-monogram" aria-hidden="true">
+            {eventName?.trim().charAt(0).toUpperCase() || 'E'}
+          </span>
+        )}
+        {eventName && <span className="draw-event-name">{eventName}</span>}
+      </div>
 
-      <h1 className="text-3xl md:text-5xl font-heading font-semibold text-brand-text tracking-tight">
-        Lucky Draw
-      </h1>
+      <div className="draw-title-block">
+        <span className="draw-title-rule" aria-hidden="true" />
+        <h1>Lucky Draw</h1>
+        <span className="draw-title-rule" aria-hidden="true" />
+      </div>
 
-      <div className="flex flex-col items-center gap-2">
+      <label className="draw-prize-control">
+        <span className="draw-prize-label">Hadiah yang diundi</span>
         <select
           value={selectedPrizeId}
           onChange={(e) => onSelectPrize(e.target.value)}
-          className="bg-brand-bgElevated border border-brand-border text-brand-text text-base md:text-lg rounded-xl px-5 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 cursor-pointer"
+          disabled={prizes.length === 0}
+          aria-label="Hadiah yang diundi"
         >
           {prizes.map((p) => (
-            <option
-              key={p.id}
-              value={p.id}
-              className="bg-brand-bgElevated text-brand-text"
-            >
-              {p.name} ({p.winners.length}/{p.quantity})
+            <option key={p.id} value={p.id}>
+              {p.name} · {p.winners.length}/{p.quantity} pemenang
             </option>
           ))}
         </select>
-        <span className="text-xs text-brand-textDim">
-          Pilih hadiah — angka di kurung = sudah dibagikan / total tersedia
-        </span>
-      </div>
-    </div>
+      </label>
+    </section>
   );
 }

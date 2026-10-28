@@ -383,7 +383,7 @@ export default function LandingPageSettingsPage() {
         <div className="mx-auto max-w-4xl space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-white text-shadow-lg">Landing Page Settings</h1>
+              <h1 className="admin-title">Landing Page Settings</h1>
               <p className="text-sm text-brand-textMuted mt-1">Kustomisasi halaman landing event</p>
             </div>
             <Button

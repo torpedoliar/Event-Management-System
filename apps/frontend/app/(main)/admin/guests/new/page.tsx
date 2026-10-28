@@ -87,7 +87,7 @@ export default function NewGuestPage() {
             <Button variant="secondary" size="sm" onClick={() => router.back()} className="rounded-full p-2 h-10 w-10 flex items-center justify-center">
               <ArrowLeft size={20} />
             </Button>
-            <h1 className="text-2xl md:text-3xl font-bold text-brand-text text-shadow-lg flex items-center gap-3">
+            <h1 className="admin-title">
               <UserPlus size={28} className="text-brand-primary" />
               Tambah Tamu
             </h1>

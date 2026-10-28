@@ -871,7 +871,7 @@ export default function SouvenirPage() {
     const collectedPrizes = prizeWins.filter(pw => pw.collection);
 
     return (
-        <div className="relative min-h-screen w-full overflow-hidden">
+        <div className="kiosk-shell relative min-h-screen w-full overflow-hidden">
             {/* Header brand */}
             <SouvenirHeader
                 logoUrl={cfg?.logoUrl}
@@ -883,7 +883,7 @@ export default function SouvenirPage() {
 
             {/* Search */}
             <div className="relative z-10 p-6 flex flex-col items-center">
-                <div className="w-full max-w-3xl rounded-2xl surface-elevated px-4 py-5 shadow-gold">
+                <div className="w-full max-w-3xl">
                     {/* Souvenir Selector Dropdown */}
                     <SouvenirSelector
                         souvenirs={souvenirs}
@@ -892,20 +892,26 @@ export default function SouvenirPage() {
                         disabled={searching || processing || creatingGuest}
                     />
 
-                    <input
-                        ref={inputRef}
-                        value={q}
-                        onChange={(e) => setQ(e.target.value)}
-                        onKeyDown={(e) => { 
-                            if (e.key === 'Enter') { 
-                                e.preventDefault(); 
-                                doSearch();
-                            } 
-                        }}
-                        placeholder="Masukkan Guest ID atau Nama..."
-                        className="w-full rounded-lg border border-brand-borderHover bg-brand-surfaceMuted px-3 py-3 text-brand-text placeholder:text-brand-textDim focus:outline-none focus:ring-2 focus:ring-brand-primary/70"
-                        autoFocus
-                    />
+                    <div className="kiosk-field">
+                        <span className="kiosk-field-icon">
+                            <Search size={21} aria-hidden="true" />
+                        </span>
+                        <input
+                            ref={inputRef}
+                            value={q}
+                            onChange={(e) => setQ(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    doSearch();
+                                }
+                            }}
+                            placeholder="Pindai QR, atau ketik ID / nama tamu"
+                            className="kiosk-input"
+                            autoFocus
+                        />
+                        <kbd className="kiosk-kbd">Enter</kbd>
+                    </div>
 
                     {rapidLogs.length > 0 && (
                         <div className="relative z-10 mt-4 flex flex-col items-center">

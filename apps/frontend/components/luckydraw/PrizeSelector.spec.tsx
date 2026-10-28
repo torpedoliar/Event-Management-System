@@ -24,26 +24,37 @@ describe('PrizeSelector', () => {
     );
 
     expect(screen.getByText('Lucky Draw')).toBeInTheDocument();
-    expect(screen.getByRole('option', { name: 'Sepeda (2/3)' })).toBeInTheDocument();
-    expect(screen.getByRole('option', { name: 'TV (0/1)' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('option', { name: 'Sepeda · 2/3 pemenang' }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'TV · 0/1 pemenang' })).toBeInTheDocument();
   });
 
-  it('menampilkan logo event bila ada', () => {
-    render(
+  it('menampilkan logo event sebagai gambar dekoratif', () => {
+    const { container } = render(
       <PrizeSelector
         logoUrl="/uploads/branding/logos/x.png"
+        eventName="Gathering Nasional 2026"
         prizes={prizes}
         selectedPrizeId="p1"
         onSelectPrize={() => {}}
       />,
     );
 
-    expect(screen.getByAltText('logo')).toBeInTheDocument();
+    const logo = container.querySelector('.draw-event-mark img');
+    expect(logo).toBeInTheDocument();
+    // Logo dekoratif: nama event sudah dibacakan sebagai teks di sebelahnya,
+    // jadi `alt` sengaja kosong agar tidak diumumkan dua kali.
+    expect(logo).toHaveAttribute('alt', '');
+    expect(screen.getByText('Gathering Nasional 2026')).toBeInTheDocument();
   });
 
   it('tidak menampilkan logo bila tidak ada', () => {
-    render(<PrizeSelector prizes={prizes} selectedPrizeId="p1" onSelectPrize={() => {}} />);
-    expect(screen.queryByAltText('logo')).not.toBeInTheDocument();
+    const { container } = render(
+      <PrizeSelector prizes={prizes} selectedPrizeId="p1" onSelectPrize={() => {}} />,
+    );
+    expect(container.querySelector('.draw-event-mark img')).not.toBeInTheDocument();
+    expect(container.querySelector('.draw-event-monogram')).toBeInTheDocument();
   });
 
   it('memilih hadiah sesuai nilai terpilih', () => {

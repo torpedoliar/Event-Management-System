@@ -1,6 +1,7 @@
 'use client';
 
 import { CheckCircle, Gift, Loader2 } from 'lucide-react';
+import Button from '@/components/ui/Button';
 import { toApiUrl } from '@/lib/api';
 import type { Guest, Souvenir } from '@/lib/souvenir/types';
 
@@ -29,89 +30,77 @@ export default function SouvenirResults({
 }) {
   const hasStock = souvenirs.some((s) => s.remaining > 0);
 
+  if (!results.length) {
+    return (
+      <div className="kiosk-results-wrap">
+        <div className="kiosk-empty">
+          <Gift size={26} aria-hidden="true" />
+          <strong>Cari tamu untuk memproses pengambilan souvenir</strong>
+          <span>Pindai QR, atau ketik ID / nama tamu lalu tekan Enter.</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="relative z-10 p-6 flex justify-center">
-      <div className="w-full max-w-5xl rounded-xl surface-elevated p-4 text-brand-text shadow-gold backdrop-blur-sm">
-        {!results.length && (
-          <div className="text-center text-brand-textMuted py-8 flex flex-col items-center gap-3">
-            <Gift size={48} className="text-brand-textDim" />
-            <p>Cari tamu untuk memproses pengambilan souvenir</p>
-          </div>
-        )}
+    <div className="kiosk-results-wrap">
+      <div className="kiosk-results-head">
+        <span>{results.length} tamu ditemukan</span>
+        {results.length > 1 && <em>Pilih tamu yang benar di bawah</em>}
+      </div>
 
-        {!!results.length && (
-          <div className="space-y-2">
-            {results.map((g) => (
-              <div
-                key={g.id}
-                onClick={() => onSelect(g)}
-                className={`cursor-pointer flex items-center justify-between rounded border p-3 transition-colors ${selectedId === g.id ? 'border-brand-primary/80 bg-brand-primary/10' : 'border-brand-border surface-interactive hover:shadow-gold'}`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 bg-brand-surfaceMuted rounded overflow-hidden flex-shrink-0">
-                    {g.photoUrl ? (
-                      <img
-                        src={toApiUrl(g.photoUrl)}
-                        className="h-full w-full object-cover"
-                        alt={g.name}
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center text-xs text-brand-textDim">
-                        No Photo
-                      </div>
-                    )}
-                  </div>
-                  <div>
-                    <div className="font-medium text-brand-text">
-                      {g.name}{' '}
-                      <span className="text-brand-textMuted font-mono text-sm">({g.guestId})</span>
-                    </div>
-                    <div className="text-sm text-brand-textMuted">
-                      {g.tableLocation} {g.company ? `• ${g.company}` : ''}{' '}
-                      {g.division ? `• ${g.division}` : ''}
-                    </div>
-                  </div>
-                </div>
+      <div className="kiosk-results">
+        {results.map((g) => {
+          const busy = processing && processingId === g.id;
 
-                <div className="flex items-center gap-2">
-                  {hasStock && (
-                    <button
-                      className={`flex items-center gap-2 rounded-full px-4 py-2 font-medium text-brand-bg shadow-soft disabled:opacity-50 transition-colors ${
-                        g.souvenirTaken
-                          ? 'bg-brand-success hover:bg-brand-success/80'
-                          : 'bg-brand-primary hover:bg-brand-primarySoft'
-                      }`}
-                      disabled={processing}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onToggleSouvenir(g);
-                      }}
-                    >
-                      {processing && processingId === g.id ? (
-                        <Loader2 className="animate-spin" size={16} />
-                      ) : g.souvenirTaken ? (
-                        <CheckCircle size={16} />
-                      ) : (
-                        <Gift size={16} />
-                      )}
-                      {processing && processingId === g.id
-                        ? 'Memproses...'
-                        : g.souvenirTaken
-                          ? 'Sudah Diambil'
-                          : 'Ambil Souvenir'}
-                    </button>
-                  )}
+          return (
+            <div
+              key={g.id}
+              className={`kiosk-result-row ${selectedId === g.id ? 'is-selected' : ''}`}
+              onClick={() => onSelect(g)}
+            >
+              <div className="kiosk-result-photo">
+                {g.photoUrl ? (
+                  <img src={toApiUrl(g.photoUrl)} alt={g.name} />
+                ) : (
+                  <Gift size={18} aria-hidden="true" />
+                )}
+              </div>
 
-                  {!hasStock && g.souvenirTaken && (
-                    <span className="flex items-center gap-1 text-brand-success text-sm">
-                      <CheckCircle size={14} /> Sudah Diambil
-                    </span>
-                  )}
+              <div className="kiosk-result-body">
+                <div className="kiosk-result-name">{g.name}</div>
+                <div className="kiosk-result-sub">
+                  <span className="kiosk-result-gid">{g.guestId}</span>
+                  {g.tableLocation && ` · ${g.tableLocation}`}
+                  {g.company && ` · ${g.company}`}
                 </div>
               </div>
-            ))}
-          </div>
-        )}
+
+              {!hasStock && g.souvenirTaken && (
+                <span className="kiosk-pill is-ok">Sudah diambil</span>
+              )}
+
+              {hasStock ? (
+                <Button
+                  className="kiosk-result-action"
+                  variant={g.souvenirTaken ? 'outline' : 'primary'}
+                  disabled={processing}
+                  loading={busy}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onToggleSouvenir(g);
+                  }}
+                >
+                  {!busy &&
+                    (g.souvenirTaken ? <CheckCircle size={16} /> : <Gift size={16} />)}
+                  {busy ? 'Memproses...' : g.souvenirTaken ? 'Sudah diambil' : 'Ambil souvenir'}
+                </Button>
+              ) : (
+                <span className="kiosk-result-action kiosk-pill is-muted">Stok habis</span>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

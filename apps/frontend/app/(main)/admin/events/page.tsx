@@ -507,7 +507,7 @@ export default function EventsPage() {
       <div className="min-h-screen p-6 md:p-8">
         <div className="mx-auto max-w-5xl space-y-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <h1 className="text-2xl md:text-3xl font-bold text-white text-shadow-lg">Event Management</h1>
+            <h1 className="admin-title">Event Management</h1>
             <div className="flex items-center gap-2">
               {/* View Toggle */}
               <div className="flex items-center bg-white/10 rounded-lg p-1">

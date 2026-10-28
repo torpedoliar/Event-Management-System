@@ -16,6 +16,7 @@ Terakhir diperbarui: 2026-10-27
 | [`MIGRASI_DATABASE.md`](MIGRASI_DATABASE.md) | Alur migrasi Prisma, baseline sekali jalan, rollback |
 | [`TESTING.md`](TESTING.md) | Menjalankan tes, mutation test, cakupan saat ini |
 | [`RUNBOOK.md`](RUNBOOK.md) | Prosedur insiden saat event berlangsung |
+| [`REWORK_UI.md`](REWORK_UI.md) | Arah rework UI/UX & motion (Front of House & Backstage), sistem motion, status fase |
 | [`DEPLOYMENT.md`](DEPLOYMENT.md) | Deploy manual (tanpa Docker) |
 | [`DOCKER_DEPLOY.md`](DOCKER_DEPLOY.md) | Deploy dengan Docker Compose |
 

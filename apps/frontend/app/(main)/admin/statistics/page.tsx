@@ -156,7 +156,7 @@ export default function StatisticsPage() {
                                     <BarChart3 size={24} className="text-white" />
                                 </div>
                                 <div>
-                                    <h1 className="text-2xl md:text-3xl font-bold text-white">Statistik Tamu</h1>
+                                    <h1 className="admin-title">Statistik Tamu</h1>
                                     <div className="flex items-center gap-2 mt-1">
                                         <Radio size={12} className={`${connected ? 'text-brand-success pulse-live' : 'text-brand-danger'}`} />
                                         <span className="text-sm text-white/60">{connected ? 'Realtime Updates' : 'Reconnecting...'}</span>

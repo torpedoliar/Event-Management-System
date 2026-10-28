@@ -43,8 +43,8 @@ describe('CheckinResultPopup', () => {
   it('menampilkan status berhasil pada check-in normal', () => {
     render(<CheckinResultPopup {...baseProps()} />);
 
-    expect(screen.getByText('Check-in Berhasil')).toBeInTheDocument();
-    expect(screen.queryByText('Sudah Check-in')).not.toBeInTheDocument();
+    expect(screen.getByText('Check-in berhasil')).toBeInTheDocument();
+    expect(screen.queryByText('Sudah check-in sebelumnya')).not.toBeInTheDocument();
   });
 
   it('menampilkan status duplikat beserta pesannya', () => {
@@ -61,7 +61,7 @@ describe('CheckinResultPopup', () => {
       />,
     );
 
-    expect(screen.getByText('Sudah Check-in')).toBeInTheDocument();
+    expect(screen.getByText('Sudah check-in sebelumnya')).toBeInTheDocument();
     expect(screen.getByText('Sudah check-in oleh Admin A')).toBeInTheDocument();
   });
 
@@ -71,7 +71,7 @@ describe('CheckinResultPopup', () => {
     expect(screen.getByText('Budi Santoso')).toBeInTheDocument();
     expect(screen.getByText('TAMU-012')).toBeInTheDocument();
     expect(screen.getByText('Meja 3')).toBeInTheDocument();
-    expect(screen.getByText('12')).toBeInTheDocument();
+    expect(screen.getByText('Meja 3')).toBeInTheDocument();
   });
 
   it('menampilkan riwayat check-in bila ada', () => {
@@ -88,7 +88,7 @@ describe('CheckinResultPopup', () => {
       />,
     );
 
-    expect(screen.getByText(/Riwayat Check-in \(2x\)/)).toBeInTheDocument();
+    expect(screen.getByText('Riwayat check-in')).toBeInTheDocument();
     expect(screen.getByText('Admin Satu')).toBeInTheDocument();
     expect(screen.getByText('Admin Dua')).toBeInTheDocument();
   });

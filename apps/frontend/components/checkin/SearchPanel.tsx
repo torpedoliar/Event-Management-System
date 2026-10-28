@@ -50,79 +50,72 @@ export default function SearchPanel({
   };
 
   return (
-    <div className="relative z-10 px-4 py-6 flex flex-col items-center">
-      <div className="w-full max-w-3xl">
-        <div className="surface-elevated p-6 md:p-8">
-          <div className="relative">
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-textMuted">
-              <Search size={22} />
-            </div>
-            <Input
-              ref={inputRef}
-              value={value}
-              onChange={(e) => onChange(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Masukkan ID Tamu atau Nama, lalu tekan Enter"
-              className="pl-12 pr-4 py-4 text-lg"
-              autoFocus
-            />
-          </div>
+    <div className="kiosk-search-wrap">
+      <div className="kiosk-search">
+        <div className={`kiosk-field ${busy ? 'is-busy' : ''}`}>
+          <span className="kiosk-field-icon">
+            <Search size={21} aria-hidden="true" />
+          </span>
+          <Input
+            ref={inputRef}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Pindai QR, atau ketik ID / nama tamu"
+            className="kiosk-input"
+            autoFocus
+          />
+          <kbd className="kiosk-kbd">Enter</kbd>
+          <span className="kiosk-field-progress" aria-hidden="true" />
+        </div>
 
-          {/* Petunjuk singkat */}
-          <div className="mt-3 flex items-center gap-2 text-xs text-brand-textDim">
-            <HelpCircle size={13} className="shrink-0" />
-            <span>
-              Ketik ID atau nama tamu → Enter untuk check-in cepat. Bisa scan QR juga. Tamu tidak
-              ditemukan? Aktifkan Auto-Create di Pengaturan.
-            </span>
-          </div>
+        <div className="kiosk-hint">
+          <HelpCircle size={13} aria-hidden="true" />
+          <span>
+            Enter langsung memproses. Tamu tidak ditemukan? Aktifkan Auto-Create di Pengaturan.
+          </span>
+        </div>
 
-          <ScanHistory logs={scanLogs} />
+        <ScanHistory logs={scanLogs} />
 
-          {error && (
-            <div className="mt-4 p-3 rounded-xl bg-brand-danger/10 border border-brand-danger/20 text-brand-danger flex items-center justify-between">
-              <span>{error}</span>
-            </div>
-          )}
+        {error && (
+          <p className="kiosk-error" role="alert">
+            {error}
+          </p>
+        )}
 
-          <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
-            <Button
-              size="lg"
-              className="flex-1"
-              disabled={busy}
-              loading={busy}
-              onClick={onSearch}
-            >
-              {!busy && <Search size={22} />}
-              {searching
-                ? 'Mencari...'
-                : creatingGuest
-                  ? 'Membuat Tamu...'
-                  : checking
-                    ? 'Check-in...'
-                    : 'Cari & Check-in'}
-            </Button>
+        <div className="kiosk-actions">
+          <Button
+            size="lg"
+            className="flex-1"
+            disabled={busy}
+            loading={busy}
+            onClick={onSearch}
+          >
+            {!busy && <Search size={20} />}
+            {searching
+              ? 'Mencari...'
+              : creatingGuest
+                ? 'Membuat tamu...'
+                : checking
+                  ? 'Check-in...'
+                  : 'Cari & check-in'}
+          </Button>
 
-            <Button
-              size="lg"
-              variant="outline"
-              className="flex-1 sm:flex-initial text-brand-text"
-              disabled={busy}
-              onClick={onScanClick}
-            >
-              <QrCode size={22} />
-              Scan QR
-            </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            className="flex-1 sm:flex-initial"
+            disabled={busy}
+            onClick={onScanClick}
+          >
+            <QrCode size={20} />
+            Scan QR
+          </Button>
 
-            <Button
-              size="lg"
-              variant="ghost"
-              onClick={onSettingsClick}
-              aria-label="Pengaturan"
-            >
-              <Settings size={22} />
-            </Button>
-          </div>
+          <Button size="lg" variant="ghost" onClick={onSettingsClick} aria-label="Pengaturan">
+            <Settings size={20} />
+          </Button>
         </div>
       </div>
     </div>

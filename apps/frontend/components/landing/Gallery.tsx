@@ -35,7 +35,7 @@ export default function Gallery({
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="text-center mb-16"
         >
-          <h2 className="text-heading-xl font-heading text-brand-text mb-4">
+          <h2 className="text-heading-1 font-heading text-brand-text mb-4">
             {title}
           </h2>
           <p className="text-body text-brand-textMuted max-w-[60ch] mx-auto">

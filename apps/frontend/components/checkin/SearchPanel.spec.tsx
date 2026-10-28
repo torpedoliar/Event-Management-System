@@ -24,7 +24,7 @@ describe('SearchPanel', () => {
     render(<SearchPanel {...baseProps()} />);
 
     expect(
-      screen.getByPlaceholderText('Masukkan ID Tamu atau Nama, lalu tekan Enter'),
+      screen.getByPlaceholderText('Pindai QR, atau ketik ID / nama tamu'),
     ).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /cari & check-in/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /scan qr/i })).toBeInTheDocument();
@@ -36,7 +36,7 @@ describe('SearchPanel', () => {
     props.value = 'TAMU-001';
     render(<SearchPanel {...props} />);
 
-    const input = screen.getByPlaceholderText(/Masukkan ID Tamu/);
+    const input = screen.getByPlaceholderText(/Pindai QR/);
     await userEvent.type(input, '{Enter}');
 
     expect(props.onSubmit).toHaveBeenCalledTimes(1);
@@ -47,7 +47,7 @@ describe('SearchPanel', () => {
     props.value = '   ';
     render(<SearchPanel {...props} />);
 
-    await userEvent.type(screen.getByPlaceholderText(/Masukkan ID Tamu/), '{Enter}');
+    await userEvent.type(screen.getByPlaceholderText(/Pindai QR/), '{Enter}');
     expect(props.onSubmit).not.toHaveBeenCalled();
   });
 

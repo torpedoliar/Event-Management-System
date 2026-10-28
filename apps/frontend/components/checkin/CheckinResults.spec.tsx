@@ -37,7 +37,7 @@ describe('CheckinResults', () => {
     expect(screen.getByText('1 tamu ditemukan')).toBeInTheDocument();
     expect(screen.getByText('Budi Santoso')).toBeInTheDocument();
     expect(screen.getByText('TAMU-001')).toBeInTheDocument();
-    expect(screen.getByText('Belum Check-in')).toBeInTheDocument();
+    expect(screen.getByText('Belum check-in')).toBeInTheDocument();
   });
 
   it('menampilkan status sudah check-in beserta jumlahnya', () => {
@@ -48,8 +48,8 @@ describe('CheckinResults', () => {
       />,
     );
 
-    expect(screen.getByText(/Sudah Check-in/)).toBeInTheDocument();
-    expect(screen.getByText(/3x/)).toBeInTheDocument();
+    expect(screen.getByText(/Sudah check-in/)).toBeInTheDocument();
+    expect(screen.getByText(/3×/)).toBeInTheDocument();
   });
 
   it('menampilkan peringatan pilih tamu saat hasil lebih dari satu', () => {
@@ -61,7 +61,7 @@ describe('CheckinResults', () => {
     );
 
     expect(screen.getByText('2 tamu ditemukan')).toBeInTheDocument();
-    expect(screen.getByText('Pilih tamu di bawah untuk Check-in')).toBeInTheDocument();
+    expect(screen.getByText('Pilih tamu yang benar di bawah')).toBeInTheDocument();
   });
 
   it('memanggil onCheckin dengan tamu yang dipilih', async () => {

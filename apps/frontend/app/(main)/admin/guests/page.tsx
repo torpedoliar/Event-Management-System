@@ -725,13 +725,13 @@ export default function GuestsListPage() {
           </Card>
         )}
 
-        <div className="relative overflow-hidden surface-elevated backdrop-blur-xl shadow-glass">
+        <div className="admin-panel">
           {loading && <div className="absolute inset-0 z-20 flex items-center justify-center bg-brand-bgElevated/50 backdrop-blur-sm"><Loader2 className="animate-spin text-brand-primary" size={32} /></div>}
           <div className="overflow-x-auto overflow-y-auto max-h-[70vh]">
-            <table className="w-full text-sm text-left border-collapse">
-              <thead className="sticky top-0 z-10 bg-brand-bgElevated/95 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
-                <tr className="text-xs font-mono uppercase tracking-widest text-brand-primarySoft/70 border-b border-brand-primary/20">
-                  <th className="px-4 py-5 w-10 whitespace-nowrap">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th className="w-10">
                     <input
                       type="checkbox"
                       checked={!!(resp?.data && resp.data.length > 0 && selectedIds.size === resp.data.length)}
@@ -739,21 +739,21 @@ export default function GuestsListPage() {
                       className="rounded border-brand-border bg-brand-surface text-brand-primary focus:ring-brand-primary"
                     />
                   </th>
-                  <th className="px-4 py-5 whitespace-nowrap">No</th>
-                  <th className="px-4 py-5 whitespace-nowrap">Foto</th>
-                  <th className="px-4 py-5 whitespace-nowrap">ID</th>
-                  <th className="px-4 py-5 whitespace-nowrap">Nama</th>
-                  <th className="px-4 py-5 whitespace-nowrap">Email</th>
-                  <th className="px-4 py-5 whitespace-nowrap">Kategori</th>
-                  <th className="px-4 py-5 whitespace-nowrap">Meja</th>
-                  <th className="px-4 py-5 whitespace-nowrap">Perusahaan</th>
-                  <th className="px-4 py-5 whitespace-nowrap">Divisi</th>
-                  <th className="px-4 py-5 whitespace-nowrap">Departemen</th>
-                  <th className="px-4 py-5 whitespace-nowrap">Waktu Check-in</th>
-                  {eventCfg?.enableSouvenir && <th className="px-4 py-5 text-center whitespace-nowrap">Souvenir</th>}
-                  <th className="px-4 py-5 text-center whitespace-nowrap">Hadiah</th>
-                  <th className="px-4 py-5 text-center whitespace-nowrap">Status</th>
-                  <th className="px-4 py-5 text-right whitespace-nowrap">Aksi</th>
+                  <th className="whitespace-nowrap">No</th>
+                  <th className="whitespace-nowrap">Foto</th>
+                  <th className="whitespace-nowrap">ID</th>
+                  <th className="whitespace-nowrap">Nama</th>
+                  <th className="whitespace-nowrap">Email</th>
+                  <th className="whitespace-nowrap">Kategori</th>
+                  <th className="whitespace-nowrap">Meja</th>
+                  <th className="whitespace-nowrap">Perusahaan</th>
+                  <th className="whitespace-nowrap">Divisi</th>
+                  <th className="whitespace-nowrap">Departemen</th>
+                  <th className="whitespace-nowrap">Waktu Check-in</th>
+                  {eventCfg?.enableSouvenir && <th className="text-center">Souvenir</th>}
+                  <th className="text-center">Hadiah</th>
+                  <th className="text-center">Status</th>
+                  <th className="text-right">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-brand-border">
@@ -762,7 +762,7 @@ export default function GuestsListPage() {
                   const src = g.registrationSource ? SOURCE_CONFIG[g.registrationSource] : null;
                   return (
                     <tr key={g.id} className={`group transition-all duration-300 ${showDuplicatesOnly ? 'bg-brand-danger/10 hover:bg-brand-danger/20 shadow-[inset_0_0_30px_rgba(225,29,72,0.1)]' : 'hover:bg-brand-bgSubtle hover:shadow-[inset_0_0_30px_rgba(212,168,83,0.05)]'} relative ${selectedIds.has(g.id) ? 'bg-brand-primary/10' : ''}`}>
-                      <td className="px-4 py-4 align-middle whitespace-nowrap">
+                      <td className="whitespace-nowrap">
                         {/* Glow Row Indicator */}
                         <div className={`absolute left-0 top-0 bottom-0 w-1 ${showDuplicatesOnly ? 'bg-brand-danger' : 'bg-brand-primary'} opacity-0 group-hover:opacity-100 transition-opacity`} />
                         <input
@@ -772,8 +772,8 @@ export default function GuestsListPage() {
                           className="rounded border-brand-border bg-brand-surface text-brand-primary focus:ring-brand-primary"
                         />
                       </td>
-                      <td className="px-4 py-4 text-xs font-mono text-brand-primarySoft/50 align-middle">{g.queueNumber}</td>
-                      <td className="px-4 py-4 align-middle">
+                      <td className="mono dim">{g.queueNumber}</td>
+                      <td className="">
                         {g.photoUrl ? (
                           <img src={toApiUrl(g.photoUrl)} alt={g.name} className="h-10 w-10 rounded-full object-cover border border-brand-border" />
                         ) : (
@@ -782,8 +782,8 @@ export default function GuestsListPage() {
                           </div>
                         )}
                       </td>
-                      <td className="px-4 py-4 font-mono text-xs text-brand-primarySoft/80 align-middle">{g.guestId}</td>
-                      <td className="px-4 py-4 text-brand-text font-medium align-middle">
+                      <td className="mono">{g.guestId}</td>
+                      <td className="strong">
                         <div className="group-hover:text-brand-primarySoft transition-colors flex items-center gap-2">
                           {g.name}
                           {showDuplicatesOnly && <span className="px-2 py-0.5 rounded text-2xs font-bold bg-brand-danger/20 text-brand-danger border border-brand-danger/30">DUPLIKAT</span>}
@@ -794,7 +794,7 @@ export default function GuestsListPage() {
                           </div>
                         )}
                       </td>
-                      <td className="px-4 py-4 text-brand-textMuted text-xs align-middle">
+                      <td className="dim">
                         {g.email ? (
                           <span className="flex items-center gap-1">
                             <Mail size={12} className="text-brand-primary" />
@@ -802,7 +802,7 @@ export default function GuestsListPage() {
                           </span>
                         ) : '-'}
                       </td>
-                      <td className="px-4 py-4 align-middle">
+                      <td className="">
                         <div className="flex flex-wrap gap-1">
                           <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${cat.bg} ${cat.color} border ${cat.border}`}>
                             {cat.label}
@@ -814,15 +814,15 @@ export default function GuestsListPage() {
                           )}
                         </div>
                       </td>
-                      <td className="px-4 py-4 text-brand-text align-middle">{g.tableLocation}</td>
-                      <td className="px-4 py-4 text-brand-textMuted align-middle font-mono text-xs">{g.company || '-'}</td>
-                      <td className="px-4 py-4 text-brand-textMuted align-middle font-mono text-xs">{g.division || '-'}</td>
-                      <td className="px-4 py-4 text-brand-textMuted align-middle font-mono text-xs">{g.department || '-'}</td>
-                      <td className="px-4 py-4 text-brand-textDim text-xs align-middle font-mono">
+                      <td className="strong">{g.tableLocation}</td>
+                      <td className="dim mono">{g.company || '-'}</td>
+                      <td className="dim mono">{g.division || '-'}</td>
+                      <td className="dim mono">{g.department || '-'}</td>
+                      <td className="dim mono">
                         {g.checkedInAt ? new Date(g.checkedInAt).toLocaleString('id-ID', { hour12: false }) : '-'}
                       </td>
                       {eventCfg?.enableSouvenir && (
-                        <td className="px-4 py-4 align-middle text-center">
+                        <td className="text-center">
                           {g.souvenirTakes && g.souvenirTakes.length > 0 ? (
                             <div className="flex flex-col items-center gap-1">
                               <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-brand-primary/20 text-brand-primary border border-brand-primary/30">
@@ -843,7 +843,7 @@ export default function GuestsListPage() {
                           )}
                         </td>
                       )}
-                      <td className="px-4 py-4 align-middle text-center">
+                      <td className="text-center">
                         {g.prizeWins && g.prizeWins.length > 0 ? (
                           <div className="flex flex-col items-center gap-1">
                             {g.prizeWins.map((pw, idx) => (
@@ -864,12 +864,12 @@ export default function GuestsListPage() {
                           <span className="text-brand-textDim text-xs">-</span>
                         )}
                       </td>
-                      <td className="px-4 py-4 align-middle text-center">
+                      <td className="text-center">
                         <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-2xs font-mono uppercase tracking-widest ${g.checkedIn ? 'bg-brand-success/10 text-brand-success border border-brand-success/20' : 'bg-brand-surface text-brand-textDim border border-brand-border'}`}>
                           {g.checkedIn ? 'CHECKED-IN' : 'BELUM'}
                         </span>
                       </td>
-                      <td className="px-4 py-4 text-right align-middle">
+                      <td className="right">
                         <div className="flex items-center justify-end gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
                           <button
                             title="Tampilkan QR"

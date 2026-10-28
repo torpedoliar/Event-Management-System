@@ -355,7 +355,7 @@ export default function EventSettingsPage() {
     <RequireAuth>
       <div className="min-h-screen p-6 md:p-8">
         <div className="mx-auto max-w-3xl space-y-6">
-          <h1 className="text-2xl md:text-3xl font-bold text-white text-shadow-lg">Event Settings</h1>
+          <h1 className="admin-title">Event Settings</h1>
 
           {/* Quick Management Links */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">

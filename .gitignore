@@ -80,3 +80,6 @@ db_backup_*.sql
 # Backup folders
 backup_*/
 .claude/
+
+# Playwright CLI session artifacts
+.playwright-cli/

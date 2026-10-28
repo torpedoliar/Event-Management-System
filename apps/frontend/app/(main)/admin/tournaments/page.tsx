@@ -77,7 +77,7 @@ export default function AdminTournamentsPage() {
     <div className="px-4 py-6 md:p-6 max-w-7xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-brand-text mb-2">Tournaments</h1>
+          <h1 className="admin-title">Tournaments</h1>
           <p className="text-brand-textMuted font-medium">Manage your tournament events</p>
         </div>
         <Button onClick={() => setShowCreateModal(true)} className="gap-2">
@@ -133,20 +133,20 @@ export default function AdminTournamentsPage() {
             </div>
           ) : (
             <div className="bg-brand-surface rounded-xl border border-brand-border shadow-sm overflow-x-auto">
-              <table className="w-full text-left min-w-[640px]">
+              <table className="admin-table min-w-[640px]">
                 <thead className="bg-black/20 text-brand-textMuted text-xs uppercase tracking-wider font-semibold border-b border-brand-border">
                   <tr>
-                    <th scope="col" className="px-4 md:px-6 py-4">Tournament</th>
-                    <th scope="col" className="px-4 md:px-6 py-4">Status</th>
-                    <th scope="col" className="px-4 md:px-6 py-4">Teams</th>
-                    <th scope="col" className="px-4 md:px-6 py-4">Start Date</th>
-                    <th scope="col" className="px-4 md:px-6 py-4 text-right">Actions</th>
+                    <th scope="col" className="">Tournament</th>
+                    <th scope="col" className="">Status</th>
+                    <th scope="col" className="">Teams</th>
+                    <th scope="col" className="">Start Date</th>
+                    <th scope="col" className="right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-brand-border">
                   {filteredTournaments.map((tournament) => (
                     <tr key={tournament.id} className="hover:bg-white/[0.02] transition-colors">
-                      <td className="px-4 md:px-6 py-4">
+                      <td className="">
                         <div className="flex items-center gap-4">
                           <div className="p-3 bg-brand-warning/10 rounded-xl">
                             <Trophy className="w-5 h-5 text-brand-warning" />
@@ -161,16 +161,16 @@ export default function AdminTournamentsPage() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 md:px-6 py-4">
+                      <td className="">
                         <StatusPill status={tournament.status} size="sm" />
                       </td>
-                      <td className="px-4 md:px-6 py-4">
+                      <td className="">
                         <span className="flex items-center gap-2 text-brand-text font-medium">
                           <Users className="w-4 h-4 text-brand-textMuted" />
                           {tournament.teams?.length || 0}
                         </span>
                       </td>
-                      <td className="px-4 md:px-6 py-4">
+                      <td className="">
                         {tournament.startDate ? (
                           <span className="flex items-center gap-2 text-brand-text font-medium">
                             <Calendar className="w-4 h-4 text-brand-textMuted" />
@@ -180,7 +180,7 @@ export default function AdminTournamentsPage() {
                           <span className="text-brand-textMuted font-medium">Not scheduled</span>
                         )}
                       </td>
-                      <td className="px-4 md:px-6 py-4">
+                      <td className="">
                         <div className="flex items-center justify-end gap-1">
                           <Link
                             href={"/admin/tournaments/" + tournament.id}

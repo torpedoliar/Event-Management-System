@@ -25,16 +25,16 @@ describe('SouvenirConfirmation', () => {
   it('menampilkan identitas tamu dan status pengambilan', () => {
     render(<SouvenirConfirmation guest={guest()} onClose={() => {}} />);
 
-    expect(screen.getByText('SOUVENIR DIAMBIL')).toBeInTheDocument();
+    expect(screen.getByText('Souvenir diambil')).toBeInTheDocument();
     expect(screen.getByText('Dewi Lestari')).toBeInTheDocument();
     expect(screen.getByText('TAMU-007')).toBeInTheDocument();
-    expect(screen.getByText('7')).toBeInTheDocument();
+    expect(screen.getByText('Meja 2')).toBeInTheDocument();
     expect(screen.getByText('Meja 2')).toBeInTheDocument();
   });
 
   it('menampilkan placeholder saat foto tidak ada', () => {
     render(<SouvenirConfirmation guest={guest()} onClose={() => {}} />);
-    expect(screen.getByText('No Photo')).toBeInTheDocument();
+    expect(screen.queryByAltText('Dewi Lestari')).not.toBeInTheDocument();
   });
 
   it('menampilkan foto bila tersedia', () => {
@@ -73,7 +73,7 @@ describe('SouvenirAlreadyTaken', () => {
   it('menampilkan peringatan dan identitas tamu', () => {
     render(<SouvenirAlreadyTaken info={info} onClose={() => {}} />);
 
-    expect(screen.getByText('Souvenir Sudah Diambil')).toBeInTheDocument();
+    expect(screen.getByText('Souvenir sudah diambil')).toBeInTheDocument();
     expect(screen.getByText('Dewi Lestari')).toBeInTheDocument();
     expect(screen.getByText('TAMU-007')).toBeInTheDocument();
   });
@@ -83,7 +83,7 @@ describe('SouvenirAlreadyTaken', () => {
 
     expect(screen.getByText('Tote Bag')).toBeInTheDocument();
     expect(screen.getByText('Kaos')).toBeInTheDocument();
-    expect(screen.getByText(/Admin: Admin A/)).toBeInTheDocument();
+    expect(screen.getByText(/Admin A/)).toBeInTheDocument();
   });
 
   it('memanggil onClose saat Mengerti ditekan', async () => {

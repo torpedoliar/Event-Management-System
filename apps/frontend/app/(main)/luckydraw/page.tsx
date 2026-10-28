@@ -1,9 +1,7 @@
 "use client";
-import { useEffect, useState, useRef, useMemo } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { apiFetch, apiBase, toApiUrl } from '@/lib/api';
-import { X, Volume2, VolumeX, Monitor } from 'lucide-react';
-import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Input';
+import { X } from 'lucide-react';
 import Modal from '@/components/ui/Modal';
 import { popWinner, finale, grandFinale } from '@/lib/celebrate';
 import WinnerHistoryModal from '@/components/WinnerHistoryModal';
@@ -15,6 +13,7 @@ import EligibleGuestsModal from '@/components/luckydraw/EligibleGuestsModal';
 import CandidatesPanel from '@/components/luckydraw/CandidatesPanel';
 import PrizeSelector from '@/components/luckydraw/PrizeSelector';
 import DrawStage from '@/components/luckydraw/DrawStage';
+import LuckyDrawControls, { SoundConsentBanner } from '@/components/luckydraw/LuckyDrawControls';
 
 import { useSSE } from '@/lib/sse-context';
 
@@ -518,50 +517,38 @@ export default function LuckyDrawPage() {
     if (loading) return <div className="min-h-[100dvh] flex items-center justify-center text-brand-text">Memuat...</div>;
 
     return (
-        <div className="min-h-[100dvh] flex flex-col items-center justify-center p-4 relative overflow-hidden">
+        <div className="draw-page min-h-[100dvh] flex flex-col items-center justify-center p-4 md:p-6 relative overflow-hidden">
             <audio ref={audioRollRef} src={toApiUrl(eventCfg?.rollSoundUrl || "/sounds/roll.mp3")} preload="auto" />
             <audio ref={audioTensionRef} src={toApiUrl(eventCfg?.tensionSoundUrl || "/sounds/tension.mp3")} preload="auto" />
             <audio ref={audioWinRef} src={toApiUrl(eventCfg?.winSoundUrl || "/sounds/win.mp3")} preload="auto" />
             <audio ref={audioGrandWinRef} src={toApiUrl(eventCfg?.grandWinSoundUrl || "/sounds/grand-win.mp3")} preload="auto" />
 
-            {/* Controls */}
-            <div className={`fixed ${isFullscreen ? 'top-6' : 'top-24'} right-6 z-[60] flex flex-col gap-2`}>
-                <Button size="sm" variant={isFullscreen ? 'primary' : 'outline'} onClick={() => setIsFullscreen(!isFullscreen)} aria-label={isFullscreen ? 'Tampilkan navigasi' : 'Sembunyikan navigasi'}>
-                    <Monitor size={20} />
-                </Button>
-                <Button size="sm" variant={soundEnabled ? 'primary' : 'outline'} onClick={toggleSound} aria-label={soundEnabled ? 'Matikan suara' : 'Aktifkan suara'}>
-                    {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
-                </Button>
-            </div>
+            <LuckyDrawControls
+                isFullscreen={isFullscreen}
+                soundEnabled={soundEnabled}
+                onToggleFullscreen={() => setIsFullscreen(!isFullscreen)}
+                onToggleSound={toggleSound}
+                modeSelector={(
+                    <label className="draw-mode-control">
+                        <span>Mode panggung</span>
+                        <select
+                            onChange={(e) => {
+                                if (e.target.value === 'slot') window.location.href = '/luckydraw/display';
+                                else if (e.target.value === 'carousel') window.location.href = '/luckydraw/carousel';
+                            }}
+                            value="classic"
+                            aria-label="Mode lucky draw"
+                        >
+                            <option value="classic">Classic</option>
+                            <option value="slot">Slot machine</option>
+                            <option value="carousel">Carousel 3D</option>
+                        </select>
+                    </label>
+                )}
+            />
 
-            {/* Mode Selector Dropdown */}
-            <div className={`fixed ${isFullscreen ? 'top-6' : 'top-24'} left-6 z-[60]`}>
-                <select
-                    onChange={(e) => {
-                        if (e.target.value === 'slot') {
-                            window.location.href = '/luckydraw/display';
-                        } else if (e.target.value === 'carousel') {
-                            window.location.href = '/luckydraw/carousel';
-                        }
-                    }}
-                    value="classic"
-                    className="bg-brand-bgElevated/80 border border-brand-primary/50 text-brand-primarySoft text-sm rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary backdrop-blur-xl transition-all shadow-lg font-mono tracking-wider cursor-pointer"
-                >
-                    <option value="classic">🎲 Classic Mode</option>
-                    <option value="slot">🎰 Slot Machine Mode</option>
-                    <option value="carousel">🎡 3D Carousel Mode</option>
-                </select>
-            </div>
-
-            {/* Sound initiation banner */}
             {!soundEnabled && !loading && (
-                <div className="fixed top-0 left-0 right-0 z-50 bg-brand-warning/20 backdrop-blur-sm border-b border-brand-warning/30 px-4 py-2 flex items-center justify-between">
-                    <span className="text-brand-warning text-sm">Enable sound for the full experience</span>
-                    <div className="flex gap-2">
-                        <Button size="sm" onClick={toggleSound} className="px-3 py-1 text-xs">Enable</Button>
-                        <Button size="sm" variant="outline" onClick={() => setSoundEnabled(true)} className="px-3 py-1 text-xs">Dismiss</Button>
-                    </div>
-                </div>
+                <SoundConsentBanner onEnable={toggleSound} onDismiss={() => setSoundEnabled(true)} />
             )}
 
             {/* Grand prize effects are preserved but scoped */}
@@ -572,6 +559,7 @@ export default function LuckyDrawPage() {
                 {/* Header */}
                 <PrizeSelector
                     logoUrl={eventCfg?.logoUrl}
+                    eventName={eventCfg?.name}
                     prizes={prizes}
                     selectedPrizeId={selectedPrizeId}
                     onSelectPrize={(id) => {

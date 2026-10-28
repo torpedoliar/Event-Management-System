@@ -1389,7 +1389,7 @@ export default function CheckinPage() {
 
   return (
     <RequireAuth>
-      <div className="relative min-h-[100dvh] w-full overflow-hidden">
+      <div className="kiosk-shell relative min-h-[100dvh] w-full overflow-hidden">
         {/* Header */}
         <CheckinHeader
           cfg={cfg}

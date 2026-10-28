@@ -20,63 +20,50 @@ interface HeroProps {
 }
 
 export default function Hero({
-  headline = 'Enterprise event management, without the noise.',
-  subtext = 'Check-in, display, and analytics in one system. Built for operations teams.',
-  ctaPrimary = 'Open Display',
-  ctaSecondary = 'Admin Login',
+  headline = 'Check-in tamu, undian, dan souvenir dalam satu sistem.',
+  subtext = 'Dirancang untuk acara yang berjalan cepat: kiosk yang tetap bekerja saat jaringan putus, panggung undian yang berkesan, dan data yang bisa dipercaya saat acara berlangsung.',
+  ctaPrimary = 'Lihat layar panggung',
+  ctaSecondary = 'Masuk admin',
   images = [],
   compact = false,
 }: HeroProps) {
   const reduce = useReducedMotion();
 
   return (
-    <section className={compact ? "pt-20 pb-12 min-h-auto" : "pt-20 pb-16 min-h-[100dvh]"}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[55%_45%] gap-12 lg:gap-16 items-center">
+    <section className={`land-hero ${compact ? 'pt-24 pb-10' : 'pt-28 pb-16 min-h-[100dvh]'}`}>
+      <div className="land-hero-inner">
+        <div className="land-hero-grid">
           <motion.div
-            initial={reduce ? false : { opacity: 0, y: 24 }}
+            className="land-hero-copy"
+            initial={reduce ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-8"
+            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
           >
-            <h1 className="text-display-sm font-heading text-brand-text line-clamp-2">
-              {headline}
-            </h1>
+            <h1 className="land-hero-title">{headline}</h1>
+            <p className="land-hero-sub">{subtext}</p>
 
-            <p className="text-body text-brand-textMuted max-w-[65ch]">
-              {subtext}
-            </p>
-
-            <div className="flex flex-wrap gap-4">
-              <Link
-                href="/show"
-                className="inline-flex items-center justify-center bg-brand-primary text-brand-bg px-6 py-3 rounded-xl font-medium
-                           hover:bg-brand-primaryHover transition-colors duration-fast
-                           focus-visible:ring-2 focus-visible:ring-brand-primary/50"
-              >
+            <div className="land-hero-actions">
+              <Link href="/show" className="land-btn is-primary">
                 {ctaPrimary}
               </Link>
-              <Link
-                href="/admin/login"
-                className="inline-flex items-center justify-center text-brand-text border border-brand-border px-6 py-3 rounded-xl font-medium
-                           hover:border-brand-borderHover transition-colors duration-fast
-                           focus-visible:ring-2 focus-visible:ring-brand-primary/50"
-              >
+              <Link href="/admin/login" className="land-btn is-quiet">
                 {ctaSecondary}
               </Link>
             </div>
           </motion.div>
 
           <motion.div
-            initial={reduce ? false : { opacity: 0, y: 24 }}
+            initial={reduce ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.55, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
           >
             {images.length > 0 ? (
-              <ImageCarousel images={images} priority />
+              <div className="land-hero-media">
+                <ImageCarousel images={images} priority />
+              </div>
             ) : (
-              <div className="aspect-[4/3] rounded-2xl shadow-panel overflow-hidden bg-brand-surface border border-brand-border flex items-center justify-center">
-                <span className="text-body-sm text-brand-textDim">Product preview</span>
+              <div className="land-hero-media land-hero-placeholder">
+                Pratinjau layar panggung
               </div>
             )}
           </motion.div>
