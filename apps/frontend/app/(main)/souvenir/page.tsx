@@ -1,79 +1,24 @@
 "use client";
 import { useEffect, useMemo, useState, useRef, useCallback } from "react";
-import { apiBase, toApiUrl, apiFetch, parseErrorMessage } from "@/lib/api";
+import { apiBase, apiFetch, parseErrorMessage } from "@/lib/api";
 import { Html5Qrcode } from "html5-qrcode";
-import { Search, QrCode, Loader2, CheckCircle, Clock, Users, X, Gift, XCircle, Trophy, Package, ChevronDown, ChevronUp, UserPlus, Settings, Radio, UserCheck, AlertTriangle, Printer } from 'lucide-react';
+import { Search, QrCode, Loader2, CheckCircle, Clock, X, Gift, XCircle, Package, UserPlus, Settings, UserCheck } from 'lucide-react';
 import { useSSE } from "@/lib/sse-context";
 import { indexedDBService, LocalGuest } from "@/lib/indexeddb";
 import { offlineSyncService } from "@/lib/offline-sync.service";
 import { connectionStatusService } from "@/lib/connection-status";
-import ConnectionStatusIndicator from "@/components/ConnectionStatusIndicator";
 import QueueManagementPanel from "@/components/QueueManagementPanel";
 import StationSetupModal from "@/components/StationSetupModal";
 import PrizeReceiptModal from "@/components/PrizeReceiptModal";
+import Html5QrcodePlugin from "@/components/Html5QrcodePlugin";
 
-type EventConfig = {
-    id: string;
-    name: string;
-    date?: string | null;
-    location?: string | null;
-    logoUrl?: string | null;
-    backgroundType: 'NONE' | 'IMAGE' | 'VIDEO';
-    backgroundImageUrl?: string | null;
-    backgroundVideoUrl?: string | null;
-    overlayOpacity: number;
-    checkinPopupTimeoutMs?: number;
-    autoCreateGuestOnSouvenir?: boolean;
-    requireCheckinForSouvenir?: boolean;
-};
-
-type SouvenirTakeInfo = {
-    souvenirName: string;
-    takenAt: string;
-    takenByName?: string;
-};
-
-type Guest = {
-    id: string;
-    queueNumber: number;
-    guestId: string;
-    name: string;
-    photoUrl?: string | null;
-    tableLocation: string;
-    company?: string | null;
-    division?: string | null;
-    notes?: string | null;
-    checkedIn: boolean;
-    checkedInAt?: string | null;
-    souvenirTaken: boolean;
-};
-
-type PrizeWin = {
-    id: string;
-    guestId: string;
-    prizeId: string;
-    wonAt: string;
-    prize: {
-        id: string;
-        name: string;
-        description?: string;
-        category: string;
-    };
-    collection?: {
-        id: string;
-        collectedAt: string;
-        collectedByName?: string;
-    } | null;
-};
-
-type Souvenir = {
-    id: string;
-    name: string;
-    description?: string;
-    quantity: number;
-    takenCount: number;
-    remaining: number;
-};
+import type { EventConfig, SouvenirTakeInfo, Guest, PrizeWin, Souvenir } from '@/lib/souvenir/types';
+import SouvenirHistory from '@/components/souvenir/SouvenirHistory';
+import { SouvenirConfirmation, SouvenirAlreadyTaken } from '@/components/souvenir/SouvenirPopups';
+import SouvenirResults from '@/components/souvenir/SouvenirResults';
+import PrizeCollection from '@/components/souvenir/PrizeCollection';
+import SouvenirHeader from '@/components/souvenir/SouvenirHeader';
+import SouvenirSelector from '@/components/souvenir/SouvenirSelector';
 
 export default function SouvenirPage() {
     const [cfg, setCfg] = useState<EventConfig | null>(null);
@@ -928,63 +873,24 @@ export default function SouvenirPage() {
     return (
         <div className="relative min-h-screen w-full overflow-hidden">
             {/* Header brand */}
-            <div className="relative z-10 p-6 flex items-center gap-4">
-                {cfg?.logoUrl && <img src={toApiUrl(cfg.logoUrl)} className="h-12 w-auto" alt="logo" />}
-                <div className="text-brand-text">
-                    <div className="text-2xl md:text-4xl font-bold text-shadow-lg flex items-center gap-3">
-                        <Gift className="text-brand-primary" size={32} />
-                        Souvenir Check-in
-                    </div>
-                    <div className="text-sm md:text-base opacity-80 text-shadow flex items-center gap-2">
-                        {cfg?.name}
-                        <span className="mx-2">•</span>
-                        <Radio size={12} className={`${connected ? 'text-brand-success animate-pulse' : 'text-brand-danger'}`} />
-                        <span className="text-xs">{connected ? 'Live' : 'Offline'}</span>
-                        <div className="ml-4">
-                            <ConnectionStatusIndicator onShowQueue={() => setShowQueuePanel(true)} cachedGuestCount={cachedGuestCount} />
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <SouvenirHeader
+                logoUrl={cfg?.logoUrl}
+                eventName={cfg?.name}
+                connected={connected}
+                cachedGuestCount={cachedGuestCount}
+                onShowQueue={() => setShowQueuePanel(true)}
+            />
 
             {/* Search */}
             <div className="relative z-10 p-6 flex flex-col items-center">
                 <div className="w-full max-w-3xl rounded-2xl surface-elevated px-4 py-5 shadow-gold">
                     {/* Souvenir Selector Dropdown */}
-                    {souvenirs.length > 0 && souvenirs.some(s => s.remaining > 0) && (
-                        <div className="mb-4">
-                            <label className="text-sm text-brand-textMuted mb-2 block flex items-center gap-2">
-                                <Package size={16} className="text-brand-primary" />
-                                Pilih Souvenir untuk Check-in:
-                            </label>
-                            <select
-                                value={selectedSouvenir}
-                                onChange={(e) => setSelectedSouvenir(e.target.value)}
-                                className="w-full rounded-lg border border-brand-primary/50 bg-brand-primary/10 px-3 py-3 text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-primary/70 appearance-none cursor-pointer"
-                                disabled={searching || processing || creatingGuest}
-                            >
-                                <option value="" className="bg-brand-bgElevated text-brand-text">-- Pilih Souvenir --</option>
-                                {souvenirs.filter(s => s.remaining > 0).map((s) => (
-                                    <option key={s.id} value={s.id} className="bg-brand-bgElevated text-brand-text">
-                                        {s.name} (Sisa: {s.remaining}/{s.quantity})
-                                    </option>
-                                ))}
-                            </select>
-                            {selectedSouvenir && (
-                                <div className="mt-2 text-sm text-brand-primarySoft flex items-center gap-2">
-                                    <CheckCircle size={14} />
-                                    <span>Pencarian akan otomatis memberikan souvenir ini</span>
-                                </div>
-                            )}
-                        </div>
-                    )}
-
-                    {souvenirs.length > 0 && !souvenirs.some(s => s.remaining > 0) && (
-                        <div className="mb-4 flex items-center gap-3 rounded-lg border border-brand-danger/30 bg-brand-danger/10 p-4 text-brand-danger">
-                            <AlertTriangle size={20} className="text-brand-danger flex-shrink-0" />
-                            <span className="text-sm">Semua stok souvenir sudah habis. Tidak dapat memberikan souvenir.</span>
-                        </div>
-                    )}
+                    <SouvenirSelector
+                        souvenirs={souvenirs}
+                        selectedId={selectedSouvenir}
+                        onSelect={setSelectedSouvenir}
+                        disabled={searching || processing || creatingGuest}
+                    />
 
                     <input
                         ref={inputRef}
@@ -1182,173 +1088,27 @@ export default function SouvenirPage() {
             )}
 
             {/* Results */}
-            <div className="relative z-10 p-6 flex justify-center">
-                <div className="w-full max-w-5xl rounded-xl surface-elevated p-4 text-brand-text shadow-gold backdrop-blur-sm">
-                    {!results.length && (
-                        <div className="text-center text-brand-textMuted py-8 flex flex-col items-center gap-3">
-                            <Gift size={48} className="text-brand-textDim" />
-                            <p>Cari tamu untuk memproses pengambilan souvenir</p>
-                        </div>
-                    )}
-                    {!!results.length && (
-                        <div className="space-y-2">
-                            {results.map((g) => (
-                                <div
-                                    key={g.id}
-                                    onClick={() => selectGuest(g)}
-                                    className={`cursor-pointer flex items-center justify-between rounded border p-3 transition-colors ${selected?.id === g.id ? 'border-brand-primary/80 bg-brand-primary/10' : 'border-brand-border surface-interactive hover:shadow-gold'}`}
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <div className="h-12 w-12 bg-brand-surfaceMuted rounded overflow-hidden flex-shrink-0">
-                                            {g.photoUrl ? (
-                                                <img src={toApiUrl(g.photoUrl)} className="h-full w-full object-cover" />
-                                            ) : (
-                                                <div className="flex h-full w-full items-center justify-center text-xs text-brand-textDim">No Photo</div>
-                                            )}
-                                        </div>
-                                        <div>
-                                            <div className="font-medium text-brand-text">
-                                                {g.name} <span className="text-brand-textMuted font-mono text-sm">({g.guestId})</span>
-                                            </div>
-                                            <div className="text-sm text-brand-textMuted">
-                                                {g.tableLocation} {g.company ? `• ${g.company}` : ''} {g.division ? `• ${g.division}` : ''}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        {souvenirs.some(s => s.remaining > 0) && (
-                                        <button
-                                            className={`flex items-center gap-2 rounded-full px-4 py-2 font-medium text-brand-bg shadow-soft disabled:opacity-50 transition-colors ${g.souvenirTaken
-                                                ? 'bg-brand-success hover:bg-brand-success/80'
-                                                : 'bg-brand-primary hover:bg-brand-primarySoft'
-                                                }`}
-                                            disabled={processing}
-                                            onClick={(e) => { e.stopPropagation(); toggleSouvenir(g); }}
-                                        >
-                                            {processing && processingId === g.id ? (
-                                                <Loader2 className="animate-spin" size={16} />
-                                            ) : g.souvenirTaken ? (
-                                                <CheckCircle size={16} />
-                                            ) : (
-                                                <Gift size={16} />
-                                            )}
-                                            {processing && processingId === g.id
-                                                ? 'Memproses...'
-                                                : (g.souvenirTaken ? 'Sudah Diambil' : 'Ambil Souvenir')}
-                                        </button>
-                                        )}
-                                        {!souvenirs.some(s => s.remaining > 0) && g.souvenirTaken && (
-                                            <span className="flex items-center gap-1 text-brand-success text-sm"><CheckCircle size={14} /> Sudah Diambil</span>
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            </div>
+            <SouvenirResults
+                results={results}
+                selectedId={selected?.id ?? null}
+                souvenirs={souvenirs}
+                processing={processing}
+                processingId={processingId}
+                onSelect={selectGuest}
+                onToggleSouvenir={toggleSouvenir}
+            />
 
             {/* Prize Collection Section - Shows when guest is selected */}
             {selected && prizeWins.length > 0 && (
-                <div className="relative z-10 px-6 pb-6 flex justify-center">
-                    <div className="w-full max-w-5xl rounded-xl surface-elevated p-4 text-brand-text shadow-gold backdrop-blur-sm">
-                        <div
-                            className="flex items-center justify-between cursor-pointer"
-                            onClick={() => setShowPrizes(!showPrizes)}
-                        >
-                            <div className="font-semibold flex items-center gap-2 text-brand-warning">
-                                <Trophy size={20} />
-                                Hadiah Lucky Draw ({uncollectedPrizes.length} belum diambil, {collectedPrizes.length} sudah diambil)
-                            </div>
-                            <button className="text-brand-warning hover:text-brand-text">
-                                {showPrizes ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                            </button>
-                        </div>
-
-                        {showPrizes && (
-                            <div className="mt-4 space-y-3">
-                                {/* Uncollected Prizes */}
-                                {uncollectedPrizes.length > 0 && (
-                                    <div className="space-y-2">
-                                        <div className="text-xs uppercase tracking-wider text-brand-warning font-medium">
-                                            Belum Diambil - Pilih hadiah yang akan diambil:
-                                        </div>
-                                        {uncollectedPrizes.map((pw) => (
-                                            <div key={pw.id} className="flex items-center justify-between rounded-lg border border-brand-warning/30 bg-brand-warning/10 p-3">
-                                                <div>
-                                                    <div className="font-semibold text-brand-text flex items-center gap-2">
-                                                        <Trophy size={16} className="text-brand-warning" />
-                                                        {pw.prize.name}
-                                                    </div>
-                                                    <div className="text-xs text-brand-textMuted">
-                                                        Kategori: {pw.prize.category === 'UTAMA' ? 'Hadiah Utama' : 'Hadiah Hiburan'}
-                                                        {pw.prize.description && ` • ${pw.prize.description}`}
-                                                    </div>
-                                                </div>
-                                                <div className="flex gap-2">
-                                                    <button
-                                                        onClick={() => { setSelectedReceiptPrizeWin(pw); setShowReceiptModal(true); }}
-                                                        className="flex items-center gap-2 rounded-lg bg-brand-info/20 text-brand-info border border-brand-info/30 px-3 py-2 font-medium hover:bg-brand-info/30 transition-colors"
-                                                        title="Print Tanda Terima"
-                                                    >
-                                                        <Printer size={16} />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => collectPrize(pw.id)}
-                                                        disabled={collectingPrize === pw.id}
-                                                        className="flex items-center gap-2 rounded-lg bg-brand-warning px-4 py-2 font-medium text-brand-bg hover:opacity-90 disabled:opacity-50 transition-colors"
-                                                    >
-                                                        {collectingPrize === pw.id ? (
-                                                            <Loader2 className="animate-spin" size={16} />
-                                                        ) : (
-                                                            <CheckCircle size={16} />
-                                                        )}
-                                                        {collectingPrize === pw.id ? 'Memproses...' : 'Ambil Hadiah Ini'}
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-
-                                {/* Collected Prizes */}
-                                {collectedPrizes.length > 0 && (
-                                    <div className="space-y-2">
-                                        <div className="text-xs uppercase tracking-wider text-brand-success/80 font-medium">
-                                            Sudah Diambil:
-                                        </div>
-                                        {collectedPrizes.map((pw) => (
-                                            <div key={pw.id} className="flex items-center justify-between rounded-lg border border-brand-success/30 bg-brand-success/10 p-3 opacity-75 hover:opacity-100 transition-opacity">
-                                                <div>
-                                                    <div className="font-semibold text-brand-text flex items-center gap-2">
-                                                        <CheckCircle size={16} className="text-brand-success" />
-                                                        {pw.prize.name}
-                                                    </div>
-                                                    <div className="text-xs text-brand-success/80">
-                                                        Diambil pada {new Date(pw.collection!.collectedAt).toLocaleString('id-ID')}
-                                                        {pw.collection!.collectedByName && ` oleh ${pw.collection!.collectedByName}`}
-                                                    </div>
-                                                </div>
-                                                <div className="flex items-center gap-3">
-                                                    <button
-                                                        onClick={() => { setSelectedReceiptPrizeWin(pw); setShowReceiptModal(true); }}
-                                                        className="flex items-center gap-2 rounded-lg bg-brand-info/20 text-brand-info border border-brand-info/30 px-3 py-1 font-medium hover:bg-brand-info/30 transition-colors"
-                                                        title="Print Tanda Terima"
-                                                    >
-                                                        <Printer size={14} /> Cetak
-                                                    </button>
-                                                    <span className="px-3 py-1 rounded-full bg-brand-success/30 text-brand-success text-sm font-medium">
-                                                        Sudah Diambil
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
-                </div>
+                <PrizeCollection
+                    uncollected={uncollectedPrizes}
+                    collected={collectedPrizes}
+                    showPrizes={showPrizes}
+                    onTogglePrizes={() => setShowPrizes(!showPrizes)}
+                    collectingPrize={collectingPrize}
+                    onCollectPrize={collectPrize}
+                    onPrintReceipt={(pw) => { setSelectedReceiptPrizeWin(pw); setShowReceiptModal(true); }}
+                />
             )}
 
             {/* Loading Prizes Indicator */}
@@ -1362,38 +1122,7 @@ export default function SouvenirPage() {
             )}
 
             {/* History */}
-            <div className="relative z-10 p-6 flex justify-center">
-                <div className="w-full max-w-5xl rounded-xl surface-elevated p-4 text-brand-text shadow-gold backdrop-blur-sm">
-                    <div className="mb-3 font-semibold flex items-center gap-2 border-b border-brand-border pb-2">
-                        <Clock size={18} />
-                        Riwayat Pengambilan Terbaru
-                    </div>
-                    {!history.length && <div className="text-sm text-brand-textMuted py-4 text-center">Belum ada riwayat sesi ini</div>}
-                    {!!history.length && (
-                        <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-                            {history.map((h) => (
-                                <div key={h.id} className="flex items-center gap-3 rounded border border-brand-border surface-interactive p-2">
-                                    <div className="h-10 w-10 rounded bg-brand-surfaceMuted overflow-hidden flex-shrink-0">
-                                        {h.photoUrl ? (
-                                            <img src={toApiUrl(h.photoUrl)} className="h-full w-full object-cover" />
-                                        ) : (
-                                            <div className="flex h-full w-full items-center justify-center text-2xs text-brand-textDim">No Photo</div>
-                                        )}
-                                    </div>
-                                    <div className="text-sm overflow-hidden">
-                                        <div className="font-medium text-brand-text truncate">
-                                            {h.name}
-                                        </div>
-                                        <div className="text-brand-success text-xs flex items-center gap-1">
-                                            <CheckCircle size={10} /> Souvenir Diambil
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            </div>
+            <SouvenirHistory history={history} />
 
             {/* Souvenir Selection Modal */}
             {showSouvenirSelect && selected && (
@@ -1476,131 +1205,17 @@ export default function SouvenirPage() {
 
             {/* Confirmation Popup */}
             {
-                checkedGuest && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                        <div className="w-full max-w-4xl rounded-xl surface-elevated text-brand-text shadow-gold grid grid-cols-1 md:grid-cols-[320px_1fr] animate-in fade-in zoom-in duration-300">
-                            <div className="bg-brand-bgSubtle flex items-center justify-center min-h-[300px] md:min-h-full">
-                                {checkedGuest.photoUrl ? (
-                                    <img src={toApiUrl(checkedGuest.photoUrl)} alt={checkedGuest.name} className="w-full h-full object-cover" />
-                                ) : (
-                                    <div className="text-brand-textDim p-8 flex flex-col items-center gap-2">
-                                        <Users size={48} className="opacity-50" />
-                                        <span>No Photo</span>
-                                    </div>
-                                )}
-                            </div>
-                            <div className="p-6 md:p-10 space-y-4 relative overflow-y-auto max-h-[60vh] md:max-h-full">
-                                <div className="text-brand-primary text-xl font-bold flex items-center gap-2">
-                                    <Gift size={24} />
-                                    SOUVENIR DIAMBIL
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <div className="text-sm text-brand-textMuted uppercase tracking-wider font-medium">Queue</div>
-                                        <div className="text-5xl md:text-7xl font-extrabold text-brand-text leading-none">{checkedGuest.queueNumber}</div>
-                                    </div>
-                                    <div>
-                                        <div className="text-sm text-brand-textMuted uppercase tracking-wider font-medium">Guest ID</div>
-                                        <div className="text-2xl md:text-3xl font-mono font-semibold text-brand-text">{checkedGuest.guestId}</div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div className="text-sm text-brand-textMuted uppercase tracking-wider font-medium">Nama</div>
-                                    <div className="text-3xl md:text-5xl font-bold text-brand-text leading-tight">{checkedGuest.name}</div>
-                                </div>
-
-                                <div>
-                                    <div className="text-sm text-brand-textMuted uppercase tracking-wider font-medium">Meja / Ruangan</div>
-                                    <div className="text-2xl md:text-3xl text-brand-text">{checkedGuest.tableLocation}</div>
-                                </div>
-
-                                <div className="pt-6 flex items-center gap-3">
-                                    <button
-                                        className="flex items-center gap-2 rounded-lg border border-brand-border bg-brand-surfaceMuted px-6 py-3 text-base font-medium text-brand-text hover:bg-brand-surfaceBright transition-colors"
-                                        onClick={() => setCheckedGuest(null)}
-                                    >
-                                        <X size={20} />
-                                        Tutup
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )
+            <SouvenirConfirmation
+                guest={checkedGuest}
+                onClose={() => setCheckedGuest(null)}
+            />
             }
 
             {/* Already Taken Popup - Shows when souvenir was already given */}
-            {alreadyTakenInfo && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div className="w-full max-w-lg rounded-xl surface-elevated text-brand-text shadow-gold p-6 animate-in fade-in zoom-in duration-300">
-                        <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-xl font-bold flex items-center gap-2 text-brand-warning">
-                                <AlertTriangle size={24} />
-                                Souvenir Sudah Diambil
-                            </h3>
-                            <button
-                                onClick={() => setAlreadyTakenInfo(null)}
-                                className="text-brand-textDim hover:text-brand-text"
-                            >
-                                <X size={24} />
-                            </button>
-                        </div>
-
-                        <div className="mb-4 p-4 rounded-lg border border-brand-border bg-brand-bgSubtle">
-                            <div className="text-sm text-brand-textMuted mb-1">Tamu</div>
-                            <div className="text-xl font-bold text-brand-text">{alreadyTakenInfo.guest.name}</div>
-                            <div className="text-sm text-brand-textMuted font-mono">{alreadyTakenInfo.guest.guestId}</div>
-                        </div>
-
-                        <div className="mb-4">
-                            <div className="text-sm text-brand-warning font-medium mb-2 flex items-center gap-2">
-                                <Package size={16} />
-                                Riwayat Pengambilan Souvenir:
-                            </div>
-                            <div className="space-y-2 max-h-[40vh] overflow-y-auto">
-                                {alreadyTakenInfo.takes.map((take, idx) => (
-                                    <div key={idx} className="p-3 rounded-lg border border-brand-warning/20 bg-brand-warning/10">
-                                        <div className="font-semibold text-brand-text flex items-center gap-2">
-                                            <Gift size={16} className="text-brand-warning" />
-                                            {take.souvenirName}
-                                        </div>
-                                        <div className="text-sm text-brand-textMuted mt-1 flex items-center gap-4">
-                                            <span className="flex items-center gap-1">
-                                                <Clock size={12} />
-                                                {new Date(take.takenAt).toLocaleString('id-ID', {
-                                                    day: '2-digit',
-                                                    month: 'short',
-                                                    year: 'numeric',
-                                                    hour: '2-digit',
-                                                    minute: '2-digit'
-                                                })}
-                                            </span>
-                                            {take.takenByName && (
-                                                <span className="flex items-center gap-1">
-                                                    <Users size={12} />
-                                                    Admin: {take.takenByName}
-                                                </span>
-                                            )}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="flex gap-3">
-                            <button
-                                onClick={() => setAlreadyTakenInfo(null)}
-                                className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-brand-warning px-4 py-3 font-medium text-brand-bg hover:opacity-90 transition-colors"
-                            >
-                                <CheckCircle size={18} />
-                                Mengerti
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+            <SouvenirAlreadyTaken
+                info={alreadyTakenInfo}
+                onClose={() => setAlreadyTakenInfo(null)}
+            />
 
             {/* Scanner Modal */}
             {
@@ -1670,136 +1285,3 @@ export default function SouvenirPage() {
         </div >
     );
 }
-
-// Reusing the robust Html5QrcodePlugin from checkin page
-const Html5QrcodePlugin = ({ qrCodeSuccessCallback, onScanFailure, fps, qrbox }: any) => {
-    const [startError, setStartError] = useState<string | null>(null);
-    const scannerRef = useRef<Html5Qrcode | null>(null);
-    const isScanningRef = useRef(false);
-    const uniqueIdRef = useRef(`reader-${Math.random().toString(36).slice(2)}`);
-    const fileInputRef = useRef<HTMLInputElement>(null);
-
-    useEffect(() => {
-        const elementId = uniqueIdRef.current;
-        if (!document.getElementById(elementId)) return;
-
-        const html5QrCode = new Html5Qrcode(elementId);
-        scannerRef.current = html5QrCode;
-        const config = { fps: fps || 10, qrbox: qrbox || 250 };
-
-        html5QrCode.start(
-            { facingMode: "environment" },
-            config,
-            (decodedText, decodedResult) => {
-                if (!isScanningRef.current) return;
-                isScanningRef.current = false;
-                html5QrCode.stop().then(() => {
-                    html5QrCode.clear();
-                    qrCodeSuccessCallback(decodedText, decodedResult);
-                }).catch(err => {
-                    console.error("Failed to stop after scan", err);
-                    qrCodeSuccessCallback(decodedText, decodedResult);
-                });
-            },
-            (errorMessage) => {
-                if (onScanFailure) onScanFailure(errorMessage);
-            }
-        ).then(() => {
-            isScanningRef.current = true;
-        }).catch((err) => {
-            console.error("Error starting QR scanner", err);
-            setStartError(err?.message || "Gagal memulai kamera.");
-        });
-
-        return () => {
-            isScanningRef.current = false;
-            if (html5QrCode.isScanning) {
-                html5QrCode.stop().then(() => html5QrCode.clear()).catch(console.error);
-            } else {
-                html5QrCode.clear();
-            }
-        };
-    }, []);
-
-    const resizeImage = (file: File, maxWidth: number): Promise<File> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    let width = img.width;
-                    let height = img.height;
-                    if (width > maxWidth) {
-                        height = Math.round((height * maxWidth) / width);
-                        width = maxWidth;
-                    }
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx?.drawImage(img, 0, 0, width, height);
-                    canvas.toBlob((blob) => {
-                        if (blob) resolve(new File([blob], file.name, { type: file.type }));
-                        else reject(new Error("Canvas to Blob failed"));
-                    }, file.type, 0.8);
-                };
-                img.onerror = reject;
-                img.src = event.target?.result as string;
-            };
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-        });
-    };
-
-    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file || !scannerRef.current) return;
-        try {
-            await scannerRef.current.scanFileV2(file, false).then((decodedText) => {
-                qrCodeSuccessCallback(decodedText, null);
-            });
-        } catch (err: any) {
-            console.warn("First scan failed, retrying resized...", err);
-            try {
-                const resized = await resizeImage(file, 800);
-                await scannerRef.current.scanFileV2(resized, false).then((decodedText) => {
-                    qrCodeSuccessCallback(decodedText, null);
-                });
-            } catch (retryErr: any) {
-                alert(`Gagal memindai QR: ${retryErr?.message || "Tidak ditemukan"}`);
-            }
-        }
-    };
-
-    return (
-        <div className="w-full">
-            <div id={uniqueIdRef.current} className="w-full overflow-hidden rounded-lg bg-black border-2 border-brand-border relative min-h-[300px]">
-                {startError && (
-                    <div className="absolute inset-0 flex items-center justify-center p-4 text-center bg-brand-bgElevated text-brand-text overflow-y-auto">
-                        <div className="max-h-full py-4">
-                            <p className="text-brand-danger font-bold mb-2">Kamera Error</p>
-                            <p className="text-sm text-brand-textMuted mb-4">
-                                {startError}
-                            </p>
-                            <div className="text-xs text-left bg-black/30 p-3 rounded border border-brand-border mb-4 space-y-2">
-                                <p className="font-bold text-brand-warning">Solusi (Chrome/Edge):</p>
-                                <ol className="list-decimal pl-4 space-y-1 opacity-90">
-                                    <li>Buka tab baru, ketik: <code className="bg-brand-surfaceMuted px-1 rounded">chrome://flags</code></li>
-                                    <li>Cari: <code className="bg-brand-surfaceMuted px-1 rounded">insecure origins</code></li>
-                                    <li>Enable <b>"Insecure origins treated as secure"</b></li>
-                                    <li>Masukkan URL ini di kotak teks yang muncul: <br /><code className="bg-brand-surfaceMuted px-1 rounded block mt-1 select-all">{typeof window !== 'undefined' ? window.location.origin : 'http://...'}</code></li>
-                                    <li>Klik <b>Relaunch</b> di bawah layar.</li>
-                                </ol>
-                            </div>
-                            <button onClick={() => fileInputRef.current?.click()} className="bg-brand-primary text-brand-bg px-4 py-2 rounded-full font-bold text-sm hover:bg-brand-primarySoft transition-colors">Buka Kamera / Upload</button>
-                        </div>
-                    </div>
-                )}
-            </div>
-            <div className="mt-4 text-center">
-                <button onClick={() => fileInputRef.current?.click()} className="text-sm text-brand-primary hover:underline font-medium">Masalah dengan kamera? Upload Foto</button>
-                <input type="file" accept="image/*" capture="environment" ref={fileInputRef} className="hidden" onChange={handleFileUpload} />
-            </div>
-        </div>
-    );
-};

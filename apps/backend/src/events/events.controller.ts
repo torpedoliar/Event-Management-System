@@ -190,7 +190,7 @@ export class EventsController {
     }
     
     const url = `/api/uploads/branding/sounds/${file.filename}`;
-    let updateData: any = {};
+    const updateData: any = {};
     
     switch(type) {
       case 'roll': updateData.rollSoundUrl = url; break;

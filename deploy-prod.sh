@@ -142,18 +142,20 @@ echo -e "${YELLOW}[3/11] Checking for existing EMS deployment...${NC}"
 
 if docker ps -q -f name=guest-db-prod | grep -q .; then
     echo "  - Existing deployment found"
-    read -p " Backup database sebelum deploy? (y/n): " confirm
-    if [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]]; then
-        echo "  - Creating backup..."
-        DATETIME=$(date +%Y%m%d_%H%M%S)
-        BACKUP_FILE="backup_pre_deploy_${DATETIME}.sql"
-        docker exec guest-db-prod pg_dump -U postgres -d guest_registry > "$BACKUP_FILE" 2>/dev/null
-        if [ -f "$BACKUP_FILE" ]; then
-            echo "  - Backup saved: $BACKUP_FILE"
-        else
-            echo -e "${YELLOW}  - [WARNING] Backup gagal, melanjutkan deployment...${NC}"
-        fi
+    # Backup selalu dibuat (tidak lagi opsional). Deploy yang mengubah skema
+    # tanpa backup adalah cara tercepat kehilangan data produksi.
+    echo "  - Creating pre-deploy backup (wajib)..."
+    DATETIME=$(date +%Y%m%d_%H%M%S)
+    BACKUP_FILE="backup_pre_deploy_${DATETIME}.sql"
+    set +e
+    docker exec guest-db-prod pg_dump -U "${DB_USER:-postgres}" -d "${DB_NAME:-guest_registry}" --no-owner --no-privileges > "$BACKUP_FILE" 2>/dev/null
+    DUMP_RC=$?
+    set -e
+    if [ "$DUMP_RC" -ne 0 ] || [ ! -s "$BACKUP_FILE" ] || ! tail -40 "$BACKUP_FILE" | grep -q 'PostgreSQL database dump complete'; then
+        echo -e "${RED}  - [ERROR] Backup database GAGAL atau tidak lengkap. Deploy dibatalkan.${NC}"
+        exit 1
     fi
+    echo "  - Backup saved & verified: $BACKUP_FILE"
 else
     echo "  - No existing EMS deployment (fresh install)"
 fi
@@ -218,8 +220,27 @@ echo "  - Redis ready"
 # ==========================================
 echo ""
 echo -e "${YELLOW}[7/11] Prisma Database Initialization...${NC}"
-echo "  - Pushing database schema via Prisma..."
-$DOCKER_COMPOSE_CMD -f docker-compose.prod.yml --env-file .env.production run --rm backend sh -c "npx prisma generate && npx prisma db push --accept-data-loss"
+# Deteksi database lama (dibuat via `prisma db push`) yang belum punya riwayat migrasi.
+set +e
+LEGACY_DB=$(docker exec guest-db-prod psql -U "${DB_USER:-postgres}" -d "${DB_NAME:-guest_registry}" -tAc \
+  "SELECT CASE WHEN to_regclass('public._prisma_migrations') IS NULL AND to_regclass('public.\"Guest\"') IS NOT NULL THEN '1' ELSE '0' END;" 2>/dev/null | tr -d '[:space:]')
+set -e
+if [ "$LEGACY_DB" = "1" ]; then
+    echo -e "${RED}  - [ERROR] Database ini belum di-baseline ke sistem migrasi.${NC}"
+    echo "    Jalankan SEKALI: bash scripts/baseline-db.sh --apply"
+    echo "    lalu ulangi deploy. Deploy dibatalkan sebelum ada perubahan apa pun."
+    exit 1
+fi
+echo "  - Applying migrations via Prisma Migrate..."
+# Migrasi wajib berhasil. Sebelumnya memakai `db push --accept-data-loss`
+# yang dapat menghapus kolom beserta data tanpa konfirmasi.
+if ! $DOCKER_COMPOSE_CMD -f docker-compose.prod.yml --env-file .env.production run --rm backend sh -c "npx prisma generate && npx prisma migrate deploy"; then
+    echo -e "${RED}[ERROR] Migrasi database GAGAL. Deploy dibatalkan.${NC}"
+    echo "  - Database berhenti pada migrasi yang gagal; tidak ada penghapusan otomatis."
+    echo "  - Backup pra-deploy tersedia di: ${BACKUP_FILE:-'(fresh install, tidak ada backup)'}"
+    echo "  - Perbaiki migrasi, lalu jalankan ulang deploy."
+    exit 1
+fi
 echo "  - Database schema synced"
 
 # ==========================================

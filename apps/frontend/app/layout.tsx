@@ -4,6 +4,7 @@ import { SSEProvider } from '@/lib/sse-context';
 import { QueryProvider } from '@/lib/query-provider';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import ThemeBackground from '@/components/ThemeBackground';
+import ClientBootstrap from '@/components/ClientBootstrap';
 
 import { Inter, JetBrains_Mono, Cinzel } from 'next/font/google';
 
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <ErrorBoundary>
           <QueryProvider>
             <SSEProvider>
+              <ClientBootstrap />
               <ThemeBackground />
               <div className="relative z-10 flex flex-col min-h-screen">
                 {children}

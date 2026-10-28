@@ -1,0 +1,40 @@
+# Normalisasi line ending agar skrip tidak rusak saat dipindah antar-OS.
+# Masalah ini sudah pernah terjadi: commit "fix deploy script line endings".
+#
+# - Skrip shell WAJIB LF: CRLF membuat bash gagal ("bad interpreter").
+# - Skrip batch Windows WAJIB CRLF: LF dapat merusak `goto` dan label.
+# - PowerShell aman dengan LF, tetapi CRLF lebih konsisten di Windows.
+
+* text=auto
+
+*.sh        text eol=lf
+*.bash      text eol=lf
+*.py        text eol=lf
+*.prisma    text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.json      text eol=lf
+*.ts        text eol=lf
+*.tsx       text eol=lf
+*.js        text eol=lf
+*.mjs       text eol=lf
+*.md        text eol=lf
+*.sql       text eol=lf
+
+*.bat       text eol=crlf
+*.cmd       text eol=crlf
+*.ps1       text eol=crlf
+
+# Aset biner - jangan diubah
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.ico       binary
+*.webp      binary
+*.woff      binary
+*.woff2     binary
+*.ttf       binary
+*.tar       binary
+*.7z        binary
+*.zip       binary

@@ -68,16 +68,30 @@ mkdir -p $BACKUP_DIR
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 BACKUP_FILE="$BACKUP_DIR/db_backup_$TIMESTAMP.sql"
 
+# Nama database diambil dari .env.production agar tidak hardcoded
+DB_USER=$(grep -E '^DB_USER=' .env.production 2>/dev/null | cut -d= -f2- | tr -d '"' || true)
+DB_USER=${DB_USER:-postgres}
+DB_NAME=$(grep -E '^DB_NAME=' .env.production 2>/dev/null | cut -d= -f2- | tr -d '"' || true)
+DB_NAME=${DB_NAME:-guest_registry}
+
 if docker ps -q -f name=guest-db-prod | grep -q .; then
-    echo "  - Mengambil dump dari container guest-db-prod..."
-    docker exec guest-db-prod pg_dump -U postgres -d guest_registry > "$BACKUP_FILE" 2>/dev/null
-    if [ -s "$BACKUP_FILE" ]; then
-        echo "  - File berhasil diamankan: $BACKUP_FILE"
-    else
-        echo -e "${YELLOW}  - [WARNING] Mekanisme backup SQL ke lokal gagal!${NC}"
+    echo "  - Mengambil dump dari container guest-db-prod ($DB_USER@$DB_NAME)..."
+    set +e
+    docker exec guest-db-prod pg_dump -U "$DB_USER" -d "$DB_NAME" --no-owner --no-privileges > "$BACKUP_FILE" 2>/dev/null
+    DUMP_RC=$?
+    set -e
+    # Backup harus utuh: file kosong atau tanpa penanda akhir berarti terpotong,
+    # dan update TIDAK boleh dilanjutkan tanpa jaring pengaman.
+    if [ "$DUMP_RC" -ne 0 ] || [ ! -s "$BACKUP_FILE" ] || ! tail -40 "$BACKUP_FILE" | grep -q 'PostgreSQL database dump complete'; then
+        echo -e "${RED}  - [ERROR] Backup database GAGAL atau tidak lengkap!${NC}"
+        echo "    Perbaikan: jalankan ulang setelah memastikan container database sehat."
+        exit 1
     fi
+    echo "  - File berhasil diamankan & terverifikasi: $BACKUP_FILE"
 else
-    echo -e "${YELLOW}  - [WARNING] Container Database Sedang Mati. Backup SQL di-skip.${NC}"
+    echo -e "${RED}  - [ERROR] Container database tidak berjalan - backup tidak dapat dibuat.${NC}"
+    echo "    Update dibatalkan agar tidak ada perubahan tanpa backup."
+    exit 1
 fi
 
 # ==========================================
@@ -164,12 +178,37 @@ fi
 # [7/7] Database Syncing & Cleanup
 # ==========================================
 echo ""
-echo -e "${YELLOW}[7/7] Menerapkan Sinkronisasi Skema Database via Prisma Engine...${NC}"
-if $DOCKER_COMPOSE_CMD -f docker-compose.prod.yml --env-file .env.production exec -T backend npx prisma db push --accept-data-loss >/dev/null 2>&1; then
-    echo "  - Database Sync Selesai (100%)."
-else
-    echo -e "${YELLOW}  - [WARNING] Database Sync selesai dengan Warning. Terkadang wajar jika DB Engine sedang heavy-load.${NC}"
+echo -e "${YELLOW}[7/7] Menerapkan Migrasi Skema Database via Prisma Migrate...${NC}"
+# Deteksi database lama (dibuat via `prisma db push`) yang belum punya riwayat
+# migrasi. Tanpa penandaan baseline, `migrate deploy` akan gagal karena tabel
+# sudah terlanjur ada - dan galatnya membingungkan.
+set +e
+LEGACY_DB=$(docker exec guest-db-prod psql -U "$DB_USER" -d "$DB_NAME" -tAc \
+  "SELECT CASE WHEN to_regclass('public._prisma_migrations') IS NULL AND to_regclass('public.\"Guest\"') IS NOT NULL THEN '1' ELSE '0' END;" 2>/dev/null | tr -d '[:space:]')
+set -e
+if [ "$LEGACY_DB" = "1" ]; then
+    echo -e "${RED}  - [ERROR] Database ini belum di-baseline ke sistem migrasi.${NC}"
+    echo "    Ini normal untuk instalasi lama. Jalankan SEKALI saja:"
+    echo "        bash scripts/baseline-db.sh --apply"
+    echo "    lalu ulangi update ini. Backup Anda tetap aman di: $BACKUP_FILE"
+    exit 1
 fi
+# Menggantikan `db push --accept-data-loss` yang dapat menghapus kolom beserta
+# datanya tanpa konfirmasi, dan sebelumnya kegagalannya hanya dianggap peringatan
+# sehingga aplikasi bisa berjalan di atas skema yang tidak sesuai.
+set +e
+MIGRATE_OUT=$($DOCKER_COMPOSE_CMD -f docker-compose.prod.yml --env-file .env.production exec -T backend npx prisma migrate deploy 2>&1)
+MIGRATE_RC=$?
+set -e
+echo "$MIGRATE_OUT" | tail -n 20
+if [ "$MIGRATE_RC" -ne 0 ]; then
+    echo -e "${RED}  - [ERROR] Migrasi database GAGAL. Update dibatalkan.${NC}"
+    echo "    - Database berhenti pada migrasi yang gagal, tidak ada data yang dihapus otomatis."
+    echo "    - Backup tersedia di: $BACKUP_FILE"
+    echo "    - Perbaiki migrasi tersebut, lalu jalankan ulang update."
+    exit 1
+fi
+echo "  - Migrasi selesai. Skema database sesuai dengan schema.prisma."
 
 echo "  - Injeksi Client Prisma (Generate)..."
 $DOCKER_COMPOSE_CMD -f docker-compose.prod.yml --env-file .env.production exec -T backend npx prisma generate >/dev/null 2>&1

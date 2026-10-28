@@ -19,6 +19,17 @@ export interface LogEntry {
   duration?: number;
 }
 
+/**
+ * Menentukan tingkat log dari status HTTP.
+ * Dipisahkan agar dapat diuji tanpa membuat instance winston.
+ */
+export function resolveRequestLevel(statusCode?: number): 'error' | 'warn' | 'info' {
+  const status = statusCode ?? 0;
+  if (status >= 500) return 'error';
+  if (status >= 400) return 'warn';
+  return 'info';
+}
+
 @Injectable()
 export class LoggerService implements NestLoggerService {
   private logger: winston.Logger;
@@ -93,7 +104,15 @@ export class LoggerService implements NestLoggerService {
   }
 
   logRequest(data: Partial<LogEntry>) {
-    this.logger.info('HTTP Request', { ...data, context: 'HTTP' });
+    // Tingkat log mengikuti status HTTP agar kegagalan server langsung
+    // masuk ke berkas error-*.log dan mudah dicari.
+    const level = data.level || resolveRequestLevel(data.statusCode);
+
+    this.logger.log(level, data.message || 'HTTP Request', {
+      ...data,
+      level,
+      context: 'HTTP',
+    });
   }
 
   logAudit(action: string, userId: string, metadata?: Record<string, any>) {

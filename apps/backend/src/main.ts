@@ -1,12 +1,13 @@
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { LoggerService } from './common/logger/logger.service';
 import { ValidationPipe } from '@nestjs/common';
 import * as express from 'express';
 import * as fs from 'fs';
 import { join } from 'path';
 // Use require to avoid ESM interop issues
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+
 const compression = require('compression');
 import helmet from 'helmet';
 
@@ -42,6 +43,19 @@ async function bootstrap() {
   }
 
   app.setGlobalPrefix('api');
+
+  // Di belakang reverse proxy (Nginx Proxy Manager / Traefik), tanpa pengaturan
+  // ini `req.ip` selalu berisi IP proxy, sehingga:
+  //   - rate limiting per-IP memblokir semua klien sekaligus, dan
+  //   - log/audit tidak menunjukkan siapa pelakunya.
+  // Nilai 1 berarti memercayai satu hop proxy terdekat (X-Forwarded-For).
+  // JANGAN dinaikkan tanpa menyesuaikan jumlah hop sebenarnya.
+  app.getHttpAdapter().getInstance().set('trust proxy', 1);
+
+  // Arahkan log internal Nest (bootstrap, pemetaan route, error tak tertangani)
+  // ke winston, agar seluruh log berada di satu tempat dengan format sama.
+  // Sebelumnya LoggerService tidak pernah dipakai sehingga log hanya ke stdout.
+  app.useLogger(app.get(LoggerService));
   
   // Use Helmet for standard security headers
   app.use(helmet());

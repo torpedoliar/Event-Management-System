@@ -177,83 +177,96 @@ export class PrizesService {
         return results[0];
     }
 
+    /**
+     * Mengundi pemenang untuk sebuah hadiah.
+     *
+     * PENTING (perbaikan race condition):
+     * Versi sebelumnya menghitung sisa stok dan daftar eligible DI LUAR
+     * transaksi, lalu menulis pemenang. Sepuluh panitia yang menekan "Undi"
+     * pada saat bersamaan dapat membagikan hadiah berstok 1 sebanyak 8 kali
+     * (lihat prizes.draw.spec.ts).
+     *
+     * Perbaikannya: hitung-dan-tulis dijalankan dalam satu transaksi yang
+     * mengambil advisory lock per-hadiah, sehingga undian untuk hadiah yang
+     * sama berjalan bergantian, sementara hadiah berbeda tetap paralel.
+     */
     async drawWinners(prizeId: string, count: number) {
         if (count < 1) throw new BadRequestException('Count must be at least 1');
-
-        const prize = await this.prisma.prize.findUnique({
-            where: { id: prizeId },
-            include: {
-                prizeWinners: { include: { guest: true } }
-            }
-        });
-        if (!prize) throw new BadRequestException('Prize not found');
-
-        const remaining = prize.quantity - prize.prizeWinners.length;
-        if (remaining <= 0) {
-            throw new BadRequestException('Semua hadiah sudah diberikan');
-        }
-
-        const actualCount = Math.min(count, remaining);
 
         const active = await this.events.getActive();
         if (!active) throw new BadRequestException('No active event');
 
-        // Get current winner IDs for this prize
-        const currentWinnerGuestIds = prize.prizeWinners.map(pw => pw.guestId);
+        return this.prisma.$transaction(
+            async (tx) => {
+                await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${prizeId})::bigint)`;
 
-        let eligible;
+                const prize = await tx.prize.findUnique({
+                    where: { id: prizeId },
+                    include: { prizeWinners: true }
+                });
+                if (!prize) throw new BadRequestException('Prize not found');
 
-        if (prize.allowMultipleWins) {
-            // Allow guests who already won OTHER prizes to win this prize
-            // But exclude guests who already won THIS specific prize
-            eligible = await this.prisma.guest.findMany({
-                where: {
-                    eventId: active.id,
-                    checkedIn: true,
-                    ...(currentWinnerGuestIds.length > 0 ? { id: { notIn: currentWinnerGuestIds } } : {})
+                const remaining = prize.quantity - prize.prizeWinners.length;
+                if (remaining <= 0) {
+                    throw new BadRequestException('Semua hadiah sudah diberikan');
                 }
-            });
-        } else {
-            // Default: only guests who haven't won ANY prize yet
-            eligible = await this.prisma.guest.findMany({
-                where: {
-                    eventId: active.id,
-                    checkedIn: true,
-                    prizeWins: { none: {} }
+
+                const actualCount = Math.min(count, remaining);
+                const currentWinnerGuestIds = prize.prizeWinners.map(pw => pw.guestId);
+
+                let eligible;
+
+                if (prize.allowMultipleWins) {
+                    // Boleh menang hadiah lain, tetapi tidak boleh hadiah ini lagi.
+                    eligible = await tx.guest.findMany({
+                        where: {
+                            eventId: active.id,
+                            checkedIn: true,
+                            ...(currentWinnerGuestIds.length > 0
+                                ? { id: { notIn: currentWinnerGuestIds } }
+                                : {})
+                        }
+                    });
+                } else {
+                    // Hanya tamu yang belum pernah menang hadiah apa pun.
+                    eligible = await tx.guest.findMany({
+                        where: {
+                            eventId: active.id,
+                            checkedIn: true,
+                            prizeWins: { none: {} }
+                        }
+                    });
                 }
-            });
-        }
 
-        if (eligible.length === 0) {
-            throw new BadRequestException(
-                prize.allowMultipleWins
-                    ? 'Semua tamu yang hadir sudah memenangkan hadiah ini'
-                    : 'Tidak ada tamu yang memenuhi syarat (semua sudah pernah menang)'
-            );
-        }
+                if (eligible.length === 0) {
+                    throw new BadRequestException(
+                        prize.allowMultipleWins
+                            ? 'Semua tamu yang hadir sudah memenangkan hadiah ini'
+                            : 'Tidak ada tamu yang memenuhi syarat (semua sudah pernah menang)'
+                    );
+                }
 
-        if (eligible.length < actualCount) {
-            // If requested more than available, draw all available
-            // (Handled by shuffle below)
-        }
+                // Fisher-Yates: pengacakan yang tidak bias, berbeda dari
+                // `sort(() => 0.5 - Math.random())` yang hasilnya condong.
+                const shuffled = [...eligible];
+                for (let i = shuffled.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                }
 
-        // Shuffle and select multiple
-        const shuffled = [...eligible].sort(() => 0.5 - Math.random());
-        const selectedWinners = shuffled.slice(0, actualCount);
+                const selectedWinners = shuffled.slice(0, actualCount);
 
-        // Create prize winner records in transaction
-        await this.prisma.$transaction(
-            selectedWinners.map(winner => 
-                this.prisma.prizeWinner.create({
-                    data: {
+                await tx.prizeWinner.createMany({
+                    data: selectedWinners.map(winner => ({
                         guestId: winner.id,
                         prizeId: prize.id
-                    }
-                })
-            )
-        );
+                    }))
+                });
 
-        return selectedWinners;
+                return selectedWinners;
+            },
+            { timeout: 15000, maxWait: 10000 }
+        );
     }
 
     async deleteWinner(prizeId: string, guestId: string) {

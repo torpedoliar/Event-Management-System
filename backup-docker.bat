@@ -14,6 +14,20 @@ for /f "tokens=2 delims==" %%I in ('wmic os get localdatetime /format:list') do 
 set BACKUP_DATE=%datetime:~0,8%_%datetime:~8,6%
 set BACKUP_DIR=backup_%BACKUP_DATE%
 
+:: Baca kredensial database dari .env.production agar tidak hardcoded.
+:: Sebelumnya skrip ini selalu memakai postgres/guest_registry; jika nilainya
+:: diubah, dump akan gagal tetapi proses tetap dianggap sukses.
+set DB_USER=postgres
+set DB_NAME=guest_registry
+set DB_CONTAINER=guest-db-prod
+if exist ".env.production" (
+    for /f "usebackq tokens=1,* delims==" %%A in (".env.production") do (
+        if /i "%%A"=="DB_USER" set DB_USER=%%~B
+        if /i "%%A"=="DB_NAME" set DB_NAME=%%~B
+    )
+)
+echo [INFO] Target database: %DB_USER%@%DB_CONTAINER%/%DB_NAME%
+
 echo [INFO] Membuat folder backup: %BACKUP_DIR%
 mkdir "%BACKUP_DIR%" 2>nul
 
@@ -52,12 +66,25 @@ if %errorlevel% neq 0 (
 :: Backup Database
 echo.
 echo [3/6] Backup database PostgreSQL...
-docker exec guest-db-prod pg_dump -U postgres -d guest_registry > "%BACKUP_DIR%\database.sql"
+docker exec %DB_CONTAINER% pg_dump -U %DB_USER% -d %DB_NAME% --no-owner --no-privileges > "%BACKUP_DIR%\database.sql" 2> "%BACKUP_DIR%\database.err"
 if %errorlevel% neq 0 (
-    echo [ERROR] Gagal backup database
-) else (
-    echo       [OK] Database exported to database.sql
+    echo [ERROR] pg_dump gagal. Backup DIBATALKAN.
+    type "%BACKUP_DIR%\database.err"
+    goto :backup_failed
 )
+:: Validasi hasil: file kosong atau tanpa penanda akhir berarti dump terpotong.
+for %%F in ("%BACKUP_DIR%\database.sql") do set DUMP_SIZE=%%~zF
+if not defined DUMP_SIZE set DUMP_SIZE=0
+if "%DUMP_SIZE%"=="0" (
+    echo [ERROR] File dump kosong. Backup DIBATALKAN.
+    goto :backup_failed
+)
+findstr /C:"PostgreSQL database dump complete" "%BACKUP_DIR%\database.sql" >nul 2>&1
+if %errorlevel% neq 0 (
+    echo [ERROR] Penanda akhir pg_dump tidak ditemukan - dump TERPOTONG. Backup DIBATALKAN.
+    goto :backup_failed
+)
+echo       [OK] Database exported to database.sql (%DUMP_SIZE% bytes, terverifikasi lengkap)
 
 :: Backup Uploads Volume
 echo.
@@ -156,6 +183,23 @@ if %errorlevel% neq 0 (
 
 echo       [OK] restore.bat created
 
+:: Verifikasi backup dengan drill restore sesungguhnya.
+:: Backup yang belum pernah berhasil di-restore BUKAN backup.
+echo.
+echo [VERIFIKASI] Menjalankan drill restore...
+if not exist "scripts\verify-backup.ps1" (
+    echo       [WARN] scripts\verify-backup.ps1 tidak ditemukan - verifikasi DILEWATI.
+    echo       [WARN] Backup ini BELUM TERBUKTI dapat di-restore.
+) else (
+    powershell -NoProfile -ExecutionPolicy Bypass -File "scripts\verify-backup.ps1" -DumpFile "%BACKUP_DIR%\database.sql" -SourceContainer %DB_CONTAINER% -DbUser %DB_USER% -DbName %DB_NAME%
+    if !errorlevel! neq 0 (
+        echo.
+        echo [ERROR] VERIFIKASI GAGAL - backup ini TIDAK dapat diandalkan.
+        echo         Lihat pesan di atas, lalu buat backup ulang.
+        goto :backup_failed
+    )
+)
+
 :: Show backup summary
 echo.
 echo ================================================================
@@ -175,3 +219,16 @@ echo 3. Buka folder backup dan jalankan "restore.bat"
 echo ----------------------------------------------------------------
 echo.
 pause
+exit /b 0
+
+:backup_failed
+echo.
+echo ================================================================
+echo                    BACKUP GAGAL
+echo ================================================================
+echo.
+echo Jangan mengandalkan folder "%BACKUP_DIR%".
+echo Periksa penyebab di atas sebelum melakukan perubahan pada sistem.
+echo.
+pause
+exit /b 1

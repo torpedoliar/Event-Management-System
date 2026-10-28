@@ -24,6 +24,15 @@ apps/backend/logs/
 .env.*
 .env.local
 .env.*.local
+# Template berisi placeholder (bukan rahasia) dan WAJIB ikut ter-commit agar
+# developer baru tahu variabel apa saja yang dibutuhkan.
+!.env.example
+!**/.env.example
+!.env.production.example
+# Artefak debug lokal yang pernah tidak sengaja ter-commit
+_detect_output.json
+test-shadow.html
+diff.txt
 # OS / editor
 .DS_Store
 Thumbs.db
@@ -55,6 +64,15 @@ apps/frontend/certs/
 # Database backups
 *.sql
 backup_*.sql
+db_backup_*.sql
+# PENTING: migrasi Prisma WAJIB ikut ter-commit.
+# Tanpa pengecualian ini, repo bersih tidak punya folder migrasi sama sekali,
+# sehingga `prisma migrate deploy` menjadi no-op dan skema tidak pernah dibuat.
+!apps/backend/prisma/migrations/**/*.sql
+# Arsip migrasi lama (tidak dieksekusi, hanya untuk melestarikan riwayat)
+!apps/backend/prisma/_migrations_legacy_*/**/*.sql
+# Fixture untuk latihan drill backup (dipakai scripts/verify-backup.sh)
+!scripts/drill-seed.sql
 # Archive files
 *.7z
 *.zip

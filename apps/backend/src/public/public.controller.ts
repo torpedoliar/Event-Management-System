@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Query, Req, Res, Headers, UnauthorizedException, Inject } from '@nestjs/common';
 import { Request } from 'express';
-import { SkipThrottle } from '@nestjs/throttler';
+import { Throttle } from '@nestjs/throttler';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { GuestsService } from '../guests/guests.service';
@@ -8,8 +8,13 @@ import { SouvenirsService } from '../souvenirs/souvenirs.service';
 import { Response } from 'express';
 import { onEvent, emitEvent } from '../common/sse';
 import { JwtService } from '@nestjs/jwt';
+import { KIOSK_LIMIT, KIOSK_HEALTH_LIMIT, PUBLIC_STREAM_LIMIT } from '../common/throttler/throttler.limits';
 
-@SkipThrottle({ default: true, short: true, medium: true, long: true })
+// Sebelumnya controller ini di-@SkipThrottle seluruhnya sehingga check-in,
+// pencarian, dan sinkronisasi benar-benar tanpa batas. Pembatasannya sekarang
+// memakai kunci per-station (lihat StationThrottlerGuard) agar 20 station di
+// satu NAT tidak saling memblokir.
+@Throttle(KIOSK_LIMIT)
 @Controller('public')
 export class PublicController {
   constructor(
@@ -196,6 +201,7 @@ export class PublicController {
     return this.guests.publicHistory(lim);
   }
 
+  @Throttle(PUBLIC_STREAM_LIMIT)
   @Get('stream')
   async stream(@Req() req: Request, @Res() res: Response, @Query('token') token?: string) {
     // R-001: Require valid JWT to access the event stream.
@@ -245,6 +251,7 @@ export class PublicController {
     });
   }
 
+  @Throttle(KIOSK_HEALTH_LIMIT)
   @Get('health')
   async health() {
     const CACHE_KEY = 'public:health';
@@ -280,7 +287,9 @@ export class PublicController {
 }
 
 function reqOnClose(res: Response, cb: () => void) {
-  // @ts-ignore
-  const req = res.req as any;
-  req.on('close', cb);
+  // `req` tidak dideklarasikan pada tipe Response Express, tetapi tersedia
+  // saat runtime. Cast eksplisit lebih aman daripada @ts-ignore, yang akan
+  // diam-diam tidak berefek bila suatu saat tipenya berubah.
+  const patched = res as unknown as { req: { on: (event: string, cb: () => void) => void } };
+  patched.req.on('close', cb);
 }

@@ -9,7 +9,10 @@ import { UpdateGuestDto } from './dto/update-guest.dto';
 import { QueryGuestsDto } from './dto/query-guests.dto';
 import { Guest, Prisma, GuestCategory } from '@prisma/client';
 
-const isDev = process.env.NODE_ENV === 'development';
+/** Guest beserta relasi yang dibutuhkan untuk memutuskan boleh/tidaknya check-in. */
+type GuestWithCheckins = Prisma.GuestGetPayload<{
+  include: { event: true; checkins: true };
+}>;
 
 @Injectable()
 export class GuestsService {
@@ -360,136 +363,157 @@ export class GuestsService {
     return { success: true };
   }
 
-  async checkIn(id: string, adminId?: string, adminName?: string) {
-    const guest = await this.prisma.guest.findUnique({
-      where: { id },
-      include: { event: true, checkins: true }
-    });
-    if (!guest) throw new NotFoundException('Guest not found');
-
-    const now = new Date();
+  /**
+   * Menentukan apakah check-in harus ditolak, TANPA melakukan penulisan apa pun.
+   *
+   * Dipisahkan dari checkIn() karena aturan yang sama dipakai dua kali:
+   *   - jalur cepat sebelum transaksi, untuk menolak permintaan yang jelas
+   *     konflik tanpa perlu mengambil lock, dan
+   *   - jalur otoritatif di dalam transaksi, setelah lock didapat dan data
+   *     dibaca ulang.
+   */
+  private buildCheckinConflict(
+    guest: GuestWithCheckins,
+    adminId?: string,
+    adminName?: string,
+  ): ConflictException | null {
     const event = guest.event;
     const allowMultiple = event?.allowMultipleCheckin ?? false;
     const maxCheckins = event?.maxCheckinCount ?? 1;
     const allowMultiplePerCounter = event?.allowMultipleCheckinPerCounter ?? false;
 
-    // Debug logging (dev only — console.log blocks event loop)
-    if (isDev) {
-      console.log(`[CheckIn] Guest: ${guest.name}, AdminId: ${adminId}, AdminName: ${adminName}`);
-      console.log(`[CheckIn] Settings - allowMultiplePerCounter: ${allowMultiplePerCounter}, allowMultiple: ${allowMultiple}, maxCheckins: ${maxCheckins}`);
-      console.log(`[CheckIn] Guest checkedIn: ${guest.checkedIn}, checkinCount: ${guest.checkinCount}`);
-      console.log(`[CheckIn] Existing checkins:`, guest.checkins.map(c => ({ id: c.checkinById, name: c.checkinByName })));
-    }
+    const sortedCheckins = [...guest.checkins].sort(
+      (a, b) => new Date(a.checkinAt).getTime() - new Date(b.checkinAt).getTime(),
+    );
 
-    // Check if this admin already checked in this guest (only if adminId is provided)
     const existingCheckinByAdmin = adminId
-      ? guest.checkins.find(c => c.checkinById === adminId)
+      ? guest.checkins.find((c) => c.checkinById === adminId)
       : null;
 
-    if (isDev) console.log(`[CheckIn] existingCheckinByAdmin:`, existingCheckinByAdmin ? 'YES' : 'NO');
+    if (!guest.checkedIn) return null;
 
-    if (guest.checkedIn) {
-      // MODE 1: Per-Counter mode (allowMultiplePerCounter = true)
-      // Allow unlimited total check-ins, but only 1 per admin/counter
-      if (allowMultiplePerCounter) {
-        if (isDev) console.log(`[CheckIn] Using Per-Counter mode`);
-
-        // Require login for per-counter mode
-        if (!adminId) {
-          // Reuse already-loaded checkins, sort in-memory
-          const sortedCheckins = [...guest.checkins].sort((a, b) => new Date(a.checkinAt).getTime() - new Date(b.checkinAt).getTime());
-          throw new ConflictException({
-            ...guest,
-            checkins: sortedCheckins,
-            requireLogin: true,
-            message: `Login diperlukan untuk mode Multiple Check-in Per Counter`
-          });
-        }
-
-        // Check if THIS specific admin has already checked in
-        if (existingCheckinByAdmin) {
-          if (isDev) console.log(`[CheckIn] BLOCKED - Admin ${adminName} (${adminId}) already checked in this guest`);
-          const sortedCheckins = [...guest.checkins].sort((a, b) => new Date(a.checkinAt).getTime() - new Date(b.checkinAt).getTime());
-          throw new ConflictException({
-            ...guest,
-            checkins: sortedCheckins,
-            alreadyCheckedByThisAdmin: true,
-            message: `${adminName || 'Admin ini'} sudah pernah check-in tamu ini`
-          });
-        }
-
-        // ALLOW - this admin hasn't checked in yet
-        if (isDev) console.log(`[CheckIn] ALLOWED - Admin ${adminName} (${adminId}) can check in`);
-
-        // MODE 2: No multiple check-in allowed  
-      } else if (!allowMultiple) {
-        if (isDev) console.log(`[CheckIn] BLOCKED - Multiple check-in not allowed`);
-        // Reuse already-loaded checkins, sort in-memory
-        const sortedCheckins = [...guest.checkins].sort((a, b) => new Date(a.checkinAt).getTime() - new Date(b.checkinAt).getTime());
-        throw new ConflictException({ ...guest, checkins: sortedCheckins });
-
-        // MODE 3: Regular multiple check-in with maxCheckinCount limit
-      } else {
-        if (isDev) console.log(`[CheckIn] Using Regular Multiple mode with max ${maxCheckins}`);
-
-        // Check if already checked in by this admin (only if adminId provided)
-        if (adminId && existingCheckinByAdmin) {
-          if (isDev) console.log(`[CheckIn] BLOCKED - Admin already checked in`);
-          const sortedCheckins = [...guest.checkins].sort((a, b) => new Date(a.checkinAt).getTime() - new Date(b.checkinAt).getTime());
-          throw new ConflictException({
-            ...guest,
-            checkins: sortedCheckins,
-            alreadyCheckedByThisAdmin: true,
-            message: `${adminName || 'Admin ini'} sudah pernah check-in tamu ini`
-          });
-        }
-
-        // Check if max check-ins reached
-        if (guest.checkinCount >= maxCheckins) {
-          if (isDev) console.log(`[CheckIn] BLOCKED - Max check-ins reached (${guest.checkinCount}/${maxCheckins})`);
-          const sortedCheckins = [...guest.checkins].sort((a, b) => new Date(a.checkinAt).getTime() - new Date(b.checkinAt).getTime());
-          throw new ConflictException({
-            ...guest,
-            checkins: sortedCheckins,
-            maxReached: true,
-            message: `Sudah mencapai maksimum ${maxCheckins}x check-in`
-          });
-        }
+    // MODE 1: Per-Counter — total bebas, tetapi hanya 1x per admin/counter
+    if (allowMultiplePerCounter) {
+      if (!adminId) {
+        return new ConflictException({
+          ...guest,
+          checkins: sortedCheckins,
+          requireLogin: true,
+          message: `Login diperlukan untuk mode Multiple Check-in Per Counter`,
+        });
       }
+      if (existingCheckinByAdmin) {
+        return new ConflictException({
+          ...guest,
+          checkins: sortedCheckins,
+          alreadyCheckedByThisAdmin: true,
+          message: `${adminName || 'Admin ini'} sudah pernah check-in tamu ini`,
+        });
+      }
+      return null;
     }
 
-    // Perform check-in and return updated guest in one transaction
-    const [newCheckin, updatedGuest] = await this.prisma.$transaction(async (tx) => {
-      // Create check-in record
-      const checkin = await tx.guestCheckin.create({
-        data: {
-          guestId: id,
-          checkinById: adminId || null,
-          checkinByName: adminName || null,
-          checkinAt: now,
-        }
-      });
+    // MODE 2: Check-in tunggal
+    if (!allowMultiple) {
+      return new ConflictException({ ...guest, checkins: sortedCheckins });
+    }
 
-      // Update guest
-      const updated = await tx.guest.update({
-        where: { id },
-        data: {
-          checkedIn: true,
-          checkedInAt: guest.checkedInAt || now, // Keep first check-in time
-          checkedInById: guest.checkedInById || adminId || null, // Keep first admin
-          checkedInByName: guest.checkedInByName || adminName || null,
-          checkinCount: { increment: 1 },
-        },
+    // MODE 3: Multiple check-in dengan batas maxCheckinCount
+    if (adminId && existingCheckinByAdmin) {
+      return new ConflictException({
+        ...guest,
+        checkins: sortedCheckins,
+        alreadyCheckedByThisAdmin: true,
+        message: `${adminName || 'Admin ini'} sudah pernah check-in tamu ini`,
       });
+    }
 
-      return [checkin, updated];
+    if (guest.checkinCount >= maxCheckins) {
+      return new ConflictException({
+        ...guest,
+        checkins: sortedCheckins,
+        maxReached: true,
+        message: `Sudah mencapai maksimum ${maxCheckins}x check-in`,
+      });
+    }
+
+    return null;
+  }
+
+  /**
+   * Check-in tamu.
+   *
+   * PENTING (perbaikan race condition):
+   * Versi sebelumnya melakukan baca → validasi → tulis tanpa penguncian.
+   * Dua perangkat yang menekan check-in bersamaan sama-sama membaca
+   * `checkedIn = false`, sama-sama lolos validasi, lalu sama-sama menulis.
+   * Pada pengujian 20 permintaan paralel, SELURUH 20 berhasil padahal hanya
+   * satu yang seharusnya boleh (lihat guests.checkin.spec.ts).
+   *
+   * Perbaikannya: seluruh baca-validasi-tulis dijalankan di dalam satu
+   * transaksi yang lebih dulu mengambil advisory lock per-tamu. Lock hanya
+   * memblokir tamu yang sama, sehingga check-in tamu berbeda tetap paralel,
+   * dan dilepas otomatis oleh PostgreSQL saat transaksi selesai.
+   */
+  async checkIn(id: string, adminId?: string, adminName?: string) {
+    // Jalur cepat: tolak konflik yang sudah terlihat tanpa mengambil lock.
+    // Ini menjaga kasus paling sering (scan ulang tamu yang sudah check-in)
+    // tetap murah dan tidak menghabiskan koneksi pool.
+    const snapshot = await this.prisma.guest.findUnique({
+      where: { id },
+      include: { event: true, checkins: true },
     });
+    if (!snapshot) throw new NotFoundException('Guest not found');
 
-    // Build response in-memory — avoid extra findUnique query
-    const allCheckins = [...guest.checkins, newCheckin].sort(
-      (a, b) => new Date(a.checkinAt).getTime() - new Date(b.checkinAt).getTime()
+    const fastConflict = this.buildCheckinConflict(snapshot, adminId, adminName);
+    if (fastConflict) throw fastConflict;
+
+    return this.prisma.$transaction(
+      async (tx) => {
+        // Advisory lock berbasis hash id tamu; otomatis dilepas saat COMMIT/ROLLBACK.
+        await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${id})::bigint)`;
+
+        // Baca ulang DI DALAM lock: permintaan lain mungkin sudah menulis
+        // tepat sebelum lock berhasil didapat.
+        const guest = await tx.guest.findUnique({
+          where: { id },
+          include: { event: true, checkins: true },
+        });
+        if (!guest) throw new NotFoundException('Guest not found');
+
+        const conflict = this.buildCheckinConflict(guest, adminId, adminName);
+        if (conflict) throw conflict;
+
+        const now = new Date();
+
+        const checkin = await tx.guestCheckin.create({
+          data: {
+            guestId: id,
+            checkinById: adminId || null,
+            checkinByName: adminName || null,
+            checkinAt: now,
+          },
+        });
+
+        const updated = await tx.guest.update({
+          where: { id },
+          data: {
+            checkedIn: true,
+            checkedInAt: guest.checkedInAt || now, // pertahankan waktu check-in pertama
+            checkedInById: guest.checkedInById || adminId || null,
+            checkedInByName: guest.checkedInByName || adminName || null,
+            checkinCount: { increment: 1 },
+          },
+        });
+
+        const allCheckins = [...guest.checkins, checkin].sort(
+          (a, b) => new Date(a.checkinAt).getTime() - new Date(b.checkinAt).getTime(),
+        );
+
+        return { ...updated, checkins: allCheckins };
+      },
+      { timeout: 15000, maxWait: 10000 },
     );
-    return { ...updatedGuest, checkins: allCheckins };
   }
 
   async uncheckIn(id: string, adminId?: string, adminName?: string, reason?: string) {
@@ -661,61 +685,51 @@ export class GuestsService {
   }
 
   /**
-   * Process offline check-in submitted by station
-   * OPTIMIZED: Use select instead of include, cache event settings
+   * Mencari id internal tamu dari identifier yang dikirim station
+   * (bisa UUID internal atau guestId milik event).
+   */
+  private async resolveGuestId(identifier: string, eventId: string): Promise<string | null> {
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(identifier);
+
+    if (isUuid) {
+      const byId = await this.prisma.guest.findUnique({
+        where: { id: identifier },
+        select: { id: true },
+      });
+      if (byId) return byId.id;
+    }
+
+    const byGuestId = await this.prisma.guest.findFirst({
+      where: { eventId, guestId: identifier },
+      select: { id: true },
+    });
+    return byGuestId?.id ?? null;
+  }
+
+  /**
+   * Memproses check-in offline yang dikirim satu station.
+   *
+   * PENTING: pemeriksaan duplikat dan penulisan dilakukan di dalam transaksi
+   * yang mengambil advisory lock per-tamu. Tanpa lock, dua station yang
+   * menyinkronkan tamu yang sama pada saat bersamaan akan sama-sama membaca
+   * `checkins` lama dan sama-sama menyimpulkan "belum check-in".
    */
   async checkInOffline(
     stationId: string,
     guestIdentifier: string,
     clientTimestamp: string,
-    stationName?: string
+    stationName?: string,
   ) {
     const eventId = await this.getActiveEventId();
     if (!eventId) throw new NotFoundException('No active event');
 
-    // OPTIMIZATION: Use select instead of include (lighter query)
-    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(guestIdentifier);
-
-    let guest: any = null;
-    if (isUuid) {
-      guest = await this.prisma.guest.findUnique({
-        where: { id: guestIdentifier },
-        select: {
-          id: true, guestId: true, name: true, checkedIn: true,
-          checkedInAt: true, checkinCount: true,
-          event: { select: { allowMultipleCheckin: true, maxCheckinCount: true } },
-          checkins: { select: { id: true, checkinById: true, checkinAt: true } }
-        }
-      });
-    }
-
-    if (!guest) {
-      guest = await this.prisma.guest.findFirst({
-        where: { eventId, guestId: guestIdentifier },
-        select: {
-          id: true, guestId: true, name: true, checkedIn: true,
-          checkedInAt: true, checkinCount: true,
-          event: { select: { allowMultipleCheckin: true, maxCheckinCount: true } },
-          checkins: { select: { id: true, checkinById: true, checkinAt: true } }
-        }
-      });
-    }
-
-    if (!guest) throw new NotFoundException('Guest not found');
-
-    // Check event settings
-    const allowMultiple = guest.event?.allowMultipleCheckin ?? false;
-    const maxCheckins = guest.event?.maxCheckinCount ?? 1;
-
-    // Conflict detection
-    const existingCheckins = guest.checkins || [];
-    const isDuplicate = !allowMultiple && existingCheckins.length > 0;
-    const maxReached = existingCheckins.length >= maxCheckins;
-
-    const now = new Date();
     const clientTime = new Date(clientTimestamp);
+    const now = new Date();
 
-    // SAFEGUARD: Ensure CheckinStation exists before GuestCheckin
+    const guestId = await this.resolveGuestId(guestIdentifier, eventId);
+    if (!guestId) throw new NotFoundException('Guest not found');
+
+    // SAFEGUARD: pastikan CheckinStation ada sebelum membuat GuestCheckin (FK).
     const station = await this.prisma.checkinStation.upsert({
       where: { stationId },
       create: {
@@ -723,56 +737,89 @@ export class GuestsService {
         name: stationName || stationId,
         eventId,
         lastSyncAt: now,
-        isActive: true
+        isActive: true,
       },
       update: {
         name: stationName || stationId,
         lastSyncAt: now,
-        isActive: true
-      }
+        isActive: true,
+      },
     });
 
-    const [newCheckin, updatedGuest] = await this.prisma.$transaction(async (tx) => {
-      const checkin = await tx.guestCheckin.create({
-        data: {
-          guestId: guest.id,
-          stationId: station.id,
-          counterName: stationName || null,
-          checkinAt: clientTime,
-          isOffline: true,
-          clientTimestamp: clientTime,
-          syncedAt: now,
-          isDuplicate: isDuplicate || maxReached,
-        }
-      });
+    const result = await this.prisma.$transaction(
+      async (tx) => {
+        await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${guestId})::bigint)`;
 
-      let updated: any;
-      if (!isDuplicate && !maxReached) {
-        updated = await tx.guest.update({
-          where: { id: guest.id },
-          data: {
-            checkedIn: true,
-            checkedInAt: guest.checkedInAt || clientTime,
-            checkinCount: { increment: 1 },
-          },
+        const guest = await tx.guest.findUnique({
+          where: { id: guestId },
           select: {
-            id: true, guestId: true, name: true, checkedIn: true,
-            checkedInAt: true, checkinCount: true
-          }
+            id: true,
+            guestId: true,
+            name: true,
+            checkedIn: true,
+            checkedInAt: true,
+            checkinCount: true,
+            event: { select: { allowMultipleCheckin: true, maxCheckinCount: true } },
+            checkins: { select: { id: true, checkinById: true, checkinAt: true } },
+          },
         });
-      } else {
-        updated = guest;
-      }
+        if (!guest) throw new NotFoundException('Guest not found');
 
-      return [checkin, updated];
-    });
+        const allowMultiple = guest.event?.allowMultipleCheckin ?? false;
+        const maxCheckins = guest.event?.maxCheckinCount ?? 1;
+
+        const existingCheckins = guest.checkins || [];
+        const isDuplicate = !allowMultiple && existingCheckins.length > 0;
+        const maxReached = existingCheckins.length >= maxCheckins;
+
+        const checkin = await tx.guestCheckin.create({
+          data: {
+            guestId: guest.id,
+            stationId: station.id,
+            counterName: stationName || null,
+            checkinAt: clientTime,
+            isOffline: true,
+            clientTimestamp: clientTime,
+            syncedAt: now,
+            isDuplicate: isDuplicate || maxReached,
+          },
+        });
+
+        let updated: any;
+        if (!isDuplicate && !maxReached) {
+          updated = await tx.guest.update({
+            where: { id: guest.id },
+            data: {
+              checkedIn: true,
+              checkedInAt: guest.checkedInAt || clientTime,
+              checkinCount: { increment: 1 },
+            },
+            select: {
+              id: true,
+              guestId: true,
+              name: true,
+              checkedIn: true,
+              checkedInAt: true,
+              checkinCount: true,
+            },
+          });
+        } else {
+          updated = guest;
+        }
+
+        return { checkin, guest: updated, maxReached };
+      },
+      { timeout: 15000, maxWait: 10000 },
+    );
 
     return {
-      success: !newCheckin.isDuplicate,
-      guest: updatedGuest,
-      checkin: newCheckin,
-      conflict: newCheckin.isDuplicate,
-      reason: newCheckin.isDuplicate ? (maxReached ? 'max_checkins_reached' : 'already_checked_in') : null
+      success: !result.checkin.isDuplicate,
+      guest: result.guest,
+      checkin: result.checkin,
+      conflict: result.checkin.isDuplicate,
+      reason: result.checkin.isDuplicate
+        ? (result.maxReached ? 'max_checkins_reached' : 'already_checked_in')
+        : null,
     };
   }
 
@@ -862,73 +909,110 @@ export class GuestsService {
             };
           }
 
-          const allowMultiple = guest.event?.allowMultipleCheckin ?? false;
-          const maxCheckins = guest.event?.maxCheckinCount ?? 1;
-          const existingCheckins = guest.checkins || [];
-          const isDuplicate = !allowMultiple && existingCheckins.length > 0;
-          const maxReached = existingCheckins.length >= maxCheckins;
           const clientTime = new Date(item.clientTimestamp);
 
-          // Idempotency check: prevent duplicate checkin insertion due to network flapping
-          const alreadySynced = existingCheckins.some(
-            (c: any) => c.clientTimestamp && new Date(c.clientTimestamp).getTime() === clientTime.getTime() && c.stationId === dbStationId
-          );
-
-          if (alreadySynced) {
-            const matchedCheckin = existingCheckins.find((c: any) => c.clientTimestamp && new Date(c.clientTimestamp).getTime() === clientTime.getTime() && c.stationId === dbStationId);
-            return {
-              clientTimestamp: item.clientTimestamp,
-              success: true, // Mark success so frontend clears its queue
-              checkinId: matchedCheckin?.id,
-              conflict: false,
-              reason: 'already_synced'
-            };
-          }
-
           try {
-            const checkin = await this.prisma.guestCheckin.create({
-              data: {
-                guestId: guest.id,
-                stationId: dbStationId,
-                counterName: stationName || null,
-                checkinAt: clientTime,
-                isOffline: true,
-                clientTimestamp: clientTime,
-                syncedAt: now,
-                isDuplicate: isDuplicate || maxReached,
-              }
-            });
+            return await this.prisma.$transaction(
+              async (tx) => {
+                // Serialisasi per tamu. Tanpa ini, dua station yang mengirim
+                // tamu yang sama pada saat bersamaan sama-sama membaca
+                // checkins lama dan sama-sama menyimpulkan "belum check-in".
+                await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${guest.id})::bigint)`;
 
-            // Update guest only if not duplicate
-            if (!isDuplicate && !maxReached) {
-              const guestUpdateData: Prisma.GuestUpdateInput = {
-                checkedIn: true,
-                checkedInAt: guest.checkedInAt || clientTime,
-                checkinCount: { increment: 1 },
-              };
-              if (item.photo) {
-                guestUpdateData.photoUrl = item.photo;
-              }
+                // Baca ulang di dalam lock: guestMap adalah hasil batch load
+                // sebelum antrean diproses, sehingga datanya bisa sudah basi.
+                const fresh = await tx.guest.findUnique({
+                  where: { id: guest.id },
+                  select: {
+                    id: true,
+                    checkedInAt: true,
+                    event: { select: { allowMultipleCheckin: true, maxCheckinCount: true } },
+                    checkins: { select: { id: true, clientTimestamp: true, stationId: true } },
+                  },
+                });
 
-              await this.prisma.guest.update({
-                where: { id: guest.id },
-                data: guestUpdateData
-              });
-            }
+                if (!fresh) {
+                  return {
+                    clientTimestamp: item.clientTimestamp,
+                    success: false,
+                    conflict: false,
+                    reason: 'Guest not found',
+                  };
+                }
 
-            return {
-              clientTimestamp: item.clientTimestamp,
-              success: !checkin.isDuplicate,
-              checkinId: checkin.id,
-              conflict: checkin.isDuplicate,
-              reason: checkin.isDuplicate ? (maxReached ? 'max_checkins_reached' : 'already_checked_in') : undefined
-            };
+                const allowMultiple = fresh.event?.allowMultipleCheckin ?? false;
+                const maxCheckins = fresh.event?.maxCheckinCount ?? 1;
+                const existingCheckins = fresh.checkins || [];
+
+                // Idempotency: cegah duplikasi saat jaringan terputus-putus.
+                const alreadySynced = existingCheckins.find(
+                  (c) =>
+                    c.clientTimestamp &&
+                    new Date(c.clientTimestamp).getTime() === clientTime.getTime() &&
+                    c.stationId === dbStationId,
+                );
+
+                if (alreadySynced) {
+                  return {
+                    clientTimestamp: item.clientTimestamp,
+                    success: true, // sukses agar frontend membersihkan antreannya
+                    checkinId: alreadySynced.id,
+                    conflict: false,
+                    reason: 'already_synced',
+                  };
+                }
+
+                const isDuplicate = !allowMultiple && existingCheckins.length > 0;
+                const maxReached = existingCheckins.length >= maxCheckins;
+
+                const checkin = await tx.guestCheckin.create({
+                  data: {
+                    guestId: fresh.id,
+                    stationId: dbStationId,
+                    counterName: stationName || null,
+                    checkinAt: clientTime,
+                    isOffline: true,
+                    clientTimestamp: clientTime,
+                    syncedAt: now,
+                    isDuplicate: isDuplicate || maxReached,
+                  },
+                });
+
+                // Update tamu hanya jika bukan duplikat
+                if (!isDuplicate && !maxReached) {
+                  const guestUpdateData: Prisma.GuestUpdateInput = {
+                    checkedIn: true,
+                    checkedInAt: fresh.checkedInAt || clientTime,
+                    checkinCount: { increment: 1 },
+                  };
+                  if (item.photo) {
+                    guestUpdateData.photoUrl = item.photo;
+                  }
+
+                  await tx.guest.update({
+                    where: { id: fresh.id },
+                    data: guestUpdateData,
+                  });
+                }
+
+                return {
+                  clientTimestamp: item.clientTimestamp,
+                  success: !checkin.isDuplicate,
+                  checkinId: checkin.id,
+                  conflict: checkin.isDuplicate,
+                  reason: checkin.isDuplicate
+                    ? (maxReached ? 'max_checkins_reached' : 'already_checked_in')
+                    : undefined,
+                };
+              },
+              { timeout: 15000, maxWait: 10000 },
+            );
           } catch (error: any) {
             return {
               clientTimestamp: item.clientTimestamp,
               success: false,
               conflict: false,
-              reason: error.message || 'Unknown error'
+              reason: error.message || 'Unknown error',
             };
           }
         })

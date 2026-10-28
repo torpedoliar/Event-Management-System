@@ -167,21 +167,32 @@ for /f %%i in ('docker ps -q -f name^=guest-db-prod') do set "HAS_DB=%%i"
 
 if defined HAS_DB (
     echo   - Existing deployment found
-    set /p "BACKUP=  Backup database sebelum deploy? (y/n): "
-    if /i "!BACKUP!"=="y" (
-        echo   - Creating backup...
-        for /f "tokens=*" %%d in ('powershell -c "Get-Date -Format 'yyyyMMdd_HHmmss'"') do set "DATETIME=%%d"
-        set "BACKUP_FILE=backup_pre_deploy_!DATETIME!.sql"
-        docker exec guest-db-prod pg_dump -U postgres -d guest_registry > "!BACKUP_FILE!" 2>nul
-        if exist "!BACKUP_FILE!" (
-            echo   - Backup saved: !BACKUP_FILE!
-        ) else (
-            echo   - [WARNING] Backup gagal, melanjutkan...
-        )
-    )
+    REM Backup selalu dibuat (tidak lagi opsional). Deploy yang mengubah skema
+    REM tanpa backup adalah cara tercepat kehilangan data produksi.
+    echo   - Creating pre-deploy backup (wajib)...
+    for /f "tokens=*" %%d in ('powershell -c "Get-Date -Format 'yyyyMMdd_HHmmss'"') do set "DATETIME=%%d"
+    set "BACKUP_FILE=backup_pre_deploy_!DATETIME!.sql"
+    docker exec guest-db-prod pg_dump -U postgres -d guest_registry --no-owner --no-privileges > "!BACKUP_FILE!" 2>nul
+    if !ERRORLEVEL! neq 0 goto deploy_backup_failed
+    for %%F in ("!BACKUP_FILE!") do set "DUMP_SIZE=%%~zF"
+    if not defined DUMP_SIZE set "DUMP_SIZE=0"
+    if "!DUMP_SIZE!"=="0" goto deploy_backup_failed
+    findstr /C:"PostgreSQL database dump complete" "!BACKUP_FILE!" >nul 2>&1
+    if !ERRORLEVEL! neq 0 goto deploy_backup_failed
+    echo   - Backup saved & verified: !BACKUP_FILE!
 ) else (
     echo   - No existing EMS deployment (fresh install^)
 )
+goto deploy_backup_ok
+
+:deploy_backup_failed
+echo.
+echo   - [ERROR] Backup database GAGAL atau tidak lengkap. Deploy dibatalkan.
+echo     Perbaiki kondisi database lalu jalankan ulang deploy.
+pause
+exit /b 1
+
+:deploy_backup_ok
 
 REM ==========================================
 REM [4/11] Stop Existing EMS Containers
@@ -251,8 +262,20 @@ REM [7/11] Database Initialization
 REM ==========================================
 echo.
 echo [7/11] Prisma Database Initialization...
-echo   - Pushing database schema...
-%DOCKER_COMPOSE_CMD% -f docker-compose.prod.yml --env-file .env.production run --rm backend sh -c "npx prisma generate && npx prisma db push --accept-data-loss"
+echo   - Applying migrations via Prisma Migrate...
+REM Migrasi wajib berhasil. Sebelumnya memakai db push --accept-data-loss
+REM yang dapat menghapus kolom beserta data tanpa konfirmasi.
+%DOCKER_COMPOSE_CMD% -f docker-compose.prod.yml --env-file .env.production run --rm backend sh -c "npx prisma generate && npx prisma migrate deploy"
+if !ERRORLEVEL! neq 0 (
+    echo   - [ERROR] Migrasi database GAGAL. Deploy dibatalkan.
+    echo     Database berhenti pada migrasi yang gagal; tidak ada penghapusan otomatis.
+    echo     Backup pra-deploy tersedia di: !BACKUP_FILE!
+    echo     Jika ini instalasi LAMA (dibuat sebelum sistem migrasi baseline),
+    echo     jalankan sekali: bash scripts/baseline-db.sh --apply
+    echo     lalu ulangi deploy ini.
+    pause
+    exit /b 1
+)
 echo   - Database schema synced
 
 REM ==========================================

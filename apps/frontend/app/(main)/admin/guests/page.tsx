@@ -1,5 +1,6 @@
 "use client";
 import RequireAuth from '@/components/RequireAuth';
+import Link from 'next/link';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { apiFetch, toApiUrl, apiBase } from '@/lib/api';
 import Card from '@/components/ui/Card';
@@ -523,12 +524,12 @@ export default function GuestsListPage() {
           >
             {loading ? 'Mencari...' : 'Cari'}
           </Button>
-          <a
+          <Link
             href="/admin/guests/new"
             className="ml-auto inline-flex items-center rounded-full bg-brand-surface px-3 py-1 text-sm font-medium text-brand-text shadow-soft hover:bg-brand-primarySoft"
           >
             + Tambah
-          </a>
+          </Link>
           <Button
             size="sm"
             variant={showDuplicatesOnly ? "primary" : "secondary"}

@@ -1,14 +1,25 @@
 "use client";
 import { useEffect, useMemo, useState, useRef } from "react";
 import { apiBase, toApiUrl, parseErrorMessage } from "@/lib/api";
-import { Html5Qrcode } from "html5-qrcode";
-import { Search, QrCode, Loader2, CheckCircle, Clock, Users, X, XCircle, UserPlus, Settings, Camera, UserCheck, Trash2, Monitor, HelpCircle } from 'lucide-react';
+import { Search, QrCode, Loader2, CheckCircle, Users, X, XCircle, Settings, Camera, Monitor } from 'lucide-react';
 import Label from '@/components/ui/Label';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Modal from '@/components/ui/Modal';
-import Toggle from '@/components/ui/Toggle';
 import StatusBadge from '@/components/ui/StatusBadge';
+import ScanHistory from '@/components/checkin/ScanHistory';
+import CheckinResults from '@/components/checkin/CheckinResults';
+import CheckinResultPopup from '@/components/checkin/CheckinResultPopup';
+import Html5QrcodePlugin from '@/components/Html5QrcodePlugin';
+import { usePopupTimeout } from '@/hooks/usePopupTimeout';
+import { findCachedGuests, localGuestToGuest } from '@/lib/checkin/offline-lookup';
+import CheckinHistory from '@/components/checkin/CheckinHistory';
+import ClearCacheModal from '@/components/checkin/ClearCacheModal';
+import { UncheckModal, PhotoCaptureModal } from '@/components/checkin/CheckinModals';
+import SearchPanel from '@/components/checkin/SearchPanel';
+import SettingsModal from '@/components/checkin/SettingsModal';
+import CheckinHeader from '@/components/checkin/CheckinHeader';
+import { EventChangeBanner, PendingSyncBanner } from '@/components/checkin/Banners';
 import StationSetupModal from "@/components/StationSetupModal";
 import ConnectionStatusIndicator from "@/components/ConnectionStatusIndicator";
 import QueueManagementPanel from "@/components/QueueManagementPanel";
@@ -16,85 +27,10 @@ import { indexedDBService, StationConfig as StationConfigType, LocalGuest } from
 import { offlineSyncService } from "@/lib/offline-sync.service";
 import { connectionStatusService } from "@/lib/connection-status";
 
-type EventConfig = {
-  id: string;
-  name: string;
-  date?: string | null;
-  location?: string | null;
-  logoUrl?: string | null;
-  backgroundType: 'NONE' | 'IMAGE' | 'VIDEO';
-  backgroundImageUrl?: string | null;
-  backgroundVideoUrl?: string | null;
-  overlayOpacity: number;
-  checkinPopupTimeoutMs?: number;
-  autoCreateGuestOnCheckin?: boolean;
-  enablePhotoCapture?: boolean;
-  allowMultipleCheckinPerCounter?: boolean;
-  allowOfflineMode?: boolean;
-  offlineSyncInterval?: number;
-  offlineQueueLimit?: number;
-};
-
-type GuestCheckin = {
-  id: string;
-  checkinAt: string;
-  checkinByName?: string;
-  counterName?: string;
-};
-
-type Guest = {
-  id: string;
-  queueNumber: number;
-  guestId: string;
-  name: string;
-  photoUrl?: string | null;
-  tableLocation: string;
-  company?: string | null;
-  department?: string | null;
-  division?: string | null;
-  notes?: string | null;
-  checkedIn: boolean;
-  checkedInAt?: string | null;
-  checkedInByName?: string | null;
-  checkinCount?: number;
-  checkins?: GuestCheckin[];
-  alreadyCheckedByThisAdmin?: boolean;
-  maxReached?: boolean;
-  message?: string;
-};
-
-function cleanQrContent(text: string): string {
-  if (!text) return "";
-  try {
-    // Jika diawali http/https, anggap URL dan ambil bagian terakhir path-nya
-    if (text.startsWith('http://') || text.startsWith('https://')) {
-      const url = new URL(text);
-      const parts = url.pathname.split('/').filter(p => p.trim() !== '');
-      if (parts.length > 0) {
-        return parts[parts.length - 1];
-      }
-    }
-  } catch (e) {
-    // ignore error, return original
-  }
-  return text;
-}
-
-function isNameSearchQuery(text: string): boolean {
-  const query = text.trim();
-  return !!query && !/[\d\-]/.test(query) && !/^[A-Z0-9_\-]+$/.test(query);
-}
-
 import { useSSE } from "@/lib/sse-context";
 import RequireAuth from "@/components/RequireAuth";
-
-type ScanLogItem = {
-  id: string;
-  guestIdOrName: string;
-  status: 'SUCCESS' | 'DUPLICATE' | 'NOT_FOUND' | 'ERROR';
-  message: string;
-  timestamp: Date;
-};
+import { cleanQrContent, isNameSearchQuery } from "@/lib/checkin/qr";
+import type { EventConfig, Guest, GuestCheckin, ScanLogItem } from "@/lib/checkin/types";
 
 export default function CheckinPage() {
   const rapidQueueRef = useRef<string[]>([]);
@@ -208,32 +144,12 @@ export default function CheckinPage() {
             break;
           }
         } catch (e: any) {
-          const cleanSearchQ = cleanQrContent(activeQuery);
-          let matchedGuests: any[] = [];
-          const exactMatch = await indexedDBService.getCachedGuestByGuestId(cleanSearchQ);
-          if (exactMatch) {
-            matchedGuests = [exactMatch];
-          } else {
-             const cachedGuests = await indexedDBService.getAllCachedGuests();
-             for (const g of cachedGuests) {
-               if (g.guestId.toLowerCase() === cleanSearchQ.toLowerCase() || g.name.toLowerCase() === activeQuery.toLowerCase()) {
-                 matchedGuests.push(g);
-               }
-             }
-          }
+          const matchedGuests = await findCachedGuests(indexedDBService, activeQuery);
+
           if (matchedGuests.length === 1) {
              const matchedGuest = matchedGuests[0];
-             const guestFromCache: Guest = {
-               id: matchedGuest.id,
-               guestId: matchedGuest.guestId,
-               name: matchedGuest.name,
-               queueNumber: 0,
-               tableLocation: '',
-               checkedIn: matchedGuest.checkedIn,
-               checkedInAt: matchedGuest.lastCheckinAt,
-               checkinCount: matchedGuest.checkinCount,
-               photoUrl: matchedGuest.photoUrl,
-             };
+             const guestFromCache = localGuestToGuest(matchedGuest);
+
 
              if (isNameSearchQuery(activeQuery)) {
                setResults([guestFromCache]);
@@ -270,17 +186,8 @@ export default function CheckinPage() {
              refreshHistory();
              startPopupTimeout();
           } else if (matchedGuests.length > 1) {
-             const guestResults: Guest[] = matchedGuests.map(g => ({
-               id: g.id,
-               guestId: g.guestId,
-               name: g.name,
-               queueNumber: 0,
-               tableLocation: '',
-               checkedIn: g.checkedIn,
-               checkedInAt: g.lastCheckinAt,
-               checkinCount: g.checkinCount,
-               photoUrl: g.photoUrl,
-             }));
+             const guestResults: Guest[] = matchedGuests.map(localGuestToGuest);
+
              setResults(guestResults);
              appendLog(activeQuery, 'DUPLICATE', `Ditemukan ${matchedGuests.length} tamu (offline). Silakan pilih tamu di bawah.`);
              break;
@@ -339,7 +246,6 @@ export default function CheckinPage() {
   const autoStreamRef = useRef<MediaStream | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const searchAbortRef = useRef<AbortController | null>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { addEventListener, removeEventListener } = useSSE();
 
   // Offline mode state
@@ -413,23 +319,14 @@ export default function CheckinPage() {
     backgroundColor: `rgba(0,0,0,${effectiveOverlay})`,
   }), [effectiveOverlay]);
 
-  // Helper to manage popup timeout
-  const startPopupTimeout = () => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    const ms = cfg?.checkinPopupTimeoutMs ?? 5000;
-    timeoutRef.current = setTimeout(() => {
+  // Timer popup dikelola hook agar ikut dibersihkan saat komponen dilepas.
+  const { start: startPopupTimeout, clear: clearPopupTimeout } = usePopupTimeout(
+    cfg?.checkinPopupTimeoutMs ?? 5000,
+    () => {
       setCheckedGuest(null);
       setIsDuplicateCheckIn(false);
-      timeoutRef.current = null;
-    }, ms);
-  };
-
-  const clearPopupTimeout = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
-    }
-  };
+    },
+  );
 
   const toggleMultipleCheckinPerCounter = async (enabled: boolean) => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
@@ -1494,379 +1391,71 @@ export default function CheckinPage() {
     <RequireAuth>
       <div className="relative min-h-[100dvh] w-full overflow-hidden">
         {/* Header */}
-        <div className="relative z-30 p-4 md:p-6 pb-6">
-          <div className="max-w-4xl mx-auto">
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                {cfg?.logoUrl ? (
-                  <img src={toApiUrl(cfg.logoUrl)} className="h-12 md:h-16 w-auto border border-brand-primary/30 rounded-lg" alt="logo" />
-                ) : (
-                  <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-brand-primary/10 border border-brand-border flex items-center justify-center">
-                    <Users size={28} className="text-brand-primary" />
-                  </div>
-                )}
-                <div>
-                  <div className="text-xl md:text-3xl font-semibold text-brand-text">{cfg?.name || 'Event'}</div>
-                  {(cfg?.date || cfg?.location) && (
-                    <div className="text-sm text-brand-text/70 flex items-center gap-2 mt-0.5">
-                      {cfg?.date && <span>{new Date(cfg.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</span>}
-                      {cfg?.date && cfg?.location && <span>•</span>}
-                      {cfg?.location && <span>{cfg.location}</span>}
-                    </div>
-                  )}
-                </div>
-              </div>
-              {currentAdmin ? (
-                <StatusBadge status="success">{currentAdmin.name}</StatusBadge>
-              ) : (
-                <StatusBadge status="warning">Tidak login</StatusBadge>
-              )}
-            </div>
-
-            <div className="mt-4 flex items-center justify-between">
-              {stationConfig ? (
-                <StatusBadge status="info" className="flex items-center gap-1.5">
-                  <Monitor size={12} />
-                  {stationConfig.stationName}
-                </StatusBadge>
-              ) : <div />}
-              <div className="flex items-center gap-3">
-                <button onClick={() => setShowQueuePanel(true)} className="text-brand-text/60 hover:text-brand-text text-sm">Antrian</button>
-                <button onClick={() => setShowStationSetup(true)} className="text-brand-text/60 hover:text-brand-text text-sm">Stasiun</button>
-                <ConnectionStatusIndicator onShowQueue={() => setShowQueuePanel(true)} cachedGuestCount={cachedGuestCount} />
-              </div>
-            </div>
-          </div>
-        </div>
+        <CheckinHeader
+          cfg={cfg}
+          currentAdmin={currentAdmin}
+          stationConfig={stationConfig}
+          cachedGuestCount={cachedGuestCount}
+          onShowQueue={() => setShowQueuePanel(true)}
+          onShowStationSetup={() => setShowStationSetup(true)}
+        />
 
         {/* Search */}
-        <div className="relative z-10 px-4 py-6 flex flex-col items-center">
-          <div className="w-full max-w-3xl">
-            <div className="surface-elevated p-6 md:p-8">
-              <div className="relative">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-textMuted">
-                  <Search size={22} />
-                </div>
-                <Input
-                  ref={inputRef}
-                  value={q}
-                  onChange={(e) => setQ(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      if (!q.trim()) return;
-                      rapidQueueRef.current.push(q.trim());
-                      setQ('');
-                      processRapidQueue();
-                    }
-                  }}
-                  placeholder="Masukkan ID Tamu atau Nama, lalu tekan Enter"
-                  className="pl-12 pr-4 py-4 text-lg"
-                  autoFocus
-                />
-              </div>
-
-              {/* Inline help hint */}
-              <div className="mt-3 flex items-center gap-2 text-xs text-brand-textDim">
-                <HelpCircle size={13} className="shrink-0" />
-                <span>Ketik ID atau nama tamu → Enter untuk check-in cepat. Bisa scan QR juga. Tamu tidak ditemukan? Aktifkan Auto-Create di Pengaturan.</span>
-              </div>
-
-              {rapidLogs.length > 0 && (
-                <div className="mt-4 surface-elevated p-4 text-sm max-h-48 overflow-y-auto">
-                  <div className="flex items-center gap-2 mb-3">
-                    <h3 className="text-brand-text font-semibold">Riwayat Scan</h3>
-                    <div className="group relative">
-                      <HelpCircle size={13} className="text-brand-textDim cursor-help" />
-                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-brand-bgElevated border border-brand-border rounded-lg text-xs text-brand-text shadow-panel w-64 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity z-10">
-                        Log scan terakhir. Warna hijau = berhasil, kuning = sudah check-in, merah = error/tidak ditemukan.
-                      </div>
-                    </div>
-                  </div>
-                  <ul className="space-y-2">
-                    {rapidLogs.map((log) => (
-                      <li key={log.id} className="flex justify-between items-center bg-brand-bgSubtle px-3 py-2 rounded-lg">
-                        <div className="flex gap-3">
-                          <span className="text-brand-textMuted">{log.timestamp.toLocaleTimeString()}</span>
-                          <strong className="text-brand-text">{log.guestIdOrName}</strong>
-                        </div>
-                        <span className={`font-medium ${
-                          log.status === 'SUCCESS' ? 'text-brand-success' :
-                          log.status === 'DUPLICATE' ? 'text-brand-warning' :
-                          'text-brand-danger'
-                        }`}>
-                          {log.message}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {error && (
-                <div className="mt-4 p-3 rounded-xl bg-brand-danger/10 border border-brand-danger/20 text-brand-danger flex items-center justify-between">
-                  <span>{error}</span>
-                </div>
-              )}
-
-              <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
-                <Button
-                  size="lg"
-                  className="flex-1"
-                  disabled={searching || checking || creatingGuest}
-                  loading={searching || checking || creatingGuest}
-                  onClick={doSearch}
-                >
-                  {!searching && !checking && !creatingGuest && <Search size={22} />}
-                  {searching ? 'Mencari...' : (creatingGuest ? 'Membuat Tamu...' : (checking ? 'Check-in...' : 'Cari & Check-in'))}
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="flex-1 sm:flex-initial text-brand-text"
-                  disabled={searching || checking || creatingGuest}
-                  onClick={() => setShowScanner(true)}
-                >
-                  <QrCode size={22} />
-                  Scan QR
-                </Button>
-                <Button size="lg" variant="ghost" onClick={() => setShowSettings(true)} aria-label="Pengaturan">
-                  <Settings size={22} />
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <SearchPanel
+          value={q}
+          onChange={setQ}
+          onSubmit={() => {
+            rapidQueueRef.current.push(q.trim());
+            setQ('');
+            processRapidQueue();
+          }}
+          inputRef={inputRef}
+          scanLogs={rapidLogs}
+          error={error}
+          searching={searching}
+          checking={checking}
+          creatingGuest={creatingGuest}
+          onSearch={doSearch}
+          onScanClick={() => setShowScanner(true)}
+          onSettingsClick={() => setShowSettings(true)}
+        />
 
         {/* Settings Modal */}
-        <Modal
+        <SettingsModal
           open={showSettings}
           onClose={() => setShowSettings(false)}
-          title={
-            <span className="flex items-center gap-2">
-              <Settings size={20} className="text-brand-primary" />
-              Pengaturan Stasiun
-            </span>
-          }
-          footer={
-            <Button onClick={() => setShowSettings(false)} className="w-full">
-              <CheckCircle size={18} />
-              Selesai
-            </Button>
-          }
-        >
-          <div className="space-y-3">
-            <div className="bg-brand-primary/5 border border-brand-primary/10 rounded-lg p-3 mb-2">
-              <div className="flex gap-2">
-                <HelpCircle size={14} className="text-brand-primary shrink-0 mt-0.5" />
-                <p className="text-xs text-brand-textMuted leading-relaxed">
-                  Atur perilaku check-in di station ini. Perubahan tersimpan otomatis dan berlaku hanya untuk perangkat ini.
-                </p>
-              </div>
-            </div>
-            <Toggle
-              icon={<UserPlus size={18} />}
-              checked={autoCreateGuest}
-              onChange={(checked) => {
-                setAutoCreateGuest(checked);
-                localStorage.setItem('checkinAutoCreateGuest', String(checked));
-              }}
-              label="Buat tamu baru bila tidak ditemukan"
-              description="Saat pencarian tidak menemukan tamu, sistem membuat tamu baru lalu check-in. Cocok untuk walk-in guests."
-            />
-            <Toggle
-              icon={<Camera size={18} />}
-              checked={enablePhotoCapture}
-              onChange={(checked) => {
-                setEnablePhotoCapture(checked);
-                localStorage.setItem('checkinEnablePhotoCapture', String(checked));
-              }}
-              label="Ambil foto otomatis saat check-in"
-              description="Gunakan webcam untuk mengambil foto tamu setelah check-in berhasil."
-            />
-
-            {isAuth && (
-              <div className="pt-3 border-t border-brand-border space-y-3">
-                <div className="text-xs uppercase tracking-wider text-brand-textMuted">Pengaturan Event (Admin)</div>
-                <Toggle
-                  icon={<UserCheck size={18} />}
-                  checked={cfg?.allowMultipleCheckinPerCounter ?? false}
-                  onChange={(checked) => toggleMultipleCheckinPerCounter(checked)}
-                  disabled={savingEventSetting}
-                  label="Check-in berulang per counter"
-                  description="Tamu dapat check-in di berbagai counter, maksimal 1x per counter."
-                />
-              </div>
-            )}
-
-            <div className="pt-3 border-t border-brand-border space-y-3">
-              <div className="text-xs uppercase tracking-wider text-brand-textMuted">Akses Offline</div>
-              <Button
-                variant="outline"
-                className="w-full justify-start text-brand-text"
-                onClick={handleDownloadGuests}
-                loading={downloadingGuests}
-              >
-                <Users size={18} />
-                <span className="text-left">
-                  <span className="block font-medium">Download data tamu</span>
-                  <span className="block text-xs text-brand-textMuted font-normal">Simpan ke perangkat untuk pencarian offline</span>
-                </span>
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full justify-start text-brand-danger border-brand-danger/30 hover:bg-brand-danger/10"
-                onClick={handleClearCache}
-              >
-                <Trash2 size={18} />
-                <span className="text-left">
-                  <span className="block font-medium">Hapus cache lokal</span>
-                  <span className="block text-xs text-brand-textMuted font-normal">Hapus semua data tamu tersimpan di perangkat ini</span>
-                </span>
-              </Button>
-              {downloadProgress && !downloadingGuests && (
-                <div className="text-xs text-brand-success text-center">{downloadProgress}</div>
-              )}
-            </div>
-          </div>
-        </Modal>
+          autoCreateGuest={autoCreateGuest}
+          onAutoCreateChange={(checked) => {
+            setAutoCreateGuest(checked);
+            localStorage.setItem('checkinAutoCreateGuest', String(checked));
+          }}
+          enablePhotoCapture={enablePhotoCapture}
+          onPhotoCaptureChange={(checked) => {
+            setEnablePhotoCapture(checked);
+            localStorage.setItem('checkinEnablePhotoCapture', String(checked));
+          }}
+          isAuth={isAuth}
+          allowMultiplePerCounter={cfg?.allowMultipleCheckinPerCounter ?? false}
+          onMultiplePerCounterChange={toggleMultipleCheckinPerCounter}
+          savingEventSetting={savingEventSetting}
+          onDownloadGuests={handleDownloadGuests}
+          downloadingGuests={downloadingGuests}
+          onClearCache={handleClearCache}
+          downloadProgress={downloadProgress}
+        />
 
         {/* Results */}
-        <div className="relative z-10 px-4 pb-4 flex justify-center">
-          <div className="w-full max-w-3xl surface-elevated p-4 md:p-6">
-            {!results.length && (
-              <div className="text-center py-8 flex flex-col items-center gap-4">
-                <div className="w-16 h-16 rounded-full bg-brand-text/5 flex items-center justify-center">
-                  <Search size={32} className="text-brand-textMuted" />
-                </div>
-                <div>
-                  <p className="text-brand-text text-lg">Siap untuk check-in</p>
-                  <p className="text-brand-textMuted text-sm mt-1">Masukkan ID Tamu / Nama atau gunakan Scan QR</p>
-                </div>
-              </div>
-            )}
-            {!!results.length && (
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-sm font-medium mb-3">
-                  <div className="flex items-center gap-2 text-brand-text">
-                    <Users size={16} className="text-brand-primary" />
-                    <span>{results.length} tamu ditemukan</span>
-                  </div>
-                  {results.length > 1 && (
-                    <span className="px-2.5 py-1 rounded-full bg-brand-warning/15 border border-brand-warning/30 text-brand-warning text-xs font-semibold animate-pulse">
-                      Pilih tamu di bawah untuk Check-in
-                    </span>
-                  )}
-                </div>
-                {results.map((g) => (
-                  <div
-                    key={g.id}
-                    className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl p-4 transition-all border ${
-                      selected?.id === g.id
-                        ? 'bg-brand-primary/10 border-brand-primary/50 shadow-gold'
-                        : 'border-brand-border surface-interactive hover:border-brand-primary/30'
-                    }`}
-                  >
-                    <div className="flex items-start sm:items-center gap-4 min-w-0 flex-1">
-                      <div className="h-14 w-14 rounded-xl bg-brand-text/5 overflow-hidden flex-shrink-0 border border-brand-border">
-                        {g.photoUrl ? (
-                          <img src={toApiUrl(g.photoUrl)} className="h-full w-full object-cover" alt={g.name} />
-                        ) : (
-                          <div className="flex h-full w-full items-center justify-center">
-                            <Users size={24} className="text-brand-textMuted" />
-                          </div>
-                        )}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="font-semibold text-brand-text text-lg">{g.name}</span>
-                          {g.checkedIn ? (
-                            <span className="text-[11px] px-2 py-0.5 rounded-full bg-brand-warning/15 text-brand-warning border border-brand-warning/30 font-medium">
-                              Sudah Check-in {(g.checkinCount ?? 0) > 1 ? `(${g.checkinCount}x)` : ''}
-                            </span>
-                          ) : (
-                            <span className="text-[11px] px-2 py-0.5 rounded-full bg-brand-success/15 text-brand-success border border-brand-success/30 font-medium">
-                              Belum Check-in
-                            </span>
-                          )}
-                        </div>
-                        <div className="text-xs sm:text-sm text-brand-textMuted flex flex-wrap items-center gap-2 mt-1">
-                          <span className="font-mono text-brand-primary font-medium">{g.guestId}</span>
-                          <span>•</span>
-                          <span>Meja: <strong className="text-brand-text font-medium">{g.tableLocation || '-'}</strong></span>
-                        </div>
-                        {g.company && (
-                          <div className="text-xs sm:text-sm text-brand-warning/90 mt-1 font-medium flex items-center gap-1.5">
-                            <span className="px-1.5 py-0.5 rounded bg-brand-warning/10 border border-brand-warning/20">
-                              {g.company}
-                              {g.division && <span className="text-brand-textMuted"> • {g.division}</span>}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <Button
-                      className="shrink-0 w-full sm:w-auto"
-                      disabled={checking}
-                      loading={checking && checkingId === g.id}
-                      onClick={() => doCheckin(g, true)}
-                    >
-                      {!checking && <CheckCircle size={16} />}
-                      {g.checkedIn && cfg?.allowMultipleCheckinPerCounter ? 'Check-in Ulang' : 'Check-in'}
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
+        <CheckinResults
+          results={results}
+          selectedId={selected?.id ?? null}
+          checking={checking}
+          checkingId={checkingId}
+          allowMultiplePerCounter={cfg?.allowMultipleCheckinPerCounter}
+          onCheckin={(g) => doCheckin(g, true)}
+        />
 
         {/* History */}
-        <div className="relative z-10 px-4 pb-6 flex justify-center">
-          <div className="w-full max-w-3xl surface-elevated p-4 md:p-6">
-            <div className="mb-4 flex items-center justify-between">
-              <div className="font-semibold flex items-center gap-2 text-brand-text">
-                <Clock size={18} className="text-brand-primary" />
-                Riwayat Check-in Terbaru
-              </div>
-              <span className="text-xs text-brand-textMuted">{history.length} tamu</span>
-            </div>
-            {!history.length && (
-              <div className="text-sm text-brand-textMuted py-6 text-center flex flex-col items-center gap-2">
-                <Clock size={32} className="text-brand-textMuted/50" />
-                Belum ada riwayat check-in
-              </div>
-            )}
-            {!!history.length && (
-              <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-                {history.map((h) => (
-                  <div key={h.id} className="flex items-center gap-3 rounded-xl border border-brand-border surface-interactive p-3 hover:shadow-gold transition-all">
-                    <div className="h-12 w-12 rounded-lg bg-brand-text/5 overflow-hidden flex-shrink-0">
-                      {h.photoUrl ? (
-                        <img src={toApiUrl(h.photoUrl)} className="h-full w-full object-cover" alt={h.name} />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center">
-                          <Users size={20} className="text-brand-textMuted" />
-                        </div>
-                      )}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="font-medium text-brand-text truncate">{h.name}</div>
-                      <div className="text-xs text-brand-textMuted truncate flex items-center gap-1.5">
-                        <span className="font-mono text-brand-primary/70">{h.guestId}</span>
-                        <span>•</span>
-                        <span>{h.tableLocation}</span>
-                      </div>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <div className="text-xs text-brand-success font-medium">#{h.queueNumber}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
+        <CheckinHistory history={history} />
 
         <Modal
           open={!!pendingNameCheckin}
@@ -1951,181 +1540,20 @@ export default function CheckinPage() {
         </Modal>
 
         {/* Confirmation full display */}
-        {checkedGuest && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={() => { setCheckedGuest(null); setIsDuplicateCheckIn(false); clearPopupTimeout(); }}>
-            <div className="w-full max-w-5xl overflow-hidden rounded-2xl surface-elevated shadow-gold grid grid-cols-1 md:grid-cols-[360px_1fr]">
-              <div className="bg-brand-text/5 flex items-center justify-center min-h-[300px] md:min-h-full relative">
-                {autoCapturing ? (
-                  <div className="w-full h-full flex flex-col items-center justify-center">
-                    <video
-                      ref={autoVideoRef}
-                      autoPlay
-                      playsInline
-                      muted
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute bottom-4 left-0 right-0 text-center">
-                      <div className="inline-flex items-center gap-2 bg-black/60 text-brand-text px-4 py-2 rounded-full text-sm font-medium">
-                        <Loader2 className="animate-spin" size={16} />
-                        {autoCaptureStatus}
-                      </div>
-                    </div>
-                  </div>
-                ) : checkedGuest.photoUrl ? (
-                  <img src={toApiUrl(checkedGuest.photoUrl)} alt={checkedGuest.name} className="w-full h-full object-cover" />
-                ) : (
-                  <div className="text-brand-textMuted p-8 flex flex-col items-center gap-2">
-                    <Users size={48} />
-                    <span>Tidak ada foto</span>
-                  </div>
-                )}
-                <canvas ref={autoCanvasRef} className="hidden" />
-              </div>
-              <div className="p-6 md:p-10 space-y-5 relative overflow-y-auto max-h-[60vh] md:max-h-full">
-                {isDuplicateCheckIn ? (
-                  <div className="flex items-center gap-3 text-brand-warning">
-                    <div className="p-2 rounded-lg bg-brand-warning/10 border border-brand-warning/30">
-                      <XCircle size={22} />
-                    </div>
-                    <div>
-                      <div className="text-xl font-semibold">Sudah Check-in</div>
-                      <div className="text-sm text-brand-warning/80">Tamu pernah check-in sebelumnya</div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-3 text-brand-success">
-                    <div className="p-2 rounded-lg bg-brand-success/10 border border-brand-success/30">
-                      <CheckCircle size={22} />
-                    </div>
-                    <div>
-                      <div className="text-xl font-semibold">Check-in Berhasil</div>
-                      {(checkedGuest.checkinCount ?? 0) > 1 && (
-                        <div className="text-sm text-brand-success/80">Check-in ke-{checkedGuest.checkinCount}</div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Show check-in history for both success and duplicate */}
-                {checkedGuest.checkins && checkedGuest.checkins.length > 0 && (
-                  <div className={`mb-4 rounded-lg p-3 ${isDuplicateCheckIn ? 'bg-brand-warning/10 border border-brand-warning/20' : 'bg-brand-success/10 border border-brand-success/20'}`}>
-                    {isDuplicateCheckIn && checkedGuest.message && (
-                      <div className="text-base text-brand-warning font-medium mb-2">{checkedGuest.message}</div>
-                    )}
-                    <div className={`text-sm uppercase tracking-wider font-medium mb-2 ${isDuplicateCheckIn ? 'text-brand-warning' : 'text-brand-success'}`}>
-                      Riwayat Check-in ({checkedGuest.checkinCount || checkedGuest.checkins.length}x)
-                    </div>
-                    <div className="space-y-2 max-h-32 overflow-y-auto">
-                      {checkedGuest.checkins.map((c, idx) => (
-                        <div key={c.id || idx} className={`flex items-center justify-between text-sm rounded px-2 py-1 ${isDuplicateCheckIn ? 'bg-brand-warning/10' : 'bg-brand-success/10'}`}>
-                          <span className={`font-medium ${isDuplicateCheckIn ? 'text-brand-warning' : 'text-brand-success'}`}>
-                            {c.checkinByName || 'Admin'}
-                            {c.counterName && <span className="text-brand-text/50 ml-1">({c.counterName})</span>}
-                          </span>
-                          <span className={`font-mono text-xs ${isDuplicateCheckIn ? 'text-brand-warning' : 'text-brand-success'}`}>
-                            {new Date(c.checkinAt).toLocaleString('id-ID', {
-                              day: '2-digit',
-                              month: 'short',
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            })}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Fallback for old data without checkins array */}
-                {isDuplicateCheckIn && (!checkedGuest.checkins || checkedGuest.checkins.length === 0) && checkedGuest.checkedInAt && (
-                  <div className="mb-4 bg-brand-warning/10 border border-brand-warning/20 rounded-lg p-3">
-                    {checkedGuest.message && (
-                      <div className="text-base text-brand-warning font-medium mb-2">{checkedGuest.message}</div>
-                    )}
-                    <div className="text-sm text-brand-warning uppercase tracking-wider font-medium">Waktu Check-in Sebelumnya</div>
-                    <div className="text-xl font-mono font-bold text-brand-warning">
-                      {new Date(checkedGuest.checkedInAt).toLocaleString('id-ID', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit'
-                      })}
-                    </div>
-                    {checkedGuest.checkedInByName && (
-                      <div className="text-sm text-brand-warning mt-1">Oleh: {checkedGuest.checkedInByName}</div>
-                    )}
-                  </div>
-                )}
-
-                <div className="space-y-5">
-                  <div>
-                    <div className="text-sm text-brand-textMuted uppercase tracking-wider font-medium">ID Tamu</div>
-                    <div className="text-xl font-mono font-semibold text-brand-text">{checkedGuest.guestId}</div>
-                  </div>
-                  <div>
-                    <div className="text-sm text-brand-textMuted uppercase tracking-wider font-medium">Nama</div>
-                    <div className="text-3xl md:text-5xl font-semibold text-brand-text leading-tight">{checkedGuest.name}</div>
-                  </div>
-                  <div>
-                    <div className="text-sm text-brand-textMuted uppercase tracking-wider font-medium">Meja / Ruangan</div>
-                    <div className="text-2xl md:text-4xl font-semibold text-brand-text">{checkedGuest.tableLocation}</div>
-                  </div>
-                  {checkedGuest.company && (
-                    <div>
-                      <div className="text-sm text-brand-textMuted uppercase tracking-wider font-medium">Perusahaan</div>
-                      <div className="text-xl md:text-2xl font-semibold text-brand-text">{checkedGuest.company}</div>
-                    </div>
-                  )}
-                  {checkedGuest.department && (
-                    <div>
-                      <div className="text-sm text-brand-textMuted uppercase tracking-wider font-medium">Departemen</div>
-                      <div className="text-xl md:text-2xl font-semibold text-brand-text">{checkedGuest.department}</div>
-                    </div>
-                  )}
-                  {checkedGuest.division && (
-                    <div>
-                      <div className="text-sm text-brand-textMuted uppercase tracking-wider font-medium">Divisi</div>
-                      <div className="text-xl md:text-2xl font-semibold text-brand-text">{checkedGuest.division}</div>
-                    </div>
-                  )}
-                  {checkedGuest.notes && (
-                    <div className="p-4 bg-brand-warning/10 border border-brand-warning/20 rounded-xl">
-                      <div className="text-sm text-brand-warning uppercase tracking-wider font-medium mb-1">Catatan</div>
-                      <div className="text-base text-brand-warning italic">"{checkedGuest.notes}"</div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="pt-4 border-t border-brand-border flex items-center justify-between">
-                  <div>
-                    <div className="text-xs text-brand-textMuted uppercase tracking-wider font-medium">Nomor Antrian</div>
-                    <div className="text-2xl font-semibold text-brand-text">{checkedGuest.queueNumber}</div>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Button variant="outline" onClick={() => { setCheckedGuest(null); setIsDuplicateCheckIn(false); clearPopupTimeout(); }} disabled={autoCapturing}>
-                      <X size={18} /> Tutup
-                    </Button>
-                    {enablePhotoCapture && !isDuplicateCheckIn && !autoCapturing && (
-                      <Button onClick={() => { clearPopupTimeout(); setShowPhotoCapture(true); startCamera(); }}>
-                        <Camera size={18} /> {checkedGuest?.photoUrl ? 'Ulangi Foto' : 'Ambil Foto'}
-                      </Button>
-                    )}
-                    {isAuth && (
-                      <Button variant="danger" disabled={unchecking} onClick={() => openUncheckModal(checkedGuest)}>
-                        <XCircle size={18} /> Batalkan
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
-          </div>
-        )}
+        <CheckinResultPopup
+          guest={checkedGuest}
+          isDuplicate={isDuplicateCheckIn}
+          autoCapturing={autoCapturing}
+          autoCaptureStatus={autoCaptureStatus}
+          videoRef={autoVideoRef}
+          canvasRef={autoCanvasRef}
+          enablePhotoCapture={enablePhotoCapture}
+          isAuth={isAuth}
+          unchecking={unchecking}
+          onClose={() => { setCheckedGuest(null); setIsDuplicateCheckIn(false); clearPopupTimeout(); }}
+          onPhotoCapture={() => { clearPopupTimeout(); setShowPhotoCapture(true); startCamera(); }}
+          onUncheck={openUncheckModal}
+        />
 
         {/* Scanner Modal */}
         <Modal open={showScanner} onClose={() => setShowScanner(false)} className="max-w-lg" title="Scan QR Code">
@@ -2147,71 +1575,32 @@ export default function CheckinPage() {
         </Modal>
 
         {/* Uncheck Confirmation Modal */}
-        <Modal
+        <UncheckModal
           open={showUncheckModal && !!uncheckTarget}
+          targetName={uncheckTarget?.name}
+          error={uncheckError}
+          password={uncheckPassword}
+          onPasswordChange={(v) => { setUncheckPassword(v); setUncheckError(null); }}
+          reason={uncheckReason}
+          onReasonChange={setUncheckReason}
           onClose={closeUncheckModal}
-          title="Batalkan Check-in"
-        >
-          <div className="space-y-4">
-            <p className="text-sm text-brand-textMuted">
-              Check-in tamu <strong className="text-brand-text">{uncheckTarget?.name}</strong> akan dibatalkan. Hak undian tamu akan dicabut sampai check-in ulang.
-            </p>
-            {uncheckError && (
-              <div className="bg-brand-danger/10 border border-brand-danger/20 text-brand-danger rounded-lg p-3 text-sm">
-                {uncheckError}
-              </div>
-            )}
-            <div>
-              <Label className="text-xs uppercase tracking-wider text-brand-textMuted mb-1.5 block">Password Admin</Label>
-              <Input type="password" value={uncheckPassword} onChange={(e) => { setUncheckPassword(e.target.value); setUncheckError(null); }} />
-            </div>
-            <div>
-              <Label className="text-xs uppercase tracking-wider text-brand-textMuted mb-1.5 block">Alasan (min. 5 karakter)</Label>
-              <Input value={uncheckReason} onChange={(e) => setUncheckReason(e.target.value)} />
-            </div>
-            <div className="flex gap-3 pt-2">
-              <Button variant="outline" className="flex-1" onClick={closeUncheckModal}>Batal</Button>
-              <Button variant="danger" className="flex-1" onClick={doUncheckin} disabled={!uncheckPassword || uncheckReason.length < 5 || unchecking} loading={unchecking}>
-                <XCircle size={16} />
-                Konfirmasi
-              </Button>
-            </div>
-          </div>
-        </Modal>
+          onConfirm={doUncheckin}
+          submitting={unchecking}
+        />
 
         {/* Photo Capture Modal */}
-        <Modal
+        <PhotoCaptureModal
           open={showPhotoCapture && !!checkedGuest}
+          guestName={checkedGuest?.name}
+          capturedPhoto={capturedPhoto}
+          videoRef={videoRef}
+          canvasRef={canvasRef}
           onClose={closePhotoCapture}
-          title={`Ambil Foto: ${checkedGuest?.name}`}
-        >
-          <div className="space-y-4">
-            <div className="relative aspect-[4/3] bg-black rounded-xl overflow-hidden">
-              {!capturedPhoto ? (
-                <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover" />
-              ) : (
-                <img src={capturedPhoto} alt="Captured" className="w-full h-full object-cover" />
-              )}
-            </div>
-            <canvas ref={canvasRef} className="hidden" />
-            <div className="flex gap-3 justify-center">
-              {!capturedPhoto ? (
-                <>
-                  <Button variant="outline" onClick={closePhotoCapture}><X size={18} /> Batal</Button>
-                  <Button onClick={capturePhoto}><Camera size={18} /> Ambil Foto</Button>
-                </>
-              ) : (
-                <>
-                  <Button variant="outline" onClick={retakePhoto}><Camera size={18} /> Ulangi</Button>
-                  <Button onClick={uploadCapturedPhoto} loading={uploadingPhoto}>
-                    {!uploadingPhoto && <CheckCircle size={18} />}
-                    {uploadingPhoto ? 'Menyimpan...' : 'Simpan Foto'}
-                  </Button>
-                </>
-              )}
-            </div>
-          </div>
-        </Modal>
+          onCapture={capturePhoto}
+          onRetake={retakePhoto}
+          onUpload={uploadCapturedPhoto}
+          uploading={uploadingPhoto}
+        />
         {/* Station Setup Modal */}
         <StationSetupModal
           isOpen={showStationSetup}
@@ -2229,199 +1618,24 @@ export default function CheckinPage() {
         />
 
         {/* Clear Cache Confirmation Modal */}
-        <Modal
+        <ClearCacheModal
           open={showClearCacheModal}
-          onClose={() => setShowClearCacheModal(false)}
-          title="Hapus Cache Lokal"
-          className="max-w-md"
-          footer={
-            <div className="flex gap-3 w-full">
-              <Button variant="outline" className="flex-1" onClick={() => setShowClearCacheModal(false)}>
-                Batal
-              </Button>
-              <Button variant="danger" className="flex-1" onClick={executeClearCache}>
-                Ya, Hapus
-              </Button>
-            </div>
-          }
-        >
-          <p className="text-brand-textMuted">
-            Apakah Anda yakin ingin menghapus semua cache tamu lokal di perangkat ini? Data yang tersimpan di server tidak akan terpengaruh.
-          </p>
-        </Modal>
+          onCancel={() => setShowClearCacheModal(false)}
+          onConfirm={executeClearCache}
+        />
 
         {/* Event Change Notification Banner */}
-        {eventChangeNotif && (
-          <div className="fixed bottom-4 right-4 z-[100] max-w-md p-4 rounded-xl bg-brand-warning/20 border border-brand-warning/30 backdrop-blur-xl">
-            <div className="flex items-start gap-3">
-              <div className="flex-1 text-sm text-brand-warning">{eventChangeNotif}</div>
-              <button onClick={() => setEventChangeNotif(null)} className="text-brand-warning/60 hover:text-brand-warning">
-                <X size={16} />
-              </button>
-            </div>
-          </div>
-        )}
+        <EventChangeBanner
+          message={eventChangeNotif}
+          onDismiss={() => setEventChangeNotif(null)}
+        />
 
         {/* Pending Sync Alert Banner */}
-        {pendingSyncAlert !== null && (
-          <div className="fixed bottom-4 left-4 z-[100] max-w-md p-4 rounded-xl bg-brand-info/20 border border-brand-info/30 backdrop-blur-xl">
-            <div className="flex items-start gap-3">
-              <div className="flex-1 text-sm text-brand-info">
-                Anda masih memiliki {pendingSyncAlert} antrean sinkronisasi dari event sebelumnya. Harap pastikan perangkat terhubung ke internet agar sinkronisasi dapat selesai.
-              </div>
-              <button onClick={() => setPendingSyncAlert(null)} className="text-brand-info/60 hover:text-brand-info">
-                <X size={16} />
-              </button>
-            </div>
-          </div>
-        )}
+        <PendingSyncBanner
+          count={pendingSyncAlert}
+          onDismiss={() => setPendingSyncAlert(null)}
+        />
       </div>
     </RequireAuth>
   );
 }
-
-// Helper component for html5-qrcode
-
-const Html5QrcodePlugin = ({ qrCodeSuccessCallback, onScanFailure, fps, qrbox }: any) => {
-  const [startError, setStartError] = useState<string | null>(null);
-  const scannerRef = useRef<Html5Qrcode | null>(null);
-  const isScanningRef = useRef(false);
-  const uniqueIdRef = useRef(`reader-${Math.random().toString(36).slice(2)}`);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    const elementId = uniqueIdRef.current;
-
-    // Ensure element exists
-    if (!document.getElementById(elementId)) return;
-
-    const html5QrCode = new Html5Qrcode(elementId);
-    scannerRef.current = html5QrCode;
-
-    const config = { fps: fps || 10, qrbox: qrbox || 250 };
-
-    // Start scanning
-    html5QrCode.start(
-      { facingMode: "environment" },
-      config,
-      (decodedText, decodedResult) => {
-        if (!isScanningRef.current) return;
-        isScanningRef.current = false;
-
-        html5QrCode.stop().then(() => {
-          html5QrCode.clear();
-          qrCodeSuccessCallback(decodedText, decodedResult);
-        }).catch(err => {
-          console.error("Failed to stop after scan", err);
-          qrCodeSuccessCallback(decodedText, decodedResult);
-        });
-      },
-      (errorMessage) => {
-        if (onScanFailure) onScanFailure(errorMessage);
-      }
-    ).then(() => {
-      isScanningRef.current = true;
-    }).catch((err) => {
-      console.error("Error starting QR scanner", err);
-      setStartError(err?.message || "Gagal memulai kamera.");
-    });
-
-    return () => {
-      isScanningRef.current = false;
-      if (html5QrCode.isScanning) {
-        html5QrCode.stop().then(() => {
-          html5QrCode.clear();
-        }).catch(err => console.error(err));
-      } else {
-        html5QrCode.clear();
-      }
-    };
-  }, []);
-
-  const resizeImage = (file: File, maxWidth: number): Promise<File> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          let width = img.width;
-          let height = img.height;
-
-          if (width > maxWidth) {
-            height = Math.round((height * maxWidth) / width);
-            width = maxWidth;
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx?.drawImage(img, 0, 0, width, height);
-
-          canvas.toBlob((blob) => {
-            if (blob) {
-              resolve(new File([blob], file.name, { type: file.type }));
-            } else {
-              reject(new Error("Canvas to Blob failed"));
-            }
-          }, file.type, 0.8);
-        };
-        img.onerror = reject;
-        img.src = event.target?.result as string;
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  };
-
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !scannerRef.current) return;
-
-    try {
-      // Attempt 1: Original file
-      await scannerRef.current.scanFileV2(file, false)
-        .then((decodedText) => {
-          qrCodeSuccessCallback(decodedText, null);
-        });
-    } catch (err: any) {
-      console.warn("First scan attempt failed, retrying with resized image...", err);
-
-      // Attempt 2: Resize image if it's likely too large
-      try {
-        const resizedFile = await resizeImage(file, 800); // Resize to max 800px width
-        await scannerRef.current.scanFileV2(resizedFile, false)
-          .then((decodedText) => {
-            qrCodeSuccessCallback(decodedText, null);
-          });
-      } catch (retryErr: any) {
-        console.error("Retry scan error:", retryErr);
-        setStartError(`Gagal memindai QR Code: ${retryErr?.message || "Tidak ditemukan QR Code"}. Pastikan gambar jelas, pencahayaan cukup, dan QR Code terlihat utuh.`);
-      }
-    }
-  };
-
-  return (
-    <div className="w-full">
-      <div id={uniqueIdRef.current} className="w-full overflow-hidden rounded-lg bg-black border border-brand-border relative min-h-[300px]">
-        {startError && (
-          <div className="absolute inset-0 flex items-center justify-center p-4 text-center bg-brand-bgElevated text-brand-text overflow-y-auto">
-            <div className="max-h-full py-4">
-              <p className="text-brand-danger font-semibold mb-2">Kamera Error</p>
-              <p className="text-sm text-brand-textMuted mb-4">{startError}</p>
-              <Button onClick={() => fileInputRef.current?.click()}>Buka Kamera / Upload</Button>
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div className="mt-4 text-center">
-        <button onClick={() => fileInputRef.current?.click()} className="text-sm text-brand-primary hover:text-brand-primarySoft font-medium">
-          Masalah dengan kamera? Upload foto
-        </button>
-        <input type="file" accept="image/*" capture="environment" ref={fileInputRef} className="hidden" onChange={handleFileUpload} />
-      </div>
-
-    </div>
-  );
-};

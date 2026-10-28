@@ -67,20 +67,44 @@ if not exist "backups" mkdir backups
 for /f "tokens=2 delims==" %%I in ('wmic os get localdatetime /format:list') do set datetime=%%I
 set BACKUP_FILE=backups\db_backup_!datetime:~0,8!_!datetime:~8,6!.sql
 
+:: Nama database diambil dari .env.production agar tidak hardcoded
+set DB_USER=postgres
+set DB_NAME=guest_registry
+if exist ".env.production" (
+    for /f "usebackq tokens=1,* delims==" %%A in (".env.production") do (
+        if /i "%%A"=="DB_USER" set DB_USER=%%~B
+        if /i "%%A"=="DB_NAME" set DB_NAME=%%~B
+    )
+)
+
 :: Cek apakah database sedang berjalan
 docker ps -q -f name=guest-db-prod | findstr . >nul
 if !ERRORLEVEL! equ 0 (
-    echo      - Mengambil dump dari container guest-db-prod...
-    docker exec guest-db-prod pg_dump -U postgres -d guest_registry > "!BACKUP_FILE!" 2>nul
-    if exist "!BACKUP_FILE!" (
-        echo      - File berhasil diamankan: !BACKUP_FILE!
-    ) else (
-        echo      - [WARNING] Mekanisme backup SQL ke lokal gagal.
-        echo        Hal ini tidak biasa, melanjutkan operasi dengan resiko.
-    )
+    echo      - Mengambil dump dari container guest-db-prod (!DB_USER!@!DB_NAME!)...
+    docker exec guest-db-prod pg_dump -U !DB_USER! -d !DB_NAME! --no-owner --no-privileges > "!BACKUP_FILE!" 2>nul
+    if !ERRORLEVEL! neq 0 goto backup_failed
+    :: Backup harus utuh: kosong atau tanpa penanda akhir berarti terpotong.
+    for %%F in ("!BACKUP_FILE!") do set DUMP_SIZE=%%~zF
+    if not defined DUMP_SIZE set DUMP_SIZE=0
+    if "!DUMP_SIZE!"=="0" goto backup_failed
+    findstr /C:"PostgreSQL database dump complete" "!BACKUP_FILE!" >nul 2>&1
+    if !ERRORLEVEL! neq 0 goto backup_failed
+    echo      - File berhasil diamankan & terverifikasi: !BACKUP_FILE!
 ) else (
-    echo      - [WARNING] Container Database Sedang Mati. Backup SQL di-skip.
+    echo      - [ERROR] Container database tidak berjalan - backup tidak dapat dibuat.
+    echo        Update dibatalkan agar tidak ada perubahan tanpa backup.
+    pause
+    exit /b 1
 )
+goto backup_ok
+
+:backup_failed
+echo      - [ERROR] Backup database GAGAL atau tidak lengkap!
+echo        Update dibatalkan. Perbaiki kondisi database lalu jalankan ulang.
+pause
+exit /b 1
+
+:backup_ok
 
 :: ==========================================
 :: [2/7] Tarik Kode Terbaru (Git Pull)
@@ -170,13 +194,22 @@ echo      - Backend API Online. Siap di percobaan ke-!RETRY!.
 :: [7/7] Database Syncing & Cleanup
 :: ==========================================
 echo.
-echo [7/7] Menerapkan Sinkronisasi Skema Database via Prisma Engine...
-!DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production exec -T backend npx prisma db push --accept-data-loss >nul 2>&1
-if !ERRORLEVEL! equ 0 (
-    echo      - Database Sync Selesai (100^%).
-) else (
-    echo      - [WARNING] Database Sync selesai dengan Warning. Terkadang wajar jika DB Engine sedang heavy-load.
+echo [7/7] Menerapkan Migrasi Skema Database via Prisma Migrate...
+:: Menggantikan db push --accept-data-loss yang dapat menghapus kolom beserta
+:: datanya tanpa konfirmasi. Kegagalan migrasi TIDAK boleh diabaikan.
+!DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production exec -T backend npx prisma migrate deploy
+if !ERRORLEVEL! neq 0 (
+    echo.
+    echo      - [ERROR] Migrasi database GAGAL. Update dibatalkan.
+    echo        Database berhenti pada migrasi yang gagal; tidak ada penghapusan otomatis.
+    echo        Backup tersedia di: !BACKUP_FILE!
+    echo        Jika ini instalasi LAMA (dibuat sebelum sistem migrasi baseline),
+    echo        jalankan sekali: bash scripts/baseline-db.sh --apply
+    echo        lalu ulangi update ini.
+    pause
+    exit /b 1
 )
+echo      - Migrasi selesai. Skema database sesuai dengan schema.prisma.
 
 echo      - Injeksi Client Prisma (Generate)...
 !DOCKER_COMPOSE_CMD! -f docker-compose.prod.yml --env-file .env.production exec -T backend npx prisma generate >nul 2>&1

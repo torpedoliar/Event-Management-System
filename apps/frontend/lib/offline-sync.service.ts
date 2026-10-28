@@ -5,6 +5,7 @@
 
 import { indexedDBService, PendingCheckin, PendingSouvenir } from './indexeddb';
 import { connectionStatusService } from './connection-status';
+import { setStationId } from './station-fetch';
 
 export interface SyncResult {
   success: boolean;
@@ -54,6 +55,10 @@ class OfflineSyncService {
     this.stationId = stationId;
     this.stationName = stationName;
     this.syncIntervalSeconds = syncInterval || 30;
+
+    // Simpan agar interceptor fetch dapat mengirim header X-Station-Id,
+    // sehingga backend membatasi laju per station (bukan per IP/NAT).
+    setStationId(stationId);
 
     // Initialize IndexedDB
     await indexedDBService.init();

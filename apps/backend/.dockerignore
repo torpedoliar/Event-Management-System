@@ -46,10 +46,16 @@ uploads/
 __tests__/
 
 # Data files
+# Catatan: pola "*.sql" hanya cocok pada file di root context (tanpa garis miring),
+# sehingga prisma/migrations/**/migration.sql tetap ikut ke dalam image.
+# Migrasi WAJIB ada di image agar `prisma migrate deploy` dapat berjalan.
 *.xlsx
 *.xls
 *.csv
 *.sql
+
+# Riwayat migrasi lama yang sudah diarsipkan (tidak dipakai lagi)
+prisma/_migrations_legacy_*/
 
 # Logs
 logs/

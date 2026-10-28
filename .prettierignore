@@ -1,0 +1,29 @@
+# Dependensi & hasil build
+node_modules/
+.next/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# Aset yang dihasilkan otomatis
+apps/frontend/public/sw.js
+apps/frontend/public/workbox-*.js
+
+# Dokumentasi & graph
+# (sengaja dikecualikan agar format markdown tidak mengubah ratusan baris
+#  sekaligus; dapat diaktifkan terpisah bila diinginkan)
+docs/
+*.md
+graphify-out/
+
+# Data & backup
+*.sql
+*.xlsx
+*.csv
+backups/
+backup_*/
+
+# Berkas lain
+*.min.js
+*.log

@@ -1,12 +1,15 @@
 import { Controller, Get, Put, Post, Body, Query, Res, UseGuards, Logger } from '@nestjs/common';
-import { SkipThrottle } from '@nestjs/throttler';
+import { Throttle } from '@nestjs/throttler';
 import { Response } from 'express';
 import { PublicRegistrationService } from './public-registration.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UpdateRegistrationConfigDto } from './dto/update-registration-config.dto';
 import { SubmitRegistrationDto } from './dto/submit-registration.dto';
+import { PUBLIC_READ_LIMIT, PUBLIC_SUBMIT_LIMIT } from '../common/throttler/throttler.limits';
 
-@SkipThrottle({ default: true, short: true, medium: true, long: true })
+// Sebelumnya tanpa batas sama sekali. Endpoint submit adalah satu-satunya
+// jalur publik yang MENULIS data tanpa autentikasi, sehingga paling rawan spam.
+@Throttle(PUBLIC_READ_LIMIT)
 @Controller()
 export class PublicRegistrationController {
   private readonly logger = new Logger(PublicRegistrationController.name);
@@ -29,6 +32,7 @@ export class PublicRegistrationController {
     return res.json(data);
   }
 
+  @Throttle(PUBLIC_SUBMIT_LIMIT)
   @Post('public/registration/submit')
   async submitRegistration(@Body() dto: SubmitRegistrationDto) {
     try {
