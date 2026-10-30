@@ -18,6 +18,9 @@ import {
   Activity,
   Layout,
   Settings,
+  Mail,
+  Globe,
+  UserCog,
   ChevronDown,
   Trophy,
   QrCode,
@@ -46,6 +49,13 @@ export default function TopNav() {
   const [adminMenuOpen, setAdminMenuOpen] = useState(false);
   const { addEventListener, removeEventListener, connected } = useSSE();
   const adminMenuRef = useRef<HTMLDivElement>(null);
+  const adminMenuButtonRef = useRef<HTMLButtonElement>(null);
+  const brandLinkRef = useRef<HTMLAnchorElement>(null);
+  const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileDrawerRef = useRef<HTMLDivElement>(null);
+  const mobileOverlayRef = useRef<HTMLDivElement>(null);
+  const mobileWasOpen = useRef(false);
+  const backgroundStateRef = useRef<Array<{ element: HTMLElement; inert: boolean; ariaHidden: string | null }>>([]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -93,6 +103,14 @@ export default function TopNav() {
   }, [pathname]);
 
   useEffect(() => {
+    const closeDrawerOnDesktop = () => {
+      if (window.matchMedia?.('(min-width: 1024px)').matches) setMobileMenuOpen(false);
+    };
+    window.addEventListener('resize', closeDrawerOnDesktop);
+    return () => window.removeEventListener('resize', closeDrawerOnDesktop);
+  }, []);
+
+  useEffect(() => {
     const onClickOutside = (e: MouseEvent) => {
       if (
         adminMenuRef.current &&
@@ -101,11 +119,107 @@ export default function TopNav() {
         setAdminMenuOpen(false);
       }
     };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setAdminMenuOpen(false);
+        adminMenuButtonRef.current?.focus();
+      }
+    };
     if (adminMenuOpen) {
       document.addEventListener("mousedown", onClickOutside);
+      document.addEventListener('keydown', onKeyDown);
     }
-    return () => document.removeEventListener("mousedown", onClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", onClickOutside);
+      document.removeEventListener('keydown', onKeyDown);
+    };
   }, [adminMenuOpen]);
+
+  useEffect(() => {
+    const drawer = mobileDrawerRef.current;
+    if (!drawer) return;
+
+    if (!mobileMenuOpen) {
+      drawer.setAttribute("inert", "");
+      if (mobileWasOpen.current) {
+        const focusTarget = window.matchMedia?.('(min-width: 1024px)').matches
+          ? brandLinkRef.current
+          : mobileMenuButtonRef.current;
+        focusTarget?.focus();
+      }
+      return;
+    }
+
+    drawer.removeAttribute("inert");
+    const overlay = mobileOverlayRef.current;
+    const background = Array.from(drawer.parentElement?.children ?? [])
+      .filter((element): element is HTMLElement =>
+        element instanceof HTMLElement && element !== drawer && element !== overlay,
+      )
+      .map((element) => ({
+        element,
+        inert: element.hasAttribute("inert"),
+      }));
+    backgroundStateRef.current = background.map(({ element, inert }) => ({
+      element,
+      inert,
+      ariaHidden: element.getAttribute("aria-hidden"),
+    }));
+    background.forEach(({ element }) => element.setAttribute("inert", ""));
+
+    requestAnimationFrame(() => drawer.querySelector<HTMLElement>("[data-drawer-close]")?.focus());
+
+    return () => {
+      backgroundStateRef.current.forEach(({ element, inert, ariaHidden }) => {
+        if (!inert) element.removeAttribute("inert");
+        if (ariaHidden === null) element.removeAttribute("aria-hidden");
+        else element.setAttribute("aria-hidden", ariaHidden);
+      });
+      backgroundStateRef.current = [];
+    };
+  }, [mobileMenuOpen]);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) {
+      mobileWasOpen.current = false;
+      return;
+    }
+    mobileWasOpen.current = true;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setMobileMenuOpen(false);
+        return;
+      }
+      if (event.key !== 'Tab' || !mobileDrawerRef.current) return;
+
+      const focusable = Array.from(
+        mobileDrawerRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((element) => {
+        const style = window.getComputedStyle(element);
+        return style.display !== 'none' && style.visibility !== 'hidden';
+      });
+      if (focusable.length === 0) {
+        event.preventDefault();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && (document.activeElement === first || !mobileDrawerRef.current.contains(document.activeElement))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (document.activeElement === last || !mobileDrawerRef.current.contains(document.activeElement))) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [mobileMenuOpen]);
 
   if (pathname?.startsWith("/show") || pathname === "/admin/login") return null;
   const isRegisterPage = pathname === "/register";
@@ -117,27 +231,53 @@ export default function TopNav() {
     }
   };
 
-  const adminLinks: AdminLink[] = [
-    { href: "/admin/dashboard", label: "Dashboard", icon: <LayoutDashboard size={16} /> },
-    { href: "/admin/statistics", label: "Statistik", icon: <BarChart3 size={16} /> },
-    { href: "/admin/guests", label: "Tamu", icon: <Users size={16} /> },
-    { href: "/luckydraw", label: "Lucky Draw", icon: <Dices size={16} /> },
-    { href: "/souvenir", label: "Souvenir", icon: <Package size={16} /> },
-    ...(eventCfg?.enableTournament ? [{ href: "/admin/tournaments", label: "Tournament", icon: <Trophy size={16} /> }] : []),
-    ...(eventCfg?.enableTournament ? [{ href: "/tournament-checkin", label: "Tournament Check-in", icon: <QrCode size={16} /> }] : []),
-    { href: "/admin/events", label: "Events", icon: <CalendarDays size={16} /> },
-    { href: "/admin/settings/event", label: "Settings", icon: <Settings size={16} /> },
-    { href: "/admin/settings/landing-page", label: "Landing", icon: <Layout size={16} /> },
-    { href: "/admin/system", label: "System", icon: <Activity size={16} /> },
-  ];
+  const adminLinkGroups = [
+    {
+      label: 'Ringkasan',
+      links: [
+        { href: '/admin/dashboard', label: 'Dasbor', icon: <LayoutDashboard size={16} /> },
+        { href: '/admin/statistics', label: 'Statistik', icon: <BarChart3 size={16} /> },
+      ],
+    },
+    {
+      label: 'Operasional',
+      links: [
+        { href: '/admin/guests', label: 'Tamu', icon: <Users size={16} /> },
+        { href: '/luckydraw', label: 'Undian', icon: <Dices size={16} /> },
+        { href: '/souvenir', label: 'Souvenir', icon: <Package size={16} /> },
+        ...(eventCfg?.enableTournament
+          ? [
+              { href: '/admin/tournaments', label: 'Turnamen', icon: <Trophy size={16} /> },
+              { href: '/tournament-checkin', label: 'Check-in turnamen', icon: <QrCode size={16} /> },
+            ]
+          : []),
+      ],
+    },
+    {
+      label: 'Pengaturan',
+      links: [
+        { href: '/admin/events', label: 'Acara', icon: <CalendarDays size={16} /> },
+        { href: '/admin/settings/event', label: 'Event & stasiun', icon: <Settings size={16} /> },
+        { href: '/admin/settings/landing-page', label: 'Halaman publik', icon: <Layout size={16} /> },
+        { href: '/admin/settings/public-registration', label: 'Pendaftaran publik', icon: <Globe size={16} /> },
+        { href: '/admin/settings/users', label: 'Pengguna', icon: <UserCog size={16} /> },
+        { href: '/admin/settings/email', label: 'Email', icon: <Mail size={16} /> },
+        { href: '/admin/system', label: 'Sistem', icon: <Activity size={16} /> },
+      ],
+    },
+  ] satisfies { label: string; links: AdminLink[] }[];
+  const adminLinks = adminLinkGroups.flatMap((group) => group.links);
 
-  const isAdminActive = adminLinks.some(
-    (l) => pathname === l.href || pathname?.startsWith(l.href)
-  );
+  const routeMatches = (href: string) =>
+    pathname === href || (href !== '/' && Boolean(pathname?.startsWith(`${href}/`)));
+  const ariaCurrentFor = (href: string) =>
+    pathname === href ? 'page' : routeMatches(href) ? 'location' : undefined;
+  const adminLinkMatches = (href: string) => routeMatches(href);
+  const isAdminActive = Boolean(pathname?.startsWith('/admin/')) ||
+    adminLinks.some((link) => adminLinkMatches(link.href));
 
   const linkCls = (href: string) => {
-    const active =
-      pathname === href || (href !== "/" && pathname?.startsWith(href));
+    const active = routeMatches(href);
     return cn(
       "inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-fast",
       active
@@ -147,8 +287,7 @@ export default function TopNav() {
   };
 
   const mobileLinkCls = (href: string) => {
-    const active =
-      pathname === href || (href !== "/" && pathname?.startsWith(href));
+    const active = routeMatches(href);
     return cn(
       "inline-flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors w-full",
       active
@@ -164,7 +303,12 @@ export default function TopNav() {
           <div className="flex items-center justify-between gap-4 h-full">
             {/* Left: brand + event selector */}
             <div className="flex items-center gap-3 min-w-0">
-              <Link href="/" className="flex items-center gap-2.5 group shrink-0">
+              <Link
+                ref={brandLinkRef}
+                href="/"
+                aria-label={`${eventCfg?.name || 'Event Management'} — Beranda`}
+                className="flex items-center gap-2.5 group shrink-0"
+              >
                 <div className="relative">
                   <div className="absolute inset-0 bg-brand-primary/20 rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
                   <div className="relative w-9 h-9 rounded-xl bg-brand-primary/10 border border-brand-primary/30 flex items-center justify-center">
@@ -185,13 +329,13 @@ export default function TopNav() {
             {/* Center: primary nav + admin dropdown */}
             <div className="hidden lg:flex items-center gap-2">
               {!isRegisterPage && (
-                <Link className={linkCls("/checkin")} href="/checkin">
+                <Link className={linkCls("/checkin")} href="/checkin" aria-current={ariaCurrentFor('/checkin')}>
                   <UserCheck size={16} />
                   <span>Check-in</span>
                 </Link>
               )}
 
-              <Link className={linkCls("/register")} href="/register">
+              <Link className={linkCls("/register")} href="/register" aria-current={ariaCurrentFor('/register')}>
                 <UserPlus size={16} />
                 <span>Daftar</span>
               </Link>
@@ -199,6 +343,7 @@ export default function TopNav() {
               {isAuth && (
                 <div className="relative" ref={adminMenuRef}>
                   <button
+                    ref={adminMenuButtonRef}
                     onClick={() => setAdminMenuOpen(!adminMenuOpen)}
                     className={cn(
                       "inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-fast",
@@ -207,7 +352,8 @@ export default function TopNav() {
                         : "text-brand-textMuted hover:text-brand-text hover:bg-white/[0.04]"
                     )}
                     aria-expanded={adminMenuOpen}
-                    aria-haspopup="menu"
+                    aria-controls={adminMenuOpen ? 'topnav-admin-panel' : undefined}
+                    data-active={isAdminActive || undefined}
                   >
                     <LayoutDashboard size={16} />
                     <span>Admin</span>
@@ -221,34 +367,45 @@ export default function TopNav() {
                   </button>
 
                   {adminMenuOpen && (
-                    <div className="absolute top-full left-0 mt-2 w-56 bg-brand-bgElevated/98 backdrop-blur-xl border border-brand-border rounded-xl shadow-panel overflow-hidden z-50 animate-scaleIn origin-top-left">
-                      <div className="p-2 space-y-0.5">
-                        {adminLinks.map((link) => (
-                          <Link
-                            key={link.href}
-                            href={link.href}
-                            className={cn(
-                              "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                              pathname === link.href ||
-                                pathname?.startsWith(link.href)
-                                ? "bg-brand-primary/10 text-brand-primary"
-                                : "text-brand-textMuted hover:text-brand-text hover:bg-white/[0.04]"
-                            )}
-                          >
-                            <span className="text-brand-textDim">
-                              {link.icon}
-                            </span>
-                            {link.label}
-                          </Link>
+                    <div
+                      id="topnav-admin-panel"
+                      aria-label="Navigasi admin"
+                      className="absolute top-full left-0 mt-2 w-64 bg-brand-bgElevated border border-brand-border rounded-xl shadow-panel overflow-hidden z-50 animate-scaleIn origin-top-left"
+                    >
+                      <nav className="p-2" aria-label="Navigasi admin">
+                        {adminLinkGroups.map((group) => (
+                          <section key={group.label} className="py-1.5">
+                            <h3 className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-brand-textDim">
+                              {group.label}
+                            </h3>
+                            <div className="space-y-0.5">
+                              {group.links.map((link) => (
+                                <Link
+                                  key={link.href}
+                                  href={link.href}
+                                  aria-current={ariaCurrentFor(link.href)}
+                                  className={cn(
+                                    "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                                    adminLinkMatches(link.href)
+                                      ? "bg-brand-primary/10 text-brand-primary"
+                                      : "text-brand-textMuted hover:text-brand-text hover:bg-white/[0.04]"
+                                  )}
+                                >
+                                  <span className="text-brand-textDim">{link.icon}</span>
+                                  {link.label}
+                                </Link>
+                              ))}
+                            </div>
+                          </section>
                         ))}
-                      </div>
+                      </nav>
                     </div>
                   )}
                 </div>
               )}
 
               {!isRegisterPage && (
-                <Link className={linkCls("/about")} href="/about">
+                <Link className={linkCls("/about")} href="/about" aria-current={ariaCurrentFor('/about')}>
                   <Info size={16} />
                   <span>About</span>
                 </Link>
@@ -265,13 +422,13 @@ export default function TopNav() {
                   undefined
                 } />
               )}
-              {!isRegisterPage && (
+              {!isRegisterPage && isAuth && (
                 <StatusBadge
-                  status={connected ? "success" : "danger"}
+                  status={connected ? "success" : "warning"}
                   pulse={connected}
                   className="hidden sm:inline-flex"
                 >
-                  {connected ? "Live" : "Offline"}
+                  {connected ? "Realtime aktif" : "Realtime terputus"}
                 </StatusBadge>
               )}
               <div className="hidden lg:flex items-center gap-2">
@@ -293,9 +450,12 @@ export default function TopNav() {
                 )}
               </div>
               <IconButton
+                ref={mobileMenuButtonRef}
                 className="lg:hidden"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                aria-label="Menu"
+                aria-label={mobileMenuOpen ? 'Tutup menu navigasi' : 'Buka menu navigasi'}
+                aria-expanded={mobileMenuOpen}
+                aria-controls="topnav-mobile-drawer"
               >
                 {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
               </IconButton>
@@ -307,13 +467,21 @@ export default function TopNav() {
       {/* Mobile drawer overlay */}
       {mobileMenuOpen && (
         <div
+          ref={mobileOverlayRef}
           className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm lg:hidden"
+          aria-hidden="true"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
 
       {/* Mobile slide-out drawer */}
       <div
+        ref={mobileDrawerRef}
+        id="topnav-mobile-drawer"
+        role={mobileMenuOpen ? 'dialog' : undefined}
+        aria-label={mobileMenuOpen ? 'Navigasi utama' : undefined}
+        aria-modal={mobileMenuOpen ? 'true' : undefined}
+        aria-hidden={!mobileMenuOpen}
         className={`fixed inset-y-0 right-0 z-50 w-[min(80vw,320px)] bg-brand-bgElevated/95 backdrop-blur-xl border-l border-brand-border shadow-panel transition-transform duration-300 ease-expo lg:hidden ${
           mobileMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
@@ -322,8 +490,9 @@ export default function TopNav() {
         <div className="flex items-center justify-between p-4 border-b border-brand-border shrink-0">
           <span className="font-semibold text-brand-text text-sm">Menu</span>
           <IconButton
+            data-drawer-close
             onClick={() => setMobileMenuOpen(false)}
-            aria-label="Close menu"
+            aria-label="Tutup menu"
           >
             <X size={20} />
           </IconButton>
@@ -332,15 +501,15 @@ export default function TopNav() {
         <div className="flex-1 min-h-0 p-3 space-y-1 overflow-y-auto overscroll-contain">
           {/* Public / primary */}
           {!isRegisterPage && (
-            <Link className={mobileLinkCls("/checkin")} href="/checkin">
+            <Link className={mobileLinkCls("/checkin")} href="/checkin" aria-current={ariaCurrentFor('/checkin')}>
               <UserCheck size={16} /> Check-in
             </Link>
           )}
-          <Link className={mobileLinkCls("/register")} href="/register">
+          <Link className={mobileLinkCls("/register")} href="/register" aria-current={ariaCurrentFor('/register')}>
             <UserPlus size={16} /> Daftar
           </Link>
           {!isRegisterPage && (
-            <Link className={mobileLinkCls("/about")} href="/about">
+            <Link className={mobileLinkCls("/about")} href="/about" aria-current={ariaCurrentFor('/about')}>
               <Info size={16} /> About
             </Link>
           )}
@@ -349,18 +518,26 @@ export default function TopNav() {
             <>
               <div className="pt-2 mt-2 border-t border-brand-border">
                 <div className="px-3 py-2 text-xs font-medium text-brand-textDim uppercase tracking-wider">
-                  Admin
+                  Administrasi
                 </div>
               </div>
-              {adminLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  className={mobileLinkCls(link.href)}
-                  href={link.href}
-                >
-                  {link.icon}
-                  {link.label}
-                </Link>
+              {adminLinkGroups.map((group) => (
+                <section key={group.label} className="pt-2">
+                  <h3 className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-brand-textDim">
+                    {group.label}
+                  </h3>
+                  {group.links.map((link) => (
+                    <Link
+                      key={link.href}
+                      className={mobileLinkCls(link.href)}
+                      href={link.href}
+                      aria-current={ariaCurrentFor(link.href)}
+                    >
+                      {link.icon}
+                      {link.label}
+                    </Link>
+                  ))}
+                </section>
               ))}
             </>
           )}
