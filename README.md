@@ -1,407 +1,233 @@
-<p align="center">
-  <img src="https://img.shields.io/badge/version-1.0.0-blue?style=for-the-badge" alt="Version"/>
-  <img src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge" alt="License"/>
-  <img src="https://img.shields.io/badge/docker-ready-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker"/>
-  <img src="https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js"/>
-  <img src="https://img.shields.io/badge/NestJS-10-E0234E?style=for-the-badge&logo=nestjs&logoColor=white" alt="NestJS"/>
-</p>
+# Event Management System
 
-<h1 align="center">
-  🎪 Guest Registration & Check-in System
-</h1>
+**English** · [Bahasa Indonesia](README.id.md)
 
-<p align="center">
-  <strong>Enterprise-grade event management solution with real-time check-in,<br/>QR code scanning, and stunning public display animations.</strong>
-</p>
+An event operations platform that covers the full guest journey: registration, QR check-in at one or more stations, a welcome screen on the big display, souvenir handout, lucky draws, and sports tournaments. It is built for corporate gatherings where hundreds or thousands of guests arrive in a short window and the check-in desk has to keep working even when the network does not. Current version: 1.6.0. The interface is in Indonesian.
 
-<p align="center">
-  <a href="#-quick-start">Quick Start</a> •
-  <a href="#-features">Features</a> •
-  <a href="#-tech-stack">Tech Stack</a> •
-  <a href="#-deployment">Deployment</a> •
-  <a href="#-documentation">Documentation</a>
-</p>
+![Version](https://img.shields.io/badge/version-1.6.0-blue)
+![Next.js](https://img.shields.io/badge/Next.js-15-000000?logo=nextdotjs&logoColor=white)
+![NestJS](https://img.shields.io/badge/NestJS-10-E0234E?logo=nestjs&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Prisma-4169E1?logo=postgresql&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-cache-DC382D?logo=redis&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
 
----
+## Contents
 
-## ✨ Highlights
+- [Features](#features)
+- [Screens](#screens)
+- [Architecture](#architecture)
+- [Tech stack](#tech-stack)
+- [Getting started](#getting-started)
+- [Production deployment](#production-deployment)
+- [Configuration](#configuration)
+- [Operations](#operations)
+- [Testing](#testing)
+- [Project layout](#project-layout)
+- [Documentation](#documentation)
+- [License](#license)
 
-<table>
-<tr>
-<td width="50%">
+## Features
 
-### 🚀 One-Click Deployment
-Deploy the entire stack (Frontend, Backend, Database) with a single command using Docker Compose.
+### Events and guests
 
-</td>
-<td width="50%">
+- Several events in one installation, with one active event at a time. Each event has its own branding (logo, background image or video, overlay), welcome message, and feature switches.
+- Guest management with search and filters, Excel/CSV import and export, and email invitations that carry a personal QR code.
+- Public self-registration page and a configurable landing page with hero images, features, and a gallery.
 
-### ⚡ Real-time Updates
-Server-Sent Events (SSE) technology ensures instant updates across all connected devices.
+### Check-in
 
-</td>
-</tr>
-<tr>
-<td width="50%">
+- QR check-in with the device camera, plus name search for guests who arrive without their code. When a name matches several guests, the operator picks the right one and confirms before check-in.
+- Duplicate check-in detection and queue numbers.
+- Multiple check-in stations, each with its own identity.
+- Offline mode: when the connection drops, check-ins are queued in IndexedDB and synchronized automatically when it returns. Conflicts are resolved first-wins, duplicates are flagged, and everything lands in the audit trail. The queue warns at 80% and blocks at 100% of its configured limit.
 
-### 📱 QR Code Check-in
-Fast and reliable guest verification using webcam-based QR code scanning.
+### Live display
 
-</td>
-<td width="50%">
+- Welcome animation on the public screen as each guest checks in, with real-time updates over server-sent events (SSE).
+- Background video and custom overlays per event.
 
-### 🎨 Premium UI Design
-Glassmorphism effects, smooth animations, and fully customizable event branding.
+### Souvenirs and prizes
 
-</td>
-</tr>
-</table>
+- Souvenir handout tracking, with live updates when guest data changes.
+- Lucky draw with a big-screen display, two pacing presets (a quick "Hiburan" draw and a slower "Utama" grand prize draw), multi-winner draws, an eligible guest list, a winners page, and a prize carousel.
+- Prize collection tracking.
 
----
+### Tournaments
 
-## 🎯 Use Cases
+- Tournaments scoped to the active event and switched on per event.
+- Sports: futsal, basketball, volleyball, badminton, chess, esports, and an "other" category.
+- Formats: single elimination, double elimination, round robin, Swiss, and group stage followed by knockout. Team or individual participants, with simple, set-based, or point-based scoring, and manual or automatic scheduling.
+- Teams built from existing guests, team logo upload, tournament check-in, and a live match display.
 
-- **Corporate Events** — Annual meetings, product launches, conferences
-- **Weddings & Celebrations** — Guest registration with table assignments
-- **Exhibitions & Trade Shows** — Visitor tracking and badge printing
-- **Seminars & Workshops** — Attendance tracking with souvenir distribution
+### Administration
 
----
+- Dashboard and statistics, SMTP settings and email log, admin users, and a system page.
+- Request IDs on every response, structured logs, and an operations metrics endpoint for use during the event.
 
-## 🖥️ Screenshots
+## Screens
 
-<p align="center">
-  <img src="https://placehold.co/800x450/1e293b/94a3b8?text=Admin+Dashboard" alt="Admin Dashboard" width="45%"/>
-  &nbsp;&nbsp;
-  <img src="https://placehold.co/800x450/1e293b/94a3b8?text=Check-in+Station" alt="Check-in Station" width="45%"/>
-</p>
-<p align="center">
-  <img src="https://placehold.co/800x450/0f172a/60a5fa?text=Public+Display+Screen" alt="Public Display" width="45%"/>
-  &nbsp;&nbsp;
-  <img src="https://placehold.co/800x450/0f172a/60a5fa?text=QR+Code+Scanner" alt="QR Scanner" width="45%"/>
-</p>
+| Path | Purpose |
+|---|---|
+| `/admin` | Admin dashboard: events, guests, prizes, souvenirs, tournaments, statistics, settings, system |
+| `/checkin` | Check-in station |
+| `/show` | Public welcome display |
+| `/souvenir` | Souvenir handout |
+| `/luckydraw` | Lucky draw control and display (`/luckydraw/display`, `/luckydraw/winners`, `/luckydraw/carousel`) |
+| `/register` | Public guest registration |
+| `/tournament`, `/tournament-checkin`, `/live` | Brackets, tournament check-in, live match display |
 
----
+## Architecture
 
-## 🚀 Quick Start
+```mermaid
+flowchart LR
+    subgraph Devices
+        Admin[Admin browser]
+        Station[Check-in stations]
+        Screen[Big screen display]
+        Guest[Guest phone]
+    end
 
-### Prerequisites
+    Admin --> FE
+    Station --> FE
+    Screen --> FE
+    Guest --> FE
 
-| Requirement | Version |
-|-------------|---------|
-| Node.js | ≥ 18.x |
-| Docker & Docker Compose | Latest |
-| PostgreSQL | 14+ (or use Docker) |
+    subgraph Stack["Docker Compose"]
+        FE["Frontend: Next.js 15 (port 3000)"]
+        BE["Backend: NestJS 10 (port 4000)"]
+        DB[(PostgreSQL)]
+        R[(Redis cache)]
+    end
 
-### 🐳 Docker Deployment (Recommended)
-
-```bash
-# Clone the repository
-git clone https://github.com/your-username/guest-registry.git
-cd guest-registry
-
-# One-click deploy
-deploy-prod.bat
+    FE -->|REST + SSE| BE
+    BE --> DB
+    BE --> R
+    BE -->|SMTP| Mail[Email]
+    Station -. "offline queue (IndexedDB)" .-> Station
 ```
 
-The application will be available at:
-- **Admin Panel**: `https://localhost:443/admin`
-- **Check-in Station**: `https://localhost:443/checkin`
-- **Public Display**: `https://localhost:443/show`
+In production, Nginx Proxy Manager terminates HTTPS in front of the frontend.
 
-### 💻 Manual Development Setup
+## Tech stack
 
-<details>
-<summary><strong>Click to expand</strong></summary>
+| Layer | Technology |
+|---|---|
+| Frontend | Next.js 15, React 18, Tailwind CSS, React Query, html5-qrcode, QRCode.js, IndexedDB |
+| Backend | NestJS 10, Prisma 5, PostgreSQL, Redis (cache-manager), Nodemailer, Winston |
+| Realtime | Server-sent events |
+| Tests | Jest (backend), Vitest (frontend) |
+| Deployment | Docker Compose, Nginx Proxy Manager, Bash and Windows batch scripts |
 
-#### Backend Setup
+## Getting started
+
+Requirements: Node.js 18 or newer, PostgreSQL 14 or newer, and Redis. Docker is recommended.
+
+### Backend
+
 ```bash
 cd apps/backend
-
-# Install dependencies
+cp .env.example .env      # PORT, DATABASE_URL, JWT_SECRET, CORS_ORIGIN, optional HTTPS settings
 npm install
-
-# Configure environment
-cp .env.example .env
-# Edit .env with your database credentials
-
-# Run migrations & seed
-npm run prisma:migrate
 npm run prisma:generate
-npm run seed
-
-# Start development server
-npm run dev
+npm run prisma:migrate
+npm run seed              # creates the admin account
+npm run dev               # http://localhost:4000
 ```
 
-#### Frontend Setup
+The seed reads `ADMIN_USERNAME` and `ADMIN_PASSWORD` from the environment and falls back to `admin` and a default password defined in `prisma/seed.ts`. Set your own values, or change the password right after the first login.
+
+### Frontend
+
 ```bash
 cd apps/frontend
-
-# Install dependencies
+cp .env.example .env      # NEXT_PUBLIC_API_BASE_URL
 npm install
-
-# Start development server
-npm run dev
+npm run dev               # http://localhost:3000
 ```
 
-</details>
+For local HTTPS (needed for camera access on other devices), use `docker-compose.dev-https.yml` together with `generate-ssl.bat` or `start-dev-docker-https.bat`.
 
----
+## Production deployment
 
-## 🎨 Features
-
-<details open>
-<summary><h3>📋 Guest Management</h3></summary>
-
-| Feature | Description |
-|---------|-------------|
-| **CRUD Operations** | Add, edit, delete guests with intuitive UI |
-| **Bulk Import** | Import thousands of guests via Excel/CSV |
-| **Export** | Download guest lists and attendance reports |
-| **Search & Filter** | Real-time search by name, ID, company, or table |
-| **Email Invitations** | Send personalized invitations with QR codes |
-
-</details>
-
-<details open>
-<summary><h3>✅ Check-in System</h3></summary>
-
-| Feature | Description |
-|---------|-------------|
-| **QR Code Scanning** | Webcam-based instant verification |
-| **Manual Search** | Fallback search for guests without QR |
-| **Duplicate Prevention** | Automatic detection of already checked-in guests |
-| **Souvenir Tracking** | Separate module for gift distribution |
-| **Real-time Counter** | Live attendance statistics |
-
-</details>
-
-<details open>
-<summary><h3>🖥️ Public Display</h3></summary>
-
-| Feature | Description |
-|---------|-------------|
-| **Welcome Animation** | Eye-catching animation when guests arrive |
-| **Queue Numbers** | Auto-generated numbers for seating/prizes |
-| **Event Branding** | Custom logo, background, and overlay images |
-| **Loop Videos** | Background video support for ambiance |
-| **Multi-Screen** | Support for multiple display screens |
-
-</details>
-
-<details>
-<summary><h3>⚙️ Settings & Configuration</h3></summary>
-
-| Feature | Description |
-|---------|-------------|
-| **Event Details** | Name, date, location, welcome message |
-| **Visual Assets** | Logo, background, overlay images |
-| **SMTP Email** | Configure email server for invitations |
-| **User Management** | Admin, Operator, and User roles |
-| **Timeout Settings** | Configurable display and popup durations |
-
-</details>
-
----
-
-## 💻 Tech Stack
-
-<table>
-<tr>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nextjs/nextjs-original.svg" width="48" height="48" alt="Next.js" />
-<br><strong>Next.js 15</strong>
-<br><sub>Frontend</sub>
-</td>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nestjs/nestjs-original.svg" width="48" height="48" alt="NestJS" />
-<br><strong>NestJS 10</strong>
-<br><sub>Backend</sub>
-</td>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/postgresql/postgresql-original.svg" width="48" height="48" alt="PostgreSQL" />
-<br><strong>PostgreSQL</strong>
-<br><sub>Database</sub>
-</td>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original.svg" width="48" height="48" alt="Docker" />
-<br><strong>Docker</strong>
-<br><sub>Containerization</sub>
-</td>
-<td align="center" width="120">
-<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/tailwindcss/tailwindcss-original.svg" width="48" height="48" alt="Tailwind" />
-<br><strong>Tailwind CSS</strong>
-<br><sub>Styling</sub>
-</td>
-</tr>
-</table>
-
-### Additional Technologies
-
-- **Prisma** — Type-safe ORM for database access
-- **React Query** — Server state management
-- **Server-Sent Events** — Real-time communication
-- **QRCode.js** — QR code generation
-- **html5-qrcode** — QR code scanning
-- **Nodemailer** — Email sending
-- **Winston** — Logging
-
----
-
-## 📁 Project Structure
-
-```
-├── 📂 apps/
-│   ├── 📂 backend/           # NestJS API Server
-│   │   ├── prisma/           # Database schema & migrations
-│   │   └── src/
-│   │       ├── auth/         # Authentication module
-│   │       ├── guests/       # Guest management
-│   │       ├── config/       # App configuration
-│   │       └── public/       # Public endpoints & SSE
-│   │
-│   └── 📂 frontend/          # Next.js Web App
-│       └── app/
-│           ├── admin/        # Admin dashboard pages
-│           ├── checkin/      # Check-in station
-│           └── show/         # Public display
-│
-├── 📂 docs/                  # Documentation
-├── 📂 certs/                 # SSL certificates
-├── 🐳 docker-compose.prod.yml
-├── 🚀 deploy-prod.bat        # One-click deployment
-├── 💾 backup-docker.bat      # Backup script
-└── 📜 restore-docker.bat     # Restore script
+```bash
+cp .env.production.example .env.production   # fill in every value
+./deploy-prod.sh                             # Linux
+deploy-prod.bat                              # Windows
 ```
 
----
+The deploy script checks Docker and the required files, loads `.env.production`, and brings up PostgreSQL, Redis, the backend, and the frontend with `docker-compose.prod.yml`. The frontend is published on `FRONTEND_PORT` (default 3000) and joins the Nginx Proxy Manager network for HTTPS. `JWT_SECRET` and `ADMIN_PASSWORD` are required; compose refuses to start without them.
 
-## 🔐 Environment Variables
+Updates run through `update.sh` or `update.bat`. [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) and [docs/DOCKER_DEPLOY.md](docs/DOCKER_DEPLOY.md) cover the details, and [docs/server-specification.md](docs/server-specification.md) lists the recommended server size.
 
-### Backend (`apps/backend/.env`)
+## Configuration
 
-| Variable | Required | Description |
-|----------|:--------:|-------------|
-| `DATABASE_URL` | ✅ | PostgreSQL connection string |
-| `JWT_SECRET` | ✅ | Secret key for JWT tokens |
-| `ADMIN_PASSWORD` | ✅ | Initial admin password |
-| `CORS_ORIGIN` | ❌ | Allowed origins (default: `*`) |
-| `SMTP_HOST` | ❌ | Email server hostname |
-| `SMTP_USER` | ❌ | Email username |
-| `SMTP_PASS` | ❌ | Email password |
+`.env.production`:
 
-### Frontend (`apps/frontend/.env`)
+| Variable | Description |
+|---|---|
+| `DB_USER`, `DB_PASSWORD`, `DB_NAME` | PostgreSQL credentials |
+| `BACKEND_PORT` | Backend port |
+| `REDIS_URL` | Redis connection |
+| `JWT_SECRET` | Token signing secret. Required |
+| `CORS_ORIGIN` | Allowed frontend origin |
+| `ADMIN_USERNAME`, `ADMIN_PASSWORD` | Initial admin account. The password is required |
+| `FRONTEND_PORT` | Published frontend port (default 3000) |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM` | Outgoing email for invitations |
 
-| Variable | Required | Description |
-|----------|:--------:|-------------|
-| `BACKEND_ORIGIN` | ✅ | Backend API URL for proxying |
-| `NEXT_PUBLIC_API_BASE_URL` | ❌ | Client-side API URL |
+Backend development settings (`apps/backend/.env`): `PORT` (default 4000), `DATABASE_URL`, `JWT_SECRET`, `CORS_ORIGIN`, and `USE_HTTPS`, `SSL_KEY_PATH`, `SSL_CERT_PATH` for HTTPS. Frontend: `NEXT_PUBLIC_API_BASE_URL`.
 
----
+## Operations
 
-## 📚 Documentation
+[docs/RUNBOOK.md](docs/RUNBOOK.md) is the incident runbook for use during an event. Its rule of thumb: never stop the whole system to fix one problem, because the stations can keep working offline. The first three checks:
 
-| Document | Description |
-|----------|-------------|
-| [📘 User Guide](USER_GUIDE.md) | Complete usage instructions |
-| [📗 API Reference](docs/API.md) | REST API endpoints |
-| [📙 Deployment Guide](docs/DEPLOY_PRODUCTION.md) | Production deployment |
-| [📕 Docker Guide](docs/DOCKER_DEPLOY.md) | Docker-specific instructions |
-| [📓 Technical Blueprint](TECHNICAL_BLUEPRINT.md) | Architecture deep-dive |
-| [📒 Changelog](CHANGELOG.md) | Version history |
-
----
-
-## 🔄 Backup & Restore
-
-### Create Backup
-
-```batch
-backup-docker.bat
+```bash
+docker ps --filter "name=guest" --format "table {{.Names}}\t{{.Status}}"
+curl -s http://localhost:4000/api/health
+docker exec guest-backend-prod sh -c "tail -n 100 logs/error-$(date +%F).log"
 ```
 
-This creates a complete backup including:
-- ✅ Docker images (frontend, backend, postgres)
-- ✅ Database dump (SQL)
-- ✅ Uploads folder
-- ✅ Configuration files
-- ✅ SSL certificates
+Every response carries an `X-Request-Id` header that can be searched in the logs. Logged-in admins can read live attendance figures from `GET /api/ops/metrics`.
 
-### Restore from Backup
+Backup and restore: `backup-docker.bat`, `restore-docker.bat`, and `docker-compose.restore.yml`. Windows helpers for firewall and port 80 conflicts are included (`fix-firewall.bat`, `fix-iis-port80.bat`, `fix-ultimate-firewall.bat`), as is `renew-ssl.bat`.
 
-```batch
-cd backup_YYYYMMDD_HHMMSS
-restore.bat
+## Testing
+
+```bash
+cd apps/backend && npm test     # Jest
+cd apps/frontend && npm test    # Vitest
 ```
 
----
+[docs/TESTING.md](docs/TESTING.md) describes the test approach.
 
-## ❓ FAQ
+## Project layout
 
-<details>
-<summary><strong>Camera not working on Check-in page?</strong></summary>
+```
+apps/
+  backend/                NestJS API
+    prisma/               schema, migrations, seed
+    src/
+      auth/  users/       authentication and admin users
+      events/  guests/    events, guests, import and export
+      stations/           check-in stations and offline sync
+      souvenirs/ prizes/  souvenir handout and lucky draw
+      tournaments/        tournaments, teams, matches, brackets
+      public/ public-registration/ landing-page/   public endpoints and SSE
+      reports/ email/ ops/ common/
+  frontend/               Next.js app
+    app/(main)/           admin, checkin, show, souvenir, luckydraw, register, tournament, live, about
+    components/ lib/ hooks/
+docs/                     architecture, API, schema, deployment, runbook, module notes
+```
 
-Browsers block webcam access on insecure origins (HTTP). Solutions:
-1. Use HTTPS (recommended)
-2. Access via `localhost`
-3. Enable "Insecure origins treated as secure" in `chrome://flags`
+## Documentation
 
-</details>
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), [docs/API.md](docs/API.md), [docs/DB_SCHEMA.md](docs/DB_SCHEMA.md)
+- [docs/MULTI_STATION_OFFLINE_IMPLEMENTATION.md](docs/MULTI_STATION_OFFLINE_IMPLEMENTATION.md)
+- [USER_GUIDE.md](USER_GUIDE.md) and [DOCUMENTATION.md](DOCUMENTATION.md)
+- [CHANGELOG.md](CHANGELOG.md)
 
-<details>
-<summary><strong>Public Display not updating in real-time?</strong></summary>
+## License
 
-1. Check network connectivity between display and server
-2. Verify SSE connection in browser DevTools (Network tab)
-3. Ensure no firewall is blocking the connection
+This repository does not include a license file. Contact the author before reusing the code.
 
-</details>
-
-<details>
-<summary><strong>Cannot login to admin panel?</strong></summary>
-
-1. Ensure database migrations are applied
-2. Run `npm run seed` to create default admin
-3. Default credentials: `admin` / (check your `.env` file)
-
-</details>
-
-<details>
-<summary><strong>Email invitations not sending?</strong></summary>
-
-1. Verify SMTP settings in Admin → Settings → Email
-2. Check backend logs for email errors
-3. Test with a reliable SMTP provider (Gmail, SendGrid, etc.)
-
-</details>
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-<p align="center">
-  <strong>Created with ❤️ by Yohanes Octavian Rizky</strong>
-</p>
-
-<p align="center">
-  <a href="https://github.com/your-username">
-    <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/>
-  </a>
-</p>
+Developed by Yohanes Octavian Rizky ([@torpedoliar](https://github.com/torpedoliar)).
